@@ -415,7 +415,7 @@ function SystemStatusHintMargin() {
 
 function MainLoginContainer() {
   return (
-    <div className="-translate-y-1/2 absolute content-stretch flex flex-col items-center left-[499px] max-w-[440px] right-[499px] top-1/2" data-name="Main - Login Container">
+    <div className="-translate-y-1/2 absolute content-stretch flex flex-col items-center left-1/2 -translate-x-1/2 max-w-[440px] top-1/2" data-name="Main - Login Container">
       <HeaderSmartSortBrandingMargin />
       <LoginCard />
       <SystemStatusHintMargin />
@@ -425,7 +425,7 @@ function MainLoginContainer() {
 
 export default function Login() {
   return (
-    <div className="bg-[#f3f4f6] border border-[rgba(0,0,0,0.1)] border-solid overflow-clip relative rounded-[16px] size-full" data-name="Login">
+    <div className="bg-[#f3f4f6] border border-[rgba(0,0,0,0.1)] border-solid overflow-clip relative rounded-[16px] size-full">
       <MainLoginContainer />
     </div>
   );
