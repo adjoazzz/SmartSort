@@ -9,6 +9,7 @@ import Analytics from "../pages/Analytics/Analytics";
 import Devices from "../pages/Devices/Devices";
 import Alerts from "../pages/Alerts/Alerts";
 import CollectionJobs from "../pages/CollectionJobs/CollectionJobs";
+import Collectors from "../pages/Collectors/Collectors";
 import UserManagement from "../pages/UserManagement/UserManagement";
 import CommunityFeedback from "../pages/CommunityFeedback/CommunityFeedback";
 
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       { path: "devices", Component: Devices },
       { path: "alerts", Component: Alerts },
       { path: "jobs", Component: CollectionJobs },
+      { path: "collectors", Component: Collectors },
       { path: "community-feedback", Component: CommunityFeedback },
       { path: "admin", Component: UserManagement },
     ],
