@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { InputField } from "../../components/InputField";
-import imgSmartSortUnitGraphic from "../../assets/766e56a2df329f87931d885f861bda13a303c6bf.png";
 
 /**
  * Onboarding Step 3: Facility Mapping / Device Connection
@@ -28,9 +27,6 @@ export default function Onboarding() {
           <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
             Help
           </button>
-          <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
-            Log in
-          </button>
         </div>
       </header>
 
@@ -43,32 +39,48 @@ export default function Onboarding() {
             {/* The background green glow effect from the original */}
             <div className="absolute w-64 h-64 bg-[#10b981] rounded-full blur-[80px] opacity-20" />
             
-            <img 
-              src={imgSmartSortUnitGraphic} 
-              alt="SmartSort Unit" 
-              className="relative z-10 max-h-80 drop-shadow-xl" 
-            />
+            {/* QR Code Scanning Visual */}
+            <div className="relative z-10 flex flex-col items-center gap-5">
+              {/* Scanner Frame */}
+              <div className="relative w-48 h-48">
+                {/* Corner brackets */}
+                <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-[#006c49] rounded-tl-md" />
+                <div className="absolute top-0 right-0 w-8 h-8 border-t-[3px] border-r-[3px] border-[#006c49] rounded-tr-md" />
+                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[3px] border-l-[3px] border-[#006c49] rounded-bl-md" />
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-[#006c49] rounded-br-md" />
+
+                {/* Scanning line animation */}
+                <div className="absolute left-3 right-3 h-0.5 bg-[#10b981] top-1/2 -translate-y-1/2 opacity-60 animate-pulse" />
+
+                {/* QR Code icon */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" className="text-[#006c49] opacity-80">
+                    <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                    <rect x="5" y="5" width="3" height="3" fill="currentColor" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                    <rect x="16" y="5" width="3" height="3" fill="currentColor" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
+                    <rect x="5" y="16" width="3" height="3" fill="currentColor" />
+                    <rect x="14" y="14" width="3" height="3" fill="currentColor" />
+                    <rect x="19" y="14" width="2" height="2" fill="currentColor" />
+                    <rect x="14" y="19" width="2" height="2" fill="currentColor" />
+                    <rect x="19" y="19" width="2" height="2" fill="currentColor" />
+                    <rect x="17" y="17" width="1.5" height="1.5" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Instructional text */}
+              <div className="text-center">
+                <p className="text-sm font-semibold text-[#0b1c30]">Scan QR Code on Device</p>
+                <p className="text-xs text-[#515f74] mt-1 max-w-[200px] leading-relaxed">
+                  Point your camera at the QR code on your SmartSort bin to auto-fill the serial number.
+                </p>
+              </div>
+            </div>
 
             <div className="absolute top-10 left-10 flex flex-col gap-6 z-20">
               <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3 opacity-50">
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                      <path d="M20 6L9 17l-5-5" stroke="#006c49" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <span className="font-semibold text-[#515f74] tracking-wide text-sm hidden sm:block">Account Verified</span>
-                </div>
-
-                <div className="flex items-center gap-3 opacity-50">
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                      <path d="M20 6L9 17l-5-5" stroke="#006c49" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <span className="font-semibold text-[#515f74] tracking-wide text-sm hidden sm:block">Company Profile</span>
-                </div>
-
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 flex items-center justify-center">
                     <div className="w-2.5 h-2.5 bg-[#006c49] rounded-sm ring-2 ring-[#006c49] ring-offset-4 ring-offset-[#eff4ff]" />
