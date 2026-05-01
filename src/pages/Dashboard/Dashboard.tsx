@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { PageLayout } from '../../components/PageLayout';
 import { MetricCard } from '../../components/MetricCard';
 import { ProgressBar } from '../../components/ProgressBar';
@@ -107,6 +108,7 @@ const RECENT_EVENTS = [
 
 export default function Dashboard() {
   const [activeRange, setActiveRange] = useState("24h");
+  const navigate = useNavigate();
 
   return (
     <PageLayout
@@ -243,7 +245,7 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="p-4 border-t border-[#f1f5f9] bg-[#f8fafc] rounded-b-xl">
-              <button className="w-full text-xs font-bold text-[#515f74] tracking-widest uppercase hover:text-[#0b1c30] transition-colors py-2">
+              <button onClick={() => navigate('/devices')} className="w-full text-xs font-bold text-[#515f74] tracking-widest uppercase hover:text-[#0b1c30] transition-colors py-2">
                 Manage All Devices
               </button>
             </div>

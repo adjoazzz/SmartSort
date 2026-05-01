@@ -11,7 +11,7 @@ import React from "react";
  * @param {string} props.value - The currently selected value.
  * @param {Function} props.onChange - Callback fired when a new option is selected.
  */
-export function SelectField({ id, label, options, value, onChange }) {
+export function SelectField({ id, label, options, value, onChange, error }: any) {
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor={id} className="text-sm font-medium text-[#515f74]">
@@ -21,7 +21,9 @@ export function SelectField({ id, label, options, value, onChange }) {
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-10 px-3 border border-[#cbd5e1] rounded-lg text-sm bg-white text-[#0b1c30] focus:outline-none focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/10 transition-all appearance-none cursor-pointer"
+        className={`h-10 px-3 border rounded-lg text-sm bg-white text-[#0b1c30] focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer ${
+          error ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10" : "border-[#cbd5e1] focus:border-[#006c49] focus:ring-[#006c49]/10"
+        }`}
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23515f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
           backgroundRepeat: "no-repeat",
@@ -32,12 +34,13 @@ export function SelectField({ id, label, options, value, onChange }) {
         <option value="" disabled>
           {options[0]}
         </option>
-        {options.slice(1).map((opt) => (
+        {options.slice(1).map((opt: string) => (
           <option key={opt} value={opt}>
             {opt}
           </option>
         ))}
       </select>
+      {error && <span className="text-[11px] font-medium text-[#ba1a1a]">{error}</span>}
     </div>
   );
 }
