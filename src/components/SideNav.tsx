@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router';
 
 export interface SideNavProps {
@@ -35,12 +35,20 @@ const NAV_ITEMS = [
       <line x1="12" y1="17" x2="12.01" y2="17"></line>
     </svg>
   )},
-  { path: '/jobs', label: 'Collection Jobs', icon: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-    </svg>
-  )},
+  { 
+    path: '/jobs', 
+    label: 'Collection Jobs', 
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+      </svg>
+    ),
+    children: [
+      { path: '/jobs', label: 'Collection Jobs' },
+      { path: '/collectors', label: 'Collectors' }
+    ]
+  },
   { path: '/community-feedback', label: 'Community Feedback', icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
@@ -58,6 +66,13 @@ const NAV_ITEMS = [
 
 export function SideNav({ isOpen, onClose }: SideNavProps) {
   const location = useLocation();
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({
+    '/jobs': true // default expand jobs if we want, or evaluate based on current path
+  });
+
+  const toggleExpand = (path: string) => {
+    setExpandedItems(prev => ({ ...prev, [path]: !prev[path] }));
+  };
 
   return (
     <>
@@ -88,23 +103,74 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
 
         <nav className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
           {NAV_ITEMS.map((item) => {
-            const isActive = location.pathname.startsWith(item.path);
+            const hasChildren = !!item.children;
+            const isChildActive = hasChildren && item.children!.some(c => location.pathname === c.path);
+            const isActive = location.pathname === item.path || isChildActive;
+            const isExpanded = expandedItems[item.path] || isChildActive;
+
             return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                  isActive 
-                    ? 'bg-[#006c49]/10 text-[#006c49] font-bold' 
-                    : 'text-[#515f74] hover:bg-[#f8fafc] hover:text-[#0b1c30] font-semibold'
-                }`}
-              >
-                <div className={`${isActive ? 'text-[#006c49]' : 'text-[#94a3b8] group-hover:text-[#515f74]'}`}>
-                  {item.icon}
-                </div>
-                {item.label}
-              </Link>
+              <div key={item.path} className="flex flex-col gap-1">
+                {hasChildren ? (
+                  <button
+                    onClick={() => toggleExpand(item.path)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group w-full ${
+                      isActive 
+                        ? 'bg-[#006c49]/10 text-[#006c49] font-bold' 
+                        : 'text-[#515f74] hover:bg-[#f8fafc] hover:text-[#0b1c30] font-semibold'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`${isActive ? 'text-[#006c49]' : 'text-[#94a3b8] group-hover:text-[#515f74]'}`}>
+                        {item.icon}
+                      </div>
+                      {item.label}
+                    </div>
+                    <svg 
+                      width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                ) : (
+                  <Link
+                    to={item.path}
+                    onClick={onClose}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      isActive 
+                        ? 'bg-[#006c49]/10 text-[#006c49] font-bold' 
+                        : 'text-[#515f74] hover:bg-[#f8fafc] hover:text-[#0b1c30] font-semibold'
+                    }`}
+                  >
+                    <div className={`${isActive ? 'text-[#006c49]' : 'text-[#94a3b8] group-hover:text-[#515f74]'}`}>
+                      {item.icon}
+                    </div>
+                    {item.label}
+                  </Link>
+                )}
+
+                {hasChildren && isExpanded && (
+                  <div className="flex flex-col gap-1 pl-11 pr-2 pb-2">
+                    {item.children!.map((child) => {
+                      const isChildItemActive = location.pathname === child.path;
+                      return (
+                        <Link
+                          key={child.path}
+                          to={child.path}
+                          onClick={onClose}
+                          className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
+                            isChildItemActive 
+                              ? 'text-[#006c49] font-bold bg-[#006c49]/5' 
+                              : 'text-[#64748b] hover:text-[#0b1c30] hover:bg-[#f8fafc] font-medium'
+                          }`}
+                        >
+                          {child.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </nav>

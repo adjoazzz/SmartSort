@@ -5,12 +5,16 @@ import { MetricCard } from '../../components/MetricCard';
 
 /* ── Static data ─────────────────────────────────────────── */
 
-const JOBS_DATA = [
+const INITIAL_JOBS_DATA = [
   { id: 'JOB-1042', device: '#SN-9902-X', location: 'North Wing Cafe - B3', zone: 'Level 2, Zone A', fill: 94, urgency: 'Critical', status: 'Pending', assignedTo: null },
   { id: 'JOB-1041', device: '#SN-4431-L', location: 'Main Lobby Entrance', zone: 'Level 1, Main', fill: 82, urgency: 'High', status: 'In Transit', assignedTo: 'Marcus V.' },
   { id: 'JOB-1040', device: '#SN-1108-P', location: 'West Parking B1', zone: 'Basement 1, Zone C', fill: 78, urgency: 'Normal', status: 'Pending', assignedTo: null },
   { id: 'JOB-1039', device: '#SN-8871-S', location: 'Employee Breakroom', zone: 'Level 4, South', fill: 71, urgency: 'Normal', status: 'In Transit', assignedTo: 'Sarah Jenks' },
   { id: 'JOB-1038', device: '#SN-5520-R', location: 'South Lobby', zone: 'Level 1, Zone B', fill: 65, urgency: 'Normal', status: 'Completed', assignedTo: 'Mike R.' },
+];
+
+const AVAILABLE_COLLECTORS = [
+  'Kwame Mensah', 'Abena Osei', 'Kofi Annan', 'Ama Asare', 'Yaw Appiah'
 ];
 
 const KPIS = [
@@ -69,8 +73,17 @@ const getInitials = (name: string) =>
 export default function CollectionJobs() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [jobs, setJobs] = useState(INITIAL_JOBS_DATA);
+  const [assigningJobId, setAssigningJobId] = useState<string | null>(null);
 
-  const filteredData = JOBS_DATA.filter(job => {
+  const handleAssign = (collector: string) => {
+    setJobs(prev => prev.map(job => 
+      job.id === assigningJobId ? { ...job, assignedTo: collector, status: 'In Transit' } : job
+    ));
+    setAssigningJobId(null);
+  };
+
+  const filteredData = jobs.filter(job => {
     const matchesSearch = job.device.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           job.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           job.id.toLowerCase().includes(searchTerm.toLowerCase());
@@ -213,7 +226,10 @@ export default function CollectionJobs() {
                         </button>
                       ) : (
                         <>
-                          <button className="px-3 py-1 bg-[#006c49] text-white text-xs font-bold rounded-md hover:bg-[#005a3c] transition-all">
+                          <button 
+                            onClick={() => setAssigningJobId(job.id)}
+                            className="px-3 py-1 bg-[#006c49] text-white text-xs font-bold rounded-md hover:bg-[#005a3c] transition-all"
+                          >
                             Assign
                           </button>
                           <button className="px-3 py-1 border border-[#e2e8f0] text-[#515f74] text-xs font-bold rounded-md hover:bg-[#f8fafc] transition-all">
@@ -240,7 +256,7 @@ export default function CollectionJobs() {
         {/* Pagination Footer */}
         <div className="px-6 py-4 border-t border-[#f1f5f9] bg-[#f8fafc]/50 flex items-center justify-between mt-auto">
           <span className="text-xs text-[#515f74]">
-            Showing <span className="font-bold text-[#0b1c30]">{filteredData.length}</span> of {JOBS_DATA.length} active jobs
+            Showing <span className="font-bold text-[#0b1c30]">{filteredData.length}</span> of {jobs.length} active jobs
           </span>
           <div className="flex items-center gap-1">
             <button className="p-1 text-[#94a3b8] hover:text-[#0b1c30] disabled:opacity-30 cursor-not-allowed" disabled>
@@ -313,6 +329,34 @@ export default function CollectionJobs() {
           </div>
         </div>
       </div>
+
+      {/* ── Assignment Modal ──────────────────────────────── */}
+      {assigningJobId && (
+        <div className="fixed inset-0 bg-[#0b1c30]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-[#e2e8f0] flex justify-between items-center bg-[#f8fafc]">
+              <h3 className="font-bold text-[#0b1c30]">Assign Collector</h3>
+              <button onClick={() => setAssigningJobId(null)} className="text-[#94a3b8] hover:text-[#0b1c30] transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div className="p-2 max-h-[300px] overflow-y-auto flex flex-col gap-1">
+              {AVAILABLE_COLLECTORS.map(collector => (
+                <button 
+                  key={collector}
+                  onClick={() => handleAssign(collector)}
+                  className="w-full text-left px-4 py-3 hover:bg-[#f8fafc] rounded-lg transition-colors flex items-center gap-3 group"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#e2e8f0] flex items-center justify-center shrink-0 group-hover:bg-[#006c49]/10 transition-colors">
+                    <span className="text-[10px] font-bold text-[#515f74] group-hover:text-[#006c49]">{getInitials(collector)}</span>
+                  </div>
+                  <span className="text-sm font-semibold text-[#0b1c30]">{collector}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </PageLayout>
   );
 }
