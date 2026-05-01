@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { PageLayout } from '../../components/PageLayout';
 import { StatusBadge } from '../../components/StatusBadge';
+import { RegisterDeviceModal } from '../../components/RegisterDeviceModal';
 
 // Mock Data for Devices
 const DEVICE_FLEET_DATA = [
@@ -26,7 +26,7 @@ const EVENT_LOGS = [
 export default function Devices() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDevice, setSelectedDevice] = useState('982-AX-01');
-  const navigate = useNavigate();
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   // Filter data based on search
   const filteredData = DEVICE_FLEET_DATA.filter(device => 
@@ -47,7 +47,7 @@ export default function Devices() {
             </svg>
             Filters
           </button>
-          <button onClick={() => navigate('/onboarding-3')} className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2">
+          <button onClick={() => setShowRegisterModal(true)} className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -254,6 +254,7 @@ export default function Devices() {
 
         </div>
       </div>
+      <RegisterDeviceModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
     </PageLayout>
   );
 }
