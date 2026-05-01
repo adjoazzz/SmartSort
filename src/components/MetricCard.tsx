@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 export interface MetricCardProps {
   title: string;
@@ -8,6 +9,7 @@ export interface MetricCardProps {
   iconColorClass?: string;
   iconBgClass?: string;
   iconSvg?: React.ReactNode;
+  linkTo?: string;
 }
 
 export function MetricCard({ 
@@ -17,7 +19,8 @@ export function MetricCard({
   trendDirection = 'neutral',
   iconColorClass = 'text-[#006c49]',
   iconBgClass = 'bg-[#10b981]/10',
-  iconSvg
+  iconSvg,
+  linkTo
 }: MetricCardProps) {
   
   // Determine trend styling
@@ -25,8 +28,8 @@ export function MetricCard({
   if (trendDirection === 'up') trendColor = 'text-[#006c49]';
   if (trendDirection === 'down') trendColor = 'text-[#ba1a1a]';
 
-  return (
-    <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow h-[150px]">
+  const cardContent = (
+    <>
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
           {title}
@@ -40,9 +43,16 @@ export function MetricCard({
       </div>
 
       <div className="flex flex-col gap-1 mt-2">
-        <span className="text-3xl font-bold text-[#0b1c30] tracking-tight">
-          {value}
-        </span>
+        <div className="flex items-center justify-between">
+          <span className="text-3xl font-bold text-[#0b1c30] tracking-tight">
+            {value}
+          </span>
+          {linkTo && (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#94a3b8] group-hover:text-[#006c49] transition-colors">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </div>
         
         {trend && (
           <div className="flex items-center gap-1.5">
@@ -69,6 +79,25 @@ export function MetricCard({
           </div>
         )}
       </div>
+    </>
+  );
+
+  const baseClasses = "bg-white border border-[#e2e8f0] rounded-xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all h-[150px] group";
+
+  if (linkTo) {
+    return (
+      <Link
+        to={linkTo}
+        className={`${baseClasses} hover:border-[#006c49]/30 cursor-pointer no-underline`}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={baseClasses}>
+      {cardContent}
     </div>
   );
 }

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link } from "react-router";
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import { SideNav } from './SideNav';
+import { AlertsSidebar } from './AlertsSidebar';
 
 export function HeaderNav() {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isAlertsOpen, setIsAlertsOpen] = useState(false);
 
   return (
     <>
@@ -36,7 +38,11 @@ export function HeaderNav() {
         </div>
 
         <div className="flex items-center gap-6">
-          <button className="text-[#64748b] hover:text-[#0b1c30] transition-colors relative">
+          <button 
+            onClick={() => setIsAlertsOpen(true)}
+            className="text-[#64748b] hover:text-[#0b1c30] transition-colors relative"
+            aria-label="Open alerts"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -58,6 +64,7 @@ export function HeaderNav() {
       </header>
 
       <SideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
+      <AlertsSidebar isOpen={isAlertsOpen} onClose={() => setIsAlertsOpen(false)} />
     </>
   );
 }

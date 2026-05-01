@@ -19,6 +19,7 @@ const KPIS = [
     trendDirection: "neutral" as const,
     iconColorClass: "text-[#515f74]",
     iconBgClass: "bg-[#515f74]/10",
+    linkTo: "/devices",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
@@ -144,6 +145,7 @@ export default function Dashboard() {
               iconColorClass={kpi.iconColorClass}
               iconBgClass={kpi.iconBgClass}
               iconSvg={kpi.icon}
+              linkTo={'linkTo' in kpi ? (kpi as any).linkTo : undefined}
             />
           ))}
         </div>
