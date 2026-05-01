@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { InputField } from "../../components/InputField";
 
 /**
@@ -9,6 +9,7 @@ import { InputField } from "../../components/InputField";
  */
 export default function Login() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("user@smartsort.com");
   const [password, setPassword] = useState("password123");
   const [rememberMe, setRememberMe] = useState(false);
@@ -44,8 +45,11 @@ export default function Login() {
     e.preventDefault();
     if (!validate()) return;
     
+    // Check if the user came from a collector invite link
+    const isCollectorInvite = searchParams.get("role") === "collector";
+    
     // Simulate auto-routing based on account type
-    if (email.toLowerCase().includes("collector")) {
+    if (email.toLowerCase().includes("collector") || isCollectorInvite) {
       navigate("/collector-dashboard");
     } else {
       navigate("/dashboard");
@@ -148,6 +152,13 @@ export default function Login() {
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white">
                 <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/collector-dashboard')}
+              className="w-full h-10 rounded-lg bg-white border border-[#cbd5e1] hover:bg-[#f8fafc] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm text-[#515f74]"
+            >
+              <span className="text-xs font-bold tracking-wide">Demo Collector Login</span>
             </button>
           </form>
 

@@ -33,7 +33,7 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
         {
           collector_email: email,
           temp_password: generatedPassword,
-          invite_link: window.location.origin,
+          invite_link: `${window.location.origin}/?role=collector`,
           region: region
         },
         'v5igHVOqku3cMfXGW' // Public Key
