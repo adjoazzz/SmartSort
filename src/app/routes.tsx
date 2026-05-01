@@ -10,6 +10,7 @@ import Devices from "../pages/Devices/Devices";
 import Alerts from "../pages/Alerts/Alerts";
 import CollectionJobs from "../pages/CollectionJobs/CollectionJobs";
 import Collectors from "../pages/Collectors/Collectors";
+import CollectorDashboard from "../pages/CollectorDashboard/CollectorDashboard";
 import UserManagement from "../pages/UserManagement/UserManagement";
 import CommunityFeedback from "../pages/CommunityFeedback/CommunityFeedback";
 
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: "onboarding-2", Component: Onboarding1 },
       { path: "onboarding-3", Component: Onboarding2 },
       { path: "dashboard", Component: Dashboard },
+      { path: "collector-dashboard", Component: CollectorDashboard },
       { path: "analytics", Component: Analytics },
       { path: "devices", Component: Devices },
       { path: "alerts", Component: Alerts },

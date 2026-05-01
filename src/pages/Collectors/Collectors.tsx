@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageLayout } from '../../components/PageLayout';
 import { StatusBadge } from '../../components/StatusBadge';
 import { CollectorProfileModal } from './CollectorProfileModal';
+import { InviteCollectorModal } from './InviteCollectorModal';
 
 const MOCK_COLLECTORS = [
   { id: 'COL-001', name: 'Kwame Mensah', region: 'North Sector', status: 'Active', rating: 4.8 },
@@ -13,13 +14,17 @@ const MOCK_COLLECTORS = [
 
 export default function Collectors() {
   const [selectedCollector, setSelectedCollector] = useState<any>(null);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   return (
     <PageLayout
       title="Collectors"
       description="Manage and track collection personnel across all sectors."
       actions={
-        <button className="bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors">
+        <button 
+          onClick={() => setIsInviteModalOpen(true)}
+          className="bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
+        >
           Add New Collector
         </button>
       }
@@ -73,6 +78,11 @@ export default function Collectors() {
         isOpen={!!selectedCollector} 
         onClose={() => setSelectedCollector(null)} 
         collector={selectedCollector} 
+      />
+
+      <InviteCollectorModal 
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
       />
     </PageLayout>
   );

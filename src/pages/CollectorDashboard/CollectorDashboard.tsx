@@ -1,0 +1,138 @@
+import React, { useState } from 'react';
+import { PageLayout } from '../../components/PageLayout';
+import { StatusBadge } from '../../components/StatusBadge';
+import { MetricCard } from '../../components/MetricCard';
+
+const COLLECTOR_JOBS = [
+  { id: 'JOB-1041', device: '#SN-4431-L', location: 'Main Lobby Entrance', zone: 'Level 1, Main', fill: 82, urgency: 'High', status: 'In Transit', isAssignedToMe: true },
+  { id: 'JOB-1042', device: '#SN-9902-X', location: 'North Wing Cafe - B3', zone: 'Level 2, Zone A', fill: 94, urgency: 'Critical', status: 'Pending', isAssignedToMe: false },
+  { id: 'JOB-1040', device: '#SN-1108-P', location: 'West Parking B1', zone: 'Basement 1, Zone C', fill: 78, urgency: 'Normal', status: 'Pending', isAssignedToMe: false },
+  { id: 'JOB-1039', device: '#SN-8871-S', location: 'Employee Breakroom', zone: 'Level 4, South', fill: 71, urgency: 'Normal', status: 'Pending', isAssignedToMe: false },
+  { id: 'JOB-1038', device: '#SN-5520-R', location: 'South Lobby', zone: 'Level 1, Zone B', fill: 65, urgency: 'Normal', status: 'Completed', isAssignedToMe: true },
+];
+
+export default function CollectorDashboard() {
+  const [activeTab, setActiveTab] = useState<'my_jobs' | 'available_jobs'>('available_jobs');
+  const [jobs, setJobs] = useState(COLLECTOR_JOBS);
+
+  const displayedJobs = jobs.filter(job => 
+    activeTab === 'my_jobs' 
+      ? job.isAssignedToMe 
+      : (!job.isAssignedToMe && job.status === 'Pending')
+  );
+
+  const handleClaimJob = (id: string) => {
+    setJobs(prev => prev.map(job => 
+      job.id === id ? { ...job, isAssignedToMe: true, status: 'In Transit' } : job
+    ));
+    setActiveTab('my_jobs');
+  };
+
+  const handleCompleteJob = (id: string) => {
+    setJobs(prev => prev.map(job => 
+      job.id === id ? { ...job, status: 'Completed' } : job
+    ));
+  };
+
+  return (
+    <PageLayout
+      title="Collector Dashboard"
+      description="Welcome back, Kwame. Here are your tasks for today."
+    >
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <MetricCard
+          title="Active Jobs"
+          value={jobs.filter(j => j.isAssignedToMe && j.status !== 'Completed').length.toString()}
+          trend="Action required"
+          trendDirection="neutral"
+          iconColorClass="text-[#0284c7]"
+          iconBgClass="bg-[#0284c7]/10"
+        />
+        <MetricCard
+          title="Completed Today"
+          value={jobs.filter(j => j.isAssignedToMe && j.status === 'Completed').length.toString()}
+          trend="Keep it up!"
+          trendDirection="up"
+          iconColorClass="text-[#006c49]"
+          iconBgClass="bg-[#10b981]/10"
+        />
+        <MetricCard
+          title="Available Jobs"
+          value={jobs.filter(j => !j.isAssignedToMe && j.status === 'Pending').length.toString()}
+          trend="In your area"
+          trendDirection="neutral"
+          iconColorClass="text-[#f59e0b]"
+          iconBgClass="bg-[#f59e0b]/10"
+        />
+      </div>
+
+      <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm flex flex-col overflow-hidden">
+        {/* Tabs */}
+        <div className="flex border-b border-[#e2e8f0] bg-[#f8fafc]">
+          <button 
+            onClick={() => setActiveTab('available_jobs')}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'available_jobs' ? 'border-[#006c49] text-[#006c49] bg-white' : 'border-transparent text-[#64748b] hover:text-[#0b1c30]'}`}
+          >
+            Available Jobs ({jobs.filter(j => !j.isAssignedToMe && j.status === 'Pending').length})
+          </button>
+          <button 
+            onClick={() => setActiveTab('my_jobs')}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'my_jobs' ? 'border-[#006c49] text-[#006c49] bg-white' : 'border-transparent text-[#64748b] hover:text-[#0b1c30]'}`}
+          >
+            My Assignments ({jobs.filter(j => j.isAssignedToMe && j.status !== 'Completed').length})
+          </button>
+        </div>
+
+        {/* List */}
+        <div className="p-4 flex flex-col gap-4">
+          {displayedJobs.length === 0 ? (
+            <div className="text-center py-12 text-[#94a3b8] text-sm">
+              No jobs to show here.
+            </div>
+          ) : (
+            displayedJobs.map(job => (
+              <div key={job.id} className="border border-[#e2e8f0] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] transition-colors bg-white">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base font-bold text-[#0b1c30]">{job.location}</span>
+                    <StatusBadge label={job.urgency} variant={job.urgency === 'Critical' ? 'danger' : job.urgency === 'High' ? 'warning' : 'success'} />
+                  </div>
+                  <span className="text-sm font-mono text-[#515f74]">{job.device} • {job.zone}</span>
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="w-24 h-1.5 bg-[#f1f5f9] rounded-full overflow-hidden">
+                      <div className="h-full bg-[#ba1a1a] rounded-full" style={{ width: `${job.fill}%` }} />
+                    </div>
+                    <span className="text-xs font-bold text-[#ba1a1a]">{job.fill}% Full</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center sm:justify-end gap-2">
+                  {activeTab === 'available_jobs' ? (
+                    <button 
+                      onClick={() => handleClaimJob(job.id)}
+                      className="px-4 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors"
+                    >
+                      Claim Job
+                    </button>
+                  ) : job.status !== 'Completed' ? (
+                    <>
+                      <StatusBadge label={job.status} variant="info" hasDot />
+                      <button 
+                        onClick={() => handleCompleteJob(job.id)}
+                        className="px-4 py-2 bg-[#0b1c30] text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors"
+                      >
+                        Complete
+                      </button>
+                    </>
+                  ) : (
+                    <StatusBadge label="Completed" variant="success" hasDot />
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </PageLayout>
+  );
+}

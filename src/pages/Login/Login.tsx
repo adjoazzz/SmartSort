@@ -43,8 +43,13 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    console.log("Logging in with:", { email, password, rememberMe });
-    navigate("/dashboard");
+    
+    // Simulate auto-routing based on account type
+    if (email.toLowerCase().includes("collector")) {
+      navigate("/collector-dashboard");
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
