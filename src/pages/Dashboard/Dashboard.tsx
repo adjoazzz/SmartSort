@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { PageLayout } from '../../components/PageLayout';
 import { MetricCard } from '../../components/MetricCard';
 import { ProgressBar } from '../../components/ProgressBar';
@@ -106,6 +107,7 @@ const RECENT_EVENTS = [
 
 export default function Dashboard() {
   const [activeRange, setActiveRange] = useState("24h");
+  const navigate = useNavigate();
 
   return (
     <PageLayout
@@ -135,16 +137,21 @@ export default function Dashboard() {
         {/* KPIs Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {KPIS.map((kpi, idx) => (
-            <MetricCard 
-              key={idx}
-              title={kpi.title}
-              value={kpi.value}
-              trend={kpi.trend}
-              trendDirection={kpi.trendDirection}
-              iconColorClass={kpi.iconColorClass}
-              iconBgClass={kpi.iconBgClass}
-              iconSvg={kpi.icon}
-            />
+            <div 
+              key={idx} 
+              onClick={() => kpi.title === "ACTIVE DEVICES" ? navigate('/devices') : undefined}
+              className={kpi.title === "ACTIVE DEVICES" ? "cursor-pointer" : ""}
+            >
+              <MetricCard 
+                title={kpi.title}
+                value={kpi.value}
+                trend={kpi.trend}
+                trendDirection={kpi.trendDirection}
+                iconColorClass={kpi.iconColorClass}
+                iconBgClass={kpi.iconBgClass}
+                iconSvg={kpi.icon}
+              />
+            </div>
           ))}
         </div>
 
@@ -241,7 +248,7 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="p-4 border-t border-[#f1f5f9] bg-[#f8fafc] rounded-b-xl">
-              <button className="w-full text-xs font-bold text-[#515f74] tracking-widest uppercase hover:text-[#0b1c30] transition-colors py-2">
+              <button onClick={() => navigate('/devices')} className="w-full text-xs font-bold text-[#515f74] tracking-widest uppercase hover:text-[#0b1c30] transition-colors py-2">
                 Manage All Devices
               </button>
             </div>

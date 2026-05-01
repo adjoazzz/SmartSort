@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router";
 import { StepDots } from "../../components/StepDots";
 import { SelectField } from "../../components/SelectField";
 import { InputField } from "../../components/InputField";
@@ -14,7 +15,7 @@ import { InputField } from "../../components/InputField";
  * @param {string} props.description - A brief description of the feature.
  * @param {React.ReactNode} props.icon - The SVG icon component to render.
  */
-function FeatureCard({ iconBg, iconColor, title, description, icon }) {
+function FeatureCard({ iconBg, iconColor, title, description, icon }: any) {
   return (
     <div className="bg-white border border-[#e2e8f0] rounded-xl p-4">
       <div
@@ -47,9 +48,9 @@ function AnalyticsIcon() {
 }
 
 /**
- * SVG icon representing carbon tracking, specifically used for the "Carbon tracking" feature card.
+ * SVG icon representing time efficiency, specifically used for the "Efficient collection" feature card.
  */
-function CarbonIcon() {
+function EfficiencyIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
       <circle cx="8" cy="8" r="5.5" stroke="#23acf1" strokeWidth="1.2" />
@@ -68,21 +69,50 @@ function CarbonIcon() {
  * for all form fields and handles the initial submission step.
  */
 export default function Onboarding() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    org: "",
-    orgSize: "",
-    industry: "",
+    role: "",
     password: "",
   });
+  
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const set = (key) => (val) => setForm((f) => ({ ...f, [key]: val }));
+  const set = (key: string) => (val: string) => {
+    setForm((f) => ({ ...f, [key]: val }));
+    if (errors[key]) {
+      setErrors((e) => ({ ...e, [key]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!form.firstName.trim()) newErrors.firstName = "First name is required.";
+    if (!form.lastName.trim()) newErrors.lastName = "Last name is required.";
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) newErrors.email = "Please enter a valid email address.";
+    
+    if (form.role === "Select a role" || !form.role) newErrors.role = "Please select a role.";
+    
+    if (form.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
+    } else if (!/[A-Z]/.test(form.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter.";
+    } else if (!/[0-9]/.test(form.password)) {
+      newErrors.password = "Password must contain at least one number.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = () => {
+    if (!validate()) return;
     console.log("Form submitted:", form);
-    // navigate("/onboarding-2")
+    navigate("/onboarding-2");
   };
 
   return (
@@ -96,9 +126,6 @@ export default function Onboarding() {
           <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
             Help
           </button>
-          <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
-            Log in
-          </button>
         </div>
       </header>
 
@@ -110,7 +137,7 @@ export default function Onboarding() {
           <div className="flex flex-col gap-8">
             <div>
               <span className="inline-flex items-center bg-[#10b981] text-white text-xs font-semibold tracking-widest px-4 py-1.5 rounded-full">
-                STEP 1 OF 3
+                STEP 1 OF 2
               </span>
             </div>
 
@@ -134,9 +161,9 @@ export default function Onboarding() {
               />
               <FeatureCard
                 iconBg="#e1f0fc"
-                title="Carbon tracking"
-                description="Automated reporting for CO₂ offsets and compliance."
-                icon={<CarbonIcon />}
+                title="Efficient collection"
+                description="Optimized routing and delivery for smart waste management."
+                icon={<EfficiencyIcon />}
               />
             </div>
 
@@ -164,6 +191,7 @@ export default function Onboarding() {
                 placeholder="Jane"
                 value={form.firstName}
                 onChange={set("firstName")}
+                error={errors.firstName}
               />
               <InputField
                 id="lname"
@@ -171,6 +199,7 @@ export default function Onboarding() {
                 placeholder="Smith"
                 value={form.lastName}
                 onChange={set("lastName")}
+                error={errors.lastName}
               />
             </div>
 
@@ -181,45 +210,19 @@ export default function Onboarding() {
               placeholder="jane@company.com"
               value={form.email}
               onChange={set("email")}
-            />
-
-            <InputField
-              id="org"
-              label="Organization name"
-              placeholder="Acme Corp"
-              value={form.org}
-              onChange={set("org")}
+              error={errors.email}
             />
 
             <SelectField
-              id="orgsize"
-              label="Organization size"
-              value={form.orgSize}
-              onChange={set("orgSize")}
+              id="role"
+              label="Select your role"
+              value={form.role}
+              onChange={set("role")}
+              error={errors.role}
               options={[
-                "Select size",
-                "1 – 10 employees",
-                "11 – 50 employees",
-                "51 – 200 employees",
-                "201 – 1,000 employees",
-                "1,000+ employees",
-              ]}
-            />
-
-            <SelectField
-              id="industry"
-              label="Industry"
-              value={form.industry}
-              onChange={set("industry")}
-              options={[
-                "Select industry",
-                "Manufacturing",
-                "Retail & Consumer Goods",
-                "Healthcare",
-                "Hospitality & Food Service",
-                "Construction",
-                "Government & Public Sector",
-                "Other",
+                "Select a role",
+                "Manager",
+                "Collector"
               ]}
             />
 
@@ -230,6 +233,7 @@ export default function Onboarding() {
               placeholder="Min. 8 characters"
               value={form.password}
               onChange={set("password")}
+              error={errors.password}
             />
 
             <div className="flex flex-col gap-3 pt-1">
@@ -241,12 +245,12 @@ export default function Onboarding() {
               </button>
 
               <div className="flex items-center justify-between">
-                <StepDots current={0} total={3} />
+                <StepDots current={0} total={2} />
                 <p className="text-xs text-[#94a3b8]">
                   Already have an account?{" "}
-                  <a href="#" className="text-[#006c49] font-medium hover:underline">
+                  <Link to="/" className="text-[#006c49] font-medium hover:underline">
                     Log in
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>

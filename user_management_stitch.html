@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#89ceff",
+                    "tertiary": "#006591",
+                    "secondary": "#515f74",
+                    "error": "#ba1a1a",
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#004c6e",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-surface-variant": "#3c4a42",
+                    "on-tertiary-container": "#003d59",
+                    "inverse-surface": "#213145",
+                    "surface-container": "#e5eeff",
+                    "primary-fixed-dim": "#4edea3",
+                    "on-background": "#0b1c30",
+                    "secondary-fixed": "#d5e3fd",
+                    "outline": "#6c7a71",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#3a485c",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#0d1c2f",
+                    "on-primary-fixed-variant": "#005236",
+                    "primary": "#006c49",
+                    "secondary-fixed-dim": "#b9c7e0",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#eff4ff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#00422b",
+                    "background": "#f8f9ff",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary": "#ffffff",
+                    "primary-fixed": "#6ffbbe",
+                    "inverse-primary": "#4edea3",
+                    "on-surface": "#0b1c30",
+                    "primary-container": "#10b981",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-container": "#23acf1",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-container": "#d5e3fd",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#001e2f",
+                    "on-secondary-container": "#57657b",
+                    "on-primary-fixed": "#002113",
+                    "tertiary-fixed": "#c9e6ff",
+                    "surface-tint": "#006c49",
+                    "surface-bright": "#f8f9ff",
+                    "outline-variant": "#bbcabf"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "card-gap": "20px",
+                    "unit": "4px",
+                    "container-padding": "24px",
+                    "topbar-height": "64px",
+                    "gutter": "16px",
+                    "sidebar-width": "260px"
+            },
+            "fontFamily": {
+                    "data-tabular": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "data-tabular": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #334155; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-slate-900 shadow-2xl flex flex-col py-6">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">recycling</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-white leading-none">SmartSort</h1>
+<p class="font-['Inter'] text-[10px] uppercase font-semibold tracking-widest text-emerald-500 mt-1">Waste Intelligence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-xs uppercase font-semibold tracking-widest">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Inter'] text-xs uppercase font-semibold tracking-widest">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-['Inter'] text-xs uppercase font-semibold tracking-widest">Devices</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-['Inter'] text-xs uppercase font-semibold tracking-widest">Alerts</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+<span class="font-['Inter'] text-xs uppercase font-semibold tracking-widest">Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 bg-slate-800 text-white border-l-4 border-emerald-500 active:scale-98 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-['Inter'] text-xs uppercase font-semibold tracking-widest">Admin</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-3 bg-primary-container text-on-primary-container font-bold rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Report</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex flex-col min-h-screen">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full h-14 bg-white border-b border-slate-200 z-40 flex justify-between items-center px-6">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-50 border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-emerald-500/20 placeholder:text-slate-400" placeholder="Search system logs or users..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200 cursor-pointer active:opacity-80 transition-opacity">
+<img alt="User Profile" data-alt="professional portrait of a male system administrator with short hair and glasses against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrEXYSB3NMphSdVuQ_QWfbtl7JgE71cVtmOvVa8s10rNfOSZhVaud9lm6n3YDQy8o5jF7fqohAchtUKphxtyq6PuTAGME3rZ-N73D9cELF5T4mJhEtMJkj9E2usBj8ziaOmWt7gta6SnyDXxV_CdzNRtvD-9ifpyGOFa-RuFK5cIpWUBEQMlhaLhXLp7fCScoIqiC-kKoVKwQrLeOKg5oh8veOFBHInM3vT3wVQqK2WFDT7QQNlD61JvSf1yAv-w6r4ufj7xnwrZwf"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-6 space-y-6">
+<!-- Header Section -->
+<div class="flex items-end justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">User Management</h2>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Configure user roles, permissions and monitor system access.</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-medium shadow-sm transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span>Invite User</span>
+</button>
+</div>
+<!-- Stats Overview (Bento Style Lite) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+<div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Users</p>
+<p class="text-xl font-bold">24</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+<div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Admins</p>
+<p class="text-xl font-bold">3</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+<div class="p-3 bg-amber-50 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Invites</p>
+<p class="text-xl font-bold">5</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+<div class="p-3 bg-slate-50 text-slate-600 rounded-lg">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Security Score</p>
+<p class="text-xl font-bold">98%</p>
+</div>
+</div>
+</div>
+<!-- User Table -->
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-slate-50 text-left border-b border-slate-200">
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary">User</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Email Address</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Role</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Status</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary">Last Login</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="Sarah Chen" data-alt="portrait of a professional woman with black hair smiling gently, studio lighting, clean office aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfXC-Lr5g2WMH_93WgdTwn3LN9s07BbtDPThIt7RL2Bwsm584PdS52UUEMkxT2yaxOJ54AyyghoZNMkERR6-HDQx1syS9hSV0LAq01x6g1W9jgirVVYOB3etf0HhnJEWpJsmcFuawe1Jx1sEWehTt7EemOu0y5hWLDhdJCNMxZ1rh7iv7lVjN4y7p1IthcdwMf7vTpVd2Tt1bncKD2eWLhgnWu-6tqjF0wf7kHUy3rjV1XmFr7T3DPn3LY12FPHmsU1SwFWuHCPpQL"/>
+</div>
+<span class="font-data-tabular text-data-tabular">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-md text-body-md text-secondary">s.chen@smartsort.io</td>
+<td class="px-6 py-3">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">Admin</span>
+</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-1.5 text-emerald-600">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+<span class="text-xs font-medium">Active</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-sm text-body-sm text-slate-500">2 mins ago</td>
+<td class="px-6 py-3 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="Marcus Wright" data-alt="close up of a professional man with a short beard and confident expression, bright daylight lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1FPvXQ66xa2GkkmBlIgAnp9GJpGB2yEUH6u6sZOWTHWI31L9SI0Q3Mf5K6y3k8FpHiRrvc_-6TqW58GC1ZHD9i0asWNEtX6k1Rrknkcsw41cqDivJ6UUGAN0KrB_waCp31_SYSsN4eaXmPc6T-b5-Dv4nd8AkjtB1cWBIzQT0XJW9ZdrKAtZw1zP3pGR21HgTsOVjJMDRE6UZaCeMluTRSvW3OqoRBR8Plyl2FctE8lXbPv8Zei6KyjkkT0NW9OSMYgDoKypBRwPl"/>
+</div>
+<span class="font-data-tabular text-data-tabular">Marcus Wright</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-md text-body-md text-secondary">m.wright@smartsort.io</td>
+<td class="px-6 py-3">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Manager</span>
+</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-1.5 text-emerald-600">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+<span class="text-xs font-medium">Active</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-sm text-body-sm text-slate-500">1 hour ago</td>
+<td class="px-6 py-3 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="Elena Rodriguez" data-alt="headshot of a smiling young woman with light brown hair, friendly and approachable, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXTmcjMnuRY0814kgE8XgwtX_7w1NpRyWL0ozovpS9gttkUSxFHjQo6BI1Zcs57JrTIrX34TO1sLUbEnZGD-FsWkiKjvCwtc-O0XxsPtYnUxc7XDbAZwWlVOvUljaEWV9DR_F_Ks2B6BF-eWJUUOC7_t5ywBAUVV6CFyM1FJSNBz7MsN-3OelQuAH2mcLuCvvvF-obBZJryXD412NGCZVRfEuTSwzkcN2HffOwIee_-tDCViRrszwmklOXhjh-ebmmOucy4Xn2fTqt"/>
+</div>
+<span class="font-data-tabular text-data-tabular">Elena Rodriguez</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-md text-body-md text-secondary">e.rodriguez@smartsort.io</td>
+<td class="px-6 py-3">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">Viewer</span>
+</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-1.5 text-amber-600">
+<div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
+<span class="text-xs font-medium">Pending</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-sm text-body-sm text-slate-500">Never</td>
+<td class="px-6 py-3 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+<img alt="David Kim" data-alt="modern portrait of a professional man with dark hair, focused expression, cinematic office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCh-Al09hTbrudGDQrlU8eUTxoDXp07JRsn6MvHYCnQQpnXihYKXoqkN5VXF09glELKVyu9LPXZyqMmnrWXyx06bdVrGeazjFbcXAMfsd9WsPKIkcJUoZ1GaquuU1IlmPTDF0V_RpPYkfHJImTreLEh7_xZhr5QiT6uZwDgapHfj_AZD14YmnhUrKvwAlxMGZ6eJr-JmnuUpFU5b01CdHvfjDEEbVnuGzdj5VfhHeHqwE9MS_pmdrHn_95ITgHC-hxEzu9-O7E8Oqe"/>
+</div>
+<span class="font-data-tabular text-data-tabular">David Kim</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-md text-body-md text-secondary">d.kim@smartsort.io</td>
+<td class="px-6 py-3">
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Manager</span>
+</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-1.5 text-emerald-600">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+<span class="text-xs font-medium">Active</span>
+</div>
+</td>
+<td class="px-6 py-3 font-body-sm text-body-sm text-slate-500">4 hours ago</td>
+<td class="px-6 py-3 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
+<p class="text-body-sm text-secondary">Showing 4 of 24 users</p>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded border border-slate-200 text-slate-400 hover:bg-white disabled:opacity-50"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="p-1.5 rounded border border-slate-200 bg-white text-slate-900 font-bold px-3 text-xs">1</button>
+<button class="p-1.5 rounded border border-slate-200 text-slate-600 hover:bg-white px-3 text-xs">2</button>
+<button class="p-1.5 rounded border border-slate-200 text-slate-600 hover:bg-white px-3 text-xs">3</button>
+<button class="p-1.5 rounded border border-slate-200 text-slate-400 hover:bg-white"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Bottom Sections: Audit Log & Permissions -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Audit Log Section -->
+<div class="bg-white rounded-xl border border-slate-200 flex flex-col h-[400px]">
+<div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+<h3 class="font-headline-md text-base text-on-surface">System Audit Log</h3>
+<button class="text-primary text-xs font-bold hover:underline">Export CSV</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Log Entry -->
+<div class="flex gap-4 items-start">
+<div class="min-w-[48px] pt-1 text-right">
+<span class="text-[10px] font-bold text-slate-400 block uppercase">14:22</span>
+</div>
+<div class="flex-1 pb-4 border-b border-slate-100">
+<p class="text-body-sm font-semibold">User Role Updated</p>
+<p class="text-xs text-secondary mt-1"><span class="font-bold text-slate-900">Sarah Chen</span> changed <span class="font-bold text-slate-900">Marcus Wright's</span> role from Viewer to Manager.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="min-w-[48px] pt-1 text-right">
+<span class="text-[10px] font-bold text-slate-400 block uppercase">12:05</span>
+</div>
+<div class="flex-1 pb-4 border-b border-slate-100">
+<p class="text-body-sm font-semibold text-emerald-600">New User Invited</p>
+<p class="text-xs text-secondary mt-1"><span class="font-bold text-slate-900">Sarah Chen</span> invited <span class="font-bold text-slate-900">Elena Rodriguez</span> as Viewer.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="min-w-[48px] pt-1 text-right">
+<span class="text-[10px] font-bold text-slate-400 block uppercase">09:15</span>
+</div>
+<div class="flex-1 pb-4 border-b border-slate-100">
+<p class="text-body-sm font-semibold text-error">Security Alert</p>
+<p class="text-xs text-secondary mt-1">Failed login attempt for user <span class="font-bold text-slate-900">j.smith@unknown.com</span> from IP 192.168.1.104.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="min-w-[48px] pt-1 text-right">
+<span class="text-[10px] font-bold text-slate-400 block uppercase">Yesterday</span>
+</div>
+<div class="flex-1 pb-4 border-b border-slate-100">
+<p class="text-body-sm font-semibold">System Configuration Changed</p>
+<p class="text-xs text-secondary mt-1">Device sensitivity thresholds adjusted globally by <span class="font-bold text-slate-900">Marcus Wright</span>.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="min-w-[48px] pt-1 text-right">
+<span class="text-[10px] font-bold text-slate-400 block uppercase">Yesterday</span>
+</div>
+<div class="flex-1">
+<p class="text-body-sm font-semibold">Scheduled Backup Completed</p>
+<p class="text-xs text-secondary mt-1">System automated backup completed successfully. 4.2GB archived.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Permissions Overview -->
+<div class="bg-white rounded-xl border border-slate-200 flex flex-col h-[400px]">
+<div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+<h3 class="font-headline-md text-base text-on-surface">Permissions Matrix</h3>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-slate-600">info</span>
+</div>
+<div class="p-6">
+<div class="space-y-6">
+<!-- Role Group -->
+<div>
+<div class="flex items-center justify-between mb-3">
+<span class="font-bold text-sm">Administrator</span>
+<span class="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded border border-emerald-100 font-bold uppercase">Full Access</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> User Management</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> System Config</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> API Management</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> Billing &amp; Subscriptions</div>
+</div>
+</div>
+<!-- Role Group -->
+<div class="pt-6 border-t border-slate-100">
+<div class="flex items-center justify-between mb-3">
+<span class="font-bold text-sm">Manager</span>
+<span class="text-[10px] px-2 py-0.5 bg-blue-50 text-blue-600 rounded border border-blue-100 font-bold uppercase">Functional Access</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-slate-300 text-sm">cancel</span> User Management</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> Device Control</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> Report Creation</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> Analytics Access</div>
+</div>
+</div>
+<!-- Role Group -->
+<div class="pt-6 border-t border-slate-100">
+<div class="flex items-center justify-between mb-3">
+<span class="font-bold text-sm">Viewer</span>
+<span class="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-500 rounded border border-slate-100 font-bold uppercase">Read Only</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-slate-300 text-sm">cancel</span> Control Actions</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> View Dashboards</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span> Export Reports</div>
+<div class="flex items-center gap-2 text-xs text-secondary"><span class="material-symbols-outlined text-slate-300 text-sm">cancel</span> Edit Settings</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

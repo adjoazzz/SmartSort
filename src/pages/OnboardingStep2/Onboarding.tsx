@@ -18,11 +18,41 @@ export default function Onboarding() {
     annualWaste: "",
   });
 
-  const set = (key) => (val) => setForm((f) => ({ ...f, [key]: val }));
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showModal, setShowModal] = useState(false);
+
+  const set = (key: string) => (val: string) => {
+    setForm((f) => ({ ...f, [key]: val }));
+    if (errors[key]) {
+      setErrors((e) => ({ ...e, [key]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!form.orgName.trim()) newErrors.orgName = "Organization name is required.";
+    if (form.industry === "Select Industry" || !form.industry) newErrors.industry = "Please select an industry.";
+    
+    if (!form.numFacilities) {
+      newErrors.numFacilities = "Required.";
+    } else if (Number(form.numFacilities) < 1) {
+      newErrors.numFacilities = "Must be at least 1.";
+    } else if (!Number.isInteger(Number(form.numFacilities))) {
+      newErrors.numFacilities = "Must be a whole number.";
+    }
+    
+    if (form.annualWaste === "Select range" || !form.annualWaste) {
+      newErrors.annualWaste = "Please select a range.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = () => {
+    if (!validate()) return;
     console.log("Form step 2 submitted:", form);
-    navigate("/onboarding-3");
+    setShowModal(true);
   };
 
   return (
@@ -36,7 +66,7 @@ export default function Onboarding() {
           <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
             Help
           </button>
-          <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
+          <button onClick={() => navigate("/")} className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
             Log in
           </button>
         </div>
@@ -77,13 +107,6 @@ export default function Onboarding() {
                   </div>
                   <span className="font-semibold text-white tracking-wide text-sm">Step 2: Company Profile</span>
                 </div>
-
-                <div className="flex items-center gap-3 opacity-50">
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <div className="w-4 h-4 border-2 border-white rounded-sm" />
-                  </div>
-                  <span className="font-semibold text-white tracking-wide text-sm">Step 3: Facility Mapping</span>
-                </div>
               </div>
             </div>
           </div>
@@ -96,9 +119,9 @@ export default function Onboarding() {
                 <h3 className="text-2xl font-semibold text-[#0b1c30]">Organization Details</h3>
               </div>
               <div className="flex flex-col items-end gap-1">
-                <span className="text-sm font-medium text-[#515f74]">Step 2 of 3</span>
+                <span className="text-sm font-medium text-[#515f74]">Step 2 of 2</span>
                 <div className="w-16 h-1.5 bg-[#d5e3fd] rounded-full overflow-hidden">
-                  <div className="w-2/3 h-full bg-[#10b981]" />
+                  <div className="w-full h-full bg-[#10b981]" />
                 </div>
               </div>
             </div>
@@ -111,6 +134,7 @@ export default function Onboarding() {
                   placeholder="e.g. Global Logistics Corp"
                   value={form.orgName}
                   onChange={set("orgName")}
+                  error={errors.orgName}
                 />
               </div>
 
@@ -120,6 +144,7 @@ export default function Onboarding() {
                   label="Industry Type"
                   value={form.industry}
                   onChange={set("industry")}
+                  error={errors.industry}
                   options={[
                     "Select Industry",
                     "Manufacturing",
@@ -137,18 +162,28 @@ export default function Onboarding() {
                 id="numFacilities"
                 label="Number of Facilities"
                 type="number"
+                min={1}
+                step={1}
                 placeholder="0"
                 value={form.numFacilities}
                 onChange={set("numFacilities")}
+                error={errors.numFacilities}
               />
 
-              <InputField
+              <SelectField
                 id="annualWaste"
                 label="Estimated Annual Waste Volume (Tons)"
-                type="number"
-                placeholder="Enter amount"
                 value={form.annualWaste}
                 onChange={set("annualWaste")}
+                error={errors.annualWaste}
+                options={[
+                  "Select range",
+                  "Less than 500 Tons",
+                  "500 - 1,000 Tons",
+                  "1,000 - 5,000 Tons",
+                  "5,000 - 10,000 Tons",
+                  "10,000+ Tons",
+                ]}
               />
             </div>
 
@@ -177,7 +212,7 @@ export default function Onboarding() {
                 onClick={handleSubmit}
                 className="h-12 px-6 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center gap-2"
               >
-                Save and Continue
+                Complete Sign Up
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -202,6 +237,34 @@ export default function Onboarding() {
           ))}
         </div>
       </footer>
+
+      {/* Verification Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0b1c30]/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden flex flex-col">
+            <div className="p-6 sm:p-8 flex flex-col gap-4 text-center items-center">
+              <div className="w-16 h-16 bg-[#e1f5ee] rounded-full flex items-center justify-center mb-2">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-[#006c49]">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#0b1c30]">Verification Pending</h3>
+              <p className="text-sm text-[#515f74] leading-relaxed">
+                Your details have been securely submitted. A facility administrator will review your information shortly.
+                You will receive an email notification once your account has been verified.
+              </p>
+            </div>
+            <div className="px-6 py-5 bg-[#f8fafc] border-t border-[#e2e8f0]">
+              <button
+                onClick={() => navigate("/")}
+                className="w-full h-11 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all shadow-sm"
+              >
+                Return to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
