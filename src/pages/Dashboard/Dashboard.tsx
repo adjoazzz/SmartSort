@@ -117,7 +117,7 @@ export default function Dashboard() {
       actions={
         <>
           <select 
-            className="bg-white border border-[#bbcabf] text-[#3c4a42] text-sm font-medium rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+            className="bg-white border border-[#bbcabf] text-[#3c4a42] text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
             value={activeRange}
             onChange={(e) => setActiveRange(e.target.value)}
           >
