@@ -1,15 +1,15 @@
 import { createBrowserRouter } from "react-router";
 import { Root } from "./Root";
-import Login from "../imports/Login/Login";
-import Onboarding from "../imports/Onboarding/Onboarding";
-import Onboarding1 from "../imports/Onboarding-1/Onboarding";
-import Onboarding2 from "../imports/Onboarding-2/Onboarding";
-import Dashboard from "../imports/Dashboard/Dashboard";
-import Analytics from "../imports/Analytics/Analytics";
-import Devices from "../imports/Devices/Devices";
-import Alerts from "../imports/Alerts/Alerts";
-import CollectionJobs from "../imports/CollectionJobs/CollectionJobs";
-import UserManagement from "../imports/UserManagement/UserManagement";
+import Login from "../pages/Login/Login";
+import Onboarding from "../pages/OnboardingStep1/Onboarding";
+import Onboarding1 from "../pages/OnboardingStep2/Onboarding";
+import Onboarding2 from "../pages/OnboardingStep3/Onboarding";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import Analytics from "../pages/Analytics/Analytics";
+import Devices from "../pages/Devices/Devices";
+import Alerts from "../pages/Alerts/Alerts";
+import CollectionJobs from "../pages/CollectionJobs/CollectionJobs";
+import UserManagement from "../pages/UserManagement/UserManagement";
 
 export const router = createBrowserRouter([
   {
