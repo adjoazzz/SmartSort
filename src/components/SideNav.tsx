@@ -37,7 +37,7 @@ const NAV_ITEMS = [
   )},
   { 
     path: '/jobs', 
-    label: 'Collection Jobs', 
+    label: 'Collection', 
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
@@ -45,7 +45,7 @@ const NAV_ITEMS = [
       </svg>
     ),
     children: [
-      { path: '/jobs', label: 'Collection Jobs' },
+      { path: '/jobs', label: 'Jobs' },
       { path: '/collectors', label: 'Collectors' }
     ]
   },

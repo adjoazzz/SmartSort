@@ -103,6 +103,16 @@ function DeviceIcon({ type }: { type: string }) {
 }
 
 export default function Alerts() {
+  const [severity, setSeverity] = useState('all');
+  const [deviceType, setDeviceType] = useState('all');
+  const [timeRange, setTimeRange] = useState('24h');
+
+  const handleClearFilters = () => {
+    setSeverity('all');
+    setDeviceType('all');
+    setTimeRange('24h');
+  };
+
   return (
     <PageLayout
       title="System Alerts"
@@ -128,10 +138,13 @@ export default function Alerts() {
             <div className="flex flex-col">
               <label className="text-[10px] font-bold text-[#94a3b8] uppercase mb-1.5 ml-1">SEVERITY</label>
               <div className="relative">
-                <select className="appearance-none bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]">
-                  <option>All Severities</option>
-                  <option>Critical</option>
-                  <option>Warning</option>
+                <select 
+                  value={severity}
+                  onChange={(e) => setSeverity(e.target.value)}
+                  className="appearance-none bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]">
+                  <option value="all">All Severities</option>
+                  <option value="critical">Critical</option>
+                  <option value="warning">Warning</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
@@ -144,10 +157,13 @@ export default function Alerts() {
             <div className="flex flex-col">
               <label className="text-[10px] font-bold text-[#94a3b8] uppercase mb-1.5 ml-1">DEVICE TYPE</label>
               <div className="relative">
-                <select className="appearance-none bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]">
-                  <option>All Devices</option>
-                  <option>Conveyors</option>
-                  <option>SmartBins</option>
+                <select 
+                  value={deviceType}
+                  onChange={(e) => setDeviceType(e.target.value)}
+                  className="appearance-none bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]">
+                  <option value="all">All Devices</option>
+                  <option value="conveyors">Conveyors</option>
+                  <option value="smartbins">SmartBins</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
@@ -160,10 +176,13 @@ export default function Alerts() {
             <div className="flex flex-col">
               <label className="text-[10px] font-bold text-[#94a3b8] uppercase mb-1.5 ml-1">TIME RANGE</label>
               <div className="relative">
-                <select className="appearance-none bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]">
-                  <option>Last 24 Hours</option>
-                  <option>Last 7 Days</option>
-                  <option>Last 30 Days</option>
+                <select 
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(e.target.value)}
+                  className="appearance-none bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]">
+                  <option value="24h">Last 24 Hours</option>
+                  <option value="7d">Last 7 Days</option>
+                  <option value="30d">Last 30 Days</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
@@ -175,7 +194,9 @@ export default function Alerts() {
           </div>
 
           <div className="flex items-center gap-3 h-[42px]">
-            <button className="h-full bg-white border border-[#e2e8f0] text-[#515f74] text-sm font-semibold rounded-lg px-4 hover:bg-[#f8fafc] transition-colors flex items-center gap-2">
+            <button 
+              onClick={handleClearFilters}
+              className="h-full bg-white border border-[#e2e8f0] text-[#515f74] text-sm font-semibold rounded-lg px-4 hover:bg-[#f8fafc] transition-colors flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>

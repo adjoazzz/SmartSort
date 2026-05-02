@@ -8,7 +8,7 @@ interface InviteCollectorModalProps {
 
 export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalProps) {
   const [email, setEmail] = useState('');
-  const [region, setRegion] = useState('North Sector');
+  const [facility, setFacility] = useState('Facility 1');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
   if (!isOpen) return null;
@@ -34,7 +34,7 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
           collector_email: email,
           temp_password: generatedPassword,
           invite_link: `${window.location.origin}/?role=collector`,
-          region: region
+          region: facility
         },
         'v5igHVOqku3cMfXGW' // Public Key
       );
@@ -98,20 +98,20 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="region" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
-                Assigned Region
+              <label htmlFor="facility" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                Assigned Facility
               </label>
               <select
-                id="region"
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
+                id="facility"
+                value={facility}
+                onChange={(e) => setFacility(e.target.value)}
                 className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] bg-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
               >
-                <option value="North Sector">North Sector</option>
-                <option value="East Sector">East Sector</option>
-                <option value="South Sector">South Sector</option>
-                <option value="West Sector">West Sector</option>
-                <option value="Central Hub">Central Hub</option>
+                <option value="Facility 1">Facility 1</option>
+                <option value="Facility 2">Facility 2</option>
+                <option value="Facility 3">Facility 3</option>
+                <option value="Facility 4">Facility 4</option>
+                <option value="Facility 5">Facility 5</option>
               </select>
             </div>
 

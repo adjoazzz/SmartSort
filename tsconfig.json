@@ -7,11 +7,12 @@
     "skipLibCheck": true,
 
     /* Resolution */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "ignoreDeprecations": "6.0",
     "jsx": "react-jsx",
 
     /* Linting */

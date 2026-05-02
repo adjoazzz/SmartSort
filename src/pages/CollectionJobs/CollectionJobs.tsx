@@ -75,12 +75,80 @@ export default function CollectionJobs() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [jobs, setJobs] = useState(INITIAL_JOBS_DATA);
   const [assigningJobId, setAssigningJobId] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingJobId, setEditingJobId] = useState<string | null>(null);
+  const [newJob, setNewJob] = useState({
+    location: '',
+    device: '',
+    fill: 0,
+    urgency: 'Normal'
+  });
+  const [editJob, setEditJob] = useState({
+    location: '',
+    device: '',
+    fill: 0,
+    urgency: 'Normal'
+  });
+  const [errors, setErrors] = useState({
+    location: '',
+    device: '',
+    fill: '',
+    urgency: ''
+  });
+  const [editErrors, setEditErrors] = useState({
+    location: '',
+    device: '',
+    fill: '',
+    urgency: ''
+  });
 
   const handleAssign = (collector: string) => {
     setJobs(prev => prev.map(job => 
       job.id === assigningJobId ? { ...job, assignedTo: collector, status: 'In Transit' } : job
     ));
     setAssigningJobId(null);
+  };
+
+  const handleCreateJob = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors = { location: '', device: '', fill: '', urgency: '' };
+    if (!newJob.location.trim()) newErrors.location = 'Bin location is required';
+    if (!newJob.device.trim()) newErrors.device = 'Device ID is required';
+    if (newJob.fill < 0 || newJob.fill > 100) newErrors.fill = 'Fill % must be between 0 and 100';
+    if (!newJob.urgency) newErrors.urgency = 'Urgency is required';
+    setErrors(newErrors);
+    if (Object.values(newErrors).some(e => e)) return;
+    const newId = `JOB-${1043 + jobs.length}`;
+    const job = {
+      id: newId,
+      device: newJob.device,
+      location: newJob.location,
+      zone: 'New Zone',
+      fill: newJob.fill,
+      urgency: newJob.urgency,
+      status: 'Pending',
+      assignedTo: null
+    };
+    setJobs(prev => [job, ...prev]);
+    setIsCreateModalOpen(false);
+    setNewJob({ location: '', device: '', fill: 0, urgency: 'Normal' });
+    setErrors({ location: '', device: '', fill: '', urgency: '' });
+  };
+
+  const handleEditJob = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors = { location: '', device: '', fill: '', urgency: '' };
+    if (!editJob.location.trim()) newErrors.location = 'Bin location is required';
+    if (!editJob.device.trim()) newErrors.device = 'Device ID is required';
+    if (editJob.fill < 0 || editJob.fill > 100) newErrors.fill = 'Fill % must be between 0 and 100';
+    if (!editJob.urgency) newErrors.urgency = 'Urgency is required';
+    setEditErrors(newErrors);
+    if (Object.values(newErrors).some(e => e)) return;
+    setJobs(prev => prev.map(job => 
+      job.id === editingJobId ? { ...job, device: editJob.device, location: editJob.location, fill: editJob.fill, urgency: editJob.urgency } : job
+    ));
+    setEditingJobId(null);
+    setEditErrors({ location: '', device: '', fill: '', urgency: '' });
   };
 
   const filteredData = jobs.filter(job => {
@@ -96,7 +164,10 @@ export default function CollectionJobs() {
       title="Collection Jobs"
       description="Real-time queue of pending bin-emptying tasks across the facility."
       actions={
-        <button className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-[#005a3c] transition-all shadow-sm flex items-center gap-2 active:scale-95">
+        <button 
+          onClick={() => setIsCreateModalOpen(true)}
+          className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-[#005a3c] transition-all shadow-sm flex items-center gap-2 active:scale-95"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -211,6 +282,17 @@ export default function CollectionJobs() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex justify-end gap-2">
+                      {job.status !== 'Completed' && (
+                        <button 
+                          onClick={() => { 
+                            setEditingJobId(job.id); 
+                            setEditJob({ location: job.location, device: job.device, fill: job.fill, urgency: job.urgency }); 
+                          }}
+                          className="px-3 py-1 text-[#006c49] text-xs font-bold rounded-md hover:bg-[#006c49]/10 transition-all"
+                        >
+                          Edit
+                        </button>
+                      )}
                       {job.assignedTo ? (
                         <>
                           <button className="px-3 py-1 text-[#006c49] text-xs font-bold rounded-md hover:bg-[#006c49]/10 transition-all">
@@ -353,7 +435,210 @@ export default function CollectionJobs() {
                   <span className="text-sm font-semibold text-[#0b1c30]">{collector}</span>
                 </button>
               ))}
+        </div>
+          </div>
+        </div>
+      )}
+
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 bg-[#0b1c30]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-[#e2e8f0] flex justify-between items-center bg-[#f8fafc]">
+              <h3 className="font-bold text-[#0b1c30]">Create New Job</h3>
+              <button onClick={() => setIsCreateModalOpen(false)} className="text-[#94a3b8] hover:text-[#0b1c30] transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
             </div>
+            <form onSubmit={handleCreateJob} className="p-6 flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="location" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Bin Location
+                </label>
+                <input
+                  id="location"
+                  type="text"
+                  placeholder="e.g., North Wing Cafe - B3"
+                  value={newJob.location}
+                  onChange={(e) => {
+                    setNewJob(prev => ({ ...prev, location: e.target.value }));
+                    setErrors(prev => ({ ...prev, location: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                />
+                {errors.location && <p className="text-[#ba1a1a] text-xs mt-1">{errors.location}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="device" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Device ID
+                </label>
+                <input
+                  id="device"
+                  type="text"
+                  placeholder="e.g., #SN-9902-X"
+                  value={newJob.device}
+                  onChange={(e) => {
+                    setNewJob(prev => ({ ...prev, device: e.target.value }));
+                    setErrors(prev => ({ ...prev, device: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                />
+                {errors.device && <p className="text-[#ba1a1a] text-xs mt-1">{errors.device}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="fill" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Fill %
+                </label>
+                <input
+                  id="fill"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={newJob.fill}
+                  onChange={(e) => {
+                    setNewJob(prev => ({ ...prev, fill: parseInt(e.target.value) || 0 }));
+                    setErrors(prev => ({ ...prev, fill: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                />
+                {errors.fill && <p className="text-[#ba1a1a] text-xs mt-1">{errors.fill}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="urgency" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Urgency
+                </label>
+                <select
+                  id="urgency"
+                  value={newJob.urgency}
+                  onChange={(e) => {
+                    setNewJob(prev => ({ ...prev, urgency: e.target.value }));
+                    setErrors(prev => ({ ...prev, urgency: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] bg-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                >
+                  <option value="Normal">Normal</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Critical">Critical</option>
+                </select>
+                {errors.urgency && <p className="text-[#ba1a1a] text-xs mt-1">{errors.urgency}</p>}
+              </div>
+              <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-[#f1f5f9]">
+                <button 
+                  type="button" 
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="px-4 py-2 text-sm font-semibold text-[#515f74] hover:bg-[#f1f5f9] rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors"
+                >
+                  Create Job
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Edit Job Modal ─────────────────────────────── */}
+      {editingJobId && (
+        <div className="fixed inset-0 bg-[#0b1c30]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-[#e2e8f0] flex justify-between items-center bg-[#f8fafc]">
+              <h3 className="font-bold text-[#0b1c30]">Edit Job</h3>
+              <button onClick={() => setEditingJobId(null)} className="text-[#94a3b8] hover:text-[#0b1c30] transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <form onSubmit={handleEditJob} className="p-6 flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="edit-location" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Bin Location
+                </label>
+                <input
+                  id="edit-location"
+                  type="text"
+                  placeholder="e.g., North Wing Cafe - B3"
+                  value={editJob.location}
+                  onChange={(e) => {
+                    setEditJob(prev => ({ ...prev, location: e.target.value }));
+                    setEditErrors(prev => ({ ...prev, location: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                />
+                {editErrors.location && <p className="text-[#ba1a1a] text-xs mt-1">{editErrors.location}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="edit-device" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Device ID
+                </label>
+                <input
+                  id="edit-device"
+                  type="text"
+                  placeholder="e.g., #SN-9902-X"
+                  value={editJob.device}
+                  onChange={(e) => {
+                    setEditJob(prev => ({ ...prev, device: e.target.value }));
+                    setEditErrors(prev => ({ ...prev, device: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                />
+                {editErrors.device && <p className="text-[#ba1a1a] text-xs mt-1">{editErrors.device}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="edit-fill" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Fill %
+                </label>
+                <input
+                  id="edit-fill"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={editJob.fill}
+                  onChange={(e) => {
+                    setEditJob(prev => ({ ...prev, fill: parseInt(e.target.value) || 0 }));
+                    setEditErrors(prev => ({ ...prev, fill: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                />
+                {editErrors.fill && <p className="text-[#ba1a1a] text-xs mt-1">{editErrors.fill}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="edit-urgency" className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+                  Urgency
+                </label>
+                <select
+                  id="edit-urgency"
+                  value={editJob.urgency}
+                  onChange={(e) => {
+                    setEditJob(prev => ({ ...prev, urgency: e.target.value }));
+                    setEditErrors(prev => ({ ...prev, urgency: '' }));
+                  }}
+                  className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm text-[#0b1c30] bg-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                >
+                  <option value="Normal">Normal</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Critical">Critical</option>
+                </select>
+                {editErrors.urgency && <p className="text-[#ba1a1a] text-xs mt-1">{editErrors.urgency}</p>}
+              </div>
+              <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-[#f1f5f9]">
+                <button 
+                  type="button" 
+                  onClick={() => setEditingJobId(null)}
+                  className="px-4 py-2 text-sm font-semibold text-[#515f74] hover:bg-[#f1f5f9] rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors"
+                >
+                  Update Job
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

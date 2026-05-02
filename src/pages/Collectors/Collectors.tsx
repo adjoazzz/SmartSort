@@ -25,7 +25,7 @@ export default function Collectors() {
           onClick={() => setIsInviteModalOpen(true)}
           className="bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
         >
-          Add New Collector
+          <span className="text-lg font-bold">+</span> Add New Collector
         </button>
       }
     >
