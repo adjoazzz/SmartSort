@@ -42,7 +42,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-lg transition-colors"
+              className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-lg transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -130,7 +130,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
           <div className="px-6 pb-6 pt-2 flex items-center gap-3">
             <button
               onClick={onClose}
-              className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors"
+              className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
             >
               Cancel
             </button>
