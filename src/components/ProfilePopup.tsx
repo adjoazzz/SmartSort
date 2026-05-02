@@ -16,13 +16,6 @@ const otherAccounts = [
     email: 'JaneSimmons@user.com',
     color: '#78909C',
   },
-  // {
-  //   initials: 'j',
-  //   name: 'jilon elorm kwame asigbee',
-  //   email: 'jilonasigbee17@gmail.com',
-  //   color: '#AB47BC',
-  //   ringColor: '#43A047',
-  // },
 ];
 
 export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) {
