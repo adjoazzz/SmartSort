@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from "react-router";
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import { SideNav } from './SideNav';
@@ -6,7 +6,11 @@ import { AlertsSidebar } from './AlertsSidebar';
 import { ProfilePopup } from './ProfilePopup';
 import '../styles/profile-popup.css';
 
-export function HeaderNav() {
+export interface HeaderNavProps {
+  hideAlertsIcon?: boolean;
+}
+
+export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -43,19 +47,17 @@ export function HeaderNav() {
     }
   }, [themeMode]);
 
-  React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (settingsRef.current && !settingsRef.current.contains(target)) {
         setIsSettingsOpen(false);
       }
-    }
-    if (isSettingsOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isSettingsOpen]);
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -63,7 +65,7 @@ export function HeaderNav() {
         <div className="flex items-center gap-4 w-full max-w-lg">
           <button 
             onClick={() => setIsNavOpen(true)}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:bg-[#1a365d] hover:text-[#0b1c30] dark:text-white transition-colors"
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] hover:text-[#0b1c30] dark:text-white transition-colors"
             aria-label="Open Menu"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -73,7 +75,7 @@ export function HeaderNav() {
             </svg>
           </button>
 
-          <div className="flex items-center w-full bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl border border-transparent focus-within:border-[#cbd5e1] dark:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+          <div className="flex items-center w-full bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl border border-transparent focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -87,17 +89,19 @@ export function HeaderNav() {
         </div>
 
         <div className="flex items-center gap-6">
-          <button 
-            onClick={() => setIsAlertsOpen(true)}
-            className="text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors relative"
-            aria-label="Open alerts"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            <span className="absolute top-0 right-0 w-2 h-2 bg-[#ba1a1a] rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
-          </button>
+          {!hideAlertsIcon && (
+            <button 
+              onClick={() => setIsAlertsOpen(true)}
+              className="text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors relative"
+              aria-label="Open alerts"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span className="absolute top-0 right-0 w-2 h-2 bg-[#ba1a1a] rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
+            </button>
+          )}
 
           {/* Settings Menu */}
           <div className="relative" ref={settingsRef}>
