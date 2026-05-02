@@ -160,20 +160,6 @@ export function HeaderNav() {
                   </div>
                 </div>
 
-                {/* Profile Settings */}
-                <div className="p-1.5">
-                  <Link 
-                    to="/profile" 
-                    onClick={() => setIsSettingsOpen(false)}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#0b1c30] dark:text-white font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-lg transition-colors"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    Profile Settings
-                  </Link>
-                </div>
               </div>
             )}
           </div>

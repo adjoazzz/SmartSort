@@ -205,7 +205,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
           </div>
-          <span>Sign out of all accounts</span>
+          <span>Sign out</span>
         </button>
       </div>
 
