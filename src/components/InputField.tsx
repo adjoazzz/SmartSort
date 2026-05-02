@@ -14,7 +14,7 @@ import React from "react";
 export function InputField({ id, label, type = "text", placeholder, value, onChange, error, ...rest }: any) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-[#515f74]">
+      <label htmlFor={id} className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
         {label}
       </label>
       <input
@@ -24,8 +24,8 @@ export function InputField({ id, label, type = "text", placeholder, value, onCha
         value={value}
         onChange={(e) => onChange(e.target.value)}
         {...rest}
-        className={`h-10 px-3 border rounded-lg text-sm bg-white text-[#0b1c30] placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
-          error ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10" : "border-[#cbd5e1] focus:border-[#006c49] focus:ring-[#006c49]/10"
+        className={`h-10 px-3 border rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
+          error ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10" : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/10"
         }`}
       />
       {error && <span className="text-[11px] font-medium text-[#ba1a1a]">{error}</span>}

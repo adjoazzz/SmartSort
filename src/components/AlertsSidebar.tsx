@@ -81,12 +81,12 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
 
       {/* Sidebar panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white dark:bg-[#0b1c30] shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e2e8f0] bg-white flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e2e8f0] dark:border-[#1e3a5f] bg-white dark:bg-[#0b1c30] flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#ffdad6]/30 flex items-center justify-center text-[#ba1a1a]">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -95,13 +95,13 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
               </svg>
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#0b1c30]">Notifications</h2>
-              <p className="text-xs text-[#64748b] font-medium">{activeCount} active alert{activeCount !== 1 ? 's' : ''}</p>
+              <h2 className="text-base font-bold text-[#0b1c30] dark:text-white">Notifications</h2>
+              <p className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] font-medium">{activeCount} active alert{activeCount !== 1 ? 's' : ''}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-[#94a3b8] hover:text-[#0b1c30] hover:bg-[#f1f5f9] transition-colors"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] transition-colors"
             aria-label="Close notifications"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -140,17 +140,17 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                         <span className={`text-[10px] font-bold ${config.textColor} uppercase tracking-widest`}>
                           {alert.severity}
                         </span>
-                        <span className="text-[10px] font-medium text-[#94a3b8]">{alert.timestamp}</span>
+                        <span className="text-[10px] font-medium text-[#94a3b8] dark:text-[#64748b]">{alert.timestamp}</span>
                       </div>
 
                       {/* Message */}
-                      <p className="text-sm font-semibold text-[#0b1c30] mb-1 leading-snug">{alert.message}</p>
+                      <p className="text-sm font-semibold text-[#0b1c30] dark:text-white mb-1 leading-snug">{alert.message}</p>
 
                       {/* Meta row */}
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-[#64748b]">{alert.device}</span>
+                        <span className="text-xs font-mono text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">{alert.device}</span>
                         <span className="text-[#cbd5e1]">·</span>
-                        <span className="text-xs text-[#64748b]">{alert.type}</span>
+                        <span className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">{alert.type}</span>
                       </div>
                     </div>
 
@@ -166,7 +166,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#e2e8f0] bg-[#f8fafc] flex-shrink-0">
+        <div className="px-6 py-4 border-t border-[#e2e8f0] dark:border-[#1e3a5f] bg-[#f8fafc] dark:bg-[#0f2942] flex-shrink-0">
           <Link
             to="/alerts"
             onClick={onClose}

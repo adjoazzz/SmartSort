@@ -18,7 +18,7 @@ const KPIS = [
     value: "18/20",
     trend: "System nominal",
     trendDirection: "neutral" as const,
-    iconColorClass: "text-[#515f74]",
+    iconColorClass: "text-[#515f74] dark:text-[#cbd5e1]",
     iconBgClass: "bg-[#515f74]/10",
     linkTo: "/devices",
     icon: (
@@ -117,7 +117,7 @@ export default function Dashboard() {
       actions={
         <>
           <select 
-            className="bg-white border border-[#bbcabf] text-[#3c4a42] text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+            className="bg-white dark:bg-[#0b1c30] border border-[#bbcabf] text-[#3c4a42] text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
             value={activeRange}
             onChange={(e) => setActiveRange(e.target.value)}
           >
@@ -156,39 +156,39 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           
           {/* Hourly Throughput Bar Chart */}
-          <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[360px]">
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[360px]">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-[#0b1c30]">Hourly Throughput</h2>
+              <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">Hourly Throughput</h2>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-sm bg-[#10b981]" />
-                  <span className="text-[10px] font-bold text-[#515f74] uppercase">Sorted</span>
+                  <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">Sorted</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-sm bg-[#e2e8f0]" />
-                  <span className="text-[10px] font-bold text-[#515f74] uppercase">Rejected</span>
+                  <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">Rejected</span>
                 </div>
               </div>
             </div>
             
-            <div className="flex-1 flex items-end gap-3 w-full border-b border-l border-[#f1f5f9] pt-4 pl-1 pb-1 relative">
+            <div className="flex-1 flex items-end gap-3 w-full border-b border-l border-[#f1f5f9] dark:border-[#0f2942] pt-4 pl-1 pb-1 relative">
               {THROUGHPUT_DATA.map((data, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center justify-end h-full group">
-                  <div className="w-full bg-[#f4f4f4] rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] transition-colors">
+                  <div className="w-full bg-[#f4f4f4] rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] dark:bg-[#1a365d] transition-colors">
                     <div 
                       className="w-full bg-[#10b981] rounded-t-xl transition-all duration-500 ease-in-out" 
                       style={{ height: `${data.value}%` }} 
                     />
                   </div>
-                  <span className="text-[10px] text-[#94a3b8] mt-2 group-hover:text-[#515f74]">{data.time}</span>
+                  <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] mt-2 group-hover:text-[#515f74] dark:text-[#cbd5e1]">{data.time}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Waste Distribution Donut */}
-          <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
-            <h2 className="text-lg font-semibold text-[#0b1c30] mb-4">Waste Categories</h2>
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
+            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white mb-4">Waste Categories</h2>
             
             <div className="flex-1 flex flex-col items-center justify-center relative">
               {/* CSS Donut Chart Mockup */}
@@ -197,27 +197,27 @@ export default function Dashboard() {
                 <div className="absolute inset-0 rounded-full border-[16px] border-t-[#10b981] border-r-[#60a5fa] border-b-[#fbbf24] border-l-[#cbd5e1] transform rotate-45" />
                 
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-[#0b1c30]">Total</span>
-                  <span className="text-[10px] font-bold text-[#515f74] uppercase">Processed</span>
+                  <span className="text-2xl font-bold text-[#0b1c30] dark:text-white">Total</span>
+                  <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">Processed</span>
                 </div>
               </div>
 
               <div className="w-full grid grid-cols-2 gap-3 mt-auto">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                  <span className="text-sm font-medium text-[#515f74]">Plastic (35%)</span>
+                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">Plastic (35%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#60a5fa]" />
-                  <span className="text-sm font-medium text-[#515f74]">Paper (22%)</span>
+                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">Paper (22%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
-                  <span className="text-sm font-medium text-[#515f74]">Metal (18%)</span>
+                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">Metal (18%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#cbd5e1]" />
-                  <span className="text-sm font-medium text-[#515f74]">Other (25%)</span>
+                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">Other (25%)</span>
                 </div>
               </div>
             </div>
@@ -229,9 +229,9 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           
           {/* Device Status */}
-          <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm flex flex-col col-span-1">
-            <div className="p-6 border-b border-[#f1f5f9] flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[#0b1c30]">Device Status</h2>
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1">
+            <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">Device Status</h2>
               <StatusBadge label="Live" variant="success" />
             </div>
             <div className="p-6 flex flex-col gap-6 flex-1">
@@ -244,47 +244,47 @@ export default function Dashboard() {
                 />
               ))}
             </div>
-            <div className="p-4 border-t border-[#f1f5f9] bg-[#f8fafc] rounded-b-xl">
-              <button onClick={() => navigate('/devices')} className="w-full text-xs font-bold text-[#515f74] tracking-widest uppercase hover:text-[#0b1c30] transition-colors py-2">
+            <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942] rounded-b-xl">
+              <button onClick={() => navigate('/devices')} className="w-full text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] tracking-widest uppercase hover:text-[#0b1c30] dark:text-white transition-colors py-2">
                 Manage All Devices
               </button>
             </div>
           </div>
 
           {/* Live Events Table */}
-          <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
-            <div className="p-6 border-b border-[#f1f5f9] flex items-center justify-between bg-white">
-              <h2 className="text-lg font-semibold text-[#0b1c30]">Live Contamination Events</h2>
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
+            <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-white dark:bg-[#0b1c30]">
+              <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">Live Contamination Events</h2>
               <StatusBadge label="Action Required" variant="danger" hasDot />
             </div>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
-                  <tr className="bg-[#f8fafc] border-b border-[#f1f5f9]">
-                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Timestamp</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Source</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Detection</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Confidence</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Visual</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Action</th>
+                  <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Timestamp</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Source</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Detection</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Confidence</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Visual</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#f1f5f9]">
                   {RECENT_EVENTS.map((evt) => (
-                    <tr key={evt.id} className="hover:bg-[#f8fafc] transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74]">{evt.time}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30]">{evt.source}</td>
+                    <tr key={evt.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">{evt.time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">{evt.source}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <StatusBadge label={evt.detection} variant={evt.detectionType as any} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">{evt.confidence}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0]">
+                        <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
                           <img src={evt.img} alt="Snapshot" className="w-full h-full object-cover" />
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] font-mono bg-[#f8fafc]">
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
                         {evt.action}
                       </td>
                     </tr>

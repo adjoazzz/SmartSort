@@ -39,7 +39,7 @@ const KPI_DATA = [
         <path d="M16.5 14.5c1.2-1.2 2.5-3.5 2.5-5.5a10 10 0 0 0-4-6c-1 1-1.5 2.5-1.5 4s1.5 3.5 3 7z" fill="none" stroke="#10b981"/>
       </svg>
     ),
-    iconBg: 'bg-transparent border border-[#e2e8f0]',
+    iconBg: 'bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]',
     progressColor: 'bg-[#10b981]',
     progressWidth: '74%',
     trendColors: 'bg-[#bbf7d0]/50 text-[#006c49]'
@@ -73,7 +73,7 @@ const KPI_DATA = [
         <path d="M16 10a4 4 0 0 1-8 0"></path>
       </svg>
     ),
-    iconBg: 'bg-transparent border border-[#e2e8f0]',
+    iconBg: 'bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]',
     progressColor: 'bg-[#3b82f6]',
     progressWidth: '75%',
     trendColors: 'bg-[#dbeafe] text-[#2563eb]'
@@ -83,8 +83,8 @@ const KPI_DATA = [
     value: '412.2 t',
     trend: '15.0%',
     trendDirection: 'up',
-    icon: <span className="text-xs font-bold text-[#64748b]">CO<sub className="text-[8px]">2</sub></span>,
-    iconBg: 'bg-transparent border border-[#e2e8f0]',
+    icon: <span className="text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">CO<sub className="text-[8px]">2</sub></span>,
+    iconBg: 'bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]',
     progressColor: 'bg-[#334155]',
     progressWidth: '40%',
     trendColors: 'bg-[#bbf7d0]/50 text-[#006c49]'
@@ -97,11 +97,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="bg-[#0b1c30] text-white p-3 rounded-lg shadow-xl text-sm border border-[#213145]">
         <p className="font-bold mb-2 pb-2 border-b border-[#3c4a42]">Oct 18, 2023</p>
         <div className="flex justify-between gap-4 mb-1">
-          <span className="text-[#94a3b8]">Recycling:</span>
+          <span className="text-[#94a3b8] dark:text-[#64748b]">Recycling:</span>
           <span className="text-[#10b981] font-bold">{payload[0].value}%</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-[#94a3b8]">Contam:</span>
+          <span className="text-[#94a3b8] dark:text-[#64748b]">Contam:</span>
           <span className="text-[#fca5a5] font-bold">{payload[1].value}%</span>
         </div>
       </div>
@@ -112,7 +112,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 function KpiCard({ data }: { data: typeof KPI_DATA[0] }) {
   return (
-    <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
+    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
       <div className="flex justify-between items-start mb-6">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${data.iconBg}`}>
           {data.icon}
@@ -135,10 +135,10 @@ function KpiCard({ data }: { data: typeof KPI_DATA[0] }) {
         </div>
       </div>
       <div>
-        <h3 className="text-xs font-bold text-[#64748b] tracking-wider uppercase mb-1">{data.title}</h3>
-        <p className="text-2xl font-bold text-[#0b1c30]">{data.value}</p>
+        <h3 className="text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase mb-1">{data.title}</h3>
+        <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">{data.value}</p>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-[#f1f5f9]">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-[#f1f5f9] dark:bg-[#1a365d]">
         <div className={`h-full ${data.progressColor}`} style={{ width: data.progressWidth }}></div>
       </div>
     </div>
@@ -158,7 +158,7 @@ export default function Analytics() {
       title="Waste Intelligence Analytics"
       description="Real-time performance metrics across your facility network."
       actions={
-        <button className="bg-white border border-[#e2e8f0] text-[#0b1c30] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] transition-colors shadow-sm flex items-center gap-2">
+        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#515f74" strokeWidth="2">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -184,20 +184,20 @@ export default function Analytics() {
         {/* Middle Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Rate Comparison Over Time */}
-          <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h2 className="text-lg font-bold text-[#0b1c30]">Rate Comparison Over Time</h2>
-                <p className="text-sm text-[#64748b] mt-1">Recycling performance vs. contamination threshold</p>
+                <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">Rate Comparison Over Time</h2>
+                <p className="text-sm text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] mt-1">Recycling performance vs. contamination threshold</p>
               </div>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></div>
-                  <span className="text-sm text-[#515f74] font-medium">Recycling</span>
+                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1] font-medium">Recycling</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#fca5a5]"></div>
-                  <span className="text-sm text-[#515f74] font-medium">Contamination</span>
+                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1] font-medium">Contamination</span>
                 </div>
               </div>
             </div>
@@ -242,41 +242,41 @@ export default function Analytics() {
           </div>
 
           {/* Tonnage by Material */}
-          <div className="bg-white border border-[#e2e8f0] rounded-xl p-6 shadow-sm flex flex-col h-[400px]">
-            <h2 className="text-[17px] font-bold text-[#0b1c30] mb-5">Tonnage by Material</h2>
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[400px]">
+            <h2 className="text-[17px] font-bold text-[#0b1c30] dark:text-white mb-5">Tonnage by Material</h2>
             
             <div className="flex flex-col gap-[18px] flex-1">
               {TONNAGE_DATA.map((item, idx) => (
                 <div key={idx}>
                   <div className="flex justify-between items-end mb-1.5">
-                    <span className="text-[13px] font-bold text-[#0b1c30]">{item.name}</span>
-                    <span className="text-xs text-[#64748b]">{item.value}</span>
+                    <span className="text-[13px] font-bold text-[#0b1c30] dark:text-white">{item.name}</span>
+                    <span className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">{item.value}</span>
                   </div>
-                  <div className="w-full bg-[#f1f5f9] rounded-full h-2">
+                  <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-2">
                     <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.percent}%` }}></div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-[#f1f5f9] mt-auto pt-4 grid grid-cols-2 divide-x divide-[#f1f5f9]">
+            <div className="border-t border-[#f1f5f9] dark:border-[#0f2942] mt-auto pt-4 grid grid-cols-2 divide-x divide-[#f1f5f9]">
               <div className="pr-4">
-                <p className="text-xs text-[#94a3b8] font-semibold mb-1">Capture Rate</p>
-                <p className="text-2xl font-bold text-[#0b1c30]">92.4%</p>
+                <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">Capture Rate</p>
+                <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">92.4%</p>
               </div>
               <div className="pl-4 text-right">
-                <p className="text-xs text-[#94a3b8] font-semibold mb-1">Efficiency</p>
-                <p className="text-2xl font-bold text-[#0b1c30]">88.2%</p>
+                <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">Efficiency</p>
+                <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">88.2%</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Row - Category Breakdown */}
-        <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-[#f1f5f9] flex justify-between items-center">
-            <h2 className="text-lg font-bold text-[#0b1c30]">Category Breakdown</h2>
-            <button className="bg-white border border-[#e2e8f0] text-[#515f74] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] transition-colors flex items-center gap-2">
+        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
+            <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">Category Breakdown</h2>
+            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
               </svg>
@@ -290,33 +290,33 @@ export default function Analytics() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white border-b border-[#f1f5f9]">
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] tracking-wider flex items-center gap-1">MATERIAL CATEGORY <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] tracking-wider">VOLUME (METRIC TONS) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] tracking-wider">MOM GROWTH <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] tracking-wider">TARGET GOAL <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] tracking-wider text-right">ACTION</th>
+                <tr className="bg-white dark:bg-[#0b1c30] border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider flex items-center gap-1">MATERIAL CATEGORY <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider">VOLUME (METRIC TONS) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider">MOM GROWTH <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider">TARGET GOAL <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider text-right">ACTION</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f1f5f9]">
                 {CATEGORY_DATA.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#f8fafc] transition-colors">
+                  <tr key={idx} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-[#f1f5f9] flex items-center justify-center text-[#515f74]">
+                        <div className="w-8 h-8 rounded bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1]">
                           <CategoryIcon type={row.icon} />
                         </div>
-                        <span className="text-sm font-bold text-[#0b1c30]">{row.name}</span>
+                        <span className="text-sm font-bold text-[#0b1c30] dark:text-white">{row.name}</span>
                       </div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
-                      <span className="text-sm text-[#515f74]">{row.volume}</span>
+                      <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">{row.volume}</span>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold
                         ${row.growthTrend === 'up' ? 'bg-[#bbf7d0]/50 text-[#006c49]' : 
                           row.growthTrend === 'down' ? 'bg-[#ffdad6] text-[#ba1a1a]' : 
-                          'bg-[#f1f5f9] text-[#64748b]'}
+                          'bg-[#f1f5f9] dark:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]'}
                       `}>
                         {row.growthTrend === 'up' && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>}
                         {row.growthTrend === 'down' && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>}
@@ -326,14 +326,14 @@ export default function Analytics() {
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3 w-32">
-                        <div className="w-full bg-[#f1f5f9] rounded-full h-1.5 overflow-hidden">
+                        <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-1.5 overflow-hidden">
                           <div className={`h-full rounded-full ${row.goalColor}`} style={{ width: `${row.goal}%` }} />
                         </div>
                         <span className="text-sm font-bold text-[#334155]">{row.goal}%</span>
                       </div>
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap text-right">
-                      <button className="text-[#94a3b8] hover:text-[#0b1c30] transition-colors p-1">
+                      <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors p-1">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <circle cx="12" cy="12" r="1"></circle>
                           <circle cx="12" cy="5" r="1"></circle>

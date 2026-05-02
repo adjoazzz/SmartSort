@@ -29,29 +29,29 @@ export default function Collectors() {
         </button>
       }
     >
-      <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#f1f5f9] flex justify-between items-center bg-[#f8fafc]">
-          <h2 className="text-lg font-semibold text-[#0b1c30]">Registered Personnel</h2>
+      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center bg-[#f8fafc] dark:bg-[#0f2942]">
+          <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">Registered Personnel</h2>
         </div>
         
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[700px]">
             <thead>
-              <tr className="bg-white border-b border-[#f1f5f9]">
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">ID</th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Name</th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Region</th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Rating</th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] uppercase tracking-wider text-right">Actions</th>
+              <tr className="bg-white dark:bg-[#0b1c30] border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">ID</th>
+                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Name</th>
+                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Region</th>
+                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Rating</th>
+                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {MOCK_COLLECTORS.map((collector) => (
-                <tr key={collector.id} className="hover:bg-[#f8fafc] transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74]">{collector.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30]">{collector.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74]">{collector.region}</td>
+                <tr key={collector.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">{collector.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">{collector.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">{collector.region}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#006c49]">⭐ {collector.rating}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <StatusBadge 
