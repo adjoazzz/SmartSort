@@ -48,7 +48,7 @@ export default function Collectors() {
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {MOCK_COLLECTORS.map((collector) => (
-                <tr key={collector.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                <tr key={collector.id} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">{collector.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">{collector.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">{collector.region}</td>

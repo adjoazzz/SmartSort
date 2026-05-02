@@ -2,6 +2,7 @@ import React, { useState, ReactNode } from 'react';
 import { PageLayout } from '../../components/PageLayout';
 import { MetricCard } from '../../components/MetricCard';
 import { StatusBadge } from '../../components/StatusBadge';
+import { InviteUserModal } from './InviteUserModal';
 
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
@@ -160,7 +161,7 @@ function ActionMenu({ userId, isOpen, onToggle, onClose }: {
                 <button
                   onClick={() => { console.log(`${item.key}:`, userId); onClose(); }}
                   className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
-                    item.danger ? 'text-[#ba1a1a] hover:bg-[#ffdad6]/30' : 'text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:bg-[#0f2942]'
+                    item.danger ? 'text-[#ba1a1a] hover:bg-[#ffdad6]/30' : 'text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]'
                   }`}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={item.danger ? 'currentColor' : '#515f74'} strokeWidth="2">{item.icon}</svg>
@@ -194,6 +195,7 @@ export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const filteredData = USERS_DATA.filter(user => {
     const matchesSearch =
@@ -210,7 +212,10 @@ export default function UserManagement() {
       title="User Management"
       description="Configure user roles, permissions and monitor system access."
       actions={
-        <button className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-[#005a3c] transition-all shadow-sm flex items-center gap-2 active:scale-95">
+        <button 
+          onClick={() => setIsInviteModalOpen(true)}
+          className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-[#005a3c] transition-all shadow-sm flex items-center gap-2 active:scale-95"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" />
             <line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" />
@@ -230,7 +235,7 @@ export default function UserManagement() {
       <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
         {/* Toolbar */}
         <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center w-full max-w-md bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+          <div className="flex items-center w-full max-w-md bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3 shrink-0">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -243,7 +248,7 @@ export default function UserManagement() {
             />
           </div>
           <select
-            className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+            className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
           >
@@ -268,7 +273,7 @@ export default function UserManagement() {
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {filteredData.map((user) => (
-                <tr key={user.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors group">
+                <tr key={user.id} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group">
                   <td className="px-6 py-3.5 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <UserAvatar name={user.name} avatar={user.avatar} />
@@ -306,7 +311,7 @@ export default function UserManagement() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
             {[1, 2, 3].map(n => (
-              <button key={n} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${n === 1 ? 'bg-[#006c49]/10 text-[#006c49]' : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:bg-[#1a365d]'}`}>{n}</button>
+              <button key={n} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${n === 1 ? 'bg-[#006c49]/10 text-[#006c49]' : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]'}`}>{n}</button>
             ))}
             <button className="p-1 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
@@ -364,6 +369,11 @@ export default function UserManagement() {
           </div>
         </PanelCard>
       </div>
+
+      <InviteUserModal 
+        isOpen={isInviteModalOpen} 
+        onClose={() => setIsInviteModalOpen(false)} 
+      />
     </PageLayout>
   );
 }

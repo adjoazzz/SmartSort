@@ -199,7 +199,7 @@ export default function CollectionJobs() {
         <div className="px-6 py-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h3 className="font-semibold text-[#0b1c30] dark:text-white text-base">Job Queue</h3>
           <div className="flex items-center gap-2">
-            <div className="flex items-center w-full max-w-xs bg-white dark:bg-[#0b1c30] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-3 py-1.5">
+            <div className="flex items-center w-full max-w-xs bg-white dark:bg-[#0b1c30] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-3 py-1.5">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" className="mr-2 shrink-0">
                 <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
@@ -212,7 +212,7 @@ export default function CollectionJobs() {
               />
             </div>
             <select
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium rounded-lg px-3 py-1.5 hover:bg-[#f8fafc] dark:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium rounded-lg px-3 py-1.5 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -244,7 +244,7 @@ export default function CollectionJobs() {
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {filteredData.map((job) => (
-                <tr key={job.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors group">
+                <tr key={job.id} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-[#0b1c30] dark:text-white">{job.location}</span>
@@ -314,7 +314,7 @@ export default function CollectionJobs() {
                           >
                             Assign
                           </button>
-                          <button className="px-3 py-1 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-xs font-bold rounded-md hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-all">
+                          <button className="px-3 py-1 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-xs font-bold rounded-md hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-all">
                             Complete
                           </button>
                         </>
@@ -345,8 +345,8 @@ export default function CollectionJobs() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
             <button className="px-3 py-1 bg-[#006c49]/10 text-[#006c49] text-xs font-bold rounded-md">1</button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-md transition-colors">2</button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-md transition-colors">3</button>
+            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">2</button>
+            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">3</button>
             <button className="p-1 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </button>
@@ -427,7 +427,7 @@ export default function CollectionJobs() {
                 <button 
                   key={collector}
                   onClick={() => handleAssign(collector)}
-                  className="w-full text-left px-4 py-3 hover:bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg transition-colors flex items-center gap-3 group"
+                  className="w-full text-left px-4 py-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors flex items-center gap-3 group"
                 >
                   <div className="w-8 h-8 rounded-full bg-[#e2e8f0] flex items-center justify-center shrink-0 group-hover:bg-[#006c49]/10 transition-colors">
                     <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] group-hover:text-[#006c49]">{getInitials(collector)}</span>

@@ -109,7 +109,7 @@ export default function CommunityFeedback() {
       description="Manage and resolve facility operational reports."
       actions={
         <>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] font-medium text-xs rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] font-medium text-xs rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -192,7 +192,7 @@ export default function CommunityFeedback() {
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {FEEDBACK_DATA.map((item) => (
-                <tr key={item.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                <tr key={item.id} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1] font-bold text-xs">{item.initials}</div>
@@ -253,10 +253,10 @@ export default function CommunityFeedback() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
             <button className="px-3 py-1 bg-[#006c49]/10 text-[#006c49] text-xs font-bold rounded-md">1</button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-md transition-colors">2</button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-md transition-colors">3</button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-md transition-colors">...</button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-md transition-colors">12</button>
+            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">2</button>
+            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">3</button>
+            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">...</button>
+            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">12</button>
             <button className="p-1 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
@@ -361,7 +361,7 @@ export default function CommunityFeedback() {
                 </div>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-lg transition-colors"
+                  className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-lg transition-colors"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -418,7 +418,7 @@ export default function CommunityFeedback() {
               <div className="px-6 pb-6 pt-2 flex items-center gap-3">
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors"
+                  className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
                 >
                   Cancel
                 </button>

@@ -41,7 +41,7 @@ export default function Devices() {
       description="Managing 128 active hardware units across 14 facilities."
       actions={
         <div className="flex gap-3">
-          <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
+          <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
@@ -62,7 +62,7 @@ export default function Devices() {
           
           {/* Local Table Search Bar */}
           <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex items-center">
-            <div className="flex items-center w-full max-w-md bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+            <div className="flex items-center w-full max-w-md bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -95,7 +95,7 @@ export default function Devices() {
                   <tr 
                     key={device.id} 
                     onClick={() => setSelectedDevice(device.id)}
-                    className={`hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors group cursor-pointer relative ${selectedDevice === device.id ? 'bg-[#f8fafc] dark:bg-[#0f2942]' : ''}`}
+                    className={`hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group cursor-pointer relative ${selectedDevice === device.id ? 'bg-[#f8fafc] dark:bg-[#0f2942]' : ''}`}
                   >
                     <td className="px-6 py-4 whitespace-nowrap relative">
                       {selectedDevice === device.id && (
@@ -151,9 +151,9 @@ export default function Devices() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
               </button>
               <button className="w-8 h-8 flex items-center justify-center rounded bg-[#10b981] text-white text-sm font-medium">1</button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] text-sm font-medium transition-colors">2</button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] text-sm font-medium transition-colors">3</button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] transition-colors">
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors">2</button>
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors">3</button>
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] transition-colors">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </button>
             </div>
@@ -240,7 +240,7 @@ export default function Devices() {
             <div className="overflow-y-auto flex-1 p-2">
               <ul className="divide-y divide-[#f1f5f9]">
                 {EVENT_LOGS.map((log) => (
-                  <li key={log.id} className="p-3 hover:bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg transition-colors cursor-default">
+                  <li key={log.id} className="p-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors cursor-default">
                     <div className="flex justify-between items-start mb-1.5">
                       <span className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}>{log.type}</span>
                       <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b]">{log.time}</span>

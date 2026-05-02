@@ -117,7 +117,7 @@ export default function Dashboard() {
       actions={
         <>
           <select 
-            className="bg-white dark:bg-[#0b1c30] border border-[#bbcabf] text-[#3c4a42] text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+            className="bg-white dark:bg-[#0b1c30] border border-[#bbcabf] dark:border-[#334155] text-[#3c4a42] dark:text-white text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
             value={activeRange}
             onChange={(e) => setActiveRange(e.target.value)}
           >
@@ -174,13 +174,13 @@ export default function Dashboard() {
             <div className="flex-1 flex items-end gap-3 w-full border-b border-l border-[#f1f5f9] dark:border-[#0f2942] pt-4 pl-1 pb-1 relative">
               {THROUGHPUT_DATA.map((data, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center justify-end h-full group">
-                  <div className="w-full bg-[#f4f4f4] rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] dark:bg-[#1a365d] transition-colors">
+                  <div className="w-full bg-[#f4f4f4] rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] dark:group-hover:bg-[#1a365d] transition-colors">
                     <div 
                       className="w-full bg-[#10b981] rounded-t-xl transition-all duration-500 ease-in-out" 
                       style={{ height: `${data.value}%` }} 
                     />
                   </div>
-                  <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] mt-2 group-hover:text-[#515f74] dark:text-[#cbd5e1]">{data.time}</span>
+                  <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] mt-2 group-hover:text-[#515f74] dark:group-hover:text-[#cbd5e1]">{data.time}</span>
                 </div>
               ))}
             </div>
@@ -272,7 +272,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody className="divide-y divide-[#f1f5f9]">
                   {RECENT_EVENTS.map((evt) => (
-                    <tr key={evt.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                    <tr key={evt.id} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">{evt.time}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">{evt.source}</td>
                       <td className="px-6 py-4 whitespace-nowrap">

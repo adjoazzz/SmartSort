@@ -18,7 +18,7 @@ export function CollectorProfileModal({ isOpen, onClose, collector }: CollectorP
         {/* Header */}
         <div className="sticky top-0 bg-white dark:bg-[#0b1c30] border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between z-10 shrink-0">
           <h2 className="text-xl font-bold text-[#0b1c30] dark:text-white">Collector Profile</h2>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] transition-colors">
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
@@ -85,19 +85,19 @@ export function CollectorProfileModal({ isOpen, onClose, collector }: CollectorP
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#f1f5f9]">
-                    <tr className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                    <tr className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">Today, 10:30 AM</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">North Hub Station B</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">142 kg</td>
                       <td className="px-6 py-3 whitespace-nowrap"><StatusBadge label="Completed" variant="success" /></td>
                     </tr>
-                    <tr className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                    <tr className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">Yesterday, 2:15 PM</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">East Sector Point 4</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">89 kg</td>
                       <td className="px-6 py-3 whitespace-nowrap"><StatusBadge label="Completed" variant="success" /></td>
                     </tr>
-                    <tr className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                    <tr className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">May 1, 09:00 AM</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">Central Hub Point 1</td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">210 kg</td>

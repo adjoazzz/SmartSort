@@ -232,7 +232,7 @@ export default function Alerts() {
               </thead>
               <tbody className="divide-y divide-[#f1f5f9]">
                 {ALERTS_DATA.map((alert) => (
-                  <tr key={alert.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                  <tr key={alert.id} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center">

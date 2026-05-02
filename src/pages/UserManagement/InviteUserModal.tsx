@@ -1,55 +1,50 @@
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
 
-interface InviteCollectorModalProps {
+interface InviteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalProps) {
+export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
   const [email, setEmail] = useState('');
-  const [facility, setFacility] = useState('Facility 1');
+  const [role, setRole] = useState('Viewer');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
+  const [emailError, setEmailError] = useState('');
 
   if (!isOpen) return null;
 
-  const handleInvite = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
+  const validate = () => {
+    let isValid = true;
+    setEmailError('');
 
-    setStatus('sending');
-    
-    // Generate a random 8-character password
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
-    let generatedPassword = '';
-    for (let i = 0; i < 8; i++) {
-      generatedPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setEmailError('Email is required.');
+      isValid = false;
+    } else if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address.');
+      isValid = false;
     }
 
-    try {
-      await emailjs.send(
-        'service_bcr70ms',    // Service ID
-        'template_65z65qd',   // Template ID
-        {
-          collector_email: email,
-          temp_password: generatedPassword,
-          invite_link: `${window.location.origin}/?role=collector`,
-          region: facility
-        },
-        'v5igHVOqku3cMfXGW' // Public Key
-      );
+    return isValid;
+  };
 
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setStatus('sending');
+
+    // Simulate API call for inviting user
+    setTimeout(() => {
       setStatus('success');
       setTimeout(() => {
         onClose();
         setStatus('idle');
         setEmail('');
+        setRole('Viewer');
       }, 3000);
-    } catch (error) {
-      console.error('Failed to send email:', error);
-      setStatus('idle');
-      alert('Failed to send invite email. Please try again.');
-    }
+    }, 1500);
   };
 
   return (
@@ -58,11 +53,11 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
         
         {/* Header */}
         <div className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
-          <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">Invite New Collector</h2>
+          <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">Invite New User</h2>
           <button 
             onClick={onClose} 
             disabled={status === 'sending' || status === 'success'}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] transition-colors disabled:opacity-50"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] transition-colors disabled:opacity-50"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
@@ -76,7 +71,7 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
             <div>
               <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">Invite Sent!</h3>
               <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-2 leading-relaxed">
-                An email has been sent to <span className="font-semibold">{email}</span> with a system-generated password and login instructions.
+                An email has been sent to <span className="font-semibold text-[#0b1c30] dark:text-white">{email}</span> with instructions to join the platform as a {role}.
               </p>
             </div>
           </div>
@@ -84,41 +79,44 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
           <form onSubmit={handleInvite} className="p-6 flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="email" className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                Collector Email
+                Email Address
               </label>
               <input
                 id="email"
                 type="email"
-                required
-                placeholder="e.g., kwame@smartsort.com"
+                placeholder="e.g., user@smartsort.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+                onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
+                className={`h-11 px-4 border rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
+                  emailError 
+                    ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20" 
+                    : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/20"
+                }`}
               />
+              {emailError && <span className="text-xs text-[#ba1a1a] font-medium">{emailError}</span>}
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="facility" className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                Assigned Facility
+              <label htmlFor="role" className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                Assigned Role
               </label>
               <select
-                id="facility"
-                value={facility}
-                onChange={(e) => setFacility(e.target.value)}
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
                 className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white bg-white dark:bg-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
               >
-                <option value="Facility 1">Facility 1</option>
-                <option value="Facility 2">Facility 2</option>
-                <option value="Facility 3">Facility 3</option>
-                <option value="Facility 4">Facility 4</option>
-                <option value="Facility 5">Facility 5</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+                <option value="Operator">Operator</option>
+                <option value="Viewer">Viewer</option>
               </select>
             </div>
 
             <div className="bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-3 mt-2 flex gap-3 items-start">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2" className="shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                The collector will automatically receive a welcome email with a link to the platform and a secure, system-generated temporary password.
+                The user will receive an email to set up their account and password. Their status will show as <span className="font-bold">Pending</span> until they complete registration.
               </p>
             </div>
 
@@ -132,7 +130,7 @@ export function InviteCollectorModal({ isOpen, onClose }: InviteCollectorModalPr
               </button>
               <button 
                 type="submit" 
-                disabled={status === 'sending' || !email}
+                disabled={status === 'sending'}
                 className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {status === 'sending' ? 'Sending...' : 'Send Invite'}

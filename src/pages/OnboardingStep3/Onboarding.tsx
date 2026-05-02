@@ -24,7 +24,7 @@ export default function Onboarding() {
           Smart<span className="text-[#006c49]">Sort</span>
         </span>
         <div className="flex gap-2">
-          <button className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+          <button className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
             Help
           </button>
         </div>

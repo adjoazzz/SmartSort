@@ -57,7 +57,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-[#f3f4f6] dark:bg-[#1a365d] flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-[440px] flex flex-col items-center gap-8">
         
         {/* Header / Branding */}
@@ -72,8 +72,8 @@ export default function Login() {
               <path d="M15 9H15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <h1 className="text-3xl font-extrabold text-[#121c28] tracking-tight">SmartSort</h1>
-          <p className="text-sm font-medium text-[#434655]/80 uppercase tracking-wide mt-1">
+          <h1 className="text-3xl font-extrabold text-[#121c28] dark:text-white tracking-tight">SmartSort</h1>
+          <p className="text-sm font-medium text-[#434655] dark:text-[#cbd5e1]/80 uppercase tracking-wide mt-1">
             Waste Intelligence for a Sustainable Future
           </p>
         </div>
@@ -83,7 +83,7 @@ export default function Login() {
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="text-xs font-semibold text-[#434655] uppercase tracking-wider">
+              <label htmlFor="email" className="text-xs font-semibold text-[#434655] dark:text-[#cbd5e1] uppercase tracking-wider">
                 EMAIL ADDRESS
               </label>
               <input
@@ -92,7 +92,7 @@ export default function Login() {
                 placeholder="user@smartsort.com"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
-                className={`h-12 px-4 border rounded-lg text-sm bg-[#eef4ff] text-[#0b1c30] dark:text-white placeholder-[#434655]/40 focus:outline-none focus:ring-2 transition-all ${
+                className={`h-12 px-4 border rounded-lg text-sm bg-[#eef4ff] dark:bg-[#1a365d] text-[#0b1c30] dark:text-white placeholder-[#434655]/40 focus:outline-none focus:ring-2 transition-all ${
                   emailError 
                     ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20" 
                     : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#398454] focus:ring-[#398454]/20"
@@ -103,10 +103,10 @@ export default function Login() {
 
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-xs font-semibold text-[#434655] uppercase tracking-wider">
+                <label htmlFor="password" className="text-xs font-semibold text-[#434655] dark:text-[#cbd5e1] uppercase tracking-wider">
                   PASSWORD
                 </label>
-                <button type="button" className="text-[10px] font-bold text-[#434655]/60 hover:text-[#398454] transition-colors relative group">
+                <button type="button" className="text-[10px] font-bold text-[#434655] dark:text-[#cbd5e1]/60 hover:text-[#398454] transition-colors relative group">
                   Forgot Password?
                   <div className="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-[#27313e] text-[#eaf1ff] text-[10px] px-2 py-1 rounded whitespace-nowrap pointer-events-none">
                     Coming Soon
@@ -118,7 +118,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
-                className={`h-12 px-4 border rounded-lg text-sm bg-[#eef4ff] text-[#0b1c30] dark:text-white placeholder-[#434655]/40 focus:outline-none focus:ring-2 transition-all ${
+                className={`h-12 px-4 border rounded-lg text-sm bg-[#eef4ff] dark:bg-[#1a365d] text-[#0b1c30] dark:text-white placeholder-[#434655]/40 focus:outline-none focus:ring-2 transition-all ${
                   passwordError 
                     ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20" 
                     : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#398454] focus:ring-[#398454]/20"
@@ -128,7 +128,7 @@ export default function Login() {
             </div>
 
             <label className="flex items-center gap-2 cursor-pointer group">
-              <div className="relative w-4 h-4 rounded border border-[#c3c6d7] bg-[#eef4ff] flex items-center justify-center group-hover:border-[#398454] transition-colors">
+              <div className="relative w-4 h-4 rounded border border-[#c3c6d7] dark:border-[#334155] bg-[#eef4ff] dark:bg-[#1a365d] flex items-center justify-center group-hover:border-[#398454] transition-colors">
                 {rememberMe && (
                   <svg className="w-3 h-3 text-[#398454]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -141,7 +141,7 @@ export default function Login() {
                 checked={rememberMe} 
                 onChange={(e) => setRememberMe(e.target.checked)} 
               />
-              <span className="text-xs font-medium text-[#434655]">Stay signed in for 30 days</span>
+              <span className="text-xs font-medium text-[#434655] dark:text-[#cbd5e1]">Stay signed in for 30 days</span>
             </label>
 
             <button
@@ -156,15 +156,15 @@ export default function Login() {
             <button
               type="button"
               onClick={() => navigate('/collector-dashboard')}
-              className="w-full h-10 rounded-lg bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#334155] hover:bg-[#f8fafc] dark:bg-[#0f2942] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm text-[#515f74] dark:text-[#cbd5e1]"
+              className="w-full h-10 rounded-lg bg-white dark:bg-[#1e3a5f] border border-[#cbd5e1] dark:border-[#334155] hover:bg-[#f8fafc] dark:hover:bg-[#274c77] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm text-[#515f74] dark:text-[#cbd5e1]"
             >
               <span className="text-xs font-bold tracking-wide">Demo Collector Login</span>
             </button>
           </form>
 
           {/* Footer Links */}
-          <div className="mt-8 pt-8 border-t border-[#c3c6d7]/20 flex items-center justify-center gap-1.5 text-xs">
-            <span className="font-medium text-[#434655]/60">New to the platform?</span>
+          <div className="mt-8 pt-8 border-t border-[#c3c6d7] dark:border-[#334155]/20 flex items-center justify-center gap-1.5 text-xs">
+            <span className="font-medium text-[#434655] dark:text-[#cbd5e1]/60">New to the platform?</span>
             <button onClick={() => navigate("/onboarding-1")} className="font-bold text-[#398454] hover:underline">Request access</button>
           </div>
         </div>
@@ -176,10 +176,10 @@ export default function Login() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#22c55e]"></span>
             </div>
-            <span className="text-[10px] font-bold text-[#434655]/70 uppercase tracking-tight">Systems Operational</span>
+            <span className="text-[10px] font-bold text-[#434655] dark:text-[#cbd5e1]/70 uppercase tracking-tight">Systems Operational</span>
           </div>
           <div className="w-px h-3 bg-[#434655]/20" />
-          <span className="text-[10px] font-bold text-[#434655]/70 uppercase tracking-tight">v4.2.0-stable</span>
+          <span className="text-[10px] font-bold text-[#434655] dark:text-[#cbd5e1]/70 uppercase tracking-tight">v4.2.0-stable</span>
         </div>
 
       </div>

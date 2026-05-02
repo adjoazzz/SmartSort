@@ -38,6 +38,7 @@ export default function CollectorDashboard() {
     <PageLayout
       title="Collector Dashboard"
       description="Welcome back, Kwame. Here are your tasks for today."
+      hideAlertsIcon={true}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <MetricCard
@@ -91,7 +92,7 @@ export default function CollectorDashboard() {
             </div>
           ) : (
             displayedJobs.map(job => (
-              <div key={job.id} className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]">
+              <div key={job.id} className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <span className="text-base font-bold text-[#0b1c30] dark:text-white">{job.location}</span>

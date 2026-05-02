@@ -158,7 +158,7 @@ export default function Analytics() {
       title="Waste Intelligence Analytics"
       description="Real-time performance metrics across your facility network."
       actions={
-        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
+        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#515f74" strokeWidth="2">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -276,7 +276,7 @@ export default function Analytics() {
         <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
           <div className="p-5 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
             <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">Category Breakdown</h2>
-            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors flex items-center gap-2">
+            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
               </svg>
@@ -300,7 +300,7 @@ export default function Analytics() {
               </thead>
               <tbody className="divide-y divide-[#f1f5f9]">
                 {CATEGORY_DATA.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                  <tr key={idx} className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                     <td className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1]">

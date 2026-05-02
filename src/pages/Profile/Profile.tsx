@@ -9,7 +9,7 @@ export default function Profile() {
       title="Collector Profile"
       description="Detailed view of collector performance and information."
       actions={
-        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
           Edit Profile
         </button>
       }
@@ -77,19 +77,19 @@ export default function Profile() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#f1f5f9]">
-                  <tr className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                  <tr className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">Today, 10:30 AM</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">North Hub Station B</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">142 kg</td>
                     <td className="px-6 py-3 whitespace-nowrap"><StatusBadge label="Completed" variant="success" /></td>
                   </tr>
-                  <tr className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                  <tr className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">Yesterday, 2:15 PM</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">East Sector Point 4</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">89 kg</td>
                     <td className="px-6 py-3 whitespace-nowrap"><StatusBadge label="Completed" variant="success" /></td>
                   </tr>
-                  <tr className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
+                  <tr className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">May 1, 09:00 AM</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">Central Hub Point 1</td>
                     <td className="px-6 py-3 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">210 kg</td>
