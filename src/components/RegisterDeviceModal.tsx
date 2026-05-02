@@ -31,18 +31,18 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
         <div
-          className="bg-white border border-[#e2e8f0] rounded-2xl shadow-2xl w-full max-w-lg pointer-events-auto flex flex-col"
+          className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-2xl w-full max-w-lg pointer-events-auto flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#f1f5f9]">
+          <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942]">
             <div>
-              <h3 className="text-xl font-semibold text-[#0b1c30]">Register New Device</h3>
-              <p className="text-xs text-[#515f74] mt-0.5">Connect a SmartSort unit to this facility</p>
+              <h3 className="text-xl font-semibold text-[#0b1c30] dark:text-white">Register New Device</h3>
+              <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">Connect a SmartSort unit to this facility</p>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 text-[#94a3b8] hover:text-[#0b1c30] hover:bg-[#f1f5f9] rounded-lg transition-colors"
+              className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:bg-[#1a365d] rounded-lg transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -74,8 +74,8 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                 </div>
               </div>
               <div>
-                <p className="text-sm font-semibold text-[#0b1c30]">Scan QR Code on Device</p>
-                <p className="text-xs text-[#515f74] mt-0.5 leading-relaxed">
+                <p className="text-sm font-semibold text-[#0b1c30] dark:text-white">Scan QR Code on Device</p>
+                <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed">
                   Point your camera at the QR code on the bin to auto-fill the serial number.
                 </p>
               </div>
@@ -90,7 +90,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                 value={serial}
                 onChange={setSerial}
               />
-              <p className="text-xs text-[#515f74] flex items-center gap-1.5">
+              <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] flex items-center gap-1.5">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zM7 4v4M7 10.5v-.5" stroke="#515f74" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -101,27 +101,27 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
             {/* Facility Switcher */}
             <div className="bg-[#eff4ff] border border-[#bbcabf] rounded-lg p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white border border-[#bbcabf] rounded-md flex items-center justify-center">
+                <div className="w-10 h-10 bg-white dark:bg-[#0b1c30] border border-[#bbcabf] rounded-md flex items-center justify-center">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6" stroke="#006c49" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-[#0b1c30]">Default Facility</span>
-                  <span className="text-sm text-[#515f74]">North Logistics Hub</span>
+                  <span className="text-xs font-semibold text-[#0b1c30] dark:text-white">Default Facility</span>
+                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">North Logistics Hub</span>
                 </div>
               </div>
               <button className="text-sm font-semibold text-[#006c49] hover:underline">Change</button>
             </div>
 
             {/* Support Note */}
-            <div className="border border-[#bbcabf]/50 bg-[#f8fafc] rounded-lg p-3 flex items-start gap-3">
+            <div className="border border-[#bbcabf]/50 bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg p-3 flex items-start gap-3">
               <svg className="w-4 h-4 text-[#23acf1] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
               <div>
-                <p className="text-xs font-semibold text-[#0b1c30]">Need help with installation?</p>
-                <p className="text-[11px] text-[#515f74] mt-0.5">Our technical team is available 24/7 for remote setup assistance.</p>
+                <p className="text-xs font-semibold text-[#0b1c30] dark:text-white">Need help with installation?</p>
+                <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5">Our technical team is available 24/7 for remote setup assistance.</p>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
           <div className="px-6 pb-6 pt-2 flex items-center gap-3">
             <button
               onClick={onClose}
-              className="flex-1 h-11 border border-[#e2e8f0] text-[#515f74] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] transition-colors"
+              className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors"
             >
               Cancel
             </button>

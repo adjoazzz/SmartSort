@@ -66,18 +66,18 @@ export default function CollectorDashboard() {
         />
       </div>
 
-      <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm flex flex-col overflow-hidden">
+      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
         {/* Tabs */}
-        <div className="flex border-b border-[#e2e8f0] bg-[#f8fafc]">
+        <div className="flex border-b border-[#e2e8f0] dark:border-[#1e3a5f] bg-[#f8fafc] dark:bg-[#0f2942]">
           <button 
             onClick={() => setActiveTab('available_jobs')}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'available_jobs' ? 'border-[#006c49] text-[#006c49] bg-white' : 'border-transparent text-[#64748b] hover:text-[#0b1c30]'}`}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'available_jobs' ? 'border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]' : 'border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
           >
             Available Jobs ({jobs.filter(j => !j.isAssignedToMe && j.status === 'Pending').length})
           </button>
           <button 
             onClick={() => setActiveTab('my_jobs')}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'my_jobs' ? 'border-[#006c49] text-[#006c49] bg-white' : 'border-transparent text-[#64748b] hover:text-[#0b1c30]'}`}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'my_jobs' ? 'border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]' : 'border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
           >
             My Assignments ({jobs.filter(j => j.isAssignedToMe && j.status !== 'Completed').length})
           </button>
@@ -86,20 +86,20 @@ export default function CollectorDashboard() {
         {/* List */}
         <div className="p-4 flex flex-col gap-4">
           {displayedJobs.length === 0 ? (
-            <div className="text-center py-12 text-[#94a3b8] text-sm">
+            <div className="text-center py-12 text-[#94a3b8] dark:text-[#64748b] text-sm">
               No jobs to show here.
             </div>
           ) : (
             displayedJobs.map(job => (
-              <div key={job.id} className="border border-[#e2e8f0] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] transition-colors bg-white">
+              <div key={job.id} className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-[#0b1c30]">{job.location}</span>
+                    <span className="text-base font-bold text-[#0b1c30] dark:text-white">{job.location}</span>
                     <StatusBadge label={job.urgency} variant={job.urgency === 'Critical' ? 'danger' : job.urgency === 'High' ? 'warning' : 'success'} />
                   </div>
-                  <span className="text-sm font-mono text-[#515f74]">{job.device} • {job.zone}</span>
+                  <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">{job.device} • {job.zone}</span>
                   <div className="flex items-center gap-2 mt-2">
-                    <div className="w-24 h-1.5 bg-[#f1f5f9] rounded-full overflow-hidden">
+                    <div className="w-24 h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full overflow-hidden">
                       <div className="h-full bg-[#ba1a1a] rounded-full" style={{ width: `${job.fill}%` }} />
                     </div>
                     <span className="text-xs font-bold text-[#ba1a1a]">{job.fill}% Full</span>

@@ -58,15 +58,15 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8f9ff] to-[#f0faf5]">
       {/* Header */}
-      <header className="h-16 bg-white border-b border-[#e2e8f0] flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
-        <span className="text-lg font-semibold text-[#0b1c30]">
+      <header className="h-16 bg-white dark:bg-[#0b1c30] border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
+        <span className="text-lg font-semibold text-[#0b1c30] dark:text-white">
           Smart<span className="text-[#006c49]">Sort</span>
         </span>
         <div className="flex gap-2">
-          <button className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
+          <button className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
             Help
           </button>
-          <button onClick={() => navigate("/")} className="px-3 py-1.5 text-sm text-[#515f74] border border-[#e2e8f0] rounded-lg hover:bg-[#f8fafc] transition-colors">
+          <button onClick={() => navigate("/")} className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors">
             Log in
           </button>
         </div>
@@ -79,8 +79,8 @@ export default function Onboarding() {
           {/* Left — Marketing / Info */}
           <div className="flex flex-col gap-8 bg-[#006c49] p-10 rounded-2xl text-white relative overflow-hidden shadow-lg h-full">
             {/* Decorative background blurs to match the original design intent */}
-            <div className="absolute bg-white/20 blur-[40px] w-64 h-64 rounded-full -bottom-10 -right-10 pointer-events-none" />
-            <div className="absolute bg-white/10 blur-[40px] w-64 h-64 rounded-full -top-10 -left-10 pointer-events-none" />
+            <div className="absolute bg-white dark:bg-[#0b1c30]/20 blur-[40px] w-64 h-64 rounded-full -bottom-10 -right-10 pointer-events-none" />
+            <div className="absolute bg-white dark:bg-[#0b1c30]/10 blur-[40px] w-64 h-64 rounded-full -top-10 -left-10 pointer-events-none" />
 
             <div className="relative z-10 flex flex-col gap-6">
               <h1 className="text-4xl font-bold leading-tight">
@@ -112,14 +112,14 @@ export default function Onboarding() {
           </div>
 
           {/* Right — Form */}
-          <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
+          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-xs font-semibold text-[#006c49] tracking-widest uppercase mb-1">CONFIGURATION</h2>
-                <h3 className="text-2xl font-semibold text-[#0b1c30]">Organization Details</h3>
+                <h3 className="text-2xl font-semibold text-[#0b1c30] dark:text-white">Organization Details</h3>
               </div>
               <div className="flex flex-col items-end gap-1">
-                <span className="text-sm font-medium text-[#515f74]">Step 2 of 2</span>
+                <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">Step 2 of 2</span>
                 <div className="w-16 h-1.5 bg-[#d5e3fd] rounded-full overflow-hidden">
                   <div className="w-full h-full bg-[#10b981]" />
                 </div>
@@ -200,7 +200,7 @@ export default function Onboarding() {
             <div className="border-t border-[#bbcabf] pt-6 flex items-center justify-between mt-2">
               <button 
                 onClick={() => navigate("/onboarding-1")}
-                className="flex items-center gap-2 text-sm font-semibold text-[#515f74] hover:text-[#0b1c30] transition-colors"
+                className="flex items-center gap-2 text-sm font-semibold text-[#515f74] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:text-white transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -224,14 +224,14 @@ export default function Onboarding() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#f8fafc] border-t border-[#e2e8f0] px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <footer className="bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold text-[#334155]">SmartSort Analytics</p>
-          <p className="text-xs text-[#64748b]">© 2024 SmartSort Analytics. Professional waste stewardship.</p>
+          <p className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">© 2024 SmartSort Analytics. Professional waste stewardship.</p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-1">
           {["Privacy policy", "Terms of service", "Environmental compliance", "Support"].map((l) => (
-            <a key={l} href="#" className="text-xs text-[#64748b] hover:text-[#006c49] transition-colors">
+            <a key={l} href="#" className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] transition-colors">
               {l}
             </a>
           ))}
@@ -241,20 +241,20 @@ export default function Onboarding() {
       {/* Verification Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0b1c30]/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 flex flex-col gap-4 text-center items-center">
               <div className="w-16 h-16 bg-[#e1f5ee] rounded-full flex items-center justify-center mb-2">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-[#006c49]">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-[#0b1c30]">Verification Pending</h3>
-              <p className="text-sm text-[#515f74] leading-relaxed">
+              <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">Verification Pending</h3>
+              <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
                 Your details have been securely submitted. A facility administrator will review your information shortly.
                 You will receive an email notification once your account has been verified.
               </p>
             </div>
-            <div className="px-6 py-5 bg-[#f8fafc] border-t border-[#e2e8f0]">
+            <div className="px-6 py-5 bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f]">
               <button
                 onClick={() => navigate("/")}
                 className="w-full h-11 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all shadow-sm"
