@@ -24,14 +24,14 @@ export function MetricCard({
 }: MetricCardProps) {
   
   // Determine trend styling
-  let trendColor = 'text-[#515f74]';
+  let trendColor = 'text-[#515f74] dark:text-[#cbd5e1]';
   if (trendDirection === 'up') trendColor = 'text-[#006c49]';
   if (trendDirection === 'down') trendColor = 'text-[#ba1a1a]';
 
   const cardContent = (
     <>
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold text-[#515f74] uppercase tracking-wider">
+        <h3 className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
           {title}
         </h3>
         
@@ -44,11 +44,11 @@ export function MetricCard({
 
       <div className="flex flex-col gap-1 mt-2">
         <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold text-[#0b1c30] tracking-tight">
+          <span className="text-3xl font-bold text-[#0b1c30] dark:text-white tracking-tight">
             {value}
           </span>
           {linkTo && (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#94a3b8] group-hover:text-[#006c49] transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-[#94a3b8] dark:text-[#64748b] group-hover:text-[#006c49] transition-colors">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           )}
@@ -82,7 +82,7 @@ export function MetricCard({
     </>
   );
 
-  const baseClasses = "bg-white border border-[#e2e8f0] rounded-xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all h-[150px] group";
+  const baseClasses = "bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all h-[150px] group";
 
   if (linkTo) {
     return (
