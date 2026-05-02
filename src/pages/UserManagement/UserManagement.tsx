@@ -61,17 +61,17 @@ const KPIS = [
   },
   {
     title: 'Security Score', value: '98%', trend: 'Excellent', trendDirection: 'up' as const,
-    iconColorClass: 'text-[#515f74]', iconBgClass: 'bg-[#f1f5f9]',
+    iconColorClass: 'text-[#515f74] dark:text-[#cbd5e1]', iconBgClass: 'bg-[#f1f5f9] dark:bg-[#1a365d]',
     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
   },
 ];
 
 const AUDIT_LOG: AuditEntry[] = [
-  { time: '14:22', title: 'User Role Updated', desc: <><span className="font-bold text-[#0b1c30]">Sarah Chen</span> changed <span className="font-bold text-[#0b1c30]">Marcus Wright's</span> role from Viewer to Manager.</>, color: 'text-[#0b1c30]' },
-  { time: '12:05', title: 'New User Invited', desc: <><span className="font-bold text-[#0b1c30]">Sarah Chen</span> invited <span className="font-bold text-[#0b1c30]">Elena Rodriguez</span> as Viewer.</>, color: 'text-[#006c49]' },
-  { time: '09:15', title: 'Security Alert', desc: <>Failed login attempt for user <span className="font-bold text-[#0b1c30]">j.smith@unknown.com</span> from IP 192.168.1.104.</>, color: 'text-[#ba1a1a]' },
-  { time: 'Yesterday', title: 'System Configuration Changed', desc: <>Device sensitivity thresholds adjusted globally by <span className="font-bold text-[#0b1c30]">Marcus Wright</span>.</>, color: 'text-[#0b1c30]' },
-  { time: 'Yesterday', title: 'Scheduled Backup Completed', desc: <>System automated backup completed successfully. 4.2GB archived.</>, color: 'text-[#0b1c30]' },
+  { time: '14:22', title: 'User Role Updated', desc: <><span className="font-bold text-[#0b1c30] dark:text-white">Sarah Chen</span> changed <span className="font-bold text-[#0b1c30] dark:text-white">Marcus Wright's</span> role from Viewer to Manager.</>, color: 'text-[#0b1c30] dark:text-white' },
+  { time: '12:05', title: 'New User Invited', desc: <><span className="font-bold text-[#0b1c30] dark:text-white">Sarah Chen</span> invited <span className="font-bold text-[#0b1c30] dark:text-white">Elena Rodriguez</span> as Viewer.</>, color: 'text-[#006c49]' },
+  { time: '09:15', title: 'Security Alert', desc: <>Failed login attempt for user <span className="font-bold text-[#0b1c30] dark:text-white">j.smith@unknown.com</span> from IP 192.168.1.104.</>, color: 'text-[#ba1a1a]' },
+  { time: 'Yesterday', title: 'System Configuration Changed', desc: <>Device sensitivity thresholds adjusted globally by <span className="font-bold text-[#0b1c30] dark:text-white">Marcus Wright</span>.</>, color: 'text-[#0b1c30] dark:text-white' },
+  { time: 'Yesterday', title: 'Scheduled Backup Completed', desc: <>System automated backup completed successfully. 4.2GB archived.</>, color: 'text-[#0b1c30] dark:text-white' },
 ];
 
 const PERMISSIONS: PermGroup[] = [
@@ -84,7 +84,7 @@ const PERMISSIONS: PermGroup[] = [
     perms: [{ label: 'User Management', granted: false }, { label: 'Device Control', granted: true }, { label: 'Report Creation', granted: true }, { label: 'Analytics Access', granted: true }],
   },
   {
-    role: 'Viewer', badgeBg: 'bg-[#f1f5f9]', badgeText: 'text-[#515f74]', badgeBorder: 'border-[#e2e8f0]', badgeLabel: 'Read Only',
+    role: 'Viewer', badgeBg: 'bg-[#f1f5f9] dark:bg-[#1a365d]', badgeText: 'text-[#515f74] dark:text-[#cbd5e1]', badgeBorder: 'border-[#e2e8f0] dark:border-[#1e3a5f]', badgeLabel: 'Read Only',
     perms: [{ label: 'Control Actions', granted: false }, { label: 'View Dashboards', granted: true }, { label: 'Export Reports', granted: true }, { label: 'Edit Settings', granted: false }],
   },
 ];
@@ -128,11 +128,11 @@ function PermIcon({ granted }: { granted: boolean }) {
 /** User avatar with image fallback to initials */
 function UserAvatar({ name, avatar }: { name: string; avatar: string | null }) {
   return (
-    <div className="w-9 h-9 rounded-full bg-[#f1f5f9] overflow-hidden border border-[#e2e8f0] flex items-center justify-center shrink-0">
+    <div className="w-9 h-9 rounded-full bg-[#f1f5f9] dark:bg-[#1a365d] overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-center shrink-0">
       {avatar ? (
         <img src={avatar} alt={name} className="w-full h-full object-cover" />
       ) : (
-        <span className="text-xs font-bold text-[#515f74]">{getInitials(name)}</span>
+        <span className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1]">{getInitials(name)}</span>
       )}
     </div>
   );
@@ -144,7 +144,7 @@ function ActionMenu({ userId, isOpen, onToggle, onClose }: {
 }) {
   return (
     <div className="relative inline-block">
-      <button onClick={onToggle} className="p-1.5 text-[#94a3b8] hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors" title="More actions">
+      <button onClick={onToggle} className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors" title="More actions">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
           <circle cx="12" cy="5" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="12" cy="19" r="2" />
         </svg>
@@ -153,14 +153,14 @@ function ActionMenu({ userId, isOpen, onToggle, onClose }: {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={onClose} />
-          <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-[#e2e8f0] rounded-lg shadow-lg z-50 py-1">
+          <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg shadow-lg z-50 py-1">
             {ACTION_MENU_ITEMS.map((item, idx) => (
               <React.Fragment key={item.key}>
-                {item.danger && <div className="border-t border-[#f1f5f9] my-1" />}
+                {item.danger && <div className="border-t border-[#f1f5f9] dark:border-[#0f2942] my-1" />}
                 <button
                   onClick={() => { console.log(`${item.key}:`, userId); onClose(); }}
                   className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
-                    item.danger ? 'text-[#ba1a1a] hover:bg-[#ffdad6]/30' : 'text-[#0b1c30] hover:bg-[#f8fafc]'
+                    item.danger ? 'text-[#ba1a1a] hover:bg-[#ffdad6]/30' : 'text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:bg-[#0f2942]'
                   }`}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={item.danger ? 'currentColor' : '#515f74'} strokeWidth="2">{item.icon}</svg>
@@ -178,9 +178,9 @@ function ActionMenu({ userId, isOpen, onToggle, onClose }: {
 /** Card wrapper used by both the Audit Log and Permissions panels */
 function PanelCard({ title, action, children }: { title: string; action?: ReactNode; children: ReactNode }) {
   return (
-    <div className="bg-white rounded-xl border border-[#e2e8f0] shadow-sm flex flex-col h-[400px]">
-      <div className="px-6 py-4 border-b border-[#e2e8f0] flex items-center justify-between shrink-0">
-        <h3 className="font-semibold text-[#0b1c30] text-sm">{title}</h3>
+    <div className="bg-white dark:bg-[#0b1c30] rounded-xl border border-[#e2e8f0] dark:border-[#1e3a5f] shadow-sm flex flex-col h-[400px]">
+      <div className="px-6 py-4 border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between shrink-0">
+        <h3 className="font-semibold text-[#0b1c30] dark:text-white text-sm">{title}</h3>
         {action}
       </div>
       {children}
@@ -203,7 +203,7 @@ export default function UserManagement() {
     return matchesSearch && matchesRole;
   });
 
-  const TH = "px-6 py-4 text-[11px] font-bold text-[#515f74] uppercase tracking-wider";
+  const TH = "px-6 py-4 text-[11px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider";
 
   return (
     <PageLayout
@@ -227,23 +227,23 @@ export default function UserManagement() {
       </div>
 
       {/* ── User Table ────────────────────────────────────── */}
-      <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-sm flex flex-col overflow-hidden">
+      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="p-4 border-b border-[#f1f5f9] bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center w-full max-w-md bg-[#f8fafc] rounded-lg border border-[#e2e8f0] focus-within:border-[#cbd5e1] focus-within:bg-white focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+        <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center w-full max-w-md bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3 shrink-0">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <input
               type="text"
               placeholder="Search by name or email..."
-              className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] placeholder-[#94a3b8] w-full"
+              className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <select
-            className="bg-white border border-[#e2e8f0] text-[#515f74] text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+            className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
           >
@@ -259,7 +259,7 @@ export default function UserManagement() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="bg-[#f8fafc] border-b border-[#e2e8f0]">
+              <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
                 {['User', 'Email Address', 'Role', 'Status', 'Last Login'].map(h => (
                   <th key={h} className={TH}>{h}</th>
                 ))}
@@ -268,17 +268,17 @@ export default function UserManagement() {
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {filteredData.map((user) => (
-                <tr key={user.id} className="hover:bg-[#f8fafc] transition-colors group">
+                <tr key={user.id} className="hover:bg-[#f8fafc] dark:bg-[#0f2942] transition-colors group">
                   <td className="px-6 py-3.5 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <UserAvatar name={user.name} avatar={user.avatar} />
-                      <span className="text-sm font-semibold text-[#0b1c30]">{user.name}</span>
+                      <span className="text-sm font-semibold text-[#0b1c30] dark:text-white">{user.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-3.5 whitespace-nowrap text-sm text-[#515f74]">{user.email}</td>
+                  <td className="px-6 py-3.5 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">{user.email}</td>
                   <td className="px-6 py-3.5 whitespace-nowrap"><StatusBadge label={user.role} variant={getRoleVariant(user.role) as any} /></td>
                   <td className="px-6 py-3.5 whitespace-nowrap"><StatusBadge label={user.status} variant={getStatusVariant(user.status) as any} hasDot /></td>
-                  <td className="px-6 py-3.5 whitespace-nowrap text-sm text-[#515f74]">{user.lastLogin}</td>
+                  <td className="px-6 py-3.5 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">{user.lastLogin}</td>
                   <td className="px-6 py-3.5 whitespace-nowrap text-right">
                     <ActionMenu
                       userId={user.id}
@@ -290,25 +290,25 @@ export default function UserManagement() {
                 </tr>
               ))}
               {filteredData.length === 0 && (
-                <tr><td colSpan={6} className="px-6 py-12 text-center text-[#94a3b8] text-sm">No users found matching your criteria</td></tr>
+                <tr><td colSpan={6} className="px-6 py-12 text-center text-[#94a3b8] dark:text-[#64748b] text-sm">No users found matching your criteria</td></tr>
               )}
             </tbody>
           </table>
         </div>
 
         {/* Pagination Footer */}
-        <div className="px-6 py-4 border-t border-[#f1f5f9] bg-[#f8fafc]/50 flex items-center justify-between mt-auto">
-          <p className="text-xs text-[#515f74]">
-            Showing <span className="font-bold text-[#0b1c30]">{filteredData.length}</span> of {USERS_DATA.length} users
+        <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942]/50 flex items-center justify-between mt-auto">
+          <p className="text-xs text-[#515f74] dark:text-[#cbd5e1]">
+            Showing <span className="font-bold text-[#0b1c30] dark:text-white">{filteredData.length}</span> of {USERS_DATA.length} users
           </p>
           <div className="flex items-center gap-1">
-            <button className="p-1 text-[#94a3b8] disabled:opacity-30 cursor-not-allowed" disabled>
+            <button className="p-1 text-[#94a3b8] dark:text-[#64748b] disabled:opacity-30 cursor-not-allowed" disabled>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
             {[1, 2, 3].map(n => (
-              <button key={n} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${n === 1 ? 'bg-[#006c49]/10 text-[#006c49]' : 'text-[#515f74] hover:bg-[#f1f5f9]'}`}>{n}</button>
+              <button key={n} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${n === 1 ? 'bg-[#006c49]/10 text-[#006c49]' : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:bg-[#1a365d]'}`}>{n}</button>
             ))}
-            <button className="p-1 text-[#94a3b8] hover:text-[#0b1c30] transition-colors">
+            <button className="p-1 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </button>
           </div>
@@ -324,11 +324,11 @@ export default function UserManagement() {
             {AUDIT_LOG.map((entry, idx) => (
               <div key={idx} className="flex gap-4 items-start">
                 <div className="min-w-[52px] pt-0.5 text-right shrink-0">
-                  <span className="text-[10px] font-bold text-[#94a3b8] uppercase">{entry.time}</span>
+                  <span className="text-[10px] font-bold text-[#94a3b8] dark:text-[#64748b] uppercase">{entry.time}</span>
                 </div>
-                <div className={`flex-1 ${idx < AUDIT_LOG.length - 1 ? 'pb-4 border-b border-[#f1f5f9]' : ''}`}>
+                <div className={`flex-1 ${idx < AUDIT_LOG.length - 1 ? 'pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942]' : ''}`}>
                   <p className={`text-sm font-semibold ${entry.color}`}>{entry.title}</p>
-                  <p className="text-xs text-[#515f74] mt-1 leading-relaxed">{entry.desc}</p>
+                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-1 leading-relaxed">{entry.desc}</p>
                 </div>
               </div>
             ))}
@@ -346,14 +346,14 @@ export default function UserManagement() {
         >
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {PERMISSIONS.map((group, idx) => (
-              <div key={idx} className={idx > 0 ? 'pt-6 border-t border-[#f1f5f9]' : ''}>
+              <div key={idx} className={idx > 0 ? 'pt-6 border-t border-[#f1f5f9] dark:border-[#0f2942]' : ''}>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-bold text-sm text-[#0b1c30]">{group.role}</span>
+                  <span className="font-bold text-sm text-[#0b1c30] dark:text-white">{group.role}</span>
                   <span className={`text-[10px] px-2 py-0.5 rounded border font-bold uppercase ${group.badgeBg} ${group.badgeText} ${group.badgeBorder}`}>{group.badgeLabel}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {group.perms.map((perm, pIdx) => (
-                    <div key={pIdx} className="flex items-center gap-2 text-xs text-[#515f74]">
+                    <div key={pIdx} className="flex items-center gap-2 text-xs text-[#515f74] dark:text-[#cbd5e1]">
                       <PermIcon granted={perm.granted} />
                       {perm.label}
                     </div>
