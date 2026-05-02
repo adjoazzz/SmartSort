@@ -11,7 +11,7 @@ interface ProfilePopupProps {
 
 const otherAccounts = [
   {
-    initials: 'F',
+    initials: 'J',
     name: 'Jane Simmons',
     email: 'JaneSimmons@user.com',
     color: '#78909C',
