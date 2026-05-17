@@ -9,7 +9,15 @@ interface ProfilePopupProps {
   anchorRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-const otherAccounts = [
+interface Account {
+  initials: string;
+  name: string;
+  email: string;
+  color: string;
+  ringColor?: string;
+}
+
+const otherAccounts: Account[] = [
   {
     initials: 'J',
     name: 'Jane Simmons',
