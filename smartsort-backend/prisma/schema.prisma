@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// The Smart Bin Device
+model Device {
+  id             String          @id @default(uuid())
+  customBinId    String          @unique // e.g., "BIN_001"
+  location       String
+  fillLevel      Int             @default(0)
+  status         String          @default("Active") // Active, Offline, Maintenance
+  lastSortedItem String?         
+  updatedAt      DateTime        @updatedAt
+  createdAt      DateTime        @default(now())
+
+  // Relationships
+  collectionJobs CollectionJob[]
+}
+
+// Collection Jobs for the Collectors
+model CollectionJob {
+  id          String   @id @default(uuid())
+  status      String   @default("Pending") // Pending, In Progress, Completed
+  priority    String   @default("Normal")  // Normal, High, Urgent
+  createdAt   DateTime @default(now())
+
+  // Connecting the job to a specific device
+  device      Device   @relation(fields: [deviceId], references: [id])
+  deviceId    String
+
+  // Eventually, you will connect this to a User (Collector)
+  collectorId String?  
+}
+
+// Community Feedback
+model Feedback {
+  id        String   @id @default(uuid())
+  userEmail String
+  message   String
+  category  String   // e.g., "Missed Pickup", "Damaged Bin"
+  createdAt DateTime @default(now())
+}
