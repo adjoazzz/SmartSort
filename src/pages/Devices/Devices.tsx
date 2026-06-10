@@ -1,8 +1,9 @@
-import React, { use, useState } from "react";
+import React, { use, useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { RegisterDeviceModal } from "../../components/RegisterDeviceModal";
-import { useEffect } from "react";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
+import { Progress } from "../../components/ui/progress";
 
 // // Mock Data for Devices
 // const DEVICE_FLEET_DATA = [
@@ -180,111 +181,111 @@ export default function Devices() {
           </div>
 
           {/* Data Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[700px]">
-              <thead>
-                <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
-                  <th className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] uppercase tracking-wider">
-                    Unit Name
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] uppercase tracking-wider">
-                    Fill %
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] uppercase tracking-wider">
-                    Last Active
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] uppercase tracking-wider">
-                    Firmware
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f1f5f9]">
-                {filteredData.map((device, idx) => (
-                  <tr
-                    key={device.id}
-                    onClick={() => setSelectedDevice(device.id)}
-                    className={`hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group cursor-pointer relative ${selectedDevice === device.id ? "bg-[#f8fafc] dark:bg-[#0f2942]" : ""}`}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap relative">
-                      {selectedDevice === device.id && (
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#10b981]"></div>
-                      )}
-                      <div className="flex flex-col">
-                        <span
-                          className={`text-sm font-medium ${selectedDevice === device.id ? "text-[#065f46]" : "text-[#065f46] group-hover:text-[#006c49]"}`}
-                        >
-                          {device.name}
-                        </span>
-                        <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] font-mono mt-0.5">
-                          ID: {device.id}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                      {device.location}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <StatusBadge
-                        label={
-                          device.status === "Critical"
-                            ? "Critical"
-                            : device.status
-                        }
-                        variant={
-                          device.status === "Online"
-                            ? "success"
-                            : device.status === "Offline"
-                              ? "neutral"
-                              : device.status === "Critical"
-                                ? "danger"
-                                : "warning"
-                        }
-                        hasDot
+          <Table className="min-w-[700px]">
+            <TableHeader>
+              <TableRow className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                  Unit Name
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                  Location
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                  Status
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                  Fill %
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                  Last Active
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                  Firmware
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-[#f1f5f9]">
+              {filteredData.map((device, idx) => (
+                <TableRow
+                  key={device.id}
+                  onClick={() => setSelectedDevice(device.id)}
+                  className={`hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group cursor-pointer relative border-b border-[#f1f5f9] ${selectedDevice === device.id ? "bg-[#f8fafc] dark:bg-[#0f2942]" : ""}`}
+                >
+                  <TableCell className="px-6 py-4 whitespace-nowrap relative">
+                    {selectedDevice === device.id && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#10b981]"></div>
+                    )}
+                    <div className="flex flex-col">
+                      <span
+                        className={`text-sm font-medium ${selectedDevice === device.id ? "text-[#065f46]" : "text-[#065f46] group-hover:text-[#006c49]"}`}
+                      >
+                        {device.name}
+                      </span>
+                      <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] font-mono mt-0.5">
+                        ID: {device.id}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                    {device.location}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
+                    <StatusBadge
+                      label={
+                        device.status === "Critical"
+                          ? "Critical"
+                          : device.status
+                      }
+                      variant={
+                        device.status === "Online"
+                          ? "success"
+                          : device.status === "Offline"
+                            ? "neutral"
+                            : device.status === "Critical"
+                              ? "danger"
+                              : "warning"
+                      }
+                      hasDot
+                    />
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-3 w-24">
+                      <Progress
+                        value={device.fill}
+                        className={`h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] ${
+                          device.fill > 85
+                            ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                            : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                        }`}
                       />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-3 w-24">
-                        <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className={`h-full rounded-full ${device.fill > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]"}`}
-                            style={{ width: `${device.fill}%` }}
-                          />
-                        </div>
-                        <span
-                          className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-[#0b1c30] dark:text-white"} w-8`}
-                        >
-                          {device.fill}%
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                      {device.lastActive}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-[#94a3b8] dark:text-[#64748b]">
-                      {device.firmware}
-                    </td>
-                  </tr>
-                ))}
+                      <span
+                        className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-[#0b1c30] dark:text-white"} w-8`}
+                      >
+                        {device.fill}%
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                    {device.lastActive}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-xs text-[#94a3b8] dark:text-[#64748b]">
+                    {device.firmware}
+                  </TableCell>
+                </TableRow>
+              ))}
 
-                {filteredData.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-12 text-center text-[#94a3b8] dark:text-[#64748b] text-sm"
-                    >
-                      No devices found matching "{searchTerm}"
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+              {filteredData.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="px-6 py-12 text-center text-[#94a3b8] dark:text-[#64748b] text-sm"
+                  >
+                    No devices found matching "{searchTerm}"
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
 
           {/* Pagination Footer */}
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex items-center justify-between mt-auto">

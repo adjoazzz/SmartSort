@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
 
 const ALERTS_DATA = [
   {
@@ -321,94 +322,92 @@ export default function Alerts() {
 
         {/* Data Table */}
         <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden flex flex-col">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[900px]">
-              <thead>
-                <tr className="border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
-                  <th className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
-                    DEVICE
-                  </th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
-                    SEVERITY
-                  </th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider w-[40%]">
-                    MESSAGE
-                  </th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
-                    TIMESTAMP
-                  </th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
-                    ACTIONS
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f1f5f9]">
-                {ALERTS_DATA.map((alert) => (
-                  <tr
-                    key={alert.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
-                  >
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center">
-                          <DeviceIcon type={alert.deviceIcon} />
+          <Table className="min-w-[900px]">
+            <TableHeader>
+              <TableRow className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  DEVICE
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  SEVERITY
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider w-[40%]">
+                  MESSAGE
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  TIMESTAMP
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  ACTIONS
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-[#f1f5f9]">
+              {ALERTS_DATA.map((alert) => (
+                <TableRow
+                  key={alert.id}
+                  className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                >
+                  <TableCell className="px-6 py-5 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center">
+                        <DeviceIcon type={alert.deviceIcon} />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                          {alert.deviceName}
                         </div>
-                        <div>
-                          <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                            {alert.deviceName}
-                          </div>
-                          <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
-                            {alert.deviceLocation}
-                          </div>
+                        <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
+                          {alert.deviceLocation}
                         </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <StatusBadge
-                        label={alert.severity}
-                        variant={
-                          alert.severity === "CRITICAL" ? "danger" : "info"
-                        }
-                        hasDot
-                      />
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                        {alert.messageTitle}
-                      </div>
-                      <div className="text-[13px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed pr-4">
-                        {alert.messageDesc}
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                        {alert.timestampMain}
-                      </div>
-                      <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
-                        {alert.timestampSub}
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="flex gap-2">
-                        {alert.actions.map((action, i) => (
-                          <button
-                            key={i}
-                            className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors ${
-                              action.type === "primary"
-                                ? "bg-[#006c49] text-white hover:bg-[#005a3c]"
-                                : "bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#334155] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9]"
-                            }`}
-                          >
-                            {action.label}
-                          </button>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-5 whitespace-nowrap">
+                    <StatusBadge
+                      label={alert.severity}
+                      variant={
+                        alert.severity === "CRITICAL" ? "danger" : "info"
+                      }
+                      hasDot
+                    />
+                  </TableCell>
+                  <TableCell className="px-6 py-5">
+                    <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                      {alert.messageTitle}
+                    </div>
+                    <div className="text-[13px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed pr-4">
+                      {alert.messageDesc}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-5 whitespace-nowrap">
+                    <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                      {alert.timestampMain}
+                    </div>
+                    <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
+                      {alert.timestampSub}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-5 whitespace-nowrap">
+                    <div className="flex gap-2">
+                      {alert.actions.map((action, i) => (
+                        <button
+                          key={i}
+                          className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors ${
+                            action.type === "primary"
+                              ? "bg-[#006c49] text-white hover:bg-[#005a3c]"
+                              : "bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#334155] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9]"
+                          }`}
+                        >
+                          {action.label}
+                        </button>
+                      ))}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
           <div className="border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-3 flex items-center justify-between bg-white dark:bg-[#0b1c30]">
             <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { MetricCard } from "../../components/MetricCard";
+import { Progress } from "../../components/ui/progress";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../components/ui/tabs";
 
 const COLLECTOR_JOBS = [
   {
@@ -127,102 +129,104 @@ export default function CollectorDashboard() {
       </div>
 
       <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
-        {/* Tabs */}
-        <div className="flex border-b border-[#e2e8f0] dark:border-[#1e3a5f] bg-[#f8fafc] dark:bg-[#0f2942]">
-          <button
-            onClick={() => setActiveTab("available_jobs")}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === "available_jobs" ? "border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]" : "border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white"}`}
-          >
-            Available Jobs (
-            {
-              jobs.filter((j) => !j.isAssignedToMe && j.status === "Pending")
-                .length
-            }
-            )
-          </button>
-          <button
-            onClick={() => setActiveTab("my_jobs")}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === "my_jobs" ? "border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]" : "border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white"}`}
-          >
-            My Assignments (
-            {
-              jobs.filter((j) => j.isAssignedToMe && j.status !== "Completed")
-                .length
-            }
-            )
-          </button>
-        </div>
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full gap-0">
+          {/* Tabs */}
+          <TabsList className="flex w-full justify-start rounded-none bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f] p-0 h-auto gap-0">
+            <TabsTrigger
+              value="available_jobs"
+              className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-[#0b1c30] text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
+            >
+              Available Jobs (
+              {
+                jobs.filter((j) => !j.isAssignedToMe && j.status === "Pending")
+                  .length
+              }
+              )
+            </TabsTrigger>
+            <TabsTrigger
+              value="my_jobs"
+              className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-[#0b1c30] text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
+            >
+              My Assignments (
+              {
+                jobs.filter((j) => j.isAssignedToMe && j.status !== "Completed")
+                  .length
+              }
+              )
+            </TabsTrigger>
+          </TabsList>
 
-        {/* List */}
-        <div className="p-4 flex flex-col gap-4">
-          {displayedJobs.length === 0 ? (
-            <div className="text-center py-12 text-[#94a3b8] dark:text-[#64748b] text-sm">
-              No jobs to show here.
-            </div>
-          ) : (
-            displayedJobs.map((job) => (
-              <div
-                key={job.id}
-                className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]"
-              >
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-[#0b1c30] dark:text-white">
-                      {job.location}
-                    </span>
-                    <StatusBadge
-                      label={job.urgency}
-                      variant={
-                        job.urgency === "Critical"
-                          ? "danger"
-                          : job.urgency === "High"
-                            ? "warning"
-                            : "success"
-                      }
-                    />
-                  </div>
-                  <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
-                    {job.device} • {job.zone}
-                  </span>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="w-24 h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[#ba1a1a] rounded-full"
-                        style={{ width: `${job.fill}%` }}
-                      />
+          <TabsContent value={activeTab} className="p-0 m-0">
+            {/* List */}
+            <div className="p-4 flex flex-col gap-4">
+              {displayedJobs.length === 0 ? (
+                <div className="text-center py-12 text-[#94a3b8] dark:text-[#64748b] text-sm">
+                  No jobs to show here.
+                </div>
+              ) : (
+                displayedJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-base font-bold text-[#0b1c30] dark:text-white">
+                          {job.location}
+                        </span>
+                        <StatusBadge
+                          label={job.urgency}
+                          variant={
+                            job.urgency === "Critical"
+                              ? "danger"
+                              : job.urgency === "High"
+                                ? "warning"
+                                : "success"
+                          }
+                        />
+                      </div>
+                      <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                        {job.device} • {job.zone}
+                      </span>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Progress
+                          value={job.fill}
+                          className="w-24 h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                        />
+                        <span className="text-xs font-bold text-[#ba1a1a]">
+                          {job.fill}% Full
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-xs font-bold text-[#ba1a1a]">
-                      {job.fill}% Full
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex items-center sm:justify-end gap-2">
-                  {activeTab === "available_jobs" ? (
-                    <button
-                      onClick={() => handleClaimJob(job.id)}
-                      className="px-4 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors"
-                    >
-                      Claim Job
-                    </button>
-                  ) : job.status !== "Completed" ? (
-                    <>
-                      <StatusBadge label={job.status} variant="info" hasDot />
-                      <button
-                        onClick={() => handleCompleteJob(job.id)}
-                        className="px-4 py-2 bg-[#0b1c30] text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors"
-                      >
-                        Complete
-                      </button>
-                    </>
-                  ) : (
-                    <StatusBadge label="Completed" variant="success" hasDot />
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+                    <div className="flex items-center sm:justify-end gap-2">
+                      {activeTab === "available_jobs" ? (
+                        <button
+                          onClick={() => handleClaimJob(job.id)}
+                          className="px-4 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors cursor-pointer"
+                        >
+                          Claim Job
+                        </button>
+                      ) : job.status !== "Completed" ? (
+                        <>
+                          <StatusBadge label={job.status} variant="info" hasDot />
+                          <button
+                            onClick={() => handleCompleteJob(job.id)}
+                            className="px-4 py-2 bg-[#0b1c30] text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors cursor-pointer"
+                          >
+                            Complete
+                          </button>
+                        </>
+                      ) : (
+                        <StatusBadge label="Completed" variant="success" hasDot />
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </PageLayout>
   );

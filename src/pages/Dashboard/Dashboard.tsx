@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
-import { ProgressBar } from "../../components/ProgressBar";
 import { StatusBadge } from "../../components/StatusBadge";
+import { Progress } from "../../components/ui/progress";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
 
 import imgEventSnap from "../../assets/9389a9333045e821be3474418e89b876d4fc0c10.png";
 import imgEventSnap1 from "../../assets/8811709787b7f35f6b7245b79da448b564be54ea.png";
@@ -366,12 +367,20 @@ export default function Dashboard() {
           </div>
           <div className="p-6 flex flex-col gap-6 flex-1">
             {displayBins.map((bin, idx) => (
-              <ProgressBar
-                key={idx}
-                label={bin.label}
-                value={bin.value}
-                colorClass={bin.color}
-              />
+              <div key={idx} className="flex flex-col gap-2 w-full">
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-[#0b1c30] dark:text-white">{bin.label}</span>
+                  <span className="text-[#515f74] dark:text-[#cbd5e1]">{bin.value}%</span>
+                </div>
+                <Progress
+                  value={bin.value}
+                  className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${
+                    bin.color === "bg-[#ba1a1a]"
+                      ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                      : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                  }`}
+                />
+              </div>
             ))}
           </div>
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942] rounded-b-xl">
@@ -393,68 +402,66 @@ export default function Dashboard() {
             <StatusBadge label="Action Required" variant="danger" hasDot />
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[700px]">
-              <thead>
-                <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                    Timestamp
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                    Source
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                    Detection
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                    Confidence
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                    Visual
-                  </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f1f5f9]">
-                {RECENT_EVENTS.map((evt) => (
-                  <tr
-                    key={evt.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                      {evt.time}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
-                      {evt.source}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <StatusBadge
-                        label={evt.detection}
-                        variant={evt.detectionType as any}
+          <Table className="min-w-[700px]">
+            <TableHeader>
+              <TableRow className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#f1f5f9] dark:border-[#0f2942] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                  Timestamp
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                  Source
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                  Detection
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                  Confidence
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                  Visual
+                </TableHead>
+                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                  Action
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-[#f1f5f9]">
+              {RECENT_EVENTS.map((evt) => (
+                <TableRow
+                  key={evt.id}
+                  className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                >
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                    {evt.time}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                    {evt.source}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
+                    <StatusBadge
+                      label={evt.detection}
+                      variant={evt.detectionType as any}
+                    />
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
+                    {evt.confidence}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap">
+                    <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                      <img
+                        src={evt.img}
+                        alt="Snapshot"
+                        className="w-full h-full object-cover"
                       />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
-                      {evt.confidence}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
-                        <img
-                          src={evt.img}
-                          alt="Snapshot"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
-                      {evt.action}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
+                    {evt.action}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </PageLayout>

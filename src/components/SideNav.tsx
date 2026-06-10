@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 export interface SideNavProps {
   isOpen: boolean;
@@ -66,6 +66,8 @@ const NAV_ITEMS = [
 
 export function SideNav({ isOpen, onClose }: SideNavProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const role = localStorage.getItem("userRole");
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({
     '/jobs': true // default expand jobs if we want, or evaluate based on current path
   });
@@ -73,6 +75,19 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
   const toggleExpand = (path: string) => {
     setExpandedItems(prev => ({ ...prev, [path]: !prev[path] }));
   };
+
+  const menuItems = role === "collector"
+    ? [
+        { path: '/collector-dashboard', label: 'Collector Dashboard', icon: (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+        )}
+      ]
+    : NAV_ITEMS;
 
   return (
     <>
@@ -102,7 +117,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
-          {NAV_ITEMS.map((item) => {
+          {menuItems.map((item) => {
             const hasChildren = !!item.children;
             const isChildActive = hasChildren && item.children!.some(c => location.pathname === c.path);
             const isActive = location.pathname === item.path || isChildActive;
@@ -176,9 +191,13 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
         </nav>
 
         <div className="p-4 border-t border-[#e2e8f0] dark:border-[#1e3a5f]">
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] dark:text-red-400 hover:bg-[#ffdad6]/50 dark:hover:bg-red-500/10 font-semibold transition-colors"
+          <button
+            onClick={() => {
+              localStorage.removeItem("userRole");
+              onClose();
+              navigate("/");
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] dark:text-red-400 hover:bg-[#ffdad6]/50 dark:hover:bg-red-500/10 font-semibold transition-colors text-left cursor-pointer"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -186,7 +205,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
             Sign Out
-          </Link>
+          </button>
         </div>
       </div>
     </>

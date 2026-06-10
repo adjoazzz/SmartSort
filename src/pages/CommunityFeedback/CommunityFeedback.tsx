@@ -4,6 +4,9 @@ import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
 import { InputField } from "../../components/InputField";
 import { SelectField } from "../../components/SelectField";
+import { Skeleton } from "../../components/ui/skeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../components/ui/dialog";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
 
 const getCategoryVariant = (category: string) => {
   switch (category) {
@@ -406,32 +409,40 @@ export default function CommunityFeedback() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex items-center justify-center p-12 text-[#94a3b8] dark:text-[#64748b] text-sm font-medium">
-              Loading reports from database...
+            <div className="flex flex-col gap-4 p-6">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex gap-4 items-center">
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <Skeleton className="h-6 flex-1" />
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-6 w-20" />
+                </div>
+              ))}
             </div>
           ) : filteredFeedbacks.length === 0 ? (
             <div className="flex items-center justify-center p-12 text-[#94a3b8] dark:text-[#64748b] text-sm font-medium">
               No reports found matching selected filters.
             </div>
           ) : (
-            <table className="w-full text-left border-collapse min-w-[800px]">
-              <thead>
-                <tr className="bg-white dark:bg-[#0b1c30] text-[#515f74] dark:text-[#cbd5e1] text-[11px] font-bold uppercase tracking-wider border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
-                  <th className="px-6 py-4">User / Location</th>
-                  <th className="px-6 py-4">Issue Category</th>
-                  <th className="px-6 py-4">Description</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Reported At</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f1f5f9]">
+            <Table className="min-w-[800px]">
+              <TableHeader>
+                <TableRow className="hover:bg-transparent bg-white dark:bg-[#0b1c30] text-[#515f74] dark:text-[#cbd5e1] text-[11px] font-bold uppercase tracking-wider border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
+                  <TableHead className="px-6 py-4">User / Location</TableHead>
+                  <TableHead className="px-6 py-4">Issue Category</TableHead>
+                  <TableHead className="px-6 py-4">Description</TableHead>
+                  <TableHead className="px-6 py-4">Status</TableHead>
+                  <TableHead className="px-6 py-4">Reported At</TableHead>
+                  <TableHead className="px-6 py-4 text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filteredFeedbacks.map((item) => (
-                  <tr
+                  <TableRow
                     key={item.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1] font-bold text-xs">
                           {getInitials(item.userName)}
@@ -445,32 +456,32 @@ export default function CommunityFeedback() {
                           </div>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
                       <StatusBadge
                         label={item.category}
                         variant={getCategoryVariant(item.category) as any}
                       />
-                    </td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
                       <p className="text-[#515f74] dark:text-[#cbd5e1] text-xs line-clamp-1 max-w-[200px]" title={item.message}>
                         {item.message}
                       </p>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
                       <StatusBadge
                         label={item.status}
                         variant={getStatusVariant(item.status) as any}
                         hasDot
                       />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-[#515f74] dark:text-[#cbd5e1] text-xs font-mono">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-[#515f74] dark:text-[#cbd5e1] text-xs font-mono">
                       {formatDate(item.createdAt)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-1.5">
                         <button
-                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors"
+                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors cursor-pointer"
                           title="Convert to Job"
                         >
                           <svg
@@ -489,7 +500,7 @@ export default function CommunityFeedback() {
                         </button>
                         <button
                           onClick={() => handleUpdateStatus(item.id, item.status)}
-                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors"
+                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors cursor-pointer"
                           title={`Update status: ${item.status === 'Pending' ? 'In Progress' : item.status === 'In Progress' ? 'Resolved' : 'Pending'}`}
                         >
                           <svg
@@ -504,7 +515,7 @@ export default function CommunityFeedback() {
                           </svg>
                         </button>
                         <button
-                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#e2e8f0] rounded-lg transition-colors"
+                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#e2e8f0] rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
                           <svg
@@ -520,11 +531,11 @@ export default function CommunityFeedback() {
                           </svg>
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
         </div>
 
@@ -695,128 +706,93 @@ export default function CommunityFeedback() {
       </div>
 
       {/* Manual Entry Modal */}
-      {isModalOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
-            onClick={() => setIsModalOpen(false)}
-          />
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-2xl w-full max-w-lg p-0 gap-0 overflow-hidden flex flex-col">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942] text-left sm:text-left flex flex-col gap-1">
+            <DialogTitle className="text-xl font-semibold text-[#0b1c30] dark:text-white">
+              Add Feedback
+            </DialogTitle>
+            <DialogDescription className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">
+              Manually submit a community report or observation.
+            </DialogDescription>
+          </DialogHeader>
 
-          {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-            <div
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-2xl w-full max-w-lg pointer-events-auto flex flex-col animate-in"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                <div>
-                  <h3 className="text-xl font-semibold text-[#0b1c30] dark:text-white">
-                    Add Feedback
-                  </h3>
-                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">
-                    Manually submit a community report or observation.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-lg transition-colors"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-              </div>
+          {/* Body */}
+          <div className="px-6 py-5 flex flex-col gap-5">
+            {/* User / Location row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InputField
+                id="feedback-user"
+                label="User Name"
+                placeholder="e.g. Jane Simmons"
+                value={userName}
+                onChange={setUserName}
+              />
+              <InputField
+                id="feedback-location"
+                label="Location"
+                placeholder="e.g. Bldg A - Floor 4"
+                value={location}
+                onChange={setLocation}
+              />
+            </div>
 
-              {/* Body */}
-              <div className="px-6 py-5 flex flex-col gap-5">
-                {/* User / Location row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputField
-                    id="feedback-user"
-                    label="User Name"
-                    placeholder="e.g. Jane Simmons"
-                    value={userName}
-                    onChange={setUserName}
-                  />
-                  <InputField
-                    id="feedback-location"
-                    label="Location"
-                    placeholder="e.g. Bldg A - Floor 4"
-                    value={location}
-                    onChange={setLocation}
-                  />
-                </div>
+            {/* Issue Category */}
+            <SelectField
+              id="feedback-category"
+              label="Issue Category"
+              options={ISSUE_CATEGORIES}
+              value={category}
+              onChange={setCategory}
+            />
 
-                {/* Issue Category */}
-                <SelectField
-                  id="feedback-category"
-                  label="Issue Category"
-                  options={ISSUE_CATEGORIES}
-                  value={category}
-                  onChange={setCategory}
-                />
-
-                {/* Feedback Description */}
-                <div className="flex flex-col gap-1.5">
-                  <label
-                    htmlFor="feedback-description"
-                    className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]"
-                  >
-                    Feedback Description
-                  </label>
-                  <textarea
-                    id="feedback-description"
-                    rows={4}
-                    placeholder="Describe the issue in detail..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="px-3 py-2.5 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
-                  />
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="px-6 pb-6 pt-2 flex items-center gap-3">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmitFeedback}
-                  className="flex-1 h-11 bg-[#006c49] hover:bg-[#005a3c] active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M22 2L11 13" />
-                    <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-                  </svg>
-                  Submit Feedback
-                </button>
-              </div>
+            {/* Feedback Description */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="feedback-description"
+                className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]"
+              >
+                Feedback Description
+              </label>
+              <textarea
+                id="feedback-description"
+                rows={4}
+                placeholder="Describe the issue in detail..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="px-3 py-2.5 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
+              />
             </div>
           </div>
-        </>
-      )}
+
+          {/* Footer */}
+          <div className="px-6 pb-6 pt-2 flex items-center gap-3">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmitFeedback}
+              className="flex-1 h-11 bg-[#006c49] hover:bg-[#005a3c] active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M22 2L11 13" />
+                <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+              </svg>
+              Submit Feedback
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }
