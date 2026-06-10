@@ -1,8 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
 import { useTheme } from "next-themes";
 import imgHero from "../../assets/smartsort_hero.png";
 import imgLaptopUi from "../../assets/smartsort_laptop_ui.png";
+
+// --- Inquiry Validation Helpers ---
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateCompanyName(value: string): string | undefined {
+  if (!value.trim()) return "Company name is required";
+  if (value.trim().length < 3) return "Company name must be at least 3 characters";
+  return undefined;
+}
+
+function validateEmail(value: string): string | undefined {
+  if (!value.trim()) return "Business email is required";
+  if (!EMAIL_REGEX.test(value)) return "Please enter a valid business email address";
+  return undefined;
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p
+      className="text-[11px] font-semibold mt-1 flex items-center gap-1"
+      style={{ color: "#ef4444" }}
+    >
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      {message}
+    </p>
+  );
+}
+
+const shakeKeyframes = `
+@keyframes inquiry-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-4px); }
+  30%, 70% { transform: translateX(4px); }
+}
+`;
 
 /**
  * SmartSort Landing Page Component
@@ -20,9 +69,62 @@ export default function Landing() {
   });
   const [submitted, setSubmitted] = useState(false);
 
+  // Inquiry Validation State
+  const [errors, setErrors] = useState<{ companyName?: string; email?: string }>({});
+  const [touched, setTouched] = useState<{ companyName?: boolean; email?: boolean }>({});
+  const [shaking, setShaking] = useState(false);
+
+  // Auto-reset form after 30s on submission (silent background timer)
+  useEffect(() => {
+    if (!submitted) return;
+    const timer = setTimeout(() => {
+      setSubmitted(false);
+      setForm({ companyName: "", tonsRange: "Less than 50", email: "" });
+      setErrors({});
+      setTouched({});
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [submitted]);
+
+  const handleCompanyNameChange = (value: string) => {
+    setForm(prev => ({ ...prev, companyName: value }));
+    if (touched.companyName) {
+      setErrors(prev => ({ ...prev, companyName: validateCompanyName(value) }));
+    }
+  };
+
+  const handleEmailChange = (value: string) => {
+    setForm(prev => ({ ...prev, email: value }));
+    if (touched.email) {
+      setErrors(prev => ({ ...prev, email: validateEmail(value) }));
+    }
+  };
+
+  const handleCompanyNameBlur = () => {
+    setTouched(prev => ({ ...prev, companyName: true }));
+    setErrors(prev => ({ ...prev, companyName: validateCompanyName(form.companyName) }));
+  };
+
+  const handleEmailBlur = () => {
+    setTouched(prev => ({ ...prev, email: true }));
+    setErrors(prev => ({ ...prev, email: validateEmail(form.email) }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.companyName || !form.email) return;
+    
+    const companyErr = validateCompanyName(form.companyName);
+    const emailErr = validateEmail(form.email);
+    
+    setErrors({ companyName: companyErr, email: emailErr });
+    setTouched({ companyName: true, email: true });
+    
+    if (companyErr || emailErr) {
+      setShaking(true);
+      setTimeout(() => setShaking(false), 500);
+      return;
+    }
+    
     setSubmitted(true);
   };
 
@@ -32,6 +134,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white transition-colors duration-300 font-sans">
+      <style>{shakeKeyframes}</style>
       
       {/* 1. Header Navbar */}
       <header className="h-20 bg-white/80 dark:bg-[#0b1c30]/80 backdrop-blur-md border-b border-[#e2e8f0]/50 dark:border-[#1e3a5f]/50 flex items-center justify-between px-6 sm:px-12 sticky top-0 z-50 shadow-sm">
@@ -399,7 +502,7 @@ export default function Landing() {
           {/* Right Column (Inquiry Form Card) */}
           <div className="bg-white text-[#0b1c30] rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] shadow-xl relative z-10">
             {submitted ? (
-              <div className="py-12 flex flex-col items-center justify-center text-center gap-4 animate-fade-in">
+              <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#10b981]/15 flex items-center justify-center text-[#10b981]">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -411,19 +514,35 @@ export default function Landing() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <form
+                onSubmit={handleSubmit}
+                noValidate
+                className="flex flex-col gap-5"
+                style={shaking ? { animation: "inquiry-shake 0.4s ease-in-out" } : undefined}
+              >
                 <h3 className="text-lg font-bold border-b border-[#e2e8f0] pb-3">Inquiry Form</h3>
                 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold text-[#515f74] uppercase tracking-wider">Company Name</label>
+                  <label
+                    className={`text-[10px] font-bold uppercase tracking-wider ${
+                      errors.companyName ? "text-red-500" : "text-[#515f74]"
+                    }`}
+                  >
+                    Company Name
+                  </label>
                   <input 
                     type="text" 
-                    required 
                     placeholder="Global Logistics Inc." 
                     value={form.companyName}
-                    onChange={e => setForm({...form, companyName: e.target.value})}
-                    className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all"
+                    onChange={e => handleCompanyNameChange(e.target.value)}
+                    onBlur={handleCompanyNameBlur}
+                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
+                      errors.companyName
+                        ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
+                        : "border-[#cbd5e1] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                    }`}
                   />
+                  <FieldError message={errors.companyName} />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -441,20 +560,44 @@ export default function Landing() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold text-[#515f74] uppercase tracking-wider">Business Email</label>
+                  <label
+                    className={`text-[10px] font-bold uppercase tracking-wider ${
+                      errors.email ? "text-red-500" : "text-[#515f74]"
+                    }`}
+                  >
+                    Business Email
+                  </label>
                   <input 
                     type="email" 
-                    required 
                     placeholder="manager@company.com" 
                     value={form.email}
-                    onChange={e => setForm({...form, email: e.target.value})}
-                    className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all"
+                    onChange={e => handleEmailChange(e.target.value)}
+                    onBlur={handleEmailBlur}
+                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
+                      errors.email
+                        ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
+                        : "border-[#cbd5e1] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                    }`}
                   />
+                  <FieldError message={errors.email} />
                 </div>
 
                 <button 
                   type="submit"
-                  className="w-full h-11 bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-[0.98] text-white text-sm font-bold tracking-wide rounded-lg transition-all shadow-md mt-2"
+                  disabled={
+                    form.companyName.trim() === "" ||
+                    form.email.trim() === "" ||
+                    !!errors.companyName ||
+                    !!errors.email
+                  }
+                  className={`w-full h-11 text-sm font-bold tracking-wide rounded-lg transition-all shadow-md mt-2 ${
+                    form.companyName.trim() !== "" &&
+                    form.email.trim() !== "" &&
+                    !errors.companyName &&
+                    !errors.email
+                      ? "bg-[#2563eb] hover:bg-[#1d4ed8] text-white active:scale-[0.98] cursor-pointer"
+                      : "bg-slate-100 text-slate-400 border border-transparent cursor-not-allowed"
+                  }`}
                 >
                   Send Request
                 </button>
