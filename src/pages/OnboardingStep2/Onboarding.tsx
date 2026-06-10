@@ -273,7 +273,7 @@ export default function Onboarding() {
             SmartSort Analytics
           </p>
           <p className="text-xs text-[#64748b] dark:text-[#cbd5e1]">
-            © 2024 SmartSort Analytics. Professional waste stewardship.
+            © 2026 SmartSort Analytics. Professional waste stewardship.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-1">

@@ -448,7 +448,7 @@ export default function Onboarding() {
       <footer className="bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold text-[#334155] dark:text-[#cbd5e1]">SmartSort Analytics</p>
-          <p className="text-xs text-[#64748b] dark:text-[#cbd5e1]">© 2024 SmartSort Analytics. Professional waste stewardship.</p>
+          <p className="text-xs text-[#64748b] dark:text-[#cbd5e1]">© 2026 SmartSort Analytics. Professional waste stewardship.</p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-1">
           {["Privacy policy", "Terms of service", "Environmental compliance", "Support"].map((l) => (
