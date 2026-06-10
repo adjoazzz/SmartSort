@@ -7,7 +7,9 @@
   width: 360px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 20px;
   box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.15),
@@ -16,7 +18,7 @@
   display: flex;
   flex-direction: column;
   animation: profilePopupIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(226, 232, 240, 0.4);
 }
 
 @keyframes profilePopupIn {
@@ -344,4 +346,112 @@
     width: calc(100vw - 24px);
     right: -8px;
   }
+}
+
+/* ================================================
+   Dark Mode Support for Profile Popup
+   ================================================ */
+
+.dark .profile-popup {
+  background: rgba(11, 28, 48, 0.8);
+  border: 1px solid rgba(30, 58, 95, 0.4);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dark .profile-popup::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .profile-popup__email {
+  color: #cbd5e1;
+}
+
+.dark .profile-popup__close:hover {
+  background: #1a365d;
+  color: #ffffff;
+}
+
+.dark .profile-popup__avatar {
+  border: 3px solid #0b1c30;
+  background: #1e293b;
+}
+
+.dark .profile-popup__camera {
+  background: #0f2942;
+  border: 2px solid #1e3a5f;
+  color: #cbd5e1;
+}
+.dark .profile-popup__camera:hover {
+  background: #1a365d;
+  color: #ffffff;
+}
+
+.dark .profile-popup__greeting {
+  color: #ffffff;
+}
+
+.dark .profile-popup__manage-btn {
+  color: #ffffff;
+  background: #0b1c30;
+  border: 1.5px solid #1e3a5f;
+}
+.dark .profile-popup__manage-btn:hover {
+  background: #1a365d;
+  border-color: #334155;
+}
+
+.dark .profile-popup__accounts-section {
+  background: rgba(15, 41, 66, 0.5);
+  border: 1px solid rgba(30, 58, 95, 0.4);
+}
+
+.dark .profile-popup__toggle {
+  color: #cbd5e1;
+}
+.dark .profile-popup__toggle:hover {
+  background: #1a365d;
+}
+
+.dark .profile-popup__account-list {
+  border-top: 1px solid #1e3a5f;
+}
+
+.dark .profile-popup__account-row:hover {
+  background: #1a365d;
+}
+
+.dark .profile-popup__account-name {
+  color: #ffffff;
+}
+
+.dark .profile-popup__account-email {
+  color: #cbd5e1;
+}
+
+.dark .profile-popup__action-row {
+  color: #ffffff;
+}
+.dark .profile-popup__action-row:hover {
+  background: #1a365d;
+}
+
+.dark .profile-popup__action-icon {
+  color: #cbd5e1;
+}
+
+.dark .profile-popup__signout-section {
+  border-top: 1px solid #1e3a5f;
+}
+
+.dark .profile-popup__footer-link {
+  color: #cbd5e1;
+}
+.dark .profile-popup__footer-link:hover {
+  color: #ffffff;
+}
+
+.dark .profile-popup__footer-dot {
+  color: #64748b;
 }
