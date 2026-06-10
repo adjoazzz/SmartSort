@@ -75,6 +75,67 @@ app.get('/api/devices', async (req, res) => {
   }
 });
 
+// GET all community feedback reports
+app.get('/api/feedback', async (req, res) => {
+  try {
+    const feedbackList = await prisma.feedback.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+    res.status(200).json(feedbackList);
+  } catch (error) {
+    console.error("Error fetching feedback:", error);
+    res.status(500).json({ error: "Failed to fetch feedback" });
+  }
+});
+
+// POST a new community feedback report
+app.post('/api/feedback', async (req, res) => {
+  try {
+    const { userName, location, category, message } = req.body;
+
+    if (!userName || !location || !category || !message) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const newFeedback = await prisma.feedback.create({
+      data: {
+        userName,
+        location,
+        category,
+        message,
+        status: "Pending"
+      }
+    });
+
+    res.status(201).json(newFeedback);
+  } catch (error) {
+    console.error("Error creating feedback:", error);
+    res.status(500).json({ error: "Failed to save feedback" });
+  }
+});
+
+// PATCH a feedback's status
+app.patch('/api/feedback/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: "Status is required" });
+    }
+
+    const updatedFeedback = await prisma.feedback.update({
+      where: { id },
+      data: { status }
+    });
+
+    res.status(200).json(updatedFeedback);
+  } catch (error) {
+    console.error("Error updating feedback status:", error);
+    res.status(500).json({ error: "Failed to update feedback status" });
+  }
+});
+
 // Define the port (uses the one in .env, or defaults to 5000)
 const PORT = process.env.PORT || 5000;
 
