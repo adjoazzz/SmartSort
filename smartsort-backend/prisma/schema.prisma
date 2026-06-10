@@ -44,8 +44,10 @@ model CollectionJob {
 // Community Feedback
 model Feedback {
   id        String   @id @default(uuid())
-  userEmail String
+  userName  String
+  location  String
   message   String
   category  String   // e.g., "Missed Pickup", "Damaged Bin"
+  status    String   @default("Pending") // Pending, In Progress, Resolved
   createdAt DateTime @default(now())
 }

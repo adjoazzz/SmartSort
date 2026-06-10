@@ -1,37 +1,90 @@
-import React, { useState } from 'react';
-import { PageLayout } from '../../components/PageLayout';
-import { StatusBadge } from '../../components/StatusBadge';
-import { MetricCard } from '../../components/MetricCard';
+import React, { useState } from "react";
+import { PageLayout } from "../../components/PageLayout";
+import { StatusBadge } from "../../components/StatusBadge";
+import { MetricCard } from "../../components/MetricCard";
 
 const COLLECTOR_JOBS = [
-  { id: 'JOB-1041', device: '#SN-4431-L', location: 'Main Lobby Entrance', zone: 'Level 1, Main', fill: 82, urgency: 'High', status: 'In Transit', isAssignedToMe: true },
-  { id: 'JOB-1042', device: '#SN-9902-X', location: 'North Wing Cafe - B3', zone: 'Level 2, Zone A', fill: 94, urgency: 'Critical', status: 'Pending', isAssignedToMe: false },
-  { id: 'JOB-1040', device: '#SN-1108-P', location: 'West Parking B1', zone: 'Basement 1, Zone C', fill: 78, urgency: 'Normal', status: 'Pending', isAssignedToMe: false },
-  { id: 'JOB-1039', device: '#SN-8871-S', location: 'Employee Breakroom', zone: 'Level 4, South', fill: 71, urgency: 'Normal', status: 'Pending', isAssignedToMe: false },
-  { id: 'JOB-1038', device: '#SN-5520-R', location: 'South Lobby', zone: 'Level 1, Zone B', fill: 65, urgency: 'Normal', status: 'Completed', isAssignedToMe: true },
+  {
+    id: "JOB-1041",
+    device: "#SN-4431-L",
+    location: "Main Lobby Entrance",
+    zone: "Level 1, Main",
+    fill: 82,
+    urgency: "High",
+    status: "In Transit",
+    isAssignedToMe: true,
+  },
+  {
+    id: "JOB-1042",
+    device: "#SN-9902-X",
+    location: "North Wing Cafe - B3",
+    zone: "Level 2, Zone A",
+    fill: 94,
+    urgency: "Critical",
+    status: "Pending",
+    isAssignedToMe: false,
+  },
+  {
+    id: "JOB-1040",
+    device: "#SN-1108-P",
+    location: "West Parking B1",
+    zone: "Basement 1, Zone C",
+    fill: 78,
+    urgency: "Normal",
+    status: "Pending",
+    isAssignedToMe: false,
+  },
+  {
+    id: "JOB-1039",
+    device: "#SN-8871-S",
+    location: "Employee Breakroom",
+    zone: "Level 4, South",
+    fill: 71,
+    urgency: "Normal",
+    status: "Pending",
+    isAssignedToMe: false,
+  },
+  {
+    id: "JOB-1038",
+    device: "#SN-5520-R",
+    location: "South Lobby",
+    zone: "Level 1, Zone B",
+    fill: 65,
+    urgency: "Normal",
+    status: "Completed",
+    isAssignedToMe: true,
+  },
 ];
 
 export default function CollectorDashboard() {
-  const [activeTab, setActiveTab] = useState<'my_jobs' | 'available_jobs'>('available_jobs');
+  const [activeTab, setActiveTab] = useState<"my_jobs" | "available_jobs">(
+    "available_jobs",
+  );
   const [jobs, setJobs] = useState(COLLECTOR_JOBS);
 
-  const displayedJobs = jobs.filter(job => 
-    activeTab === 'my_jobs' 
-      ? job.isAssignedToMe 
-      : (!job.isAssignedToMe && job.status === 'Pending')
+  const displayedJobs = jobs.filter((job) =>
+    activeTab === "my_jobs"
+      ? job.isAssignedToMe
+      : !job.isAssignedToMe && job.status === "Pending",
   );
 
   const handleClaimJob = (id: string) => {
-    setJobs(prev => prev.map(job => 
-      job.id === id ? { ...job, isAssignedToMe: true, status: 'In Transit' } : job
-    ));
-    setActiveTab('my_jobs');
+    setJobs((prev) =>
+      prev.map((job) =>
+        job.id === id
+          ? { ...job, isAssignedToMe: true, status: "In Transit" }
+          : job,
+      ),
+    );
+    setActiveTab("my_jobs");
   };
 
   const handleCompleteJob = (id: string) => {
-    setJobs(prev => prev.map(job => 
-      job.id === id ? { ...job, status: 'Completed' } : job
-    ));
+    setJobs((prev) =>
+      prev.map((job) =>
+        job.id === id ? { ...job, status: "Completed" } : job,
+      ),
+    );
   };
 
   return (
@@ -43,7 +96,9 @@ export default function CollectorDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <MetricCard
           title="Active Jobs"
-          value={jobs.filter(j => j.isAssignedToMe && j.status !== 'Completed').length.toString()}
+          value={jobs
+            .filter((j) => j.isAssignedToMe && j.status !== "Completed")
+            .length.toString()}
           trend="Action required"
           trendDirection="neutral"
           iconColorClass="text-[#0284c7]"
@@ -51,7 +106,9 @@ export default function CollectorDashboard() {
         />
         <MetricCard
           title="Completed Today"
-          value={jobs.filter(j => j.isAssignedToMe && j.status === 'Completed').length.toString()}
+          value={jobs
+            .filter((j) => j.isAssignedToMe && j.status === "Completed")
+            .length.toString()}
           trend="Keep it up!"
           trendDirection="up"
           iconColorClass="text-[#006c49]"
@@ -59,7 +116,9 @@ export default function CollectorDashboard() {
         />
         <MetricCard
           title="Available Jobs"
-          value={jobs.filter(j => !j.isAssignedToMe && j.status === 'Pending').length.toString()}
+          value={jobs
+            .filter((j) => !j.isAssignedToMe && j.status === "Pending")
+            .length.toString()}
           trend="In your area"
           trendDirection="neutral"
           iconColorClass="text-[#f59e0b]"
@@ -70,17 +129,27 @@ export default function CollectorDashboard() {
       <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
         {/* Tabs */}
         <div className="flex border-b border-[#e2e8f0] dark:border-[#1e3a5f] bg-[#f8fafc] dark:bg-[#0f2942]">
-          <button 
-            onClick={() => setActiveTab('available_jobs')}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'available_jobs' ? 'border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]' : 'border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
+          <button
+            onClick={() => setActiveTab("available_jobs")}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === "available_jobs" ? "border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]" : "border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white"}`}
           >
-            Available Jobs ({jobs.filter(j => !j.isAssignedToMe && j.status === 'Pending').length})
+            Available Jobs (
+            {
+              jobs.filter((j) => !j.isAssignedToMe && j.status === "Pending")
+                .length
+            }
+            )
           </button>
-          <button 
-            onClick={() => setActiveTab('my_jobs')}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'my_jobs' ? 'border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]' : 'border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
+          <button
+            onClick={() => setActiveTab("my_jobs")}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === "my_jobs" ? "border-[#006c49] text-[#006c49] bg-white dark:bg-[#0b1c30]" : "border-transparent text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white"}`}
           >
-            My Assignments ({jobs.filter(j => j.isAssignedToMe && j.status !== 'Completed').length})
+            My Assignments (
+            {
+              jobs.filter((j) => j.isAssignedToMe && j.status !== "Completed")
+                .length
+            }
+            )
           </button>
         </div>
 
@@ -91,34 +160,55 @@ export default function CollectorDashboard() {
               No jobs to show here.
             </div>
           ) : (
-            displayedJobs.map(job => (
-              <div key={job.id} className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]">
+            displayedJobs.map((job) => (
+              <div
+                key={job.id}
+                className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]"
+              >
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-[#0b1c30] dark:text-white">{job.location}</span>
-                    <StatusBadge label={job.urgency} variant={job.urgency === 'Critical' ? 'danger' : job.urgency === 'High' ? 'warning' : 'success'} />
+                    <span className="text-base font-bold text-[#0b1c30] dark:text-white">
+                      {job.location}
+                    </span>
+                    <StatusBadge
+                      label={job.urgency}
+                      variant={
+                        job.urgency === "Critical"
+                          ? "danger"
+                          : job.urgency === "High"
+                            ? "warning"
+                            : "success"
+                      }
+                    />
                   </div>
-                  <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">{job.device} • {job.zone}</span>
+                  <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                    {job.device} • {job.zone}
+                  </span>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="w-24 h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full overflow-hidden">
-                      <div className="h-full bg-[#ba1a1a] rounded-full" style={{ width: `${job.fill}%` }} />
+                      <div
+                        className="h-full bg-[#ba1a1a] rounded-full"
+                        style={{ width: `${job.fill}%` }}
+                      />
                     </div>
-                    <span className="text-xs font-bold text-[#ba1a1a]">{job.fill}% Full</span>
+                    <span className="text-xs font-bold text-[#ba1a1a]">
+                      {job.fill}% Full
+                    </span>
                   </div>
                 </div>
 
                 <div className="flex items-center sm:justify-end gap-2">
-                  {activeTab === 'available_jobs' ? (
-                    <button 
+                  {activeTab === "available_jobs" ? (
+                    <button
                       onClick={() => handleClaimJob(job.id)}
                       className="px-4 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors"
                     >
                       Claim Job
                     </button>
-                  ) : job.status !== 'Completed' ? (
+                  ) : job.status !== "Completed" ? (
                     <>
                       <StatusBadge label={job.status} variant="info" hasDot />
-                      <button 
+                      <button
                         onClick={() => handleCompleteJob(job.id)}
                         className="px-4 py-2 bg-[#0b1c30] text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors"
                       >

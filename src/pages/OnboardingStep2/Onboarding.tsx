@@ -6,7 +6,7 @@ import { InputField } from "../../components/InputField";
 
 /**
  * Onboarding Step 2: Company Profile
- * 
+ *
  * Clean semantic view for collecting organization details during signup.
  */
 export default function Onboarding() {
@@ -30,9 +30,11 @@ export default function Onboarding() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!form.orgName.trim()) newErrors.orgName = "Organization name is required.";
-    if (form.industry === "Select Industry" || !form.industry) newErrors.industry = "Please select an industry.";
-    
+    if (!form.orgName.trim())
+      newErrors.orgName = "Organization name is required.";
+    if (form.industry === "Select Industry" || !form.industry)
+      newErrors.industry = "Please select an industry.";
+
     if (!form.numFacilities) {
       newErrors.numFacilities = "Required.";
     } else if (Number(form.numFacilities) < 1) {
@@ -40,7 +42,7 @@ export default function Onboarding() {
     } else if (!Number.isInteger(Number(form.numFacilities))) {
       newErrors.numFacilities = "Must be a whole number.";
     }
-    
+
     if (form.annualWaste === "Select range" || !form.annualWaste) {
       newErrors.annualWaste = "Please select a range.";
     }
@@ -56,7 +58,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8f9ff] to-[#f0faf5]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8f9ff] to-[#f0faf5] dark:from-[#08121e] dark:to-[#050b12]">
       {/* Header */}
       <header className="h-16 bg-white dark:bg-[#0b1c30] border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
         <span className="text-lg font-semibold text-[#0b1c30] dark:text-white">
@@ -66,7 +68,10 @@ export default function Onboarding() {
           <button className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
             Help
           </button>
-          <button onClick={() => navigate("/")} className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
+          <button
+            onClick={() => navigate("/login")}
+            className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+          >
             Log in
           </button>
         </div>
@@ -75,7 +80,6 @@ export default function Onboarding() {
       {/* Main */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10">
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
           {/* Left — Marketing / Info */}
           <div className="flex flex-col gap-8 bg-[#006c49] p-10 rounded-2xl text-white relative overflow-hidden shadow-lg h-full">
             {/* Decorative background blurs to match the original design intent */}
@@ -86,26 +90,37 @@ export default function Onboarding() {
               <h1 className="text-4xl font-bold leading-tight">
                 Setting up your <br /> Stewardship.
               </h1>
-              
+
               <p className="text-lg text-white/90 leading-relaxed font-light">
-                By providing your organization details, we can calibrate our waste diversion algorithms to your specific industry benchmarks.
+                By providing your organization details, we can calibrate our
+                waste diversion algorithms to your specific industry benchmarks.
               </p>
 
               <div className="flex flex-col gap-4 mt-4">
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 flex items-center justify-center">
                     <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                      <path d="M20 6L9 17l-5-5" stroke="#6ffbbe" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M20 6L9 17l-5-5"
+                        stroke="#6ffbbe"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </div>
-                  <span className="font-semibold text-[#6ffbbe] tracking-wide text-sm">Step 1: Account Verified</span>
+                  <span className="font-semibold text-[#6ffbbe] tracking-wide text-sm">
+                    Step 1: Account Verified
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 flex items-center justify-center">
                     <div className="w-2.5 h-2.5 bg-[#6ffbbe] rounded-sm ring-2 ring-[#6ffbbe] ring-offset-4 ring-offset-[#006c49]" />
                   </div>
-                  <span className="font-semibold text-white tracking-wide text-sm">Step 2: Company Profile</span>
+                  <span className="font-semibold text-white tracking-wide text-sm">
+                    Step 2: Company Profile
+                  </span>
                 </div>
               </div>
             </div>
@@ -115,11 +130,17 @@ export default function Onboarding() {
           <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-xs font-semibold text-[#006c49] tracking-widest uppercase mb-1">CONFIGURATION</h2>
-                <h3 className="text-2xl font-semibold text-[#0b1c30] dark:text-white">Organization Details</h3>
+                <h2 className="text-xs font-semibold text-[#006c49] tracking-widest uppercase mb-1">
+                  CONFIGURATION
+                </h2>
+                <h3 className="text-2xl font-semibold text-[#0b1c30] dark:text-white">
+                  Organization Details
+                </h3>
               </div>
               <div className="flex flex-col items-end gap-1">
-                <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">Step 2 of 2</span>
+                <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                  Step 2 of 2
+                </span>
                 <div className="w-16 h-1.5 bg-[#d5e3fd] rounded-full overflow-hidden">
                   <div className="w-full h-full bg-[#10b981]" />
                 </div>
@@ -188,50 +209,85 @@ export default function Onboarding() {
             </div>
 
             {/* Helper Info Box */}
-            <div className="bg-[#eff4ff] border border-[#bbcabf] p-4 rounded-lg flex gap-3 mt-2">
-              <svg className="w-5 h-5 text-[#006591] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="bg-[#eff4ff] dark:bg-[#071321] border border-[#bbcabf] dark:border-[#1e3a5f] p-4 rounded-lg flex gap-3 mt-2">
+              <svg
+                className="w-5 h-5 text-[#006591] dark:text-[#38bdf8] flex-shrink-0 mt-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
-              <p className="text-sm text-[#3c4a42] leading-relaxed">
-                These estimates help us customize your dashboard metrics. You can refine these values later in your Facility Settings.
+              <p className="text-sm text-[#3c4a42] dark:text-[#cbd5e1] leading-relaxed">
+                These estimates help us customize your dashboard metrics. You
+                can refine these values later in your Facility Settings.
               </p>
             </div>
 
             <div className="border-t border-[#bbcabf] pt-6 flex items-center justify-between mt-2">
-              <button 
+              <button
                 onClick={() => navigate("/onboarding-1")}
                 className="flex items-center gap-2 text-sm font-semibold text-[#515f74] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:text-white transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M15 18l-6-6 6-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Back to Account
               </button>
-              
+
               <button
                 onClick={handleSubmit}
                 className="h-12 px-6 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center gap-2"
               >
                 Complete Sign Up
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M9 18l6-6-6-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
             </div>
           </div>
-
         </div>
       </main>
 
       {/* Footer */}
       <footer className="bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold text-[#334155]">SmartSort Analytics</p>
-          <p className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">© 2024 SmartSort Analytics. Professional waste stewardship.</p>
+          <p className="text-xs font-semibold text-[#334155] dark:text-[#cbd5e1]">
+            SmartSort Analytics
+          </p>
+          <p className="text-xs text-[#64748b] dark:text-[#cbd5e1]">
+            © 2024 SmartSort Analytics. Professional waste stewardship.
+          </p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-1">
-          {["Privacy policy", "Terms of service", "Environmental compliance", "Support"].map((l) => (
-            <a key={l} href="#" className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] transition-colors">
+          {[
+            "Privacy policy",
+            "Terms of service",
+            "Environmental compliance",
+            "Support",
+          ].map((l) => (
+            <a
+              key={l}
+              href="#"
+              className="text-xs text-[#64748b] dark:text-slate-400 hover:text-[#006c49] dark:hover:text-emerald-400 transition-colors"
+            >
               {l}
             </a>
           ))}
@@ -244,19 +300,35 @@ export default function Onboarding() {
           <div className="bg-white dark:bg-[#0b1c30] rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 flex flex-col gap-4 text-center items-center">
               <div className="w-16 h-16 bg-[#e1f5ee] rounded-full flex items-center justify-center mb-2">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-[#006c49]">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="text-[#006c49]"
+                >
+                  <path
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">Verification Pending</h3>
+              <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                Verification Pending
+              </h3>
               <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                Your details have been securely submitted. A facility administrator will review your information shortly.
-                You will receive an email notification once your account has been verified.
+                Your details have been securely submitted. A facility
+                administrator will review your information shortly. You will
+                receive an email notification once your account has been
+                verified.
               </p>
             </div>
             <div className="px-6 py-5 bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f]">
               <button
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/login")}
                 className="w-full h-11 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all shadow-sm"
               >
                 Return to Login

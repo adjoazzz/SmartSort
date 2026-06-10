@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import imgUserProfileAvatar from '../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png';
 
 interface ProfilePopupProps {
@@ -27,6 +27,7 @@ const otherAccounts: Account[] = [
 ];
 
 export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) {
+  const navigate = useNavigate();
   const popupRef = useRef<HTMLDivElement>(null);
   const [showAccounts, setShowAccounts] = useState(true);
   const [position, setPosition] = useState({ top: 0, right: 0 });
@@ -185,7 +186,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
         )}
 
         {/* Add another account */}
-        <Link to="/" onClick={onClose} className="profile-popup__action-row">
+        <Link to="/login" onClick={onClose} className="profile-popup__action-row">
           <div className="profile-popup__action-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19" />
@@ -198,7 +199,14 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
 
       {/* Sign out */}
       <div className="profile-popup__signout-section">
-        <button className="profile-popup__action-row">
+        <button
+          onClick={() => {
+            localStorage.removeItem("userRole");
+            onClose();
+            navigate("/login");
+          }}
+          className="profile-popup__action-row w-full text-left cursor-pointer"
+        >
           <div className="profile-popup__action-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

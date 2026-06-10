@@ -87,12 +87,12 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
         className={`fixed top-0 left-0 bottom-0 w-64 bg-white dark:bg-[#0b1c30] border-r border-[#e2e8f0] dark:border-[#1e3a5f] shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="h-16 border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-6 shrink-0">
-          <span className="text-xl font-extrabold text-[#121c28] tracking-tight">
-            Smart<span className="text-[#006c49]">Sort</span>
+          <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
+            Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
           </span>
           <button 
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white transition-colors"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -115,12 +115,12 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                     onClick={() => toggleExpand(item.path)}
                     className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group w-full ${
                       isActive 
-                        ? 'bg-[#006c49]/10 text-[#006c49] font-bold' 
-                        : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] hover:text-[#0b1c30] dark:text-white font-semibold'
+                        ? 'bg-[#006c49]/10 text-[#006c49] dark:bg-emerald-500/10 dark:text-emerald-400 font-bold' 
+                        : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] hover:text-[#0b1c30] dark:hover:text-white font-semibold'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`${isActive ? 'text-[#006c49]' : 'text-[#94a3b8] dark:text-[#64748b] group-hover:text-[#515f74] dark:group-hover:text-[#cbd5e1]'}`}>
+                      <div className={`${isActive ? 'text-[#006c49] dark:text-emerald-400' : 'text-[#94a3b8] dark:text-[#cbd5e1] group-hover:text-[#515f74] dark:group-hover:text-white'}`}>
                         {item.icon}
                       </div>
                       {item.label}
@@ -138,11 +138,11 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                     onClick={onClose}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                       isActive 
-                        ? 'bg-[#006c49]/10 text-[#006c49] font-bold' 
-                        : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] hover:text-[#0b1c30] dark:text-white font-semibold'
+                        ? 'bg-[#006c49]/10 text-[#006c49] dark:bg-emerald-500/10 dark:text-emerald-400 font-bold' 
+                        : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] hover:text-[#0b1c30] dark:hover:text-white font-semibold'
                     }`}
                   >
-                    <div className={`${isActive ? 'text-[#006c49]' : 'text-[#94a3b8] dark:text-[#64748b] group-hover:text-[#515f74] dark:group-hover:text-[#cbd5e1]'}`}>
+                    <div className={`${isActive ? 'text-[#006c49] dark:text-emerald-400' : 'text-[#94a3b8] dark:text-[#cbd5e1] group-hover:text-[#515f74] dark:group-hover:text-white'}`}>
                       {item.icon}
                     </div>
                     {item.label}
@@ -160,8 +160,8 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                           onClick={onClose}
                           className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
                             isChildItemActive 
-                              ? 'text-[#006c49] font-bold bg-[#006c49]/5' 
-                              : 'text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] font-medium'
+                              ? 'text-[#006c49] dark:text-emerald-400 font-bold bg-[#006c49]/5 dark:bg-emerald-500/5' 
+                              : 'text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:hover:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] font-medium'
                           }`}
                         >
                           {child.label}
@@ -178,7 +178,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
         <div className="p-4 border-t border-[#e2e8f0] dark:border-[#1e3a5f]">
           <Link
             to="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] hover:bg-[#ffdad6]/50 font-semibold transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] dark:text-red-400 hover:bg-[#ffdad6]/50 dark:hover:bg-red-500/10 font-semibold transition-colors"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

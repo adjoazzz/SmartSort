@@ -1,55 +1,119 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { InputField } from "../../components/InputField";
+import imgAiCore from "../../assets/smartsort_ai_core.png";
 
-/**
- * Login Page Component
- * 
- * Clean semantic view for user authentication.
- */
+// --- Custom SVGs for UI Icons ---
+
+function LogoSvg() {
+  return (
+    <svg width="36" height="36" viewBox="0 0 100 100" fill="none" className="text-blue-600">
+      <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" stroke="currentColor" strokeWidth="8" strokeLinejoin="round" fill="none"/>
+      <line x1="50" y1="5" x2="50" y2="50" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
+      <line x1="50" y1="50" x2="90" y2="72.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
+      <line x1="50" y1="50" x2="10" y2="72.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
+      <polygon points="50,35 65,42.5 65,57.5 50,65 35,57.5 35,42.5" fill="currentColor" opacity="0.8"/>
+    </svg>
+  );
+}
+
+function ShieldLockIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+  );
+}
+
+function TruckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="3" width="15" height="13"></rect>
+      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+    </svg>
+  );
+}
+
+function UserIcon({ className }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+  );
+}
+
+function PasswordLockIcon({ className }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+  );
+}
+
+function EyeOpenIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+    </svg>
+  );
+}
+
+function EyeClosedIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+      <line x1="1" y1="1" x2="23" y2="23"></line>
+    </svg>
+  );
+}
+
+function LoginArrowIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+      <polyline points="10 17 15 12 10 7"></polyline>
+      <line x1="15" y1="12" x2="3" y2="12"></line>
+    </svg>
+  );
+}
+
+// --- Main Login Component ---
+
 export default function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [email, setEmail] = useState("user@smartsort.com");
-  const [password, setPassword] = useState("password123");
+
+  // Local Form States
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  
+  // Selected Login Role Toggle
+  const [selectedRole, setSelectedRole] = useState<"manager" | "collector">("manager");
 
-  const validate = () => {
-    let isValid = true;
-    setEmailError("");
-    setPasswordError("");
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError("Please enter a valid email address.");
-      isValid = false;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
-      isValid = false;
-    } else if (!/[A-Z]/.test(password)) {
-      setPasswordError("Password must contain at least one uppercase letter.");
-      isValid = false;
-    } else if (!/[0-9]/.test(password)) {
-      setPasswordError("Password must contain at least one number.");
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    
-    // Check if the user came from a collector invite link
+  // Sync role toggle choice with search parameters
+  useEffect(() => {
     const isCollectorInvite = searchParams.get("role") === "collector";
-    
-    // Simulate auto-routing based on account type
-    if (email.toLowerCase().includes("collector") || isCollectorInvite) {
+    if (isCollectorInvite) {
+      setSelectedRole("collector");
+    }
+  }, [searchParams]);
+
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+
+    // Set selected role to localStorage to drive role-based menu configurations
+    localStorage.setItem("userRole", selectedRole);
+
+    // Dynamic role based routing
+    if (selectedRole === "collector") {
       navigate("/collector-dashboard");
     } else {
       navigate("/dashboard");
@@ -57,132 +121,197 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] dark:bg-[#1a365d] flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-[440px] flex flex-col items-center gap-8">
+    <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-[#0b1c30] text-[#0f172a] dark:text-white transition-colors duration-300 font-sans">
+      
+      {/* LEFT PANEL: Form and Branding */}
+      <div className="w-full md:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-white dark:bg-[#0b1c30] relative">
         
-        {/* Header / Branding */}
-        <div className="flex flex-col items-center text-center gap-2">
-          <div className="w-16 h-16 bg-[#398454] rounded-2xl flex items-center justify-center shadow-lg mb-2 relative">
-            {/* The white glowing leaf/icon equivalent */}
-            <div className="absolute -bottom-1 w-full h-full bg-white dark:bg-[#0b1c30]/20 blur-md rounded-2xl" />
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="relative z-10 text-white">
-              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M9 9H9.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M15 9H15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+        {/* Top Branding Header */}
+        <div className="flex items-center gap-3">
+          <LogoSvg />
+          <div className="flex flex-col">
+            <span className="text-lg font-black tracking-tight text-[#0f172a] dark:text-white">SmartSort</span>
+            <span className="text-[9px] font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase -mt-1">Air</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-[#121c28] dark:text-white tracking-tight">SmartSort</h1>
-          <p className="text-sm font-medium text-[#434655] dark:text-[#cbd5e1]/80 uppercase tracking-wide mt-1">
-            Waste Intelligence for a Sustainable Future
-          </p>
         </div>
 
-        {/* Login Card */}
-        <div className="w-full bg-white dark:bg-[#0b1c30]/80 backdrop-blur-xl border border-white/40 shadow-[0_12px_20px_rgba(18,28,40,0.06)] rounded-2xl p-8 sm:p-10">
-          <form onSubmit={handleLogin} className="flex flex-col gap-6">
+        {/* Login Form Container */}
+        <div className="max-w-md w-full mx-auto my-auto py-10 flex flex-col gap-8">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-[#0f172a] dark:text-white">Welcome</h2>
+            <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-1.5">
+              Please log in with your login details to start working!
+            </p>
+          </div>
+
+          <form onSubmit={handleLoginSubmit} className="flex flex-col gap-6">
             
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="text-xs font-semibold text-[#434655] dark:text-[#cbd5e1] uppercase tracking-wider">
-                EMAIL ADDRESS
-              </label>
+            {/* Role segmented toggle */}
+            <div className="bg-slate-100 dark:bg-[#0f2942] p-1 rounded-xl flex gap-1 border border-slate-200/50 dark:border-[#1e3a5f]/50">
+              <button
+                type="button"
+                onClick={() => setSelectedRole("manager")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                  selectedRole === "manager"
+                    ? "bg-white dark:bg-[#0b1c30] shadow-sm text-blue-600 dark:text-blue-400"
+                    : "text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0f172a] dark:hover:text-white"
+                }`}
+              >
+                <ShieldLockIcon />
+                Admin / Manager
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedRole("collector")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                  selectedRole === "collector"
+                    ? "bg-white dark:bg-[#0b1c30] shadow-sm text-blue-600 dark:text-blue-400"
+                    : "text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0f172a] dark:hover:text-white"
+                }`}
+              >
+                <TruckIcon />
+                Collector
+              </button>
+            </div>
+
+            {/* Email field */}
+            <div className="relative border-b border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400 py-3 transition-colors flex items-center gap-3">
+              <UserIcon className="text-slate-400 dark:text-[#94a3b8] w-5 h-5 flex-shrink-0" />
               <input
-                id="email"
                 type="email"
-                placeholder="user@smartsort.com"
+                required
+                placeholder="Email Address"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
-                className={`h-12 px-4 border rounded-lg text-sm bg-[#eef4ff] dark:bg-[#1a365d] text-[#0b1c30] dark:text-white placeholder-[#434655]/40 focus:outline-none focus:ring-2 transition-all ${
-                  emailError 
-                    ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20" 
-                    : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#398454] focus:ring-[#398454]/20"
-                }`}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
               />
-              {emailError && <span className="text-xs text-[#ba1a1a] font-medium">{emailError}</span>}
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-xs font-semibold text-[#434655] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  PASSWORD
-                </label>
-                <button type="button" className="text-[10px] font-bold text-[#434655] dark:text-[#cbd5e1]/60 hover:text-[#398454] transition-colors relative group">
-                  Forgot Password?
-                  <div className="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-[#27313e] text-[#eaf1ff] text-[10px] px-2 py-1 rounded whitespace-nowrap pointer-events-none">
-                    Coming Soon
-                  </div>
-                </button>
-              </div>
+            {/* Password field */}
+            <div className="relative border-b border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400 py-3 transition-colors flex items-center gap-3">
+              <PasswordLockIcon className="text-slate-400 dark:text-[#94a3b8] w-5 h-5 flex-shrink-0" />
               <input
-                id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
+                required
+                placeholder="Password"
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
-                className={`h-12 px-4 border rounded-lg text-sm bg-[#eef4ff] dark:bg-[#1a365d] text-[#0b1c30] dark:text-white placeholder-[#434655]/40 focus:outline-none focus:ring-2 transition-all ${
-                  passwordError 
-                    ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20" 
-                    : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#398454] focus:ring-[#398454]/20"
-                }`}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
               />
-              {passwordError && <span className="text-xs text-[#ba1a1a] font-medium">{passwordError}</span>}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-slate-400 dark:text-[#94a3b8] hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+              </button>
             </div>
 
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <div className="relative w-4 h-4 rounded border border-[#c3c6d7] dark:border-[#334155] bg-[#eef4ff] dark:bg-[#1a365d] flex items-center justify-center group-hover:border-[#398454] transition-colors">
-                {rememberMe && (
-                  <svg className="w-3 h-3 text-[#398454]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </div>
-              <input 
-                type="checkbox" 
-                className="hidden" 
-                checked={rememberMe} 
-                onChange={(e) => setRememberMe(e.target.checked)} 
-              />
-              <span className="text-xs font-medium text-[#434655] dark:text-[#cbd5e1]">Stay signed in for 30 days</span>
-            </label>
-
+            {/* Submit Button */}
             <button
               type="submit"
-              className="w-full h-12 rounded-lg bg-gradient-to-br from-[#398454] to-[#2563eb] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg mt-2"
+              disabled={!email || !password}
+              className={`h-12 w-full rounded-lg font-bold text-sm tracking-wide transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 ${
+                email && password
+                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-blue-600/10"
+                  : "bg-slate-100 dark:bg-[#0f2942] text-slate-400 dark:text-slate-600 cursor-not-allowed border border-transparent"
+              }`}
             >
-              <span className="text-sm font-bold text-white tracking-wide">Sign In</span>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white">
-                <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <LoginArrowIcon />
+              LOGIN
             </button>
-            <button
-              type="button"
-              onClick={() => navigate('/collector-dashboard')}
-              className="w-full h-10 rounded-lg bg-white dark:bg-[#1e3a5f] border border-[#cbd5e1] dark:border-[#334155] hover:bg-[#f8fafc] dark:hover:bg-[#274c77] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm text-[#515f74] dark:text-[#cbd5e1]"
-            >
-              <span className="text-xs font-bold tracking-wide">Demo Collector Login</span>
-            </button>
-          </form>
 
-          {/* Footer Links */}
-          <div className="mt-8 pt-8 border-t border-[#c3c6d7] dark:border-[#334155]/20 flex items-center justify-center gap-1.5 text-xs">
-            <span className="font-medium text-[#434655] dark:text-[#cbd5e1]/60">New to the platform?</span>
-            <button onClick={() => navigate("/onboarding-1")} className="font-bold text-[#398454] hover:underline">Request access</button>
-          </div>
+            {/* Inquiry & links */}
+            <div className="flex flex-col gap-4 items-center justify-center text-xs mt-2">
+              <a href="#" className="font-semibold text-slate-500 hover:text-blue-600 transition-colors">
+                Forgot password?
+              </a>
+              
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded border-slate-300 dark:border-[#1e3a5f] text-blue-600 focus:ring-blue-500 bg-slate-50 dark:bg-[#0b1c30]"
+                />
+                <span className="text-slate-500 dark:text-[#cbd5e1] font-medium">Stay signed in for 30 days</span>
+              </label>
+            </div>
+
+          </form>
         </div>
 
-        {/* System Status Hint */}
-        <div className="mt-4 px-4 py-2 rounded-full bg-white dark:bg-[#0b1c30]/40 backdrop-blur-sm border border-white/20 flex items-center gap-4 shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#22c55e]"></span>
-            </div>
-            <span className="text-[10px] font-bold text-[#434655] dark:text-[#cbd5e1]/70 uppercase tracking-tight">Systems Operational</span>
-          </div>
-          <div className="w-px h-3 bg-[#434655]/20" />
-          <span className="text-[10px] font-bold text-[#434655] dark:text-[#cbd5e1]/70 uppercase tracking-tight">v4.2.0-stable</span>
+        {/* Bottom Status Panel */}
+        <div className="flex items-center gap-4 text-[10px] font-bold text-[#64748b] tracking-wider uppercase">
+          <span className="inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-[#1e3a5f] rounded-full px-3 py-1 bg-slate-50 dark:bg-[#0f2942]">
+            <span className="w-1.5 h-1.5 bg-[#22c55e] rounded-full animate-pulse" />
+            Systems Operational
+          </span>
+          <span className="text-slate-200 dark:text-[#1e3a5f]">|</span>
+          <span>V4.2.0-STABLE</span>
         </div>
 
       </div>
+
+      {/* RIGHT PANEL: High-Tech Branding */}
+      <div 
+        className="w-full md:w-1/2 bg-[#020e24] text-white flex flex-col justify-center items-center p-8 sm:p-12 lg:p-16 relative overflow-hidden"
+        style={{
+          backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)",
+          backgroundSize: "24px 24px"
+        }}
+      >
+        {/* Glow ambient background effects */}
+        <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+        <div className="max-w-md w-full flex flex-col items-center gap-10 relative z-10">
+          
+          {/* Circular float card */}
+          <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-[#07132a]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col items-center justify-center gap-3 p-6 group hover:border-blue-500/30 transition-all duration-500">
+            {/* AI badge */}
+            <span className="absolute top-4 right-4 bg-blue-600 text-[8px] font-extrabold tracking-widest px-2 py-0.5 rounded uppercase">
+              AI Engine
+            </span>
+            
+            {/* Circular glowing orb */}
+            <div className="w-44 h-44 rounded-full flex items-center justify-center relative">
+              <div className="absolute inset-0 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-all" />
+              <img 
+                src={imgAiCore} 
+                alt="SmartSort AI Core" 
+                className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105" 
+              />
+            </div>
+            
+            {/* Bottom brand card status */}
+            <span className="text-lg font-black tracking-tight text-blue-400">SmartSort</span>
+
+            {/* Binary check badge */}
+            <span className="absolute bottom-4 left-4 bg-white/5 border border-white/10 text-[8.5px] font-mono tracking-wider px-2 py-0.5 rounded text-[#10b981] flex items-center gap-1">
+              ✓ 1001100111100
+            </span>
+          </div>
+
+          {/* Tagline block */}
+          <div className="text-center flex flex-col gap-4">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Revolutionary Waste Management
+            </h3>
+            <p className="text-xs sm:text-sm text-[#94a3b8] leading-relaxed font-light">
+              SmartSort is the next generation waste management software which growth with its users. Built with the best practices in mind it fits your needs no matter if you need the whole software or just one component. Is there still something missing? Get in touch so that we can tailor it to your needs.
+            </p>
+          </div>
+
+          {/* Dots Pagination */}
+          <div className="flex gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-white shadow-sm" />
+            <span className="w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/40 cursor-pointer transition-colors" />
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from "react-router";
+import { useTheme } from 'next-themes';
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import { SideNav } from './SideNav';
 import { AlertsSidebar } from './AlertsSidebar';
@@ -19,33 +20,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
 
-  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system'>(() => {
-    return (localStorage.getItem('themeMode') as 'light' | 'dark' | 'system') || 'system';
-  });
-
-  React.useEffect(() => {
-    const root = document.documentElement;
-    localStorage.setItem('themeMode', themeMode);
-
-    if (themeMode === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const applySystemTheme = (e: MediaQueryListEvent | MediaQueryList) => {
-        if (e.matches) {
-          root.classList.add('dark');
-        } else {
-          root.classList.remove('dark');
-        }
-      };
-      
-      applySystemTheme(mediaQuery);
-      mediaQuery.addEventListener('change', applySystemTheme);
-      return () => mediaQuery.removeEventListener('change', applySystemTheme);
-    } else if (themeMode === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [themeMode]);
+  const { theme: themeMode, setTheme: setThemeMode } = useTheme();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -92,7 +67,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           {!hideAlertsIcon && (
             <button 
               onClick={() => setIsAlertsOpen(true)}
-              className="text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors relative"
+            className="text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white transition-colors relative"
               aria-label="Open alerts"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -107,7 +82,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           <div className="relative" ref={settingsRef}>
             <button 
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className={`text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] transition-colors ${isSettingsOpen ? 'text-[#0b1c30] dark:text-white' : 'hover:text-[#0b1c30] dark:text-white'}`}
+              className={`text-[#64748b] dark:text-[#cbd5e1] transition-colors ${isSettingsOpen ? 'text-[#0b1c30] dark:text-white' : 'hover:text-[#0b1c30] dark:hover:text-white'}`}
               aria-label="Settings"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -145,19 +120,19 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                   <div className="flex bg-[#f8fafc] dark:bg-[#0f2942] p-1 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f]">
                     <button 
                       onClick={() => setThemeMode('light')}
-                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'light' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
+                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'light' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
                       Light
                     </button>
                     <button 
                       onClick={() => setThemeMode('dark')}
-                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'dark' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
+                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'dark' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
                       Dark
                     </button>
                     <button 
                       onClick={() => setThemeMode('system')}
-                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'system' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white'}`}
+                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'system' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
                       System
                     </button>

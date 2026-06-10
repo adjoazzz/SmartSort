@@ -73,7 +73,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
     <>
       {/* Backdrop overlay */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/10 backdrop-blur-[2px] z-[60] transition-opacity duration-300 ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
@@ -81,12 +81,12 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
 
       {/* Sidebar panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white dark:bg-[#0b1c30] shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white/80 dark:bg-[#0b1c30]/80 backdrop-blur-md border-l border-[#e2e8f0]/40 dark:border-[#1e3a5f]/40 shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e2e8f0] dark:border-[#1e3a5f] bg-white dark:bg-[#0b1c30] flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e2e8f0]/40 dark:border-[#1e3a5f]/40 bg-transparent flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#ffdad6]/30 flex items-center justify-center text-[#ba1a1a]">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -166,7 +166,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#e2e8f0] dark:border-[#1e3a5f] bg-[#f8fafc] dark:bg-[#0f2942] flex-shrink-0">
+        <div className="px-6 py-4 border-t border-[#e2e8f0]/40 dark:border-[#1e3a5f]/40 bg-[#f8fafc]/50 dark:bg-[#0f2942]/50 flex-shrink-0">
           <Link
             to="/alerts"
             onClick={onClose}
