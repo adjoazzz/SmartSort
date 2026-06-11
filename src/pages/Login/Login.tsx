@@ -82,6 +82,71 @@ function LoginArrowIcon() {
   );
 }
 
+// --- Validation Helpers ---
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LENGTH = 8;
+
+interface ValidationErrors {
+  email?: string;
+  password?: string;
+}
+
+function validateEmail(value: string): string | undefined {
+  if (!value.trim()) return "Email address is required";
+  if (!EMAIL_REGEX.test(value)) return "Please enter a valid email address";
+  return undefined;
+}
+
+function validatePassword(value: string): string | undefined {
+  if (!value) return "Password is required";
+  if (value.length < MIN_PASSWORD_LENGTH)
+    return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+  if (!/\d/.test(value))
+    return "Password must contain at least one number";
+  if (!/[!@#$%^&*(),.?":{}|<>[\]\\/`~_\-+=]/.test(value))
+    return "Password must contain at least one special character";
+  return undefined;
+}
+
+// --- Inline Error Message Component ---
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p
+      className="text-[11px] font-semibold mt-1.5 flex items-center gap-1"
+      style={{ color: "#ef4444" }}
+    >
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      {message}
+    </p>
+  );
+}
+
+// --- Shake keyframe injected once via a <style> tag ---
+
+const shakeKeyframes = `
+@keyframes login-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-4px); }
+  30%, 70% { transform: translateX(4px); }
+}
+`;
+
 // --- Main Login Component ---
 
 export default function Login() {
@@ -93,9 +158,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  
+
   // Selected Login Role Toggle
   const [selectedRole, setSelectedRole] = useState<"manager" | "collector">("manager");
+
+  // Validation States
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [touched, setTouched] = useState<{ email?: boolean; password?: boolean }>({});
+  const [shaking, setShaking] = useState(false);
 
   // Sync role toggle choice with search parameters
   useEffect(() => {
@@ -105,9 +175,54 @@ export default function Login() {
     }
   }, [searchParams]);
 
+  // Clear field error on change when the new value is valid
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (touched.email) {
+      const err = validateEmail(value);
+      setErrors((prev) => ({ ...prev, email: err }));
+    }
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (touched.password) {
+      const err = validatePassword(value);
+      setErrors((prev) => ({ ...prev, password: err }));
+    }
+  };
+
+  // Mark field as touched when the user leaves it
+  const handleEmailBlur = () => {
+    setTouched((prev) => ({ ...prev, email: true }));
+    setErrors((prev) => ({ ...prev, email: validateEmail(email) }));
+  };
+
+  const handlePasswordBlur = () => {
+    setTouched((prev) => ({ ...prev, password: true }));
+    setErrors((prev) => ({ ...prev, password: validatePassword(password) }));
+  };
+
+  const triggerShake = () => {
+    setShaking(true);
+    setTimeout(() => setShaking(false), 500);
+  };
+
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+
+    // Run full validation
+    const emailErr = validateEmail(email);
+    const passwordErr = validatePassword(password);
+    const newErrors: ValidationErrors = { email: emailErr, password: passwordErr };
+    setErrors(newErrors);
+    setTouched({ email: true, password: true });
+
+    // If there are validation errors, shake the form and stop
+    if (emailErr || passwordErr) {
+      triggerShake();
+      return;
+    }
 
     // Set selected role to localStorage to drive role-based menu configurations
     localStorage.setItem("userRole", selectedRole);
@@ -120,9 +235,15 @@ export default function Login() {
     }
   };
 
+  const hasEmailError = !!errors.email;
+  const hasPasswordError = !!errors.password;
+  const isFormValid = email.trim() !== "" && password !== "" && !hasEmailError && !hasPasswordError;
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-[#0b1c30] text-[#0f172a] dark:text-white transition-colors duration-300 font-sans">
-      
+      {/* Inject shake animation */}
+      <style>{shakeKeyframes}</style>
+
       {/* LEFT PANEL: Form and Branding */}
       <div className="w-full md:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-white dark:bg-[#0b1c30] relative">
         
@@ -144,7 +265,12 @@ export default function Login() {
             </p>
           </div>
 
-          <form onSubmit={handleLoginSubmit} className="flex flex-col gap-6">
+          <form
+            onSubmit={handleLoginSubmit}
+            noValidate
+            className="flex flex-col gap-6"
+            style={shaking ? { animation: "login-shake 0.4s ease-in-out" } : undefined}
+          >
             
             {/* Role segmented toggle */}
             <div className="bg-slate-100 dark:bg-[#0f2942] p-1 rounded-xl flex gap-1 border border-slate-200/50 dark:border-[#1e3a5f]/50">
@@ -175,44 +301,84 @@ export default function Login() {
             </div>
 
             {/* Email field */}
-            <div className="relative border-b border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400 py-3 transition-colors flex items-center gap-3">
-              <UserIcon className="text-slate-400 dark:text-[#94a3b8] w-5 h-5 flex-shrink-0" />
-              <input
-                type="email"
-                required
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
-              />
+            <div>
+              <div
+                className={`relative py-3 transition-colors flex items-center gap-3 border-b ${
+                  hasEmailError
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400"
+                }`}
+              >
+                <UserIcon
+                  className={`w-5 h-5 flex-shrink-0 ${
+                    hasEmailError
+                      ? "text-red-500"
+                      : "text-slate-400 dark:text-[#94a3b8]"
+                  }`}
+                />
+                <input
+                  id="login-email"
+                  type="email"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => handleEmailChange(e.target.value)}
+                  onBlur={handleEmailBlur}
+                  aria-invalid={hasEmailError}
+                  aria-describedby={hasEmailError ? "login-email-error" : undefined}
+                  className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
+                />
+              </div>
+              <div id="login-email-error">
+                <FieldError message={errors.email} />
+              </div>
             </div>
 
             {/* Password field */}
-            <div className="relative border-b border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400 py-3 transition-colors flex items-center gap-3">
-              <PasswordLockIcon className="text-slate-400 dark:text-[#94a3b8] w-5 h-5 flex-shrink-0" />
-              <input
-                type={showPassword ? "text" : "password"}
-                required
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="text-slate-400 dark:text-[#94a3b8] hover:text-blue-600 dark:hover:text-blue-400"
+            <div>
+              <div
+                className={`relative py-3 transition-colors flex items-center gap-3 border-b ${
+                  hasPasswordError
+                    ? "border-red-500 dark:border-red-500"
+                    : "border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400"
+                }`}
               >
-                {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
-              </button>
+                <PasswordLockIcon
+                  className={`w-5 h-5 flex-shrink-0 ${
+                    hasPasswordError
+                      ? "text-red-500"
+                      : "text-slate-400 dark:text-[#94a3b8]"
+                  }`}
+                />
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  onBlur={handlePasswordBlur}
+                  aria-invalid={hasPasswordError}
+                  aria-describedby={hasPasswordError ? "login-password-error" : undefined}
+                  className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-slate-400 dark:text-[#94a3b8] hover:text-blue-600 dark:hover:text-blue-400"
+                >
+                  {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                </button>
+              </div>
+              <div id="login-password-error">
+                <FieldError message={errors.password} />
+              </div>
             </div>
 
             {/* Submit Button */}
             <button
+              id="login-submit"
               type="submit"
-              disabled={!email || !password}
               className={`h-12 w-full rounded-lg font-bold text-sm tracking-wide transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 ${
-                email && password
+                isFormValid
                   ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-blue-600/10"
                   : "bg-slate-100 dark:bg-[#0f2942] text-slate-400 dark:text-slate-600 cursor-not-allowed border border-transparent"
               }`}
