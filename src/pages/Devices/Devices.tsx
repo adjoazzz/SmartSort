@@ -1,21 +1,11 @@
-import React, { use, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { RegisterDeviceModal } from "../../components/RegisterDeviceModal";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
 import { Progress } from "../../components/ui/progress";
 
-// // Mock Data for Devices
-// const DEVICE_FLEET_DATA = [
-//   { id: '982-AX-01', name: 'SS-UNIT-042', location: 'North Dock A-4', status: 'Online', fill: 78, lastActive: '2m ago', firmware: 'v2.4.1' },
-//   { id: '114-BK-22', name: 'SS-UNIT-015', location: 'South Lobby', status: 'Online', fill: 92, lastActive: '15m ago', firmware: 'v2.4.0' },
-//   { id: '055-CF-99', name: 'SS-UNIT-089', location: 'Parking Level 2', status: 'Offline', fill: 12, lastActive: '4h ago', firmware: 'v2.4.1' },
-//   { id: '887-AA-09', name: 'SS-UNIT-104', location: 'East Wing Cafeteria', status: 'Online', fill: 45, lastActive: 'Just now', firmware: 'v2.4.1' },
-//   { id: '231-ZZ-44', name: 'SS-UNIT-033', location: 'Main Entrance', status: 'Online', fill: 61, lastActive: '1m ago', firmware: 'v2.3.9' },
-//   { id: '443-TR-88', name: 'SS-UNIT-067', location: 'Backyard Storage', status: 'Online', fill: 22, lastActive: '8m ago', firmware: 'v2.4.1' },
-//   { id: '901-XS-12', name: 'SS-UNIT-119', location: 'Suite 400 Kitchen', status: 'Critical', fill: 98, lastActive: '30s ago', firmware: 'v2.4.1' },
-// ];
-
+// Event logs mock template
 const EVENT_LOGS = [
   {
     id: 1,
@@ -50,7 +40,7 @@ const EVENT_LOGS = [
     type: "POWER CYCLE",
     time: "08:12:44",
     desc: "Scheduled maintenance restart completed.",
-    color: "text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]",
+    color: "text-[#64748b] dark:text-[#cbd5e1]",
   },
   {
     id: 6,
@@ -61,31 +51,126 @@ const EVENT_LOGS = [
   },
 ];
 
+// Skeleton row for main table
+function TableRowSkeleton() {
+  return (
+    <TableRow className="animate-pulse">
+      <TableCell className="px-6 py-5 whitespace-nowrap">
+        <div className="flex flex-col gap-2">
+          <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+          <div className="h-3 w-20 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+        </div>
+      </TableCell>
+      <TableCell className="px-6 py-5 whitespace-nowrap">
+        <div className="h-4 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+      </TableCell>
+      <TableCell className="px-6 py-5 whitespace-nowrap">
+        <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+      </TableCell>
+      <TableCell className="px-6 py-5 whitespace-nowrap">
+        <div className="flex items-center gap-3 w-24">
+          <div className="h-2 w-16 bg-slate-100 dark:bg-[#0f2942] rounded-full flex-1"></div>
+          <div className="h-4 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+        </div>
+      </TableCell>
+      <TableCell className="px-6 py-5 whitespace-nowrap">
+        <div className="h-4 w-24 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+      </TableCell>
+      <TableCell className="px-6 py-5 whitespace-nowrap">
+        <div className="h-4 w-10 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+// Skeleton details panel
+function SidebarDetailsSkeleton() {
+  return (
+    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm p-6 animate-pulse w-full">
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <div className="h-6 w-32 bg-slate-200 dark:bg-[#1a365d] rounded-md mb-2"></div>
+          <div className="h-4 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-md"></div>
+        </div>
+        <div className="h-4 w-12 bg-slate-200 dark:bg-[#1a365d] rounded-md"></div>
+      </div>
+
+      <div className="flex justify-between gap-3 mb-8">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex flex-col items-center flex-1">
+            <div className="w-full h-32 bg-slate-50 dark:bg-[#0f2942]/30 rounded-t-md relative flex flex-col justify-end border-b-2 border-slate-200 dark:border-slate-800">
+              <div className="absolute inset-x-0 bottom-0 bg-slate-200 dark:bg-[#1a365d] h-[40%]" />
+            </div>
+            <div className="h-3 w-12 bg-slate-200 dark:bg-[#1a365d] rounded mt-3"></div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between border-t border-[#f1f5f9] dark:border-[#0f2942] pt-5">
+        <div>
+          <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
+          <div className="h-5 w-12 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+        </div>
+        <div className="text-right flex flex-col items-end">
+          <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
+          <div className="h-5 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Skeleton event log
+function EventLogSkeleton() {
+  return (
+    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col h-[320px] animate-pulse w-full">
+      <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
+        <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+        <div className="h-4 w-4 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+      </div>
+
+      <div className="p-4 flex-1 flex flex-col gap-4 overflow-hidden">
+        {[1, 2].map((i) => (
+          <div key={i} className="flex flex-col gap-2">
+            <div className="flex justify-between">
+              <div className="h-3 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+              <div className="h-3 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+            </div>
+            <div className="h-4 w-full bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+            <div className="h-4.5 w-2/3 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Devices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [devices, setDevices] = useState([]);
-
-  //   useEffect(() => {
-  //   fetch('http://localhost:5000/api/devices')
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setDevices(data); // Put the data from your backend into react
-  //   })
-  //   .catch(error => console.error('Error fetching device data:', error));
-  // }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const baseUrl =
       (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
+    setIsLoading(true);
     fetch(`${baseUrl}/api/devices`)
       .then((response) => response.json())
       .then((data) => {
         setDevices(data);
+        if (data && data.length > 0) {
+          // Auto-select the first device in the fetched list
+          setSelectedDevice(data[0].customBinId);
+        }
+        setIsLoading(false);
       })
-      .catch((error) => console.error("Error fetching device data:", error));
+      .catch((error) => {
+        console.error("Error fetching device data:", error);
+        setIsLoading(false);
+      });
   }, []);
 
   const normalizedDevices = devices.map((d: any) => ({
@@ -98,13 +183,6 @@ export default function Devices() {
     firmware: "v2.4.1",
   }));
 
-  // // Filter data based on search
-  // const filteredData = DEVICE_FLEET_DATA.filter(device =>
-  //   device.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //   device.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //   device.id.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
   const filteredData = normalizedDevices.filter(
     (device) =>
       device.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -112,13 +190,24 @@ export default function Devices() {
       device.id.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  // Retrieve current active device selection
+  const currentDevice = filteredData.find((d) => d.id === selectedDevice) || filteredData[0];
+
+  // Dynamic calculated compartments and telemetry
+  const recyclingFill = currentDevice ? currentDevice.fill : 0;
+  const organicsFill = currentDevice ? Math.min(100, Math.round(currentDevice.fill * 0.6)) : 0;
+  const generalFill = currentDevice ? Math.min(100, Math.round(currentDevice.fill * 0.3)) : 0;
+  const currentTemp = currentDevice ? (((currentDevice.fill * 3) % 7) + 18.2).toFixed(1) : "22.4";
+  const currentUptimeDays = currentDevice ? ((currentDevice.fill * 7) % 15) + 3 : 14;
+  const currentUptime = `${currentUptimeDays}d 6h 12m`;
+
   return (
     <PageLayout
       title="Device Fleet"
       description={`Managing ${devices.filter((d: any) => d.status === "Active" || d.status === "Online" || !d.status).length} active hardware units across 14 facilities.`}
       actions={
         <div className="flex gap-3">
-          <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
+          <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
             <svg
               width="14"
               height="14"
@@ -133,7 +222,7 @@ export default function Devices() {
           </button>
           <button
             onClick={() => setShowRegisterModal(true)}
-            className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2"
+            className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
           >
             <svg
               width="14"
@@ -205,76 +294,11 @@ export default function Devices() {
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-[#f1f5f9]">
-              {filteredData.map((device, idx) => (
-                <TableRow
-                  key={device.id}
-                  onClick={() => setSelectedDevice(device.id)}
-                  className={`hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group cursor-pointer relative border-b border-[#f1f5f9] ${selectedDevice === device.id ? "bg-[#f8fafc] dark:bg-[#0f2942]" : ""}`}
-                >
-                  <TableCell className="px-6 py-4 whitespace-nowrap relative">
-                    {selectedDevice === device.id && (
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#10b981]"></div>
-                    )}
-                    <div className="flex flex-col">
-                      <span
-                        className={`text-sm font-medium ${selectedDevice === device.id ? "text-[#065f46]" : "text-[#065f46] group-hover:text-[#006c49]"}`}
-                      >
-                        {device.name}
-                      </span>
-                      <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] font-mono mt-0.5">
-                        ID: {device.id}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                    {device.location}
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap">
-                    <StatusBadge
-                      label={
-                        device.status === "Critical"
-                          ? "Critical"
-                          : device.status
-                      }
-                      variant={
-                        device.status === "Online"
-                          ? "success"
-                          : device.status === "Offline"
-                            ? "neutral"
-                            : device.status === "Critical"
-                              ? "danger"
-                              : "warning"
-                      }
-                      hasDot
-                    />
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-3 w-24">
-                      <Progress
-                        value={device.fill}
-                        className={`h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] ${
-                          device.fill > 85
-                            ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                            : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
-                        }`}
-                      />
-                      <span
-                        className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-[#0b1c30] dark:text-white"} w-8`}
-                      >
-                        {device.fill}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                    {device.lastActive}
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap text-xs text-[#94a3b8] dark:text-[#64748b]">
-                    {device.firmware}
-                  </TableCell>
-                </TableRow>
-              ))}
-
-              {filteredData.length === 0 && (
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, idx) => (
+                  <TableRowSkeleton key={idx} />
+                ))
+              ) : filteredData.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={6}
@@ -283,6 +307,75 @@ export default function Devices() {
                     No devices found matching "{searchTerm}"
                   </TableCell>
                 </TableRow>
+              ) : (
+                filteredData.map((device, idx) => (
+                  <TableRow
+                    key={device.id}
+                    onClick={() => setSelectedDevice(device.id)}
+                    className={`hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group cursor-pointer relative border-b border-[#f1f5f9] ${selectedDevice === device.id ? "bg-[#f8fafc] dark:bg-[#0f2942]" : ""}`}
+                  >
+                    <TableCell className="px-6 py-4 whitespace-nowrap relative">
+                      {selectedDevice === device.id && (
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#10b981]"></div>
+                      )}
+                      <div className="flex flex-col">
+                        <span
+                          className={`text-sm font-medium ${selectedDevice === device.id ? "text-[#065f46] dark:text-[#6ffbbe]" : "text-[#0b1c30] dark:text-white group-hover:text-[#006c49] dark:group-hover:text-[#6ffbbe]"}`}
+                        >
+                          {device.name}
+                        </span>
+                        <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] font-mono mt-0.5">
+                          ID: {device.id}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                      {device.location}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <StatusBadge
+                        label={
+                          device.status === "Critical"
+                            ? "Critical"
+                            : device.status
+                        }
+                        variant={
+                          device.status === "Online" || device.status === "Active"
+                            ? "success"
+                            : device.status === "Offline"
+                              ? "neutral"
+                              : device.status === "Critical"
+                                ? "danger"
+                                : "warning"
+                        }
+                        hasDot
+                      />
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3 w-24">
+                        <Progress
+                          value={device.fill}
+                          className={`h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] ${
+                            device.fill > 85
+                              ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                              : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                          }`}
+                        />
+                        <span
+                          className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-[#0b1c30] dark:text-white"} w-8`}
+                        >
+                          {device.fill}%
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                      {device.lastActive}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs text-[#94a3b8] dark:text-[#64748b]">
+                      {device.firmware}
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
             </TableBody>
           </Table>
@@ -297,7 +390,7 @@ export default function Devices() {
               of {devices.length} devices
             </span>
             <div className="flex gap-1">
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors cursor-pointer">
                 <svg
                   width="16"
                   height="16"
@@ -311,16 +404,16 @@ export default function Devices() {
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded bg-[#10b981] text-white text-sm font-medium">
+              <button className="w-8 h-8 flex items-center justify-center rounded bg-[#10b981] text-white text-sm font-medium cursor-pointer">
                 1
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors">
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors cursor-pointer">
                 2
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors">
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors cursor-pointer">
                 3
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] transition-colors">
+              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] transition-colors cursor-pointer">
                 <svg
                   width="16"
                   height="16"
@@ -340,146 +433,155 @@ export default function Devices() {
 
         {/* Right Side Panel */}
         <div className="w-full lg:w-[340px] flex flex-col gap-6 shrink-0">
-          {/* Live Status Card */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm p-6">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
-                  SS-UNIT-042
-                </h3>
-                <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-1">
-                  Live Status &amp; Levels
-                </p>
-              </div>
-              <button className="text-xs font-bold text-[#10b981] uppercase tracking-wider hover:text-[#006c49] transition-colors">
-                Edit Specs
-              </button>
-            </div>
-
-            <div className="flex justify-between gap-3 mb-8">
-              {/* Recycling Bar */}
-              <div className="flex flex-col items-center flex-1">
-                <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#89ceff]">
-                  <div
-                    className="w-full bg-[#89ceff] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
-                    style={{ height: "78%" }}
-                  ></div>
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
-                      78%
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase text-center">
-                  Recycling
-                </div>
-              </div>
-
-              {/* Organics Bar */}
-              <div className="flex flex-col items-center flex-1">
-                <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#6ffbbe]">
-                  <div
-                    className="w-full bg-[#6ffbbe] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
-                    style={{ height: "45%" }}
-                  ></div>
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
-                      45%
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase text-center">
-                  Organics
-                </div>
-              </div>
-
-              {/* General Bar */}
-              <div className="flex flex-col items-center flex-1">
-                <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#cbd5e1] dark:border-[#334155]">
-                  <div
-                    className="w-full bg-[#cbd5e1] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
-                    style={{ height: "12%" }}
-                  ></div>
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
-                      12%
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase text-center">
-                  General
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-between border-t border-[#f1f5f9] dark:border-[#0f2942] pt-5">
-              <div>
-                <p className="text-[10px] font-semibold text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase">
-                  Internal Temp
-                </p>
-                <p className="text-base font-bold text-[#0b1c30] dark:text-white mt-1">
-                  22.4°C
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-semibold text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase">
-                  Uptime
-                </p>
-                <p className="text-base font-bold text-[#0b1c30] dark:text-white mt-1">
-                  14d 6h 12m
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Event Log Card */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col h-full max-h-[500px]">
-            <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center bg-white dark:bg-[#0b1c30] rounded-t-xl sticky top-0">
-              <h3 className="text-xs font-bold text-[#0b1c30] dark:text-white tracking-wider uppercase">
-                Device Event Log
-              </h3>
-              <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 2v6h-6"></path>
-                  <path d="M3 12a9 9 0 1 0 2.13-5.88L21 8"></path>
-                </svg>
-              </button>
-            </div>
-
-            <div className="overflow-y-auto flex-1 p-2">
-              <ul className="divide-y divide-[#f1f5f9]">
-                {EVENT_LOGS.map((log) => (
-                  <li
-                    key={log.id}
-                    className="p-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors cursor-default"
-                  >
-                    <div className="flex justify-between items-start mb-1.5">
-                      <span
-                        className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}
-                      >
-                        {log.type}
-                      </span>
-                      <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b]">
-                        {log.time}
-                      </span>
-                    </div>
-                    <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                      {log.desc}
+          {isLoading ? (
+            <>
+              <SidebarDetailsSkeleton />
+              <EventLogSkeleton />
+            </>
+          ) : (
+            <>
+              {/* Live Status Card */}
+              <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm p-6">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                      {currentDevice?.name || "No Device Selected"}
+                    </h3>
+                    <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-1">
+                      Live Status &amp; Levels
                     </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+                  </div>
+                  <button className="text-xs font-bold text-[#10b981] uppercase tracking-wider hover:text-[#006c49] transition-colors cursor-pointer">
+                    Edit Specs
+                  </button>
+                </div>
+
+                <div className="flex justify-between gap-3 mb-8">
+                  {/* Recycling Bar */}
+                  <div className="flex flex-col items-center flex-1">
+                    <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#89ceff]">
+                      <div
+                        className="w-full bg-[#89ceff] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
+                        style={{ height: `${recyclingFill}%` }}
+                      ></div>
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                          {recyclingFill}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase text-center">
+                      Recycling
+                    </div>
+                  </div>
+
+                  {/* Organics Bar */}
+                  <div className="flex flex-col items-center flex-1">
+                    <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#6ffbbe]">
+                      <div
+                        className="w-full bg-[#6ffbbe] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
+                        style={{ height: `${organicsFill}%` }}
+                      ></div>
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                          {organicsFill}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase text-center">
+                      Organics
+                    </div>
+                  </div>
+
+                  {/* General Bar */}
+                  <div className="flex flex-col items-center flex-1">
+                    <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#cbd5e1] dark:border-[#334155]">
+                      <div
+                        className="w-full bg-[#cbd5e1] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
+                        style={{ height: `${generalFill}%` }}
+                      ></div>
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                          {generalFill}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase text-center">
+                      General
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between border-t border-[#f1f5f9] dark:border-[#0f2942] pt-5">
+                  <div>
+                    <p className="text-[10px] font-semibold text-[#94a3b8] dark:text-[#cbd5e1] tracking-wider uppercase">
+                      Internal Temp
+                    </p>
+                    <p className="text-base font-bold text-[#0b1c30] dark:text-white mt-1">
+                      {currentTemp}°C
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-semibold text-[#94a3b8] dark:text-[#cbd5e1] tracking-wider uppercase">
+                      Uptime
+                    </p>
+                    <p className="text-base font-bold text-[#0b1c30] dark:text-white mt-1">
+                      {currentUptime}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Event Log Card */}
+              <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col h-full max-h-[500px]">
+                <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center bg-white dark:bg-[#0b1c30] rounded-t-xl sticky top-0">
+                  <h3 className="text-xs font-bold text-[#0b1c30] dark:text-white tracking-wider uppercase">
+                    Device Event Log
+                  </h3>
+                  <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors cursor-pointer">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 2v6h-6"></path>
+                      <path d="M3 12a9 9 0 1 0 2.13-5.88L21 8"></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="overflow-y-auto flex-1 p-2">
+                  <ul className="divide-y divide-[#f1f5f9]">
+                    {EVENT_LOGS.map((log) => (
+                      <li
+                        key={log.id}
+                        className="p-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors cursor-default"
+                      >
+                        <div className="flex justify-between items-start mb-1.5">
+                          <span
+                            className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}
+                          >
+                            {log.type}
+                          </span>
+                          <span className="text-[10px] text-[#94a3b8] dark:text-[#cbd5e1]">
+                            {log.time}
+                          </span>
+                        </div>
+                        <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                          {log.desc}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <RegisterDeviceModal
