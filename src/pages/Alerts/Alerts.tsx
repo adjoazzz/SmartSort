@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";
@@ -157,6 +157,14 @@ export default function Alerts() {
   const [severity, setSeverity] = useState("all");
   const [deviceType, setDeviceType] = useState("all");
   const [timeRange, setTimeRange] = useState("24h");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 750); // Simulate API loading delay
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClearFilters = () => {
     setSeverity("all");
@@ -169,24 +177,37 @@ export default function Alerts() {
       title="System Alerts"
       description="Real-time notification center for facility sensor network."
       actions={
-        <div className="flex bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden">
-          <div className="px-6 py-3 flex flex-col items-center justify-center">
-            <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider uppercase mb-1">
-              CRITICAL
-            </span>
-            <span className="text-[28px] leading-none font-bold text-[#ba1a1a]">
-              03
-            </span>
+        isLoading ? (
+          <div className="flex bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden animate-pulse">
+            <div className="px-6 py-3 flex flex-col items-center justify-center">
+              <div className="h-3 w-14 bg-slate-200 dark:bg-[#1a365d] rounded mb-1"></div>
+              <div className="h-7 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+            </div>
+            <div className="px-6 py-3 flex flex-col items-center justify-center">
+              <div className="h-3 w-14 bg-slate-200 dark:bg-[#1a365d] rounded mb-1"></div>
+              <div className="h-7 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+            </div>
           </div>
-          <div className="px-6 py-3 flex flex-col items-center justify-center">
-            <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider uppercase mb-1">
-              WARNINGS
-            </span>
-            <span className="text-[28px] leading-none font-bold text-[#0284c7]">
-              12
-            </span>
+        ) : (
+          <div className="flex bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden">
+            <div className="px-6 py-3 flex flex-col items-center justify-center">
+              <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider uppercase mb-1">
+                CRITICAL
+              </span>
+              <span className="text-[28px] leading-none font-bold text-[#ba1a1a]">
+                03
+              </span>
+            </div>
+            <div className="px-6 py-3 flex flex-col items-center justify-center">
+              <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider uppercase mb-1">
+                WARNINGS
+              </span>
+              <span className="text-[28px] leading-none font-bold text-[#0284c7]">
+                12
+              </span>
+            </div>
           </div>
-        </div>
+        )
       }
     >
       <div className="flex flex-col gap-6">
@@ -284,7 +305,7 @@ export default function Alerts() {
           <div className="flex items-center gap-3 h-[42px]">
             <button
               onClick={handleClearFilters}
-              className="h-full bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 hover:bg-[#f8fafc] transition-colors flex items-center gap-2"
+              className="h-full bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 hover:bg-[#f8fafc] transition-colors flex items-center gap-2 cursor-pointer"
             >
               <svg
                 width="14"
@@ -302,7 +323,7 @@ export default function Alerts() {
               </svg>
               Clear Filters
             </button>
-            <button className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2">
+            <button className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
               <svg
                 width="14"
                 height="14"
@@ -343,69 +364,108 @@ export default function Alerts() {
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-[#f1f5f9]">
-              {ALERTS_DATA.map((alert) => (
-                <TableRow
-                  key={alert.id}
-                  className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
-                >
-                  <TableCell className="px-6 py-5 whitespace-nowrap">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center">
-                        <DeviceIcon type={alert.deviceIcon} />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                          {alert.deviceName}
-                        </div>
-                        <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
-                          {alert.deviceLocation}
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, idx) => (
+                  <TableRow key={idx} className="animate-pulse">
+                    {/* Device Column */}
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-[#1a365d]" />
+                        <div className="flex flex-col gap-2">
+                          <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                          <div className="h-3 w-20 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-5 whitespace-nowrap">
-                    <StatusBadge
-                      label={alert.severity}
-                      variant={
-                        alert.severity === "CRITICAL" ? "danger" : "info"
-                      }
-                      hasDot
-                    />
-                  </TableCell>
-                  <TableCell className="px-6 py-5">
-                    <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                      {alert.messageTitle}
-                    </div>
-                    <div className="text-[13px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed pr-4">
-                      {alert.messageDesc}
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-5 whitespace-nowrap">
-                    <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                      {alert.timestampMain}
-                    </div>
-                    <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
-                      {alert.timestampSub}
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-5 whitespace-nowrap">
-                    <div className="flex gap-2">
-                      {alert.actions.map((action, i) => (
-                        <button
-                          key={i}
-                          className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors ${
-                            action.type === "primary"
-                              ? "bg-[#006c49] text-white hover:bg-[#005a3c]"
-                              : "bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#334155] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9]"
-                          }`}
-                        >
-                          {action.label}
-                        </button>
-                      ))}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    {/* Severity Column */}
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                    </TableCell>
+                    {/* Message Column */}
+                    <TableCell className="px-6 py-5">
+                      <div className="h-4 w-40 bg-slate-200 dark:bg-[#1a365d] rounded mb-2"></div>
+                      <div className="h-3.5 w-full bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
+                      <div className="h-3.5 w-2/3 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    </TableCell>
+                    {/* Timestamp Column */}
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="h-4 w-24 bg-slate-200 dark:bg-[#1a365d] rounded mb-2"></div>
+                      <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    </TableCell>
+                    {/* Actions Column */}
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="flex gap-2">
+                        <div className="h-8 w-24 bg-slate-200 dark:bg-[#1a365d] rounded-lg"></div>
+                        <div className="h-8 w-24 bg-slate-200 dark:bg-[#1a365d] rounded-lg"></div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                ALERTS_DATA.map((alert) => (
+                  <TableRow
+                    key={alert.id}
+                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                  >
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center">
+                          <DeviceIcon type={alert.deviceIcon} />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                            {alert.deviceName}
+                          </div>
+                          <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
+                            {alert.deviceLocation}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <StatusBadge
+                        label={alert.severity}
+                        variant={
+                          alert.severity === "CRITICAL" ? "danger" : "info"
+                        }
+                        hasDot
+                      />
+                    </TableCell>
+                    <TableCell className="px-6 py-5">
+                      <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                        {alert.messageTitle}
+                      </div>
+                      <div className="text-[13px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed pr-4">
+                        {alert.messageDesc}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                        {alert.timestampMain}
+                      </div>
+                      <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
+                        {alert.timestampSub}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-5 whitespace-nowrap">
+                      <div className="flex gap-2">
+                        {alert.actions.map((action, i) => (
+                          <button
+                            key={i}
+                            className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors cursor-pointer ${
+                              action.type === "primary"
+                                ? "bg-[#006c49] text-white hover:bg-[#005a3c]"
+                                : "bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#334155] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9]"
+                            }`}
+                          >
+                            {action.label}
+                          </button>
+                        ))}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
 
@@ -414,7 +474,7 @@ export default function Alerts() {
               Showing 1-4 of 15 active alerts
             </span>
             <div className="flex gap-1">
-              <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc]">
+              <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer">
                 <svg
                   width="14"
                   height="14"
@@ -426,7 +486,7 @@ export default function Alerts() {
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc]">
+              <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer">
                 <svg
                   width="14"
                   height="14"
@@ -454,64 +514,88 @@ export default function Alerts() {
                 Live Updates
               </span>
             </div>
-            <div className="flex-1 w-full relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={TRENDS_DATA} barSize={40}>
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 700 }}
-                    dy={10}
-                  />
-                  <Bar dataKey="value" radius={[2, 2, 0, 0]}>
-                    {TRENDS_DATA.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={entry.active ? "#10b981" : "#e0e7ff"}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            {isLoading ? (
+              <div className="flex-1 w-full bg-slate-50/50 dark:bg-[#0f2942]/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="h-10 w-48 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                  <div className="h-4 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 w-full relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={TRENDS_DATA} barSize={40}>
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 700 }}
+                      dy={10}
+                    />
+                    <Bar dataKey="value" radius={[2, 2, 0, 0]}>
+                      {TRENDS_DATA.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.active ? "#10b981" : "#e0e7ff"}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
 
           {/* Maintenance AI */}
-          <div className="col-span-1 bg-[#0b1c30] rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="flex items-center gap-2 mb-4 text-[#10b981]">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
-                </svg>
-                <span className="text-[11px] font-bold tracking-wider uppercase">
-                  MAINTENANCE AI
-                </span>
+          {isLoading ? (
+            <div className="col-span-1 bg-[#0b1c30] rounded-xl p-6 shadow-sm flex flex-col justify-between animate-pulse min-h-[200px]">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-slate-700 rounded-full"></div>
+                  <div className="h-3 w-28 bg-slate-700 rounded"></div>
+                </div>
+                <div className="h-4 w-full bg-slate-800 rounded"></div>
+                <div className="h-4 w-5/6 bg-slate-800 rounded"></div>
+                <div className="h-4 w-2/3 bg-slate-800 rounded"></div>
               </div>
-              <p className="text-[15px] leading-relaxed text-white/90 font-medium mb-8">
-                Based on recent contamination patterns,{" "}
-                <strong className="text-white font-bold">Conveyor-B42</strong>{" "}
-                is predicted to require sensor calibration in the next 48 hours
-                to prevent further critical alerts.
-              </p>
-              <div className="mt-auto">
-                <button className="w-full bg-[#10b981] hover:bg-[#059669] text-[#0b1c30] dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm">
-                  Schedule Preventive Check
-                </button>
-              </div>
+              <div className="h-11 w-full bg-slate-700 rounded-lg mt-6"></div>
             </div>
-            {/* Subtle background pattern/gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#10b981]/10 to-transparent pointer-events-none"></div>
-          </div>
+          ) : (
+            <div className="col-span-1 bg-[#0b1c30] rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center gap-2 mb-4 text-[#10b981]">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                  </svg>
+                  <span className="text-[11px] font-bold tracking-wider uppercase">
+                    MAINTENANCE AI
+                  </span>
+                </div>
+                <p className="text-[15px] leading-relaxed text-white/90 font-medium mb-8">
+                  Based on recent contamination patterns,{" "}
+                  <strong className="text-white font-bold">Conveyor-B42</strong>{" "}
+                  is predicted to require sensor calibration in the next 48 hours
+                  to prevent further critical alerts.
+                </p>
+                <div className="mt-auto">
+                  <button className="w-full bg-[#10b981] hover:bg-[#059669] text-[#0b1c30] dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm cursor-pointer">
+                    Schedule Preventive Check
+                  </button>
+                </div>
+              </div>
+              {/* Subtle background pattern/gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#10b981]/10 to-transparent pointer-events-none"></div>
+            </div>
+          )}
         </div>
       </div>
     </PageLayout>
