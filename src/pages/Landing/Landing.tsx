@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useTheme } from "next-themes";
+import { motion } from "motion/react";
 import imgHero from "../../assets/smartsort_hero.png";
 import imgLaptopUi from "../../assets/smartsort_laptop_ui.png";
 
@@ -90,7 +91,12 @@ export default function Landing() {
       {/* 2. Hero Section */}
       <section className="px-6 sm:px-12 py-16 sm:py-24 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         {/* Left Side */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-5 flex flex-col gap-6"
+        >
           <div>
             <span className="inline-flex items-center bg-[#2563eb]/10 dark:bg-[#2563eb]/20 text-[#2563eb] dark:text-[#60a5fa] text-[10px] font-bold tracking-widest px-4.5 py-1.5 rounded-full uppercase border border-[#2563eb]/20">
               ⚡ AI-Powered Waste Stewardship
@@ -107,25 +113,35 @@ export default function Landing() {
           </p>
 
           <div className="flex flex-wrap gap-4 pt-2">
-            <button 
+            <motion.button 
+              whileHover="hover"
+              whileTap={{ scale: 0.98 }}
               onClick={scrollToInquiry}
-              className="px-6 py-3.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-sm font-bold rounded-lg shadow-lg shadow-[#2563eb]/15 transition-all active:scale-[0.98] flex items-center gap-2"
+              className="px-6 py-3.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-sm font-bold rounded-lg shadow-lg shadow-[#2563eb]/15 transition-all flex items-center gap-2 cursor-pointer"
             >
               Request a Demo
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <motion.svg 
+                variants={{
+                  hover: { x: 4 }
+                }}
+                transition={{ duration: 0.2 }}
+                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              >
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </button>
-            <button 
+              </motion.svg>
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={scrollToInquiry}
-              className="px-6 py-3.5 bg-white dark:bg-[#0b1c30] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] text-[#0b1c30] dark:text-white text-sm font-bold rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] shadow-sm transition-all active:scale-[0.98] flex items-center gap-2"
+              className="px-6 py-3.5 bg-white dark:bg-[#0b1c30] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] text-[#0b1c30] dark:text-white text-sm font-bold rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] shadow-sm transition-all flex items-center gap-2 cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#2563eb]">
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
               Watch Video
-            </button>
+            </motion.button>
           </div>
 
           <div className="flex items-center gap-4 pt-4 border-t border-[#e2e8f0]/80 dark:border-[#1e3a5f]/50">
@@ -145,10 +161,15 @@ export default function Landing() {
               <p className="text-[10px] text-[#515f74] dark:text-[#cbd5e1] font-medium uppercase tracking-wider">Leading the industry in AI adoption</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Side */}
-        <div className="lg:col-span-7 relative">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-7 relative"
+        >
           {/* Card Border wrapper with blur glows */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb] to-[#006c49] opacity-20 blur-[60px] rounded-3xl" />
           <div className="relative rounded-2xl overflow-hidden border border-[#cbd5e1] dark:border-[#1e3a5f] shadow-2xl bg-[#0f172a]">
@@ -182,7 +203,7 @@ export default function Landing() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* 3. Logo Cloud */}
@@ -214,7 +235,14 @@ export default function Landing() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           
           {/* Card 1: 98% Sorting Accuracy */}
-          <div className="md:col-span-8 bg-gradient-to-br from-[#eff6ff] to-[#f8fafc] dark:from-[#0b1c30] dark:to-[#0f2942] border border-[#cbd5e1]/60 dark:border-[#1e3a5f] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(37,99,235,0.15)" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-8 bg-gradient-to-br from-[#eff6ff] to-[#f8fafc] dark:from-[#0b1c30] dark:to-[#0f2942] border border-[#cbd5e1]/60 dark:border-[#1e3a5f] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 overflow-hidden shadow-sm hover:shadow-md cursor-pointer"
+          >
             <div className="flex-1 flex flex-col justify-between gap-6">
               <div className="flex flex-col gap-4">
                 <div className="w-10 h-10 bg-[#2563eb]/10 rounded-xl flex items-center justify-center text-[#2563eb]">
@@ -235,10 +263,17 @@ export default function Landing() {
             <div className="flex-1 -mb-10 -mr-6 sm:-mr-12 rounded-tl-xl overflow-hidden border-t border-l border-[#cbd5e1] dark:border-[#1e3a5f]">
               <img src={imgLaptopUi} alt="Dashboard Interface Preview" className="w-full h-full object-cover" />
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 2: Real-time Monitoring */}
-          <div className="md:col-span-4 bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] rounded-2xl p-6 sm:p-8 text-white flex flex-col justify-between gap-12 shadow-md hover:shadow-lg transition-shadow">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(139,92,246,0.2)" }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-4 bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] rounded-2xl p-6 sm:p-8 text-white flex flex-col justify-between gap-12 shadow-md hover:shadow-lg cursor-pointer"
+          >
             <div className="flex flex-col gap-4">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -257,10 +292,17 @@ export default function Landing() {
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
               </svg>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 3: Seamless Integration */}
-          <div className="md:col-span-4 bg-[#0b1c30] text-white border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md transition-shadow">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-4 bg-[#0b1c30] text-white border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
+          >
             <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-[#3b82f6]">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
@@ -273,10 +315,17 @@ export default function Landing() {
                 Our SDK connects directly with existing SCADA systems and industrial PLCs without infrastructure overhaul.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 4: ESG Compliance Ready */}
-          <div className="md:col-span-8 bg-[#eff6ff] dark:bg-[#1e293b]/50 border border-[#cbd5e1]/60 dark:border-[#1e3a5f] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:shadow-md transition-shadow">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(37,99,235,0.1)" }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-8 bg-[#eff6ff] dark:bg-[#1e293b]/50 border border-[#cbd5e1]/60 dark:border-[#1e3a5f] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:shadow-md cursor-pointer"
+          >
             <div className="flex-1 flex flex-col gap-4">
               <h3 className="text-xl font-bold">ESG Compliance Ready</h3>
               <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
@@ -296,12 +345,18 @@ export default function Landing() {
                     <span>{stat.value}%</span>
                   </div>
                   <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div className={`h-full ${stat.color} rounded-full`} style={{ width: `${stat.value}%` }} />
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${stat.value}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                      className={`h-full ${stat.color} rounded-full`} 
+                    />
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -318,9 +373,29 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.15
+                }
+              }
+            }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-10 relative"
+          >
             {/* Step 1 */}
-            <div className="flex flex-col items-center text-center gap-5">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+              }}
+              className="flex flex-col items-center text-center gap-5"
+            >
               <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#1e3a5f] shadow-sm flex items-center justify-center text-[#2563eb]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
@@ -332,10 +407,16 @@ export default function Landing() {
               <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] max-w-xs leading-relaxed">
                 High-speed multispectral cameras identify individual waste items on the conveyor belt in milliseconds.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 2 */}
-            <div className="flex flex-col items-center text-center gap-5">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+              }}
+              className="flex flex-col items-center text-center gap-5"
+            >
               <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#1e3a5f] shadow-sm flex items-center justify-center text-[#10b981]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polygon points="12 2 2 7 12 12 22 7 12 2 12 2"></polygon>
@@ -348,10 +429,16 @@ export default function Landing() {
               <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] max-w-xs leading-relaxed">
                 Our neural network classifies materials (HDPE, PET, Paper, Metal) with laboratory-grade precision.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 3 */}
-            <div className="flex flex-col items-center text-center gap-5">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+              }}
+              className="flex flex-col items-center text-center gap-5"
+            >
               <div className="w-16 h-16 rounded-2xl bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#1e3a5f] shadow-sm flex items-center justify-center text-[#8b5cf6]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -362,8 +449,8 @@ export default function Landing() {
               <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] max-w-xs leading-relaxed">
                 Robotic actuators or air-jet systems execute precise physical separation at speeds up to 300 items per minute.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
