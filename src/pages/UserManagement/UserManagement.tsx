@@ -1,8 +1,9 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
 import { InviteUserModal } from "./InviteUserModal";
+
 
 import imgAvatar1 from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import imgAvatar2 from "../../assets/0800bfda658966e2c00bc7ac63132f861621facb.png";
@@ -591,6 +592,14 @@ export default function UserManagement() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 750);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredData = USERS_DATA.filter((user) => {
     const matchesSearch =
@@ -637,18 +646,26 @@ export default function UserManagement() {
             <span className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
               Total Users
             </span>
-            <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
-              1,284
-            </span>
+            {isLoading ? (
+              <div className="h-5 w-12 bg-slate-200 dark:bg-[#1a365d] rounded animate-pulse"></div>
+            ) : (
+              <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                1,284
+              </span>
+            )}
           </div>
           {/* Active Now Box */}
           <div className="flex items-center gap-2.5 bg-[#f1f5f9] dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-[#e2e8f0] dark:border-[#334155]">
             <span className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
               Active Now
             </span>
-            <span className="text-lg font-bold text-[#15803d]">
-              342
-            </span>
+            {isLoading ? (
+              <div className="h-5 w-10 bg-slate-200 dark:bg-[#1a365d] rounded animate-pulse"></div>
+            ) : (
+              <span className="text-lg font-bold text-[#15803d]">
+                342
+              </span>
+            )}
           </div>
         </div>
 
@@ -767,80 +784,41 @@ export default function UserManagement() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f1f5f9] dark:divide-[#0f2942]">
-              {filteredData.map((user) => (
-                <tr
-                  key={user.id}
-                  className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group"
-                >
-                  {/* Name & Identity */}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-3">
-                      <UserAvatar name={user.name} avatar={user.avatar} />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                          {user.name}
-                        </span>
-                        <span className="text-xs text-[#94a3b8] dark:text-[#64748b]">
-                          {user.email}
-                        </span>
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, idx) => (
+                  <tr key={idx} className="animate-pulse">
+                    {/* Name & Identity */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-[#1a365d]"></div>
+                        <div className="flex flex-col gap-2">
+                          <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                          <div className="h-3 w-36 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-
-                  {/* Role Type */}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getRoleBadge(user.role)}
-                  </td>
-
-                  {/* Assigned Facility */}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {renderFacility(user.assignedFacility)}
-                  </td>
-
-                  {/* Status */}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusBadge(user.status)}
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    {user.status === "SUSPENDED" ? (
-                      <button
-                        onClick={() => {
-                          console.log("Reinstating user:", user.id);
-                        }}
-                        className="bg-[#0a5cf5] hover:bg-[#094fc2] text-white text-xs font-bold rounded-lg px-4.5 py-2 inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
-                      >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="animate-spin-once"
-                        >
-                          <path d="M21.5 2v6h-6" />
-                          <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-                        </svg>
-                        Reinstate
-                      </button>
-                    ) : (
-                      <ActionMenu
-                        userId={user.id}
-                        isOpen={openMenuId === user.id}
-                        onToggle={() =>
-                          setOpenMenuId(openMenuId === user.id ? null : user.id)
-                        }
-                        onClose={() => setOpenMenuId(null)}
-                      />
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {filteredData.length === 0 && (
+                    </td>
+                    {/* Role Type */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                    </td>
+                    {/* Assigned Facility */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                        <div className="h-4 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      </div>
+                    </td>
+                    {/* Status */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                    </td>
+                    {/* Actions */}
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <div className="h-8 w-8 bg-slate-200 dark:bg-[#1a365d] rounded-lg ml-auto"></div>
+                    </td>
+                  </tr>
+                ))
+              ) : filteredData.length === 0 ? (
                 <tr>
                   <td
                     colSpan={5}
@@ -849,6 +827,80 @@ export default function UserManagement() {
                     No users found matching your criteria
                   </td>
                 </tr>
+              ) : (
+                filteredData.map((user) => (
+                  <tr
+                    key={user.id}
+                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group"
+                  >
+                    {/* Name & Identity */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <UserAvatar name={user.name} avatar={user.avatar} />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                            {user.name}
+                          </span>
+                          <span className="text-xs text-[#94a3b8] dark:text-[#64748b]">
+                            {user.email}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Role Type */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getRoleBadge(user.role)}
+                    </td>
+
+                    {/* Assigned Facility */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {renderFacility(user.assignedFacility)}
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(user.status)}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      {user.status === "SUSPENDED" ? (
+                        <button
+                          onClick={() => {
+                            console.log("Reinstating user:", user.id);
+                          }}
+                          className="bg-[#0a5cf5] hover:bg-[#094fc2] text-white text-xs font-bold rounded-lg px-4.5 py-2 inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="animate-spin-once"
+                          >
+                            <path d="M21.5 2v6h-6" />
+                            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                          </svg>
+                          Reinstate
+                        </button>
+                      ) : (
+                        <ActionMenu
+                          userId={user.id}
+                          isOpen={openMenuId === user.id}
+                          onToggle={() =>
+                            setOpenMenuId(openMenuId === user.id ? null : user.id)
+                          }
+                          onClose={() => setOpenMenuId(null)}
+                        />
+                      )}
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -857,7 +909,7 @@ export default function UserManagement() {
         {/* Pagination Footer */}
         <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942]/50 flex items-center justify-between mt-auto">
           <p className="text-sm text-[#64748b] dark:text-[#94a3b8]">
-            Showing <span className="font-semibold text-[#475569] dark:text-[#cbd5e1]">{filteredData.length}</span> of 1,284 team members
+            Showing <span className="font-semibold text-[#475569] dark:text-[#cbd5e1]">{isLoading ? 0 : filteredData.length}</span> of 1,284 team members
           </p>
           <div className="flex items-center gap-1">
             <button
@@ -918,67 +970,103 @@ export default function UserManagement() {
       {/* ── Bottom Cards ─────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
         {/* Permission Audit Card */}
-        <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
+        {isLoading ? (
+          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-[#1a365d]"></div>
+                <div className="h-5 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
               </div>
-              <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
-                Permission Audit
-              </h3>
+              <div className="flex flex-col gap-2">
+                <div className="h-3 w-full bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                <div className="h-3 w-5/6 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+              </div>
             </div>
-            <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-              Regularly review high-privilege roles. 14 users currently have Administrative access. We recommend keeping this under 10.
-            </p>
+            <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded mt-4"></div>
           </div>
-          <a
-            href="#security-logs"
-            onClick={(e) => e.preventDefault()}
-            className="text-xs font-bold text-[#0a5cf5] hover:underline flex items-center gap-1 mt-4"
-          >
-            View Security Logs
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </a>
-        </div>
+        ) : (
+          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
+                  Permission Audit
+                </h3>
+              </div>
+              <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                Regularly review high-privilege roles. 14 users currently have Administrative access. We recommend keeping this under 10.
+              </p>
+            </div>
+            <a
+              href="#security-logs"
+              onClick={(e) => e.preventDefault()}
+              className="text-xs font-bold text-[#0a5cf5] hover:underline flex items-center gap-1 mt-4"
+            >
+              View Security Logs
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+          </div>
+        )}
 
         {/* Pending Invites Card */}
-        <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
+        {isLoading ? (
+          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-[#1a365d]"></div>
+                <div className="h-5 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
               </div>
-              <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
-                Pending Invites
-              </h3>
-            </div>
-            
-            <div className="flex items-center gap-4 py-1">
-              <div className="flex -space-x-3 overflow-hidden">
-                <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#e2e8f0] dark:bg-slate-700" />
-                <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#cbd5e1] dark:bg-slate-600" />
-                <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#94a3b8] dark:bg-slate-500" />
+              <div className="flex items-center gap-4 py-1">
+                <div className="flex -space-x-3 overflow-hidden">
+                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-[#1a365d] ring-2 ring-white dark:ring-[#0b1c30]" />
+                  <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#0f2942] ring-2 ring-white dark:ring-[#0b1c30]" />
+                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-[#1a365d] ring-2 ring-white dark:ring-[#0b1c30]" />
+                </div>
+                <div className="h-4 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
               </div>
-              <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                3 Pending
-              </span>
             </div>
+            <div className="h-3 w-48 bg-slate-100 dark:bg-[#0f2942] rounded mt-2"></div>
           </div>
-          <p className="text-[10px] text-slate-400 dark:text-slate-500 italic mt-2">
-            "Invitations expire after 72 hours of inactivity."
-          </p>
-        </div>
+        ) : (
+          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
+                  Pending Invites
+                </h3>
+              </div>
+              
+              <div className="flex items-center gap-4 py-1">
+                <div className="flex -space-x-3 overflow-hidden">
+                  <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#e2e8f0] dark:bg-slate-700" />
+                  <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#cbd5e1] dark:bg-slate-600" />
+                  <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#94a3b8] dark:bg-slate-500" />
+                </div>
+                <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                  3 Pending
+                </span>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 italic mt-2">
+              "Invitations expire after 72 hours of inactivity."
+            </p>
+          </div>
+        )}
 
         {/* Need Bulk Import Card */}
         <div className="bg-gradient-to-br from-[#0a5cf5] to-[#4f46e5] text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[180px]">
