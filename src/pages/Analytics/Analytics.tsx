@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import {
   LineChart,
@@ -185,7 +185,7 @@ const KPI_DATA = [
     trend: "15.0%",
     trendDirection: "up",
     icon: (
-      <span className="text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">
+      <span className="text-xs font-bold text-[#64748b] dark:text-[#cbd5e1]">
         CO<sub className="text-[8px]">2</sub>
       </span>
     ),
@@ -253,7 +253,7 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
         </div>
       </div>
       <div>
-        <h3 className="text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider uppercase mb-1">
+        <h3 className="text-xs font-bold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase mb-1">
           {data.title}
         </h3>
         <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
@@ -324,12 +324,21 @@ function CategoryIcon({ type }: { type: string }) {
 }
 
 export default function Analytics() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 750); // Simulate API loading delay
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <PageLayout
       title="Waste Intelligence Analytics"
       description="Real-time performance metrics across your facility network."
       actions={
-        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2">
+        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
           <svg
             width="16"
             height="16"
@@ -360,9 +369,27 @@ export default function Analytics() {
       <div className="flex flex-col gap-6">
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {KPI_DATA.map((kpi, idx) => (
-            <KpiCard key={idx} data={kpi} />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-[150px]"
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-[#1a365d]" />
+                  <div className="h-6 w-14 bg-slate-100 dark:bg-[#0f2942] rounded" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div className="h-3.5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded" />
+                  <div className="h-7 w-20 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                </div>
+              </div>
+            ))
+          ) : (
+            KPI_DATA.map((kpi, idx) => (
+              <KpiCard key={idx} data={kpi} />
+            ))
+          )}
         </div>
 
         {/* Middle Row */}
@@ -374,7 +401,7 @@ export default function Analytics() {
                 <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
                   Rate Comparison Over Time
                 </h2>
-                <p className="text-sm text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] mt-1">
+                <p className="text-sm text-[#64748b] dark:text-[#cbd5e1] mt-1">
                   Recycling performance vs. contamination threshold
                 </p>
               </div>
@@ -393,59 +420,68 @@ export default function Analytics() {
                 </div>
               </div>
             </div>
-            <div className="flex-1 w-full relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={CHART_DATA}
-                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#f1f5f9"
-                  />
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }}
-                    dy={10}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }}
-                    ticks={[0, 25, 50, 75, 100]}
-                    tickFormatter={(val) => `${val}%`}
-                  />
-                  <Tooltip
-                    content={<CustomTooltip />}
-                    cursor={{ stroke: "#cbd5e1", strokeWidth: 1 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="recycling"
-                    stroke="#10b981"
-                    strokeWidth={3}
-                    dot={false}
-                    activeDot={{
-                      r: 6,
-                      fill: "#10b981",
-                      stroke: "#fff",
-                      strokeWidth: 2,
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="contamination"
-                    stroke="#fca5a5"
-                    strokeWidth={2}
-                    strokeDasharray="4 4"
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            {isLoading ? (
+              <div className="flex-1 w-full bg-slate-50/50 dark:bg-[#0f2942]/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="h-10 w-40 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                  <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 w-full relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={CHART_DATA}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#f1f5f9"
+                    />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }}
+                      dy={10}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 600 }}
+                      ticks={[0, 25, 50, 75, 100]}
+                      tickFormatter={(val) => `${val}%`}
+                    />
+                    <Tooltip
+                      content={<CustomTooltip />}
+                      cursor={{ stroke: "#cbd5e1", strokeWidth: 1 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="recycling"
+                      stroke="#10b981"
+                      strokeWidth={3}
+                      dot={false}
+                      activeDot={{
+                        r: 6,
+                        fill: "#10b981",
+                        stroke: "#fff",
+                        strokeWidth: 2,
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="contamination"
+                      stroke="#fca5a5"
+                      strokeWidth={2}
+                      strokeDasharray="4 4"
+                      dot={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
 
           {/* Tonnage by Material */}
@@ -454,26 +490,40 @@ export default function Analytics() {
               Tonnage by Material
             </h2>
 
-            <div className="flex flex-col gap-[18px] flex-1">
-              {TONNAGE_DATA.map((item, idx) => (
-                <div key={idx}>
-                  <div className="flex justify-between items-end mb-1.5">
-                    <span className="text-[13px] font-bold text-[#0b1c30] dark:text-white">
-                      {item.name}
-                    </span>
-                    <span className="text-xs text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]">
-                      {item.value}
-                    </span>
+            {isLoading ? (
+              <div className="flex flex-col gap-[18px] flex-1 animate-pulse">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex flex-col gap-2">
+                    <div className="flex justify-between">
+                      <div className="h-4 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                      <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    </div>
+                    <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full"></div>
                   </div>
-                  <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-2">
-                    <div
-                      className={`h-full rounded-full ${item.color}`}
-                      style={{ width: `${item.percent}%` }}
-                    ></div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-[18px] flex-1">
+                {TONNAGE_DATA.map((item, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between items-end mb-1.5">
+                      <span className="text-[13px] font-bold text-[#0b1c30] dark:text-white">
+                        {item.name}
+                      </span>
+                      <span className="text-xs text-[#64748b] dark:text-[#cbd5e1]">
+                        {item.value}
+                      </span>
+                    </div>
+                    <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-2">
+                      <div
+                        className={`h-full rounded-full ${item.color}`}
+                        style={{ width: `${item.percent}%` }}
+                      ></div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             <div className="border-t border-[#f1f5f9] dark:border-[#0f2942] mt-auto pt-4 grid grid-cols-2 divide-x divide-[#f1f5f9]">
               <div className="pr-4">
@@ -502,7 +552,7 @@ export default function Analytics() {
             <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
               Category Breakdown
             </h2>
-            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors flex items-center gap-2">
+            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors flex items-center gap-2 cursor-pointer">
               <svg
                 width="14"
                 height="14"
@@ -531,7 +581,7 @@ export default function Analytics() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-white dark:bg-[#0b1c30] border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider flex items-center gap-1">
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider flex items-center gap-1">
                     MATERIAL CATEGORY{" "}
                     <svg
                       width="12"
@@ -544,7 +594,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
                     VOLUME (METRIC TONS){" "}
                     <svg
                       width="12"
@@ -558,7 +608,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
                     MOM GROWTH{" "}
                     <svg
                       width="12"
@@ -572,7 +622,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
                     TARGET GOAL{" "}
                     <svg
                       width="12"
@@ -586,118 +636,146 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b] tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider text-right">
                     ACTION
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f1f5f9]">
-                {CATEGORY_DATA.map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
-                  >
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1]">
-                          <CategoryIcon type={row.icon} />
+                {isLoading ? (
+                  Array.from({ length: 3 }).map((_, idx) => (
+                    <tr key={idx} className="animate-pulse">
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-slate-200 dark:bg-[#1a365d]" />
+                          <div className="h-4 w-36 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
                         </div>
-                        <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                          {row.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                        {row.volume}
-                      </span>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold
-                        ${
-                          row.growthTrend === "up"
-                            ? "bg-[#bbf7d0]/50 text-[#006c49]"
-                            : row.growthTrend === "down"
-                              ? "bg-[#ffdad6] text-[#ba1a1a]"
-                              : "bg-[#f1f5f9] dark:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] dark:text-[#64748b]"
-                        }
-                      `}
-                      >
-                        {row.growthTrend === "up" && (
-                          <svg
-                            width="10"
-                            height="10"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                          >
-                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                            <polyline points="17 6 23 6 23 12"></polyline>
-                          </svg>
-                        )}
-                        {row.growthTrend === "down" && (
-                          <svg
-                            width="10"
-                            height="10"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                          >
-                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                            <polyline points="17 18 23 18 23 12"></polyline>
-                          </svg>
-                        )}
-                        {row.growthTrend === "neutral" && (
-                          <svg
-                            width="10"
-                            height="10"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                          >
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                          </svg>
-                        )}
-                        {row.growth}
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap">
-                      <div className="flex items-center gap-3 w-32">
-                        <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className={`h-full rounded-full ${row.goalColor}`}
-                            style={{ width: `${row.goal}%` }}
-                          />
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="h-6 w-14 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3 w-32">
+                          <div className="w-full bg-slate-100 dark:bg-[#0f2942] rounded-full h-1.5" />
+                          <div className="h-4 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
                         </div>
-                        <span className="text-sm font-bold text-[#334155]">
-                          {row.goal}%
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap text-right">
+                        <div className="w-6 h-6 bg-slate-100 dark:bg-[#0f2942] rounded ml-auto" />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  CATEGORY_DATA.map((row, idx) => (
+                    <tr
+                      key={idx}
+                      className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+                    >
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1]">
+                            <CategoryIcon type={row.icon} />
+                          </div>
+                          <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                            {row.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                          {row.volume}
                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 whitespace-nowrap text-right">
-                      <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors p-1">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold
+                          ${
+                            row.growthTrend === "up"
+                              ? "bg-[#bbf7d0]/50 text-[#006c49]"
+                              : row.growthTrend === "down"
+                                ? "bg-[#ffdad6] text-[#ba1a1a]"
+                                : "bg-[#f1f5f9] dark:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8]"
+                          }
+                        `}
                         >
-                          <circle cx="12" cy="12" r="1"></circle>
-                          <circle cx="12" cy="5" r="1"></circle>
-                          <circle cx="12" cy="19" r="1"></circle>
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                          {row.growthTrend === "up" && (
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                            >
+                              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                              <polyline points="17 6 23 6 23 12"></polyline>
+                            </svg>
+                          )}
+                          {row.growthTrend === "down" && (
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                            >
+                              <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                              <polyline points="17 18 23 18 23 12"></polyline>
+                            </svg>
+                          )}
+                          {row.growthTrend === "neutral" && (
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                            >
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                          )}
+                          {row.growth}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3 w-32">
+                          <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${row.goalColor}`}
+                              style={{ width: `${row.goal}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-bold text-[#334155] dark:text-[#cbd5e1]">
+                            {row.goal}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap text-right">
+                        <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors p-1 cursor-pointer">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
