@@ -1,9 +1,8 @@
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { useState, ReactNode } from "react";
 import { PageLayout } from "../../components/PageLayout";
-import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
 import { InviteUserModal } from "./InviteUserModal";
-
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 
 import imgAvatar1 from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import imgAvatar2 from "../../assets/0800bfda658966e2c00bc7ac63132f861621facb.png";
@@ -22,6 +21,9 @@ interface User {
   assignedFacility: string;
 }
 
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+
 interface AuditEntry {
   time: string;
   title: string;
@@ -39,46 +41,6 @@ interface PermGroup {
 }
 
 /* ── Static data ─────────────────────────────────────────── */
-
-const USERS_DATA: User[] = [
-  {
-    id: "USR-001",
-    name: "Alexander Vance",
-    email: "a.vance@smartsort.com",
-    role: "Admin",
-    status: "ACTIVE",
-    avatar: imgAvatar1,
-    assignedFacility: "HQ Corporate Center"
-  },
-  {
-    id: "USR-002",
-    name: "Sarah Jenkins",
-    email: "s.jenkins@smartsort.com",
-    role: "Manager",
-    status: "ACTIVE",
-    avatar: imgAvatar2,
-    assignedFacility: "East Side Recycling"
-  },
-  {
-    id: "USR-003",
-    name: "Marco Rossi",
-    email: "m.rossi@logistics.net",
-    role: "Collector",
-    status: "ACTIVE",
-    avatar: imgAvatar3,
-    assignedFacility: "South Hub Logistics"
-  },
-  {
-    id: "USR-004",
-    name: "Elena Rodriguez",
-    email: "e.rod@archive.org",
-    role: "Viewer",
-    status: "SUSPENDED",
-    avatar: imgAvatar4,
-    assignedFacility: "Global Read-Only"
-  }
-];
-
 
 const KPIS = [
   {
@@ -316,7 +278,15 @@ const ACTION_MENU_ITEMS = [
 
 // Facility Icons
 const BuildingIcon = () => (
-  <svg className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
     <line x1="9" y1="22" x2="9" y2="16" />
     <line x1="15" y1="22" x2="15" y2="16" />
@@ -329,7 +299,15 @@ const BuildingIcon = () => (
 );
 
 const FactoryIcon = () => (
-  <svg className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M2 20V10l5-2 5 2 5-2v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
     <path d="M17 18h4v-7l-4-2z" />
     <path d="M12 18h.01" />
@@ -337,14 +315,30 @@ const FactoryIcon = () => (
 );
 
 const WarehouseIcon = () => (
-  <svg className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
     <polyline points="9 22 9 12 15 12 15 22" />
   </svg>
 );
 
 const EyeIcon = () => (
-  <svg className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
     <circle cx="12" cy="12" r="3" />
   </svg>
@@ -369,37 +363,42 @@ const renderFacility = (facility: string) => {
 };
 
 const getRoleBadge = (role: string) => {
-  const styles: Record<string, { bg: string; text: string; hasChevron: boolean }> = {
+  const styles: Record<
+    string,
+    { bg: string; text: string; hasChevron: boolean }
+  > = {
     Admin: {
       bg: "bg-[#f3e8ff] dark:bg-[#7c3aed]/10",
       text: "text-[#7c3aed]",
-      hasChevron: true
+      hasChevron: true,
     },
     Manager: {
       bg: "bg-[#e0f2fe] dark:bg-[#2563eb]/10",
       text: "text-[#2563eb]",
-      hasChevron: false
+      hasChevron: false,
     },
     Collector: {
       bg: "bg-[#fef3c7] dark:bg-[#b45309]/10",
       text: "text-[#b45309]",
-      hasChevron: false
+      hasChevron: false,
     },
     Viewer: {
       bg: "bg-[#f1f5f9] dark:bg-[#64748b]/10",
       text: "text-[#64748b]",
-      hasChevron: true
-    }
+      hasChevron: true,
+    },
   };
 
   const style = styles[role] || {
     bg: "bg-gray-100 dark:bg-gray-800",
     text: "text-gray-600 dark:text-gray-400",
-    hasChevron: false
+    hasChevron: false,
   };
 
   return (
-    <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${style.bg} ${style.text}`}>
+    <div
+      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${style.bg} ${style.text}`}
+    >
       <span>{role}</span>
       {style.hasChevron && (
         <svg
@@ -421,14 +420,30 @@ const getRoleBadge = (role: string) => {
 };
 
 const getStatusBadge = (status: string) => {
-  const isSuspended = status === "SUSPENDED" || status === "Suspended" || status === "Inactive";
-  const bg = isSuspended ? "bg-[#fde8e8] dark:bg-[#b91c1c]/10" : "bg-[#dcfce7] dark:bg-[#15803d]/10";
-  const text = isSuspended ? "text-[#b91c1c]" : "text-[#15803d]";
-  const dot = isSuspended ? "bg-[#b91c1c]" : "bg-[#15803d]";
-  const label = isSuspended ? "SUSPENDED" : "ACTIVE";
+  const isSuspended =
+    status === "SUSPENDED" || status === "Suspended" || status === "Inactive";
+  const isPending = status === "PENDING" || status === "Pending";
+  const bg = isSuspended
+    ? "bg-[#fde8e8] dark:bg-[#b91c1c]/10"
+    : isPending
+      ? "bg-[#fef3c7] dark:bg-[#92400e]/10"
+      : "bg-[#dcfce7] dark:bg-[#15803d]/10";
+  const text = isSuspended
+    ? "text-[#b91c1c]"
+    : isPending
+      ? "text-[#92400e]"
+      : "text-[#15803d]";
+  const dot = isSuspended
+    ? "bg-[#b91c1c]"
+    : isPending
+      ? "bg-[#d97706]"
+      : "bg-[#15803d]";
+  const label = isSuspended ? "SUSPENDED" : isPending ? "PENDING" : "ACTIVE";
 
   return (
-    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${bg} ${text}`}>
+    <div
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${bg} ${text}`}
+    >
       <div className={`w-1.5 h-1.5 rounded-full ${dot}`} />
       <span>{label}</span>
     </div>
@@ -497,15 +512,43 @@ function UserAvatar({ name, avatar }: { name: string; avatar: string | null }) {
 /** Three-dot action dropdown for each user row */
 function ActionMenu({
   userId,
+  currentRole,
   isOpen,
   onToggle,
+  onRefresh,
   onClose,
 }: {
   userId: string;
+  currentRole: string;
   isOpen: boolean;
   onToggle: () => void;
+  onRefresh: () => Promise<unknown> | unknown;
   onClose: () => void;
 }) {
+  const roleCycle = ["Viewer", "Collector", "Manager", "Admin"];
+
+  const patchUser = async (payload: Record<string, string>) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update user");
+    }
+
+    await onRefresh();
+    onClose();
+  };
+
+  const nextRole = () => {
+    const currentIndex = roleCycle.indexOf(currentRole);
+    return roleCycle[(currentIndex + 1) % roleCycle.length];
+  };
+
   return (
     <div className="relative inline-block">
       <button
@@ -524,15 +567,25 @@ function ActionMenu({
         <>
           <div className="fixed inset-0 z-40" onClick={onClose} />
           <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg shadow-lg z-50 py-1">
-            {ACTION_MENU_ITEMS.map((item, idx) => (
+            {ACTION_MENU_ITEMS.map((item) => (
               <React.Fragment key={item.key}>
                 {item.danger && (
                   <div className="border-t border-[#f1f5f9] dark:border-[#0f2942] my-1" />
                 )}
                 <button
-                  onClick={() => {
-                    console.log(`${item.key}:`, userId);
-                    onClose();
+                  onClick={async () => {
+                    try {
+                      if (item.key === "role") {
+                        await patchUser({ role: nextRole() });
+                      } else if (item.key === "pending") {
+                        await patchUser({ status: "PENDING" });
+                      } else {
+                        await patchUser({ status: "SUSPENDED" });
+                      }
+                    } catch (error) {
+                      console.error("Failed to update user:", error);
+                      alert("Failed to update user. Please try again.");
+                    }
                   }}
                   className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
                     item.danger
@@ -592,22 +645,41 @@ export default function UserManagement() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const fetchUsers = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/users`);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 750);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!response.ok) {
+      throw new Error("Failed to fetch users");
+    }
 
-  const filteredData = USERS_DATA.filter((user) => {
+    return response.json();
+  };
+
+  const {
+    data: usersData,
+    isLoading,
+    refresh,
+  } = usePollingFetch<User[]>(fetchUsers, {
+    intervalMs: 5000,
+  });
+
+  const users = usersData ?? [];
+
+  const filteredData = users.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
     return matchesSearch && matchesRole;
   });
+
+  const totalUsers = users.length;
+  const activeUsers = users.filter(
+    (user) => user.status !== "SUSPENDED",
+  ).length;
+  const pendingInvites = users.filter(
+    (user) => user.status === "PENDING" || user.status === "Pending",
+  ).length;
 
   const TH =
     "px-6 py-4 text-[11px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider";
@@ -650,7 +722,7 @@ export default function UserManagement() {
               <div className="h-5 w-12 bg-slate-200 dark:bg-[#1a365d] rounded animate-pulse"></div>
             ) : (
               <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
-                1,284
+                {totalUsers.toLocaleString()}
               </span>
             )}
           </div>
@@ -663,7 +735,7 @@ export default function UserManagement() {
               <div className="h-5 w-10 bg-slate-200 dark:bg-[#1a365d] rounded animate-pulse"></div>
             ) : (
               <span className="text-lg font-bold text-[#15803d]">
-                342
+                {activeUsers}
               </span>
             )}
           </div>
@@ -773,13 +845,16 @@ export default function UserManagement() {
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
               <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
-                {["Name & Identity", "Role Type", "Assigned Facility", "Status"].map(
-                  (h) => (
-                    <th key={h} className={TH}>
-                      {h}
-                    </th>
-                  ),
-                )}
+                {[
+                  "Name & Identity",
+                  "Role Type",
+                  "Assigned Facility",
+                  "Status",
+                ].map((h) => (
+                  <th key={h} className={TH}>
+                    {h}
+                  </th>
+                ))}
                 <th className={`${TH} text-right`}>Actions</th>
               </tr>
             </thead>
@@ -828,7 +903,7 @@ export default function UserManagement() {
                   </td>
                 </tr>
               ) : (
-                filteredData.map((user) => (
+                filteredData.map((user, index) => (
                   <tr
                     key={user.id}
                     className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group"
@@ -836,7 +911,15 @@ export default function UserManagement() {
                     {/* Name & Identity */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <UserAvatar name={user.name} avatar={user.avatar} />
+                        <UserAvatar
+                          name={user.name}
+                          avatar={
+                            user.avatar ??
+                            [imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4][
+                              index % 4
+                            ]
+                          }
+                        />
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
                             {user.name}
@@ -868,7 +951,29 @@ export default function UserManagement() {
                       {user.status === "SUSPENDED" ? (
                         <button
                           onClick={() => {
-                            console.log("Reinstating user:", user.id);
+                            fetch(`${API_BASE_URL}/api/users/${user.id}`, {
+                              method: "PATCH",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({ status: "ACTIVE" }),
+                            })
+                              .then((response) => {
+                                if (!response.ok) {
+                                  throw new Error("Failed to reinstate user");
+                                }
+
+                                return refresh();
+                              })
+                              .catch((error) => {
+                                console.error(
+                                  "Failed to reinstate user:",
+                                  error,
+                                );
+                                alert(
+                                  "Failed to reinstate user. Please try again.",
+                                );
+                              });
                           }}
                           className="bg-[#0a5cf5] hover:bg-[#094fc2] text-white text-xs font-bold rounded-lg px-4.5 py-2 inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                         >
@@ -891,10 +996,14 @@ export default function UserManagement() {
                       ) : (
                         <ActionMenu
                           userId={user.id}
+                          currentRole={user.role}
                           isOpen={openMenuId === user.id}
                           onToggle={() =>
-                            setOpenMenuId(openMenuId === user.id ? null : user.id)
+                            setOpenMenuId(
+                              openMenuId === user.id ? null : user.id,
+                            )
                           }
+                          onRefresh={refresh}
                           onClose={() => setOpenMenuId(null)}
                         />
                       )}
@@ -909,12 +1018,14 @@ export default function UserManagement() {
         {/* Pagination Footer */}
         <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942]/50 flex items-center justify-between mt-auto">
           <p className="text-sm text-[#64748b] dark:text-[#94a3b8]">
-            Showing <span className="font-semibold text-[#475569] dark:text-[#cbd5e1]">{isLoading ? 0 : filteredData.length}</span> of 1,284 team members
+            Showing{" "}
+            <span className="font-semibold text-[#475569] dark:text-[#cbd5e1]">
+              {isLoading ? 0 : filteredData.length}
+            </span>{" "}
+            of {totalUsers} team members
           </p>
           <div className="flex items-center gap-1">
-            <button
-              className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#475569] dark:hover:text-[#cbd5e1] transition-colors"
-            >
+            <button className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#475569] dark:hover:text-[#cbd5e1] transition-colors">
               <svg
                 width="16"
                 height="16"
@@ -928,25 +1039,19 @@ export default function UserManagement() {
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-            <button
-              className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors bg-[#0a5cf5] text-white"
-            >
+            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors bg-[#0a5cf5] text-white">
               1
             </button>
-            <button
-              className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]"
-            >
+            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]">
               2
             </button>
-            <button
-              className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]"
-            >
+            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]">
               3
             </button>
-            <span className="text-[#94a3b8] dark:text-[#64748b] px-1 text-sm font-semibold">...</span>
-            <button
-              className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]"
-            >
+            <span className="text-[#94a3b8] dark:text-[#64748b] px-1 text-sm font-semibold">
+              ...
+            </span>
+            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]">
               32
             </button>
             <button className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#475569] dark:hover:text-[#cbd5e1] transition-colors">
@@ -989,7 +1094,16 @@ export default function UserManagement() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
@@ -998,7 +1112,8 @@ export default function UserManagement() {
                 </h3>
               </div>
               <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                Regularly review high-privilege roles. 14 users currently have Administrative access. We recommend keeping this under 10.
+                Regularly review high-privilege roles. 14 users currently have
+                Administrative access. We recommend keeping this under 10.
               </p>
             </div>
             <a
@@ -1007,7 +1122,14 @@ export default function UserManagement() {
               className="text-xs font-bold text-[#0a5cf5] hover:underline flex items-center gap-1 mt-4"
             >
               View Security Logs
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
@@ -1039,7 +1161,16 @@ export default function UserManagement() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
@@ -1050,7 +1181,7 @@ export default function UserManagement() {
                   Pending Invites
                 </h3>
               </div>
-              
+
               <div className="flex items-center gap-4 py-1">
                 <div className="flex -space-x-3 overflow-hidden">
                   <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#e2e8f0] dark:bg-slate-700" />
@@ -1058,7 +1189,7 @@ export default function UserManagement() {
                   <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#94a3b8] dark:bg-slate-500" />
                 </div>
                 <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                  3 Pending
+                  {pendingInvites} Pending
                 </span>
               </div>
             </div>
@@ -1071,11 +1202,10 @@ export default function UserManagement() {
         {/* Need Bulk Import Card */}
         <div className="bg-gradient-to-br from-[#0a5cf5] to-[#4f46e5] text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[180px]">
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold text-base">
-              Need bulk import?
-            </h3>
+            <h3 className="font-bold text-base">Need bulk import?</h3>
             <p className="text-xs text-blue-50/95 leading-relaxed">
-              Upload a CSV or sync with Active Directory for automated provisioning.
+              Upload a CSV or sync with Active Directory for automated
+              provisioning.
             </p>
           </div>
           <button
@@ -1090,6 +1220,7 @@ export default function UserManagement() {
       <InviteUserModal
         isOpen={isInviteModalOpen}
         onClose={() => setIsInviteModalOpen(false)}
+        onCreated={refresh}
       />
     </PageLayout>
   );
