@@ -41,6 +41,34 @@ model CollectionJob {
   collectorId String?  
 }
 
+// Collectors who handle collection routes
+model Collector {
+  id          String   @id @default(uuid())
+  collectorId String   @unique
+  name        String
+  region      String
+  status      String   @default("Active")
+  rating      Float    @default(0)
+  email       String?  @unique
+  joinedAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Admin and operational users
+model PlatformUser {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  name             String
+  email            String   @unique
+  role             String
+  status           String   @default("ACTIVE")
+  assignedFacility String
+  avatar           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
 // Community Feedback
 model Feedback {
   id        String   @id @default(uuid())
