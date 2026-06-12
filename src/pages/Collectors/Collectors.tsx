@@ -34,12 +34,13 @@ export default function Collectors() {
     return response.json();
   };
 
-  const { data: collectors, isLoading, refresh } = usePollingFetch<Collector[]>(
-    fetchCollectors,
-    {
-      intervalMs: 5000,
-    },
-  );
+  const {
+    data: collectors,
+    isLoading,
+    refresh,
+  } = usePollingFetch<Collector[]>(fetchCollectors, {
+    intervalMs: 5000,
+  });
 
   return (
     <PageLayout
