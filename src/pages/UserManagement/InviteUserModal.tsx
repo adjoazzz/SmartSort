@@ -4,17 +4,36 @@ import { motion, AnimatePresence } from "motion/react";
 interface InviteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreated?: () => void | Promise<void>;
 }
 
-export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+
+export function InviteUserModal({
+  isOpen,
+  onClose,
+  onCreated,
+}: InviteUserModalProps) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Viewer");
+  const [assignedFacility, setAssignedFacility] = useState(
+    "HQ Corporate Center",
+  );
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
   const [emailError, setEmailError] = useState("");
+  const [nameError, setNameError] = useState("");
 
   const validate = () => {
     let isValid = true;
     setEmailError("");
+    setNameError("");
+
+    if (!name) {
+      setNameError("Name is required.");
+      isValid = false;
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -34,16 +53,41 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
 
     status === "idle" && setStatus("sending");
 
-    // Simulate API call for inviting user
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          role,
+          status: "PENDING",
+          assignedFacility,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create user");
+      }
+
+      await onCreated?.();
+
       setStatus("success");
       setTimeout(() => {
         onClose();
         setStatus("idle");
+        setName("");
         setEmail("");
         setRole("Viewer");
+        setAssignedFacility("HQ Corporate Center");
       }, 3000);
-    }, 1500);
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      setStatus("idle");
+      alert("Failed to create user. Please try again.");
+    }
   };
 
   return (
@@ -125,7 +169,39 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
                   </div>
                 </div>
               ) : (
-                <form onSubmit={handleInvite} className="p-6 flex flex-col gap-5">
+                <form
+                  onSubmit={handleInvite}
+                  className="p-6 flex flex-col gap-5"
+                >
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="name"
+                      className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                    >
+                      Full Name
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      placeholder="e.g., Alexander Vance"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        setNameError("");
+                      }}
+                      className={`h-11 px-4 border rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
+                        nameError
+                          ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
+                          : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/20"
+                      }`}
+                    />
+                    {nameError && (
+                      <span className="text-xs text-[#ba1a1a] font-medium">
+                        {nameError}
+                      </span>
+                    )}
+                  </div>
+
                   <div className="flex flex-col gap-1.5">
                     <label
                       htmlFor="email"
@@ -175,6 +251,32 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
                     </select>
                   </div>
 
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="facility"
+                      className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                    >
+                      Assigned Facility
+                    </label>
+                    <select
+                      id="facility"
+                      value={assignedFacility}
+                      onChange={(e) => setAssignedFacility(e.target.value)}
+                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white bg-white dark:bg-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                    >
+                      <option value="HQ Corporate Center">
+                        HQ Corporate Center
+                      </option>
+                      <option value="East Side Recycling">
+                        East Side Recycling
+                      </option>
+                      <option value="South Hub Logistics">
+                        South Hub Logistics
+                      </option>
+                      <option value="Global Read-Only">Global Read-Only</option>
+                    </select>
+                  </div>
+
                   <div className="bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-3 mt-2 flex gap-3 items-start">
                     <svg
                       width="18"
@@ -192,8 +294,8 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
                     <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
                       The user will receive an email to set up their account and
                       password. Their status will show as{" "}
-                      <span className="font-bold">Pending</span> until they complete
-                      registration.
+                      <span className="font-bold">Pending</span> until they
+                      complete registration.
                     </p>
                   </div>
 
@@ -210,7 +312,7 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
                       disabled={status === "sending"}
                       className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
                     >
-                      {status === "sending" ? "Sending..." : "Send Invite"}
+                      {status === "sending" ? "Saving..." : "Create User"}
                     </button>
                   </div>
                 </form>
@@ -222,4 +324,3 @@ export function InviteUserModal({ isOpen, onClose }: InviteUserModalProps) {
     </AnimatePresence>
   );
 }
-
