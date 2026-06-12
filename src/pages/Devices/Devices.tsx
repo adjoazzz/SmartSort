@@ -2,8 +2,16 @@ import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { RegisterDeviceModal } from "../../components/RegisterDeviceModal";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "../../components/ui/table";
 import { Progress } from "../../components/ui/progress";
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 
 // Event logs mock template
 const EVENT_LOGS = [
@@ -149,29 +157,32 @@ export default function Devices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [devices, setDevices] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const baseUrl =
+    (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+
+  const fetchDevices = async () => {
+    const response = await fetch(`${baseUrl}/api/devices`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch device data");
+    }
+    return response.json();
+  };
+
+  const { data: devicesData, isLoading } = usePollingFetch<any[]>(
+    fetchDevices,
+    {
+      intervalMs: 5000,
+    },
+  );
+
+  const devices = devicesData ?? [];
 
   useEffect(() => {
-    const baseUrl =
-      (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
-
-    setIsLoading(true);
-    fetch(`${baseUrl}/api/devices`)
-      .then((response) => response.json())
-      .then((data) => {
-        setDevices(data);
-        if (data && data.length > 0) {
-          // Auto-select the first device in the fetched list
-          setSelectedDevice(data[0].customBinId);
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching device data:", error);
-        setIsLoading(false);
-      });
-  }, []);
+    if (devices.length > 0) {
+      // Auto-select the first device in the fetched list
+      setSelectedDevice(devices[0].customBinId);
+    }
+  }, [devices]);
 
   const normalizedDevices = devices.map((d: any) => ({
     id: d.customBinId,
@@ -191,14 +202,23 @@ export default function Devices() {
   );
 
   // Retrieve current active device selection
-  const currentDevice = filteredData.find((d) => d.id === selectedDevice) || filteredData[0];
+  const currentDevice =
+    filteredData.find((d) => d.id === selectedDevice) || filteredData[0];
 
   // Dynamic calculated compartments and telemetry
   const recyclingFill = currentDevice ? currentDevice.fill : 0;
-  const organicsFill = currentDevice ? Math.min(100, Math.round(currentDevice.fill * 0.6)) : 0;
-  const generalFill = currentDevice ? Math.min(100, Math.round(currentDevice.fill * 0.3)) : 0;
-  const currentTemp = currentDevice ? (((currentDevice.fill * 3) % 7) + 18.2).toFixed(1) : "22.4";
-  const currentUptimeDays = currentDevice ? ((currentDevice.fill * 7) % 15) + 3 : 14;
+  const organicsFill = currentDevice
+    ? Math.min(100, Math.round(currentDevice.fill * 0.6))
+    : 0;
+  const generalFill = currentDevice
+    ? Math.min(100, Math.round(currentDevice.fill * 0.3))
+    : 0;
+  const currentTemp = currentDevice
+    ? (((currentDevice.fill * 3) % 7) + 18.2).toFixed(1)
+    : "22.4";
+  const currentUptimeDays = currentDevice
+    ? ((currentDevice.fill * 7) % 15) + 3
+    : 14;
   const currentUptime = `${currentUptimeDays}d 6h 12m`;
 
   return (
@@ -340,7 +360,8 @@ export default function Devices() {
                             : device.status
                         }
                         variant={
-                          device.status === "Online" || device.status === "Active"
+                          device.status === "Online" ||
+                          device.status === "Active"
                             ? "success"
                             : device.status === "Offline"
                               ? "neutral"
