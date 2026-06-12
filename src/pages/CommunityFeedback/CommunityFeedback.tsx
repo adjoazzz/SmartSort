@@ -5,8 +5,22 @@ import { StatusBadge } from "../../components/StatusBadge";
 import { InputField } from "../../components/InputField";
 import { SelectField } from "../../components/SelectField";
 import { Skeleton } from "../../components/ui/skeleton";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../components/ui/dialog";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "../../components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "../../components/ui/table";
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 
 const getCategoryVariant = (category: string) => {
   switch (category) {
@@ -93,27 +107,38 @@ export default function CommunityFeedback() {
   const [description, setDescription] = useState("");
 
   const fetchFeedbacks = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/feedback");
-      if (response.ok) {
-        const data = await response.json();
-        setFeedbacks(data);
-      } else {
-        console.error("Failed to fetch feedback");
-      }
-    } catch (error) {
-      console.error("Error fetching feedback:", error);
-    } finally {
-      setLoading(false);
+    const baseUrl =
+      (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+    const response = await fetch(`${baseUrl}/api/feedback`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch feedback");
     }
+    return response.json();
   };
 
+  const {
+    data: feedbackData,
+    isLoading,
+    refresh,
+  } = usePollingFetch<FeedbackItem[]>(fetchFeedbacks, {
+    intervalMs: 5000,
+  });
+
   useEffect(() => {
-    fetchFeedbacks();
-  }, []);
+    if (feedbackData) {
+      setFeedbacks(feedbackData);
+      setLoading(false);
+    }
+  }, [feedbackData]);
 
   const handleSubmitFeedback = async () => {
-    if (!userName || !location || !category || category === "Select a category" || !description) {
+    if (
+      !userName ||
+      !location ||
+      !category ||
+      category === "Select a category" ||
+      !description
+    ) {
       alert("Please fill in all fields.");
       return;
     }
@@ -138,7 +163,7 @@ export default function CommunityFeedback() {
         setCategory("");
         setDescription("");
         setIsModalOpen(false);
-        fetchFeedbacks();
+        await refresh();
       } else {
         console.error("Failed to submit feedback");
       }
@@ -163,7 +188,7 @@ export default function CommunityFeedback() {
       });
 
       if (response.ok) {
-        fetchFeedbacks();
+        await refresh();
       } else {
         console.error("Failed to update status");
       }
@@ -174,14 +199,17 @@ export default function CommunityFeedback() {
 
   // Dynamic KPIs calculations
   const totalReports = feedbacks.length;
-  const pendingCount = feedbacks.filter(f => f.status === "Pending").length;
-  const inProgressCount = feedbacks.filter(f => f.status === "In Progress").length;
-  const resolvedCount = feedbacks.filter(f => f.status === "Resolved").length;
+  const pendingCount = feedbacks.filter((f) => f.status === "Pending").length;
+  const inProgressCount = feedbacks.filter(
+    (f) => f.status === "In Progress",
+  ).length;
+  const resolvedCount = feedbacks.filter((f) => f.status === "Resolved").length;
 
   const activeReportsCount = pendingCount + inProgressCount;
-  const resolutionRatePercent = totalReports > 0 
-    ? ((resolvedCount / totalReports) * 100).toFixed(1) + "%" 
-    : "0.0%";
+  const resolutionRatePercent =
+    totalReports > 0
+      ? ((resolvedCount / totalReports) * 100).toFixed(1) + "%"
+      : "0.0%";
 
   let sentimentLabel = "Neutral";
   if (totalReports > 0) {
@@ -287,10 +315,14 @@ export default function CommunityFeedback() {
 
   // Filtering Logic
   const filteredFeedbacks = feedbacks.filter((item) => {
-    const statusVal = statusFilter.startsWith("Status: ") ? statusFilter.replace("Status: ", "") : statusFilter;
+    const statusVal = statusFilter.startsWith("Status: ")
+      ? statusFilter.replace("Status: ", "")
+      : statusFilter;
     const matchesStatus = statusVal === "All" || item.status === statusVal;
 
-    const catVal = categoryFilter.startsWith("Category: ") ? categoryFilter.replace("Category: ", "") : categoryFilter;
+    const catVal = categoryFilter.startsWith("Category: ")
+      ? categoryFilter.replace("Category: ", "")
+      : categoryFilter;
     const matchesCategory = catVal === "All" || item.category === catVal;
 
     return matchesStatus && matchesCategory;
@@ -433,7 +465,9 @@ export default function CommunityFeedback() {
                   <TableHead className="px-6 py-4">Description</TableHead>
                   <TableHead className="px-6 py-4">Status</TableHead>
                   <TableHead className="px-6 py-4">Reported At</TableHead>
-                  <TableHead className="px-6 py-4 text-right">Actions</TableHead>
+                  <TableHead className="px-6 py-4 text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -464,7 +498,10 @@ export default function CommunityFeedback() {
                       />
                     </TableCell>
                     <TableCell className="px-6 py-4">
-                      <p className="text-[#515f74] dark:text-[#cbd5e1] text-xs line-clamp-1 max-w-[200px]" title={item.message}>
+                      <p
+                        className="text-[#515f74] dark:text-[#cbd5e1] text-xs line-clamp-1 max-w-[200px]"
+                        title={item.message}
+                      >
                         {item.message}
                       </p>
                     </TableCell>
@@ -499,9 +536,11 @@ export default function CommunityFeedback() {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleUpdateStatus(item.id, item.status)}
+                          onClick={() =>
+                            handleUpdateStatus(item.id, item.status)
+                          }
                           className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors cursor-pointer"
-                          title={`Update status: ${item.status === 'Pending' ? 'In Progress' : item.status === 'In Progress' ? 'Resolved' : 'Pending'}`}
+                          title={`Update status: ${item.status === "Pending" ? "In Progress" : item.status === "In Progress" ? "Resolved" : "Pending"}`}
                         >
                           <svg
                             width="18"
