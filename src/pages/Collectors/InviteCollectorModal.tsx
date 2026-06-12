@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-import emailjs from "@emailjs/browser";
 
 interface InviteCollectorModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreated?: () => void | Promise<void>;
 }
+
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
 export function InviteCollectorModal({
   isOpen,
   onClose,
+  onCreated,
 }: InviteCollectorModalProps) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [facility, setFacility] = useState("Facility 1");
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
@@ -18,43 +23,41 @@ export function InviteCollectorModal({
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!name || !email) return;
 
     setStatus("sending");
 
-    // Generate a random 8-character password
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
-    let generatedPassword = "";
-    for (let i = 0; i < 8; i++) {
-      generatedPassword += chars.charAt(
-        Math.floor(Math.random() * chars.length),
-      );
-    }
-
     try {
-      await emailjs.send(
-        "service_bcr70ms", // Service ID
-        "template_65z65qd", // Template ID
-        {
-          collector_email: email,
-          temp_password: generatedPassword,
-          invite_link: `${window.location.origin}/?role=collector`,
-          region: facility,
+      const response = await fetch(`${API_BASE_URL}/api/collectors`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        "v5igHVOqku3cMfXGW", // Public Key
-      );
+        body: JSON.stringify({
+          name,
+          email,
+          region: facility,
+          status: "Pending",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create collector");
+      }
+
+      await onCreated?.();
 
       setStatus("success");
       setTimeout(() => {
         onClose();
         setStatus("idle");
+        setName("");
         setEmail("");
       }, 3000);
     } catch (error) {
-      console.error("Failed to send email:", error);
+      console.error("Failed to create collector:", error);
       setStatus("idle");
-      alert("Failed to send invite email. Please try again.");
+      alert("Failed to create collector. Please try again.");
     }
   };
 
@@ -115,6 +118,24 @@ export function InviteCollectorModal({
           </div>
         ) : (
           <form onSubmit={handleInvite} className="p-6 flex flex-col gap-5">
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="name"
+                className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+              >
+                Collector Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                required
+                placeholder="e.g., Kwame Mensah"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all"
+              />
+            </div>
+
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
@@ -185,10 +206,10 @@ export function InviteCollectorModal({
               </button>
               <button
                 type="submit"
-                disabled={status === "sending" || !email}
+                disabled={status === "sending" || !name || !email}
                 className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                {status === "sending" ? "Sending..." : "Send Invite"}
+                {status === "sending" ? "Saving..." : "Create Collector"}
               </button>
             </div>
           </form>

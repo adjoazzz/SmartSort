@@ -1,19 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBadge } from "../../components/StatusBadge";
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
 interface CollectorProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  collector: any; // We can type this properly based on the mock data
+  collector: any;
+  onSaved?: () => void | Promise<void>;
 }
+
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
 export function CollectorProfileModal({
   isOpen,
   onClose,
   collector,
+  onSaved,
 }: CollectorProfileModalProps) {
+  const [name, setName] = useState(collector?.name ?? "");
+  const [region, setRegion] = useState(collector?.region ?? "");
+  const [status, setStatus] = useState(collector?.status ?? "Active");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setName(collector?.name ?? "");
+    setRegion(collector?.region ?? "");
+    setStatus(collector?.status ?? "Active");
+  }, [collector, isOpen]);
+
   if (!isOpen || !collector) return null;
+
+  const handleSave = async () => {
+    setSaving(true);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/collectors/${collector.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            region,
+            status,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update collector");
+      }
+
+      await onSaved?.();
+      onClose();
+    } catch (error) {
+      console.error("Failed to update collector:", error);
+      alert("Failed to update collector. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-[#0b1c30]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
@@ -59,15 +108,64 @@ export function CollectorProfileModal({
                 ID: {collector.id}
               </p>
               <StatusBadge
-                label={collector.status}
+                label={status}
                 variant={
-                  collector.status === "Active"
+                  status === "Active"
                     ? "success"
-                    : collector.status === "Inactive"
+                    : status === "Inactive"
                       ? "danger"
                       : "warning"
                 }
               />
+
+              <div className="w-full mt-6 flex flex-col gap-3 text-left">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                    Collector Name
+                  </label>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="h-11 px-4 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] bg-white dark:bg-[#0b1c30] text-sm text-[#0b1c30] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                    Region
+                  </label>
+                  <input
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                    className="h-11 px-4 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] bg-white dark:bg-[#0b1c30] text-sm text-[#0b1c30] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                    Status
+                  </label>
+                  <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="h-11 px-4 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] bg-white dark:bg-[#0b1c30] text-sm text-[#0b1c30] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="On Leave">On Leave</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving || !name || !region}
+                  className="mt-2 h-11 rounded-lg bg-[#006c49] text-white text-sm font-semibold hover:bg-[#005a3c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
 
               <div className="w-full mt-6 pt-6 border-t border-[#e2e8f0] dark:border-[#1e3a5f] flex flex-col gap-3">
                 <div className="flex justify-between items-center">

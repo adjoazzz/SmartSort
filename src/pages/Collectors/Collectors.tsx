@@ -3,48 +3,43 @@ import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { CollectorProfileModal } from "./CollectorProfileModal";
 import { InviteCollectorModal } from "./InviteCollectorModal";
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 
-const MOCK_COLLECTORS = [
-  {
-    id: "COL-001",
-    name: "Kwame Mensah",
-    region: "North Sector",
-    status: "Active",
-    rating: 4.8,
-  },
-  {
-    id: "COL-002",
-    name: "Abena Osei",
-    region: "East Sector",
-    status: "Active",
-    rating: 4.9,
-  },
-  {
-    id: "COL-003",
-    name: "Kofi Annan",
-    region: "South Sector",
-    status: "Inactive",
-    rating: 4.5,
-  },
-  {
-    id: "COL-004",
-    name: "Ama Asare",
-    region: "West Sector",
-    status: "Active",
-    rating: 4.7,
-  },
-  {
-    id: "COL-005",
-    name: "Yaw Appiah",
-    region: "Central Hub",
-    status: "On Leave",
-    rating: 4.6,
-  },
-];
+interface Collector {
+  id: string;
+  name: string;
+  region: string;
+  status: string;
+  rating: number;
+  email?: string | null;
+  joinedAt?: string;
+}
+
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
 export default function Collectors() {
-  const [selectedCollector, setSelectedCollector] = useState<any>(null);
+  const [selectedCollector, setSelectedCollector] = useState<Collector | null>(
+    null,
+  );
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+
+  const fetchCollectors = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/collectors`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch collectors");
+    }
+
+    return response.json();
+  };
+
+  const { data: collectors, isLoading, refresh } = usePollingFetch<Collector[]>(
+    fetchCollectors,
+    {
+      intervalMs: 5000,
+    },
+  );
 
   return (
     <PageLayout
@@ -91,45 +86,79 @@ export default function Collectors() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
-              {MOCK_COLLECTORS.map((collector) => (
-                <tr
-                  key={collector.id}
-                  className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
-                    {collector.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
-                    {collector.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                    {collector.region}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#006c49]">
-                    ⭐ {collector.rating}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <StatusBadge
-                      label={collector.status}
-                      variant={
-                        collector.status === "Active"
-                          ? "success"
-                          : collector.status === "Inactive"
-                            ? "danger"
-                            : "warning"
-                      }
-                    />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <button
-                      onClick={() => setSelectedCollector(collector)}
-                      className="text-[#006c49] text-sm font-semibold hover:underline"
-                    >
-                      View Profile
-                    </button>
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <tr key={index} className="animate-pulse">
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-24 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-32 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-16 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-6 w-20 bg-slate-200 dark:bg-[#1a365d] rounded-full" />
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded ml-auto" />
+                    </td>
+                  </tr>
+                ))
+              ) : (collectors ?? []).length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-6 py-12 text-center text-sm text-[#94a3b8] dark:text-[#64748b]"
+                  >
+                    No collectors found.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                (collectors ?? []).map((collector) => (
+                  <tr
+                    key={collector.id}
+                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                      {collector.id}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                      {collector.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                      {collector.region}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#006c49]">
+                      ⭐ {collector.rating}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <StatusBadge
+                        label={collector.status}
+                        variant={
+                          collector.status === "Active"
+                            ? "success"
+                            : collector.status === "Inactive"
+                              ? "danger"
+                              : "warning"
+                        }
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <button
+                        onClick={() => setSelectedCollector(collector)}
+                        className="text-[#006c49] text-sm font-semibold hover:underline"
+                      >
+                        View Profile
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -139,11 +168,13 @@ export default function Collectors() {
         isOpen={!!selectedCollector}
         onClose={() => setSelectedCollector(null)}
         collector={selectedCollector}
+        onSaved={refresh}
       />
 
       <InviteCollectorModal
         isOpen={isInviteModalOpen}
         onClose={() => setIsInviteModalOpen(false)}
+        onCreated={refresh}
       />
     </PageLayout>
   );
