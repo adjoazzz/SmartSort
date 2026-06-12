@@ -4,7 +4,15 @@ import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Progress } from "../../components/ui/progress";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "../../components/ui/table";
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 
 import imgEventSnap from "../../assets/9389a9333045e821be3474418e89b876d4fc0c10.png";
 import imgEventSnap1 from "../../assets/8811709787b7f35f6b7245b79da448b564be54ea.png";
@@ -174,29 +182,29 @@ const RECENT_EVENTS = [
 export default function Dashboard() {
   const [activeRange, setActiveRange] = useState("24h");
   const navigate = useNavigate();
-  const [devices, setDevices] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const baseUrl =
+    (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
-  useEffect(() => {
-    const baseUrl =
-      (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+  const fetchDevices = async () => {
+    const response = await fetch(`${baseUrl}/api/devices`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch device data");
+    }
+    return response.json();
+  };
 
-    setIsLoading(true);
-    fetch(`${baseUrl}/api/devices`)
-      .then((response) => response.json())
-      .then((data) => {
-        setDevices(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching device data:", error);
-        setIsLoading(false);
-      });
-  }, []);
+  const { data: devicesData, isLoading } = usePollingFetch<any[]>(
+    fetchDevices,
+    {
+      intervalMs: 5000,
+    },
+  );
+
+  const devices = devicesData ?? [];
 
   const totalDevices = devices.length;
   const activeDevicesCount = devices.filter(
-    (d: any) => d.status === "Active" || d.status === "Online" || !d.status
+    (d: any) => d.status === "Active" || d.status === "Online" || !d.status,
   ).length;
 
   const deviceStatusStr = `${activeDevicesCount}/${totalDevices}`;
@@ -209,13 +217,14 @@ export default function Dashboard() {
     ...KPIS.slice(1),
   ];
 
-  const displayBins = devices.length > 0
-    ? devices.slice(0, 4).map((d: any) => ({
-        label: d.location || d.customBinId,
-        value: d.fillLevel ?? 0,
-        color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]"
-      }))
-    : DEVICE_BINS;
+  const displayBins =
+    devices.length > 0
+      ? devices.slice(0, 4).map((d: any) => ({
+          label: d.location || d.customBinId,
+          value: d.fillLevel ?? 0,
+          color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
+        }))
+      : DEVICE_BINS;
 
   return (
     <PageLayout
@@ -250,35 +259,33 @@ export default function Dashboard() {
     >
       {/* KPIs Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {isLoading ? (
-          Array.from({ length: 4 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
-            >
-              <div className="flex justify-between items-center">
-                <div className="h-3 w-24 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0f2942]"></div>
+        {isLoading
+          ? Array.from({ length: 4 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="h-3 w-24 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0f2942]"></div>
+                </div>
+                <div className="h-8 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                <div className="h-3 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
               </div>
-              <div className="h-8 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-              <div className="h-3 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-            </div>
-          ))
-        ) : (
-          dynamicKpis.map((kpi, idx) => (
-            <MetricCard
-              key={idx}
-              title={kpi.title}
-              value={kpi.value}
-              trend={kpi.trend}
-              trendDirection={kpi.trendDirection}
-              iconColorClass={kpi.iconColorClass}
-              iconBgClass={kpi.iconBgClass}
-              iconSvg={kpi.icon}
-              linkTo={"linkTo" in kpi ? (kpi as any).linkTo : undefined}
-            />
-          ))
-        )}
+            ))
+          : dynamicKpis.map((kpi, idx) => (
+              <MetricCard
+                key={idx}
+                title={kpi.title}
+                value={kpi.value}
+                trend={kpi.trend}
+                trendDirection={kpi.trendDirection}
+                iconColorClass={kpi.iconColorClass}
+                iconBgClass={kpi.iconBgClass}
+                iconSvg={kpi.icon}
+                linkTo={"linkTo" in kpi ? (kpi as any).linkTo : undefined}
+              />
+            ))}
       </div>
 
       {/* Middle Charts Row */}
@@ -308,7 +315,10 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="flex-1 flex items-end gap-3 w-full border-b border-l border-[#f1f5f9] dark:border-[#0f2942] pt-4 pl-1 pb-1 relative animate-pulse">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="flex-1 flex flex-col items-center justify-end h-full">
+                <div
+                  key={i}
+                  className="flex-1 flex flex-col items-center justify-end h-full"
+                >
                   <div className="w-full bg-slate-100 dark:bg-[#0f2942] rounded-t-xl h-[45%]" />
                   <div className="h-3 w-8 bg-slate-200 dark:bg-[#1a365d] rounded mt-2" />
                 </div>
@@ -414,34 +424,39 @@ export default function Dashboard() {
             <StatusBadge label="Live" variant="success" />
           </div>
           <div className="p-6 flex flex-col gap-6 flex-1">
-            {isLoading ? (
-              Array.from({ length: 4 }).map((_, idx) => (
-                <div key={idx} className="flex flex-col gap-2 w-full animate-pulse">
-                  <div className="flex justify-between items-center">
-                    <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                    <div className="h-4 w-8 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col gap-2 w-full animate-pulse"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                      <div className="h-4 w-8 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    </div>
+                    <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full animate-pulse"></div>
                   </div>
-                  <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full animate-pulse"></div>
-                </div>
-              ))
-            ) : (
-              displayBins.map((bin, idx) => (
-                <div key={idx} className="flex flex-col gap-2 w-full">
-                  <div className="flex justify-between items-center text-sm font-medium">
-                    <span className="text-[#0b1c30] dark:text-white">{bin.label}</span>
-                    <span className="text-[#515f74] dark:text-[#cbd5e1]">{bin.value}%</span>
+                ))
+              : displayBins.map((bin, idx) => (
+                  <div key={idx} className="flex flex-col gap-2 w-full">
+                    <div className="flex justify-between items-center text-sm font-medium">
+                      <span className="text-[#0b1c30] dark:text-white">
+                        {bin.label}
+                      </span>
+                      <span className="text-[#515f74] dark:text-[#cbd5e1]">
+                        {bin.value}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={bin.value}
+                      className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${
+                        bin.color === "bg-[#ba1a1a]"
+                          ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                          : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                      }`}
+                    />
                   </div>
-                  <Progress
-                    value={bin.value}
-                    className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${
-                      bin.color === "bg-[#ba1a1a]"
-                        ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                        : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
-                    }`}
-                  />
-                </div>
-              ))
-            )}
+                ))}
           </div>
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942] rounded-b-xl">
             <button
@@ -486,65 +501,63 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-[#f1f5f9]">
-              {isLoading ? (
-                Array.from({ length: 4 }).map((_, idx) => (
-                  <TableRow key={idx} className="animate-pulse">
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-full"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-10 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-[#0f2942]"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                RECENT_EVENTS.map((evt) => (
-                  <TableRow
-                    key={evt.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
-                  >
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                      {evt.time}
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
-                      {evt.source}
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <StatusBadge
-                        label={evt.detection}
-                        variant={evt.detectionType as any}
-                      />
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
-                      {evt.confidence}
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
-                        <img
-                          src={evt.img}
-                          alt="Snapshot"
-                          className="w-full h-full object-cover"
+              {isLoading
+                ? Array.from({ length: 4 }).map((_, idx) => (
+                    <TableRow key={idx} className="animate-pulse">
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-full"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-10 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-[#0f2942]"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : RECENT_EVENTS.map((evt) => (
+                    <TableRow
+                      key={evt.id}
+                      className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                    >
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                        {evt.time}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                        {evt.source}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <StatusBadge
+                          label={evt.detection}
+                          variant={evt.detectionType as any}
                         />
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
-                      {evt.action}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
+                        {evt.confidence}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                          <img
+                            src={evt.img}
+                            alt="Snapshot"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
+                        {evt.action}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </div>
