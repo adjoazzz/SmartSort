@@ -5,8 +5,12 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const { Pool } = require('pg');
 require('dotenv').config();
 
+const databaseUrl = process.env.DATABASE_URL;
+const isSupabaseDatabase = /supabase\.com/i.test(databaseUrl || '');
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl,
+  ssl: isSupabaseDatabase ? { rejectUnauthorized: false } : undefined,
 });
 
 // Initialize Prisma Client
