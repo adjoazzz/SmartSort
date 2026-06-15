@@ -157,25 +157,30 @@ export default function Devices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchDevices = async () => {
-    const response = await fetch(`${baseUrl}/api/devices`);
+    const response = await fetch(`${baseUrl}/api/devices?page=${page}&limit=${limit}`);
     if (!response.ok) {
       throw new Error("Failed to fetch device data");
     }
     return response.json();
   };
 
-  const { data: devicesData, isLoading } = usePollingFetch<any[]>(
+  const { data: devicesResponse, isLoading } = usePollingFetch<any>(
     fetchDevices,
     {
       intervalMs: 5000,
     },
   );
 
-  const devices = devicesData ?? [];
+  const devices = devicesResponse?.data ?? [];
+  const totalCount = devicesResponse?.totalCount || 0;
+  const totalPages = devicesResponse?.totalPages || 1;
 
   useEffect(() => {
     if (devices.length > 0) {
@@ -224,7 +229,7 @@ export default function Devices() {
   return (
     <PageLayout
       title="Device Fleet"
-      description={`Managing ${devices.filter((d: any) => d.status === "Active" || d.status === "Online" || !d.status).length} active hardware units across 14 facilities.`}
+      description={`Managing ${totalCount} active hardware units across facilities.`}
       actions={
         <div className="flex gap-3">
           <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
@@ -404,47 +409,23 @@ export default function Devices() {
           {/* Pagination Footer */}
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex items-center justify-between mt-auto">
             <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
-              Showing{" "}
-              <span className="font-semibold text-[#0b1c30] dark:text-white">
-                {filteredData.length > 0 ? 1 : 0}-{filteredData.length}
-              </span>{" "}
-              of {devices.length} devices
+              Showing {devices.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} devices
             </span>
             <div className="flex gap-1">
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors cursor-pointer">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+              <button 
+                onClick={() => setPage(Math.max(1, page - 1))}
+                disabled={page === 1}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded bg-[#10b981] text-white text-sm font-medium cursor-pointer">
-                1
-              </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors cursor-pointer">
-                2
-              </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-sm font-medium transition-colors cursor-pointer">
-                3
-              </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] transition-colors cursor-pointer">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+              
+              <button 
+                onClick={() => setPage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages || totalPages === 0}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
