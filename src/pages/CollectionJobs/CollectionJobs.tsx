@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useEffect, useState } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -250,7 +251,7 @@ export default function CollectionJobs() {
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchJobs = async () => {
-    const response = await fetch(`${baseUrl}/api/jobs?page=${page}&limit=${limit}`);
+    const response = await authFetch(`${baseUrl}/api/jobs?page=${page}&limit=${limit}`);
     if (!response.ok) {
       throw new Error("Failed to fetch collection jobs");
     }
@@ -315,7 +316,7 @@ export default function CollectionJobs() {
     if (!assignedCollector || assignedCollector === "Unassigned") return;
 
     try {
-      const response = await fetch(`${baseUrl}/api/jobs/${jobId}`, {
+      const response = await authFetch(`${baseUrl}/api/jobs/${jobId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -337,7 +338,7 @@ export default function CollectionJobs() {
   // Complete job (moves In Transit -> Completed)
   const handleCompleteJob = async (jobId: string) => {
     try {
-      const response = await fetch(`${baseUrl}/api/jobs/${jobId}`, {
+      const response = await authFetch(`${baseUrl}/api/jobs/${jobId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -368,7 +369,7 @@ export default function CollectionJobs() {
     if (Object.values(newErrors).some((err) => err)) return;
 
     try {
-      const response = await fetch(`${baseUrl}/api/jobs`, {
+      const response = await authFetch(`${baseUrl}/api/jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

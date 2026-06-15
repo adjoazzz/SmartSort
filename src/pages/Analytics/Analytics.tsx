@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
@@ -261,7 +262,7 @@ export default function Analytics() {
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchSummary = async () => {
-    const response = await fetch(`${baseUrl}/api/dashboard/summary`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/summary`);
     if (!response.ok) {
       throw new Error("Failed to fetch analytics summary");
     }
@@ -270,21 +271,21 @@ export default function Analytics() {
   const { data: summary, isLoading: isLoadingSummary } = usePollingFetch<any>(fetchSummary, { intervalMs: 5000 });
 
   const fetchHistorical = async () => {
-    const response = await fetch(`${baseUrl}/api/analytics/historical`);
+    const response = await authFetch(`${baseUrl}/api/analytics/historical`);
     if (!response.ok) throw new Error("Failed to fetch historical data");
     return response.json();
   };
   const { data: historicalData, isLoading: isLoadingHistorical } = usePollingFetch<any[]>(fetchHistorical, { intervalMs: 5000 });
 
   const fetchTonnage = async () => {
-    const response = await fetch(`${baseUrl}/api/analytics/tonnage`);
+    const response = await authFetch(`${baseUrl}/api/analytics/tonnage`);
     if (!response.ok) throw new Error("Failed to fetch tonnage data");
     return response.json();
   };
   const { data: tonnageData, isLoading: isLoadingTonnage } = usePollingFetch<any[]>(fetchTonnage, { intervalMs: 5000 });
 
   const fetchCategories = async () => {
-    const response = await fetch(`${baseUrl}/api/analytics/categories`);
+    const response = await authFetch(`${baseUrl}/api/analytics/categories`);
     if (!response.ok) throw new Error("Failed to fetch categories data");
     return response.json();
   };

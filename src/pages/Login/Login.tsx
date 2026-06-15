@@ -1,5 +1,7 @@
+import { authFetch } from "../../lib/authFetch";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { supabase } from "../../lib/supabaseClient";
 import imgAiCore from "../../assets/smartsort_ai_core.png";
 
 // --- Custom SVGs for UI Icons ---
@@ -158,6 +160,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
 
   // Selected Login Role Toggle
   const [selectedRole, setSelectedRole] = useState<"manager" | "collector">("manager");
@@ -208,32 +212,69 @@ export default function Login() {
     setTimeout(() => setShaking(false), 500);
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Run full validation
     const emailErr = validateEmail(email);
     const passwordErr = validatePassword(password);
     const newErrors: ValidationErrors = { email: emailErr, password: passwordErr };
     setErrors(newErrors);
     setTouched({ email: true, password: true });
 
-    // If there are validation errors, shake the form and stop
     if (emailErr || passwordErr) {
       triggerShake();
       return;
     }
 
-    // Set selected role to localStorage to drive role-based menu configurations
-    localStorage.setItem("userRole", selectedRole);
+    setIsLoading(true);
 
-    // Dynamic role based routing
-    if (selectedRole === "collector") {
-      navigate("/collector-dashboard");
-    } else {
-      navigate("/dashboard");
+    try {
+      if (isSignup) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        
+        if (error) throw error;
+        
+        // Sync user role with backend
+        if (data.user) {
+          await authFetch((import.meta as any).env?.VITE_API_BASE_URL + "/api/auth/sync" || "http://localhost:5000/api/auth/sync", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: data.user.id,
+              email: data.user.email,
+              role: selectedRole === "manager" ? "MANAGER" : "COLLECTOR"
+            })
+          }).catch(console.error);
+        }
+        
+        // Signed up successfully, you can login directly
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+      }
+      
+      localStorage.setItem("userRole", selectedRole);
+      
+      if (selectedRole === "collector") {
+        navigate("/collector-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch(err: any) {
+      setErrors({ email: err.message });
+      triggerShake();
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   const hasEmailError = !!errors.email;
   const hasPasswordError = !!errors.password;
@@ -377,18 +418,21 @@ export default function Login() {
             <button
               id="login-submit"
               type="submit"
+              disabled={isLoading || !isFormValid}
               className={`h-12 w-full rounded-lg font-bold text-sm tracking-wide transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 ${
-                isFormValid
+                isFormValid && !isLoading
                   ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-blue-600/10"
                   : "bg-slate-100 dark:bg-[#0f2942] text-slate-400 dark:text-slate-600 cursor-not-allowed border border-transparent"
               }`}
             >
-              <LoginArrowIcon />
-              LOGIN
+              {isLoading ? "PLEASE WAIT..." : isSignup ? "SIGN UP" : "LOGIN"}
             </button>
 
             {/* Inquiry & links */}
             <div className="flex flex-col gap-4 items-center justify-center text-xs mt-2">
+              <button type="button" onClick={() => setIsSignup(!isSignup)} className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
+                {isSignup ? "Already have an account? Log in" : "Need an account? Sign up"}
+              </button>
               <a href="#" className="font-semibold text-slate-500 hover:text-blue-600 transition-colors">
                 Forgot password?
               </a>

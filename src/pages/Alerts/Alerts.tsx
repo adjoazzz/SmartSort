@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -89,13 +90,13 @@ export default function Alerts() {
   const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchAlerts = async () => {
-    const response = await fetch(`${baseUrl}/api/alerts?page=${page}&limit=${limit}`);
+    const response = await authFetch(`${baseUrl}/api/alerts?page=${page}&limit=${limit}`);
     if (!response.ok) throw new Error("Failed to fetch alerts");
     return response.json();
   };
 
   const fetchSummary = async () => {
-    const response = await fetch(`${baseUrl}/api/alerts/summary`);
+    const response = await authFetch(`${baseUrl}/api/alerts/summary`);
     if (!response.ok) throw new Error("Failed to fetch summary");
     return response.json();
   };

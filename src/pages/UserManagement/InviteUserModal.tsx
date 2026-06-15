@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { authFetch } from "../../lib/authFetch";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import emailjs from "@emailjs/browser";
 
@@ -99,8 +100,7 @@ export function InviteUserModal({
     setSubmitError("");
 
     try {
-      // 1. Create the user in the database
-      const response = await fetch(`${API_BASE_URL}/api/users`, {
+      const response = await authFetch(`${API_BASE_URL}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

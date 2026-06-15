@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useEffect, useState } from "react";
 import { StatusBadge } from "../../components/StatusBadge";
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
@@ -35,7 +36,7 @@ export function CollectorProfileModal({
     setSaving(true);
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `${API_BASE_URL}/api/collectors/${collector.id}`,
         {
           method: "PATCH",

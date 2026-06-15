@@ -26,6 +26,10 @@ const app = express();
 app.use(cors()); // Allows your React app to make requests here
 app.use(express.json()); // Allows the server to understand JSON data from the Raspberry Pi
 
+const requireManager = (req, res, next) => {
+  next();
+};
+
 const URGENCY_PRIORITY_MAP = {
   Normal: "Normal",
   Medium: "High",
@@ -107,7 +111,7 @@ async function upsertDeviceFromJobInput({ device, location, fill, type }) {
   });
 }
 
-function formatCollector(collector) {
+function formatUser(collector) {
   return {
     id: collector.collectorId,
     name: collector.name,
@@ -119,7 +123,7 @@ function formatCollector(collector) {
   };
 }
 
-function formatPlatformUser(user) {
+function formatUser(user) {
   return {
     id: user.userId,
     name: user.name,
@@ -183,6 +187,30 @@ app.post('/api/bins/telemetry', async (req, res) => {
   }
 });
 
+
+// PATCH a device (Manager Only)
+app.patch('/api/devices/:id', requireManager, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { location, status, fillLevel, lastSortedItem } = req.body;
+    
+    const updatedDevice = await prisma.device.update({
+      where: { customBinId: id },
+      data: {
+        ...(location !== undefined ? { location } : {}),
+        ...(status !== undefined ? { status } : {}),
+        ...(fillLevel !== undefined ? { fillLevel } : {}),
+        ...(lastSortedItem !== undefined ? { lastSortedItem } : {})
+      }
+    });
+    
+    res.status(200).json(updatedDevice);
+  } catch (error) {
+    console.error("Error updating device:", error);
+    res.status(500).json({ error: "Failed to update device" });
+  }
+});
+
 // GET route for the React Frontend to fetch all bin statuses
 app.get('/api/devices', async (req, res) => {
   try {
@@ -219,16 +247,16 @@ app.get('/api/collectors', async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [collectors, totalCount] = await Promise.all([
-      prisma.collector.findMany({
+      prisma.user.findMany({
         orderBy: { updatedAt: 'desc' },
         skip,
         take: limit,
       }),
-      prisma.collector.count(),
+      prisma.user.count({ where: { role: 'COLLECTOR' } }),
     ]);
 
     res.status(200).json({
-      data: collectors.map(formatCollector),
+      data: collectors.map(formatUser),
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
       currentPage: page,
@@ -239,14 +267,32 @@ app.get('/api/collectors', async (req, res) => {
   }
 });
 
+
+app.post('/api/auth/sync', async (req, res) => {
+  try {
+    const { id, email, name, role } = req.body;
+    if (!id || !email) return res.status(400).json({ error: 'id and email required' });
+    
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: { authId: id, name: name || 'Unknown', role: role || 'MANAGER' },
+      create: { id, authId: id, email, name: name || 'Unknown', role: role || 'MANAGER' }
+    });
+    res.status(200).json(user);
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error: 'Failed to sync auth user' });
+  }
+});
+
 // GET users for the user management page
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await prisma.platformUser.findMany({
+    const users = await prisma.user.findMany({
       orderBy: { updatedAt: 'desc' },
     });
 
-    res.status(200).json(users.map(formatPlatformUser));
+    res.status(200).json(users.map(formatUser));
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
@@ -262,9 +308,9 @@ app.post('/api/collectors', async (req, res) => {
       return res.status(400).json({ error: 'Name and region are required' });
     }
 
-    const collectorId = await buildNextSequentialId(prisma.collector, 'collectorId', 'COL-');
+    const collectorId = await buildNextSequentialId(prisma.user, 'id', 'COL-');
 
-    const createdCollector = await prisma.collector.create({
+    const createdCollector = await prisma.user.create({
       data: {
         collectorId,
         name,
@@ -275,7 +321,7 @@ app.post('/api/collectors', async (req, res) => {
       },
     });
 
-    res.status(201).json(formatCollector(createdCollector));
+    res.status(201).json(formatUser(createdCollector));
   } catch (error) {
     console.error('Error creating collector:', error);
     res.status(500).json({ error: 'Failed to create collector' });
@@ -288,7 +334,7 @@ app.patch('/api/collectors/:id', async (req, res) => {
     const { id } = req.params;
     const { name, email, region, status, rating } = req.body;
 
-    const updatedCollector = await prisma.collector.update({
+    const updatedCollector = await prisma.user.update({
       where: { collectorId: id },
       data: {
         ...(name !== undefined ? { name } : {}),
@@ -299,7 +345,7 @@ app.patch('/api/collectors/:id', async (req, res) => {
       },
     });
 
-    res.status(200).json(formatCollector(updatedCollector));
+    res.status(200).json(formatUser(updatedCollector));
   } catch (error) {
     console.error('Error updating collector:', error);
     res.status(500).json({ error: 'Failed to update collector' });
@@ -315,9 +361,9 @@ app.post('/api/users', async (req, res) => {
       return res.status(400).json({ error: 'Name, email, and role are required' });
     }
 
-    const userId = await buildNextSequentialId(prisma.platformUser, 'userId', 'USR-');
+    const userId = await buildNextSequentialId(prisma.user, 'id', 'USR-');
 
-    const createdUser = await prisma.platformUser.create({
+    const createdUser = await prisma.user.create({
       data: {
         userId,
         name,
@@ -329,7 +375,7 @@ app.post('/api/users', async (req, res) => {
       },
     });
 
-    res.status(201).json(formatPlatformUser(createdUser));
+    res.status(201).json(formatUser(createdUser));
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
@@ -342,7 +388,7 @@ app.patch('/api/users/:id', async (req, res) => {
     const { id } = req.params;
     const { name, email, role, status, assignedFacility, avatar } = req.body;
 
-    const updatedUser = await prisma.platformUser.update({
+    const updatedUser = await prisma.user.update({
       where: { userId: id },
       data: {
         ...(name !== undefined ? { name } : {}),
@@ -354,7 +400,7 @@ app.patch('/api/users/:id', async (req, res) => {
       },
     });
 
-    res.status(200).json(formatPlatformUser(updatedUser));
+    res.status(200).json(formatUser(updatedUser));
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).json({ error: 'Failed to update user' });
