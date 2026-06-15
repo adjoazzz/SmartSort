@@ -25,6 +25,10 @@ const app = express();
 app.use(cors()); // Allows your React app to make requests here
 app.use(express.json()); // Allows the server to understand JSON data from the Raspberry Pi
 
+const requireManager = (req, res, next) => {
+  next();
+};
+
 const URGENCY_PRIORITY_MAP = {
   Normal: "Normal",
   Medium: "High",
