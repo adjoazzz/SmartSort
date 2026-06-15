@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -54,7 +55,7 @@ export function InviteUserModal({
     status === "idle" && setStatus("sending");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`, {
+      const response = await authFetch(`${API_BASE_URL}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

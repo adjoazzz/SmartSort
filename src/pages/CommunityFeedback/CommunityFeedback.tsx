@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
@@ -109,7 +110,7 @@ export default function CommunityFeedback() {
   const fetchFeedbacks = async () => {
     const baseUrl =
       (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
-    const response = await fetch(`${baseUrl}/api/feedback`);
+    const response = await authFetch(`${baseUrl}/api/feedback`);
     if (!response.ok) {
       throw new Error("Failed to fetch feedback");
     }
@@ -144,7 +145,7 @@ export default function CommunityFeedback() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/feedback", {
+      const response = await authFetch("http://localhost:5000/api/feedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -179,7 +180,7 @@ export default function CommunityFeedback() {
     else if (currentStatus === "Resolved") nextStatus = "Pending";
 
     try {
-      const response = await fetch(`http://localhost:5000/api/feedback/${id}`, {
+      const response = await authFetch(`http://localhost:5000/api/feedback/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

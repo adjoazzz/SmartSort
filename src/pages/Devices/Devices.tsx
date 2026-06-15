@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -164,7 +165,7 @@ export default function Devices() {
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchDevices = async () => {
-    const response = await fetch(`${baseUrl}/api/devices?page=${page}&limit=${limit}`);
+    const response = await authFetch(`${baseUrl}/api/devices?page=${page}&limit=${limit}`);
     if (!response.ok) {
       throw new Error("Failed to fetch device data");
     }

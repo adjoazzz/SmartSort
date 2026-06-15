@@ -43,37 +43,25 @@ model CollectionJob {
 
   // Connecting this to a User (Collector)
   collectorId String?  
-  collector   Collector? @relation(fields: [collectorId], references: [collectorId])
+  collector   User?    @relation(fields: [collectorId], references: [id])
 }
 
-// Collectors who handle collection routes
-model Collector {
-  id          String   @id @default(uuid())
-  collectorId String   @unique
-  name        String
-  region      String
-  status      String   @default("Active")
-  rating      Float    @default(0)
-  email       String?  @unique
-  joinedAt    DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  collectionJobs CollectionJob[]
-}
-
-// Admin and operational users
-model PlatformUser {
+// Unified User model for both Managers and Collectors
+model User {
   id               String   @id @default(uuid())
-  userId           String   @unique
-  name             String
+  authId           String?  @unique // Supabase auth.users.id
   email            String   @unique
-  role             String
+  name             String
+  role             String   // e.g. "MANAGER", "COLLECTOR"
   status           String   @default("ACTIVE")
-  assignedFacility String
   avatar           String?
+  assignedFacility String?
+  region           String?
+  rating           Float?   @default(0)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  collectionJobs CollectionJob[] // For collectors
 }
 
 // Community Feedback

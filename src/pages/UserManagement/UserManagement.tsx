@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState, ReactNode } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -528,7 +529,7 @@ function ActionMenu({
   const roleCycle = ["Viewer", "Collector", "Manager", "Admin"];
 
   const patchUser = async (payload: Record<string, string>) => {
-    const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+    const response = await authFetch(`${API_BASE_URL}/api/users/${userId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -646,7 +647,7 @@ export default function UserManagement() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const fetchUsers = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/users`);
+    const response = await authFetch(`${API_BASE_URL}/api/users`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch users");
@@ -951,7 +952,7 @@ export default function UserManagement() {
                       {user.status === "SUSPENDED" ? (
                         <button
                           onClick={() => {
-                            fetch(`${API_BASE_URL}/api/users/${user.id}`, {
+                            authFetch(`${API_BASE_URL}/api/users/${user.id}`, {
                               method: "PATCH",
                               headers: {
                                 "Content-Type": "application/json",

@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -27,7 +28,7 @@ export default function Collectors() {
   const limit = 10;
 
   const fetchCollectors = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/collectors?page=${page}&limit=${limit}`);
+    const response = await authFetch(`${API_BASE_URL}/api/collectors?page=${page}&limit=${limit}`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch collectors");

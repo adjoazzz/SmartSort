@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState } from "react";
 
 interface InviteCollectorModalProps {
@@ -28,7 +29,7 @@ export function InviteCollectorModal({
     setStatus("sending");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/collectors`, {
+      const response = await authFetch(`${API_BASE_URL}/api/collectors`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

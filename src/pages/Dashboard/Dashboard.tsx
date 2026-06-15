@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
@@ -187,31 +188,31 @@ export default function Dashboard() {
 
   // Fetch functions
   const fetchDevices = async () => {
-    const response = await fetch(`${baseUrl}/api/devices`);
+    const response = await authFetch(`${baseUrl}/api/devices`);
     if (!response.ok) throw new Error("Failed to fetch device data");
     return response.json();
   };
 
   const fetchMetrics = async () => {
-    const response = await fetch(`${baseUrl}/api/dashboard/metrics`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/metrics`);
     if (!response.ok) throw new Error("Failed to fetch dashboard metrics");
     return response.json();
   };
 
   const fetchThroughput = async () => {
-    const response = await fetch(`${baseUrl}/api/dashboard/throughput`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/throughput`);
     if (!response.ok) throw new Error("Failed to fetch throughput data");
     return response.json();
   };
 
   const fetchWasteCategories = async () => {
-    const response = await fetch(`${baseUrl}/api/dashboard/waste-categories`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/waste-categories`);
     if (!response.ok) throw new Error("Failed to fetch waste categories");
     return response.json();
   };
 
   const fetchContaminationEvents = async () => {
-    const response = await fetch(`${baseUrl}/api/dashboard/contamination-events`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/contamination-events`);
     if (!response.ok) throw new Error("Failed to fetch contamination events");
     return response.json();
   };
