@@ -3,81 +3,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
-
-const ALERTS_DATA = [
-  {
-    id: "ALT-1",
-    deviceIcon: "conveyor",
-    deviceName: "Conveyor-B42",
-    deviceLocation: "Floor 2 North",
-    severity: "CRITICAL",
-    messageTitle: "Contamination Spike Detected",
-    messageDesc:
-      "Non-recyclable high-density plastic in paper stream exceeds 15% threshold.",
-    timestampMain: "Today, 14:22:05",
-    timestampSub: "3 mins ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Dispatch Tech", type: "primary" },
-    ],
-  },
-  {
-    id: "ALT-2",
-    deviceIcon: "bin",
-    deviceName: "SmartBin-009",
-    deviceLocation: "Loading Dock A",
-    severity: "WARNING",
-    messageTitle: "Fill Capacity Exceeded",
-    messageDesc: "Device reported 98% capacity. Pick-up scheduled for 18:00.",
-    timestampMain: "Today, 13:45:12",
-    timestampSub: "40 mins ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Acknowledge", type: "secondary" },
-    ],
-  },
-  {
-    id: "ALT-3",
-    deviceIcon: "sensor",
-    deviceName: "Sensor-T10",
-    deviceLocation: "Outdoor Staging",
-    severity: "WARNING",
-    messageTitle: "Battery Level Critical",
-    messageDesc: "Sensor battery at 4%. Shutdown imminent within 2 hours.",
-    timestampMain: "Today, 12:10:00",
-    timestampSub: "2 hours ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Dispatch Tech", type: "primary" },
-    ],
-  },
-  {
-    id: "ALT-4",
-    deviceIcon: "compactor",
-    deviceName: "Compactor-02",
-    deviceLocation: "Main Processing Room",
-    severity: "CRITICAL",
-    messageTitle: "Emergency Stop Engaged",
-    messageDesc:
-      "Manual emergency stop triggered. System lockout active. Investigation required.",
-    timestampMain: "Today, 11:55:30",
-    timestampSub: "2.5 hours ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Dispatch Tech", type: "primary" },
-    ],
-  },
-];
-
-const TRENDS_DATA = [
-  { name: "MON", value: 25 },
-  { name: "TUE", value: 40 },
-  { name: "WED", value: 90, active: true },
-  { name: "THU", value: 55 },
-  { name: "FRI", value: 35 },
-  { name: "SAT", value: 45 },
-  { name: "SUN", value: 60 },
-];
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 
 function DeviceIcon({ type }: { type: string }) {
   if (type === "conveyor") {
@@ -157,19 +83,46 @@ export default function Alerts() {
   const [severity, setSeverity] = useState("all");
   const [deviceType, setDeviceType] = useState("all");
   const [timeRange, setTimeRange] = useState("24h");
-  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 750); // Simulate API loading delay
-    return () => clearTimeout(timer);
-  }, []);
+  const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+
+  const fetchAlerts = async () => {
+    const response = await fetch(`${baseUrl}/api/alerts?page=${page}&limit=${limit}`);
+    if (!response.ok) throw new Error("Failed to fetch alerts");
+    return response.json();
+  };
+
+  const fetchSummary = async () => {
+    const response = await fetch(`${baseUrl}/api/alerts/summary`);
+    if (!response.ok) throw new Error("Failed to fetch summary");
+    return response.json();
+  };
+
+  const { data: alertsData, isLoading } = usePollingFetch<any>(fetchAlerts, { intervalMs: 5000 });
+  const { data: summaryData, isLoading: isSummaryLoading } = usePollingFetch<any>(fetchSummary, { intervalMs: 5000 });
+
+  const alerts = alertsData?.data || [];
+  const totalCount = alertsData?.totalCount || 0;
+  const totalPages = alertsData?.totalPages || 1;
+
+  // Derive trends data directly from the current list (or we could build a real endpoint)
+  const TRENDS_DATA = [
+    { name: "MON", value: 25 },
+    { name: "TUE", value: 40 },
+    { name: "WED", value: 90, active: true },
+    { name: "THU", value: 55 },
+    { name: "FRI", value: 35 },
+    { name: "SAT", value: 45 },
+    { name: "SUN", value: 60 },
+  ];
 
   const handleClearFilters = () => {
     setSeverity("all");
     setDeviceType("all");
     setTimeRange("24h");
+    setPage(1);
   };
 
   return (
@@ -177,7 +130,7 @@ export default function Alerts() {
       title="System Alerts"
       description="Real-time notification center for facility sensor network."
       actions={
-        isLoading ? (
+        isSummaryLoading ? (
           <div className="flex bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden animate-pulse">
             <div className="px-6 py-3 flex flex-col items-center justify-center">
               <div className="h-3 w-14 bg-slate-200 dark:bg-[#1a365d] rounded mb-1"></div>
@@ -195,7 +148,7 @@ export default function Alerts() {
                 CRITICAL
               </span>
               <span className="text-[28px] leading-none font-bold text-[#ba1a1a]">
-                03
+                {String(summaryData?.critical || 0).padStart(2, "0")}
               </span>
             </div>
             <div className="px-6 py-3 flex flex-col items-center justify-center">
@@ -203,7 +156,7 @@ export default function Alerts() {
                 WARNINGS
               </span>
               <span className="text-[28px] leading-none font-bold text-[#0284c7]">
-                12
+                {String(summaryData?.warning || 0).padStart(2, "0")}
               </span>
             </div>
           </div>
@@ -229,14 +182,7 @@ export default function Alerts() {
                   <option value="warning">Warning</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="2"
-                  >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
@@ -258,14 +204,7 @@ export default function Alerts() {
                   <option value="smartbins">SmartBins</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="2"
-                  >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
@@ -287,14 +226,7 @@ export default function Alerts() {
                   <option value="30d">Last 30 Days</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="2"
-                  >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
@@ -307,14 +239,7 @@ export default function Alerts() {
               onClick={handleClearFilters}
               className="h-full bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 hover:bg-[#f8fafc] transition-colors flex items-center gap-2 cursor-pointer"
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
                 <line x1="13" y1="18" x2="21" y2="18"></line>
@@ -324,14 +249,7 @@ export default function Alerts() {
               Clear Filters
             </button>
             <button className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -367,7 +285,6 @@ export default function Alerts() {
               {isLoading ? (
                 Array.from({ length: 4 }).map((_, idx) => (
                   <TableRow key={idx} className="animate-pulse">
-                    {/* Device Column */}
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-[#1a365d]" />
@@ -377,22 +294,18 @@ export default function Alerts() {
                         </div>
                       </div>
                     </TableCell>
-                    {/* Severity Column */}
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
                     </TableCell>
-                    {/* Message Column */}
                     <TableCell className="px-6 py-5">
                       <div className="h-4 w-40 bg-slate-200 dark:bg-[#1a365d] rounded mb-2"></div>
                       <div className="h-3.5 w-full bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
                       <div className="h-3.5 w-2/3 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
                     </TableCell>
-                    {/* Timestamp Column */}
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="h-4 w-24 bg-slate-200 dark:bg-[#1a365d] rounded mb-2"></div>
                       <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
                     </TableCell>
-                    {/* Actions Column */}
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex gap-2">
                         <div className="h-8 w-24 bg-slate-200 dark:bg-[#1a365d] rounded-lg"></div>
@@ -402,7 +315,7 @@ export default function Alerts() {
                   </TableRow>
                 ))
               ) : (
-                ALERTS_DATA.map((alert) => (
+                alerts.map((alert: any) => (
                   <TableRow
                     key={alert.id}
                     className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
@@ -449,7 +362,7 @@ export default function Alerts() {
                     </TableCell>
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex gap-2">
-                        {alert.actions.map((action, i) => (
+                        {alert.actions.map((action: any, i: number) => (
                           <button
                             key={i}
                             className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors cursor-pointer ${
@@ -471,30 +384,23 @@ export default function Alerts() {
 
           <div className="border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-3 flex items-center justify-between bg-white dark:bg-[#0b1c30]">
             <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
-              Showing 1-4 of 15 active alerts
+              Showing {alerts.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} active alerts
             </span>
             <div className="flex gap-1">
-              <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
+              <button 
+                onClick={() => setPage(Math.max(1, page - 1))}
+                disabled={page === 1}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
+              
+              <button 
+                onClick={() => setPage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages || totalPages === 0}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
@@ -601,3 +507,4 @@ export default function Alerts() {
     </PageLayout>
   );
 }
+
