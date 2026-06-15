@@ -11,76 +11,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const CHART_DATA = [
-  { name: "OCT 01", recycling: 25, contamination: 4 },
-  { name: "OCT 08", recycling: 35, contamination: 5 },
-  { name: "OCT 15", recycling: 50, contamination: 2 },
-  { name: "OCT 22", recycling: 55, contamination: -2 },
-  { name: "OCT 31", recycling: 65, contamination: 3 },
-];
+// Removed static CHART_DATA, TONNAGE_DATA, and CATEGORY_DATA.
 
-const TONNAGE_DATA = [
-  {
-    name: "Corrugated Cardboard",
-    value: "420t (34%)",
-    percent: 34,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Mixed Plastics (PET/HDPE)",
-    value: "312t (25%)",
-    percent: 25,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Aluminum & Metals",
-    value: "224t (18%)",
-    percent: 18,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Glass (Clear/Amber)",
-    value: "187t (15%)",
-    percent: 15,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Residual Waste",
-    value: "105t (8%)",
-    percent: 8,
-    color: "bg-[#cbd5e1]",
-  },
-];
-
-const CATEGORY_DATA = [
-  {
-    icon: "boxes",
-    name: "Recycled Paper & Pulp",
-    volume: "582.4",
-    growth: "+8.2%",
-    growthTrend: "up",
-    goal: 92,
-    goalColor: "bg-[#10b981]",
-  },
-  {
-    icon: "magnet",
-    name: "Ferrous Metals",
-    volume: "144.9",
-    growth: "-2.1%",
-    growthTrend: "down",
-    goal: 78,
-    goalColor: "bg-[#10b981]",
-  },
-  {
-    icon: "drop",
-    name: "Liquid Contaminants",
-    volume: "22.8",
-    growth: "+0.4%",
-    growthTrend: "neutral",
-    goal: 12,
-    goalColor: "bg-[#ba1a1a]",
-  },
-];
 
 const KPI_DATA = [
   {
@@ -335,10 +267,28 @@ export default function Analytics() {
     }
     return response.json();
   };
+  const { data: summary, isLoading: isLoadingSummary } = usePollingFetch<any>(fetchSummary, { intervalMs: 5000 });
 
-  const { data: summary, isLoading } = usePollingFetch<any>(fetchSummary, {
-    intervalMs: 5000,
-  });
+  const fetchHistorical = async () => {
+    const response = await fetch(`${baseUrl}/api/analytics/historical`);
+    if (!response.ok) throw new Error("Failed to fetch historical data");
+    return response.json();
+  };
+  const { data: historicalData, isLoading: isLoadingHistorical } = usePollingFetch<any[]>(fetchHistorical, { intervalMs: 5000 });
+
+  const fetchTonnage = async () => {
+    const response = await fetch(`${baseUrl}/api/analytics/tonnage`);
+    if (!response.ok) throw new Error("Failed to fetch tonnage data");
+    return response.json();
+  };
+  const { data: tonnageData, isLoading: isLoadingTonnage } = usePollingFetch<any[]>(fetchTonnage, { intervalMs: 5000 });
+
+  const fetchCategories = async () => {
+    const response = await fetch(`${baseUrl}/api/analytics/categories`);
+    if (!response.ok) throw new Error("Failed to fetch categories data");
+    return response.json();
+  };
+  const { data: categoriesData, isLoading: isLoadingCategories } = usePollingFetch<any[]>(fetchCategories, { intervalMs: 5000 });
 
   const totalDevices = summary?.devices?.total ?? 0;
   const activeDevices = summary?.devices?.active ?? 0;
@@ -419,7 +369,7 @@ export default function Analytics() {
       <div className="flex flex-col gap-6">
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {isLoading
+          {isLoadingSummary
             ? Array.from({ length: 4 }).map((_, idx) => (
                 <div
                   key={idx}
@@ -466,7 +416,7 @@ export default function Analytics() {
                 </div>
               </div>
             </div>
-            {isLoading ? (
+            {isLoadingHistorical ? (
               <div className="flex-1 w-full bg-slate-50/50 dark:bg-[#0f2942]/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
                 <div className="flex flex-col items-center gap-2">
                   <div className="h-10 w-40 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
@@ -477,7 +427,7 @@ export default function Analytics() {
               <div className="flex-1 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={CHART_DATA}
+                    data={historicalData ?? []}
                     margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
                     <CartesianGrid
@@ -536,7 +486,7 @@ export default function Analytics() {
               Tonnage by Material
             </h2>
 
-            {isLoading ? (
+            {isLoadingTonnage ? (
               <div className="flex flex-col gap-[18px] flex-1 animate-pulse">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex flex-col gap-2">
@@ -550,7 +500,7 @@ export default function Analytics() {
               </div>
             ) : (
               <div className="flex flex-col gap-[18px] flex-1">
-                {TONNAGE_DATA.map((item, idx) => (
+                {(tonnageData ?? []).map((item, idx) => (
                   <div key={idx}>
                     <div className="flex justify-between items-end mb-1.5">
                       <span className="text-[13px] font-bold text-[#0b1c30] dark:text-white">
@@ -688,7 +638,7 @@ export default function Analytics() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f1f5f9]">
-                {isLoading
+                {isLoadingCategories
                   ? Array.from({ length: 3 }).map((_, idx) => (
                       <tr key={idx} className="animate-pulse">
                         <td className="px-6 py-5 whitespace-nowrap">
@@ -714,7 +664,7 @@ export default function Analytics() {
                         </td>
                       </tr>
                     ))
-                  : CATEGORY_DATA.map((row, idx) => (
+                  : (categoriesData ?? []).map((row, idx) => (
                       <tr
                         key={idx}
                         className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
