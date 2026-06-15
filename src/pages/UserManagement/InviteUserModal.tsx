@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import emailjs from "@emailjs/browser";
 
 interface InviteUserModalProps {
   isOpen: boolean;
@@ -9,6 +10,41 @@ interface InviteUserModalProps {
 
 const API_BASE_URL =
   (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+
+const EMAILJS_SERVICE_ID: string =
+  (import.meta as any).env?.VITE_EMAILJS_SERVICE_ID ?? "";
+const EMAILJS_TEMPLATE_ID: string =
+  (import.meta as any).env?.VITE_EMAILJS_TEMPLATE_ID ?? "";
+const EMAILJS_PUBLIC_KEY: string =
+  (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY ?? "";
+const PORTAL_URL: string =
+  (import.meta as any).env?.VITE_COLLECTOR_PORTAL_URL ?? "http://localhost:5173";
+
+/** Generates a secure-looking temporary password */
+function generateTempPassword(length = 12): string {
+  const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const lower = "abcdefghjkmnpqrstuvwxyz";
+  const digits = "23456789";
+  const special = "!@#$%&*";
+  const all = upper + lower + digits + special;
+
+  // Guarantee at least one character from each category
+  let pwd =
+    upper[Math.floor(Math.random() * upper.length)] +
+    lower[Math.floor(Math.random() * lower.length)] +
+    digits[Math.floor(Math.random() * digits.length)] +
+    special[Math.floor(Math.random() * special.length)];
+
+  for (let i = 4; i < length; i++) {
+    pwd += all[Math.floor(Math.random() * all.length)];
+  }
+
+  // Shuffle so the guaranteed chars aren't always at the front
+  return pwd
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+}
 
 export function InviteUserModal({
   isOpen,
@@ -24,6 +60,14 @@ export function InviteUserModal({
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
   const [emailError, setEmailError] = useState("");
   const [nameError, setNameError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+
+  // Initialise EmailJS once with the public key (v4 recommended pattern)
+  useEffect(() => {
+    if (EMAILJS_PUBLIC_KEY) {
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+  }, []);
 
   const validate = () => {
     let isValid = true;
@@ -52,8 +96,10 @@ export function InviteUserModal({
     if (!validate()) return;
 
     status === "idle" && setStatus("sending");
+    setSubmitError("");
 
     try {
+      // 1. Create the user in the database
       const response = await fetch(`${API_BASE_URL}/api/users`, {
         method: "POST",
         headers: {
@@ -72,6 +118,26 @@ export function InviteUserModal({
         throw new Error("Failed to create user");
       }
 
+      // 2. Generate a temporary password
+      const tempPassword = generateTempPassword();
+
+      // 3. Send the invite email via EmailJS (v4 API)
+      try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          collector_email: email,
+          temp_password: tempPassword,
+          invite_link: PORTAL_URL,
+        });
+      } catch (emailError: any) {
+        console.error("[EmailJS] send error:", emailError);
+        // User was created successfully, but the email failed.
+        // Surface this without blocking the success flow.
+        setSubmitError(
+          "User created, but the invite email failed to send. Please notify them manually.",
+        );
+      }
+
+      // 4. Notify the parent so the table refreshes
       await onCreated?.();
 
       setStatus("success");
@@ -82,6 +148,7 @@ export function InviteUserModal({
         setEmail("");
         setRole("Viewer");
         setAssignedFacility("HQ Corporate Center");
+        setSubmitError("");
       }, 3000);
     } catch (error) {
       console.error("Failed to create user:", error);
@@ -166,6 +233,11 @@ export function InviteUserModal({
                       </span>{" "}
                       with instructions to join the platform as a {role}.
                     </p>
+                    {submitError && (
+                      <p className="text-xs text-[#ba1a1a] font-medium mt-3 leading-relaxed">
+                        {submitError}
+                      </p>
+                    )}
                   </div>
                 </div>
               ) : (

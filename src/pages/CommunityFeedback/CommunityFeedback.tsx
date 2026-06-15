@@ -132,6 +132,7 @@ export default function CommunityFeedback() {
   }, [feedbackData]);
 
   const handleSubmitFeedback = async () => {
+    console.log("Submit clicked", { userName, location, category, description });
     if (
       !userName ||
       !location ||

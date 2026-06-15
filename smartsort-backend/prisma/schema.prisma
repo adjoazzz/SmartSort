@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,51 +6,47 @@ datasource db {
   provider = "postgresql"
 }
 
-// The Smart Bin Device
 model Device {
   id             String          @id @default(uuid())
-  customBinId    String          @unique // e.g., "BIN_001"
+  customBinId    String          @unique
   location       String
   fillLevel      Int             @default(0)
-  status         String          @default("Active") // Active, Offline, Maintenance
-  lastSortedItem String?         
+  status         String          @default("Active")
+  lastSortedItem String?
   updatedAt      DateTime        @updatedAt
   createdAt      DateTime        @default(now())
-
-  // Relationships
+  deviceType     String          @default("bin")
+  Alert          Alert[]
   collectionJobs CollectionJob[]
+  ProcessedItem  ProcessedItem[]
 }
 
-// Collection Jobs for the Collectors
 model CollectionJob {
-  id          String   @id @default(uuid())
-  status      String   @default("Pending") // Pending, In Progress, Completed
-  priority    String   @default("Normal")  // Normal, High, Urgent
-  createdAt   DateTime @default(now())
-
-  // Connecting the job to a specific device
-  device      Device   @relation(fields: [deviceId], references: [id])
+  id          String     @id @default(uuid())
+  status      String     @default("Pending")
+  priority    String     @default("Normal")
+  createdAt   DateTime   @default(now())
   deviceId    String
-
-  // Eventually, you will connect this to a User (Collector)
-  collectorId String?  
+  collectorId String?
+  wasteType   String     @default("MIXED")
+  Collector   Collector? @relation(fields: [collectorId], references: [collectorId])
+  device      Device     @relation(fields: [deviceId], references: [id])
 }
 
-// Collectors who handle collection routes
 model Collector {
-  id          String   @id @default(uuid())
-  collectorId String   @unique
-  name        String
-  region      String
-  status      String   @default("Active")
-  rating      Float    @default(0)
-  email       String?  @unique
-  joinedAt    DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String          @id @default(uuid())
+  collectorId   String          @unique
+  name          String
+  region        String
+  status        String          @default("Active")
+  rating        Float           @default(0)
+  email         String?         @unique
+  joinedAt      DateTime        @default(now())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  CollectionJob CollectionJob[]
 }
 
-// Admin and operational users
 model PlatformUser {
   id               String   @id @default(uuid())
   userId           String   @unique
@@ -69,13 +60,41 @@ model PlatformUser {
   updatedAt        DateTime @updatedAt
 }
 
-// Community Feedback
 model Feedback {
   id        String   @id @default(uuid())
-  userName  String
-  location  String
   message   String
-  category  String   // e.g., "Missed Pickup", "Damaged Bin"
-  status    String   @default("Pending") // Pending, In Progress, Resolved
+  category  String
   createdAt DateTime @default(now())
+  location  String
+  status    String   @default("Pending")
+  userName  String
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Alert {
+  id          String   @id
+  deviceId    String
+  severity    String
+  title       String
+  description String
+  status      String   @default("Active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ProcessedItem {
+  id              String   @id
+  deviceId        String
+  category        String
+  status          String
+  rejectionReason String?
+  confidence      Float
+  imageUrl        String?
+  actionTaken     String
+  createdAt       DateTime @default(now())
+  Device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }

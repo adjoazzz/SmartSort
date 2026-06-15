@@ -17,6 +17,7 @@ const prisma = new PrismaClient({
 // Initialize the Express app
 const app = express();
 
+
 // Middleware
 app.use(cors()); // Allows your React app to make requests here
 app.use(express.json()); // Allows the server to understand JSON data from the Raspberry Pi
@@ -187,10 +188,10 @@ app.get('/api/devices', async (req, res) => {
     });
 
     res.status(200).json(allDevices);
-  } catch (error) {
-    console.error("Error fetching devices:", error);
-    res.status(500).json({ error: "Failed to fetch devices" });
-  }
+} catch (error) {
+  console.error('Error fetching collectors:', error);
+  res.status(500).json({ error: 'Failed to fetch collectors' });
+}
 });
 
 // GET collectors for the collectors admin page
@@ -201,10 +202,10 @@ app.get('/api/collectors', async (req, res) => {
     });
 
     res.status(200).json(collectors.map(formatCollector));
-  } catch (error) {
-    console.error('Error fetching collectors:', error);
-    res.status(500).json({ error: 'Failed to fetch collectors' });
-  }
+} catch (error) {
+  console.error('Error fetching collectors:', error);
+  res.status(500).json({ error: 'Failed to fetch collectors', details: error.message, stack: error.stack });
+}
 });
 
 // GET users for the user management page
