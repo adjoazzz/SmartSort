@@ -119,14 +119,14 @@ const KPIS = [
 ];
 
 const THROUGHPUT_DATA = [
-  { time: "08:00", value: 65 },
-  { time: "09:00", value: 85 },
-  { time: "10:00", value: 68 },
-  { time: "11:00", value: 72 },
-  { time: "12:00", value: 92 },
-  { time: "13:00", value: 100 },
-  { time: "14:00", value: 75 },
-  { time: "15:00", value: 45 },
+  { time: "08:00", sorted: 124, rejected: 18 },
+  { time: "09:00", sorted: 165, rejected: 24 },
+  { time: "10:00", sorted: 142, rejected: 15 },
+  { time: "11:00", sorted: 156, rejected: 22 },
+  { time: "12:00", sorted: 198, rejected: 34 },
+  { time: "13:00", sorted: 215, rejected: 28 },
+  { time: "14:00", sorted: 160, rejected: 19 },
+  { time: "15:00", sorted: 95, rejected: 12 },
 ];
 
 const DEVICE_BINS = [
@@ -185,46 +185,106 @@ export default function Dashboard() {
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
+  // Fetch functions
   const fetchDevices = async () => {
     const response = await fetch(`${baseUrl}/api/devices`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch device data");
-    }
+    if (!response.ok) throw new Error("Failed to fetch device data");
     return response.json();
   };
 
-  const { data: devicesData, isLoading } = usePollingFetch<any[]>(
+  const fetchMetrics = async () => {
+    const response = await fetch(`${baseUrl}/api/dashboard/metrics`);
+    if (!response.ok) throw new Error("Failed to fetch dashboard metrics");
+    return response.json();
+  };
+
+  const fetchThroughput = async () => {
+    const response = await fetch(`${baseUrl}/api/dashboard/throughput`);
+    if (!response.ok) throw new Error("Failed to fetch throughput data");
+    return response.json();
+  };
+
+  const fetchWasteCategories = async () => {
+    const response = await fetch(`${baseUrl}/api/dashboard/waste-categories`);
+    if (!response.ok) throw new Error("Failed to fetch waste categories");
+    return response.json();
+  };
+
+  const fetchContaminationEvents = async () => {
+    const response = await fetch(`${baseUrl}/api/dashboard/contamination-events`);
+    if (!response.ok) throw new Error("Failed to fetch contamination events");
+    return response.json();
+  };
+
+  // Polling hooks
+  const { data: devicesData, isLoading: devicesLoading } = usePollingFetch<any[]>(
     fetchDevices,
-    {
-      intervalMs: 5000,
-    },
+    { intervalMs: 5000 }
   );
 
-  const devices = devicesData ?? [];
+  const { data: metricsData, isLoading: metricsLoading } = usePollingFetch<any>(
+    fetchMetrics,
+    { intervalMs: 5000 }
+  );
 
-  const totalDevices = devices.length;
-  const activeDevicesCount = devices.filter(
-    (d: any) => d.status === "Active" || d.status === "Online" || !d.status,
-  ).length;
+  const { data: throughputData, isLoading: throughputLoading } = usePollingFetch<any[]>(
+    fetchThroughput,
+    { intervalMs: 5000 }
+  );
 
-  const deviceStatusStr = `${activeDevicesCount}/${totalDevices}`;
+  const { data: wasteCategoriesData, isLoading: wasteLoading } = usePollingFetch<any>(
+    fetchWasteCategories,
+    { intervalMs: 5000 }
+  );
+
+  const { data: contaminationEventsData, isLoading: contaminationLoading } = usePollingFetch<any[]>(
+    fetchContaminationEvents,
+    { intervalMs: 5000 }
+  );
+
+  const isLoading = devicesLoading || metricsLoading || throughputLoading || wasteLoading || contaminationLoading;
+
+  const devices = devicesData?.data ?? [];
 
   const dynamicKpis = [
     {
       ...KPIS[0],
-      value: deviceStatusStr,
+      value: metricsData?.deviceStatus ?? "18/20",
     },
-    ...KPIS.slice(1),
+    {
+      ...KPIS[1],
+      value: metricsData?.totalItemsSorted ?? "42,891",
+    },
+    {
+      ...KPIS[2],
+      value: metricsData?.recyclingRate ?? "84.2%",
+    },
+    {
+      ...KPIS[3],
+      value: metricsData?.contaminationRate ?? "4.1%",
+    },
   ];
 
+  const binsOnly = devices.filter((d: any) => d.deviceType === "bin");
   const displayBins =
-    devices.length > 0
-      ? devices.slice(0, 4).map((d: any) => ({
+    binsOnly.length > 0
+      ? binsOnly.map((d: any) => ({
           label: d.location || d.customBinId,
           value: d.fillLevel ?? 0,
           color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
         }))
       : DEVICE_BINS;
+
+  const chartData = throughputData ?? THROUGHPUT_DATA;
+  const maxTotal = Math.max(...chartData.map(d => (d.sorted ?? 0) + (d.rejected ?? 0)), 1);
+
+  // Map database string to visual asset image
+  const eventImages: Record<string, string> = {
+    imgEventSnap,
+    imgEventSnap1,
+    imgEventSnap2,
+    imgEventSnap3,
+  };
 
   return (
     <PageLayout
@@ -304,7 +364,7 @@ export default function Dashboard() {
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-sm bg-[#e2e8f0]" />
+                <div className="w-3 h-3 rounded-sm bg-[#cbd5e1] dark:bg-slate-500" />
                 <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
                   Rejected
                 </span>
@@ -326,22 +386,67 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="flex-1 flex items-end gap-3 w-full border-b border-l border-[#f1f5f9] dark:border-[#0f2942] pt-4 pl-1 pb-1 relative">
-              {THROUGHPUT_DATA.map((data, idx) => (
-                <div
-                  key={idx}
-                  className="flex-1 flex flex-col items-center justify-end h-full group"
-                >
-                  <div className="w-full bg-[#f4f4f4] rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] dark:group-hover:bg-[#1a365d] transition-colors">
-                    <div
-                      className="w-full bg-[#10b981] rounded-t-xl transition-all duration-500 ease-in-out"
-                      style={{ height: `${data.value}%` }}
-                    />
+              {chartData.map((data, idx) => {
+                const total = data.sorted + data.rejected;
+                const totalHeightPercent = (total / maxTotal) * 100;
+                const sortedHeightPercent = (data.sorted / total) * 100;
+                const rejectedHeightPercent = (data.rejected / total) * 100;
+
+                return (
+                  <div
+                    key={idx}
+                    className="flex-1 flex flex-col items-center justify-end h-full group"
+                  >
+                    <div className="w-full bg-[#f4f4f4] dark:bg-[#1e293b]/20 rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] dark:group-hover:bg-[#1e293b]/40 transition-colors">
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-10">
+                        <div className="bg-slate-900 dark:bg-slate-800 text-white text-[11px] rounded-lg py-1.5 px-2.5 shadow-lg border border-slate-700/50 flex flex-col gap-1 min-w-[110px]">
+                          <div className="font-semibold text-center border-b border-slate-700 pb-1">{data.time}</div>
+                          <div className="flex items-center justify-between gap-4 text-emerald-400">
+                            <div className="flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                              <span>Sorted:</span>
+                            </div>
+                            <span className="font-bold">{data.sorted}</span>
+                          </div>
+                          <div className="flex items-center justify-between gap-4 text-slate-300">
+                            <div className="flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#cbd5e1] dark:bg-slate-400" />
+                              <span>Rejected:</span>
+                            </div>
+                            <span className="font-bold">{data.rejected}</span>
+                          </div>
+                          <div className="flex items-center justify-between gap-4 text-slate-400 border-t border-slate-750 pt-1 mt-0.5">
+                            <span>Total:</span>
+                            <span className="font-bold text-white">{total}</span>
+                          </div>
+                        </div>
+                        <div className="w-2 h-2 bg-slate-900 dark:bg-slate-800 rotate-45 -mt-1 border-r border-b border-slate-700/50" />
+                      </div>
+
+                      {/* Stacked Bar */}
+                      <div
+                        className="w-full rounded-t-xl overflow-hidden flex flex-col justify-end transition-all duration-500 ease-in-out"
+                        style={{ height: `${totalHeightPercent}%` }}
+                      >
+                        {/* Rejected Part */}
+                        <div
+                          className="w-full bg-[#cbd5e1] dark:bg-slate-500 transition-all duration-500"
+                          style={{ height: `${rejectedHeightPercent}%` }}
+                        />
+                        {/* Sorted Part */}
+                        <div
+                          className="w-full bg-[#10b981] transition-all duration-500"
+                          style={{ height: `${sortedHeightPercent}%` }}
+                        />
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] mt-2 group-hover:text-[#515f74] dark:group-hover:text-[#cbd5e1]">
+                      {data.time}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] mt-2 group-hover:text-[#515f74] dark:group-hover:text-[#cbd5e1]">
-                    {data.time}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -368,45 +473,88 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center relative">
-              {/* CSS Donut Chart Mockup */}
-              <div className="w-40 h-40 rounded-full border-[16px] border-[#f8fafc] dark:border-[#0f2942] relative mb-6 shadow-inner">
-                <div className="absolute inset-0 rounded-full border-[16px] border-t-[#10b981] border-r-[#60a5fa] border-b-[#fbbf24] border-l-[#cbd5e1] transform rotate-45" />
+              <div className="relative w-40 h-40 flex items-center justify-center mb-6">
+                {/* Dynamic SVG Donut Chart */}
+                <svg width="160" height="160" viewBox="0 0 100 100" className="relative transform -rotate-90">
+                  {/* Background track */}
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="10" className="dark:stroke-[#0f2942]" />
+                  {/* Slices */}
+                  {(() => {
+                    let accumulatedPercent = 0;
+                    const categoryColors: Record<string, string> = {
+                      Plastic: "#10b981",
+                      Paper: "#60a5fa",
+                      Metal: "#fbbf24",
+                      Other: "#cbd5e1",
+                    };
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-[#0b1c30] dark:text-white">
-                    Total
+                    const categories = wasteCategoriesData?.categories ?? [
+                      { category: "Plastic", percentage: 35 },
+                      { category: "Paper", percentage: 22 },
+                      { category: "Metal", percentage: 18 },
+                      { category: "Other", percentage: 25 },
+                    ];
+
+                    return categories.map((cat: any, i: number) => {
+                      const percent = cat.percentage;
+                      if (percent <= 0) return null;
+                      
+                      const strokeLength = (percent / 100) * 251.2;
+                      const strokeOffset = 251.2 - strokeLength - (accumulatedPercent / 100) * 251.2;
+                      accumulatedPercent += percent;
+
+                      return (
+                        <circle
+                          key={i}
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          fill="transparent"
+                          stroke={categoryColors[cat.category] ?? "#cbd5e1"}
+                          strokeWidth="10"
+                          strokeDasharray={`${strokeLength} 251.2`}
+                          strokeDashoffset={strokeOffset}
+                          strokeLinecap="round"
+                          className="transition-all duration-1000 ease-out"
+                        />
+                      );
+                    });
+                  })()}
+                </svg>
+
+                {/* Centered Total */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                    {(wasteCategoriesData?.total ?? 42891).toLocaleString()}
                   </span>
-                  <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                  <span className="text-[9px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
                     Processed
                   </span>
                 </div>
               </div>
 
               <div className="w-full grid grid-cols-2 gap-3 mt-auto">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Plastic (35%)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#60a5fa]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Paper (22%)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Metal (18%)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#cbd5e1]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Other (25%)
-                  </span>
-                </div>
+                {(wasteCategoriesData?.categories ?? [
+                  { category: "Plastic", percentage: 35 },
+                  { category: "Paper", percentage: 22 },
+                  { category: "Metal", percentage: 18 },
+                  { category: "Other", percentage: 25 },
+                ]).map((cat: any, i: number) => {
+                  const colors: Record<string, string> = {
+                    Plastic: "bg-[#10b981]",
+                    Paper: "bg-[#60a5fa]",
+                    Metal: "bg-[#fbbf24]",
+                    Other: "bg-[#cbd5e1] dark:bg-slate-500",
+                  };
+                  return (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${colors[cat.category] ?? "bg-[#cbd5e1]"}`} />
+                      <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                        {cat.category} ({cat.percentage}%)
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -423,7 +571,7 @@ export default function Dashboard() {
             </h2>
             <StatusBadge label="Live" variant="success" />
           </div>
-          <div className="p-6 flex flex-col gap-6 flex-1">
+          <div className="p-6 flex flex-col gap-6 flex-1 overflow-y-auto max-h-[260px]">
             {isLoading
               ? Array.from({ length: 4 }).map((_, idx) => (
                   <div
@@ -524,7 +672,7 @@ export default function Dashboard() {
                       </TableCell>
                     </TableRow>
                   ))
-                : RECENT_EVENTS.map((evt) => (
+                : (contaminationEventsData ?? RECENT_EVENTS).map((evt) => (
                     <TableRow
                       key={evt.id}
                       className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
@@ -547,7 +695,7 @@ export default function Dashboard() {
                       <TableCell className="px-6 py-4 whitespace-nowrap">
                         <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
                           <img
-                            src={evt.img}
+                            src={eventImages[evt.img] ?? evt.img}
                             alt="Snapshot"
                             className="w-full h-full object-cover"
                           />
