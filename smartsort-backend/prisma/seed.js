@@ -12,12 +12,16 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
+    // Delete existing records
     await prisma.collectionJob.deleteMany();
+    await prisma.processedItem.deleteMany();
+    await prisma.alert.deleteMany();
     await prisma.device.deleteMany();
     await prisma.collector.deleteMany();
     await prisma.platformUser.deleteMany();
     await prisma.feedback.deleteMany();
 
+    // Create Devices
     const devices = await prisma.device.createManyAndReturn({
         data: [
             {
@@ -25,6 +29,7 @@ async function main() {
                 location: 'North Sector Hub 04',
                 fillLevel: 94,
                 status: 'Active',
+                deviceType: 'bin',
                 lastSortedItem: 'Organic Waste',
             },
             {
@@ -32,6 +37,7 @@ async function main() {
                 location: 'Downtown Plaza - East',
                 fillLevel: 88,
                 status: 'Active',
+                deviceType: 'bin',
                 lastSortedItem: 'Plastic Bottles',
             },
             {
@@ -39,6 +45,7 @@ async function main() {
                 location: 'Industrial Park - West Entrance',
                 fillLevel: 75,
                 status: 'Active',
+                deviceType: 'bin',
                 lastSortedItem: 'Glass Bottles',
             },
             {
@@ -46,6 +53,7 @@ async function main() {
                 location: 'Central Library Courtyard',
                 fillLevel: 82,
                 status: 'Maintenance',
+                deviceType: 'bin',
                 lastSortedItem: 'Mixed Waste',
             },
             {
@@ -53,6 +61,7 @@ async function main() {
                 location: 'Riverside Apartments B3',
                 fillLevel: 100,
                 status: 'Full',
+                deviceType: 'bin',
                 lastSortedItem: 'Paper Waste',
             },
             {
@@ -60,54 +69,39 @@ async function main() {
                 location: 'Metro Station South',
                 fillLevel: 68,
                 status: 'Active',
+                deviceType: 'bin',
                 lastSortedItem: 'Plastic Bottles',
             },
-        ],
-    });
-
-    const deviceByBinId = Object.fromEntries(devices.map((device) => [device.customBinId, device]));
-
-    await prisma.collectionJob.createMany({
-        data: [
             {
-                status: 'Pending',
-                priority: 'Urgent',
-                deviceId: deviceByBinId.BIN_001.id,
-                collectorId: 'COL-001',
+                customBinId: 'CON_001',
+                location: 'Floor 2 North',
+                fillLevel: 0,
+                status: 'Active',
+                deviceType: 'conveyor',
+                lastSortedItem: 'Plastic Bottles',
             },
             {
-                status: 'Pending',
-                priority: 'High',
-                deviceId: deviceByBinId.BIN_002.id,
-                collectorId: 'COL-002',
+                customBinId: 'SEN_001',
+                location: 'Outdoor Staging',
+                fillLevel: 0,
+                status: 'Active',
+                deviceType: 'sensor',
+                lastSortedItem: 'Mixed Waste',
             },
             {
-                status: 'In Progress',
-                priority: 'Normal',
-                deviceId: deviceByBinId.BIN_003.id,
-                collectorId: 'COL-003',
-            },
-            {
-                status: 'In Progress',
-                priority: 'Normal',
-                deviceId: deviceByBinId.BIN_004.id,
-                collectorId: 'COL-004',
-            },
-            {
-                status: 'Completed',
-                priority: 'Normal',
-                deviceId: deviceByBinId.BIN_005.id,
-                collectorId: 'COL-001',
-            },
-            {
-                status: 'Completed',
-                priority: 'High',
-                deviceId: deviceByBinId.BIN_006.id,
-                collectorId: 'COL-002',
+                customBinId: 'COM_001',
+                location: 'Main Processing Room',
+                fillLevel: 0,
+                status: 'Active',
+                deviceType: 'compactor',
+                lastSortedItem: 'Organic Waste',
             },
         ],
     });
 
+    const deviceMap = Object.fromEntries(devices.map((device) => [device.customBinId, device]));
+
+    // Create Collectors
     await prisma.collector.createMany({
         data: [
             {
@@ -161,6 +155,61 @@ async function main() {
         ],
     });
 
+    // Create Collection Jobs linked to Devices and Collectors
+    const jobsData = [
+        {
+            status: 'Pending',
+            priority: 'Urgent',
+            deviceId: deviceMap.BIN_001.id,
+            collectorId: 'COL-001',
+        },
+        {
+            status: 'Pending',
+            priority: 'High',
+            deviceId: deviceMap.BIN_002.id,
+            collectorId: 'COL-002',
+        },
+        {
+            status: 'In Progress',
+            priority: 'Normal',
+            deviceId: deviceMap.BIN_003.id,
+            collectorId: 'COL-003',
+        },
+        {
+            status: 'In Progress',
+            priority: 'Normal',
+            deviceId: deviceMap.BIN_004.id,
+            collectorId: 'COL-004',
+        },
+        {
+            status: 'Completed',
+            priority: 'Normal',
+            deviceId: deviceMap.BIN_005.id,
+            collectorId: 'COL-001',
+        },
+        {
+            status: 'Completed',
+            priority: 'High',
+            deviceId: deviceMap.BIN_006.id,
+            collectorId: 'COL-002',
+        },
+    ];
+
+    // Add extra completed jobs for pagination
+    for(let i = 0; i < 15; i++) {
+        jobsData.push({
+            status: 'Completed',
+            priority: 'Normal',
+            deviceId: deviceMap.BIN_001.id,
+            collectorId: 'COL-001',
+        });
+    }
+
+    await prisma.collectionJob.createMany({
+        data: jobsData,
+    });
+
+    // Create Platform Users
     await prisma.platformUser.createMany({
         data: [
             {
@@ -220,6 +269,7 @@ async function main() {
         ],
     });
 
+    // Create Community Feedback
     await prisma.feedback.createMany({
         data: [
             {
@@ -258,6 +308,164 @@ async function main() {
                 status: 'In Progress',
             },
         ],
+    });
+
+    // Create System Alerts linked to Devices
+    const alertsData = [
+        {
+            deviceId: deviceMap.CON_001.id,
+            severity: 'CRITICAL',
+            title: 'Contamination Spike Detected',
+            description: 'Non-recyclable high-density plastic in paper stream exceeds 15% threshold.',
+            status: 'Active',
+        },
+        {
+            deviceId: deviceMap.BIN_003.id,
+            severity: 'WARNING',
+            title: 'Fill Capacity Exceeded',
+            description: 'Device reported 98% capacity. Pick-up scheduled for 18:00.',
+            status: 'Active',
+        },
+        {
+            deviceId: deviceMap.SEN_001.id,
+            severity: 'WARNING',
+            title: 'Battery Level Critical',
+            description: 'Sensor battery at 4%. Shutdown imminent within 2 hours.',
+            status: 'Active',
+        },
+        {
+            deviceId: deviceMap.COM_001.id,
+            severity: 'CRITICAL',
+            title: 'Emergency Stop Engaged',
+            description: 'Manual emergency stop triggered. System lockout active. Investigation required.',
+            status: 'Active',
+        },
+    ];
+
+    // Add extra alerts for pagination
+    for(let i = 0; i < 15; i++) {
+        alertsData.push({
+            deviceId: deviceMap.BIN_002.id,
+            severity: i % 2 === 0 ? 'WARNING' : 'INFO',
+            title: `Routine System Notification ${i+1}`,
+            description: `Auto-generated log for bin status check. Normal operation.`,
+            status: 'Read',
+        });
+    }
+
+    await prisma.alert.createMany({
+        data: alertsData,
+    });
+
+    // Create ProcessedItem telemetry data for Hourly Throughput, Categories, and Contamination events
+    const processedItemsData = [];
+    const categories = ['Plastic', 'Paper', 'Metal', 'Glass', 'Organic', 'Other'];
+    const rejectionReasons = ['BIOHAZARD', 'MEDICAL_WASTE', 'E_WASTE', 'BATTERY_LITHIUM'];
+    const actions = ['ROUTED_BIN_X', 'FLAG_OPERATOR', 'ROUTED_BIN_Y', 'E-STOP_TRIGGERED'];
+
+    // Seed data that maps exactly to hourly throughput requirements
+    const throughputPlan = [
+        { hour: 8, sorted: 124, rejected: 18 },
+        { hour: 9, sorted: 165, rejected: 24 },
+        { hour: 10, sorted: 142, rejected: 15 },
+        { hour: 11, sorted: 156, rejected: 22 },
+        { hour: 12, sorted: 198, rejected: 34 },
+        { hour: 13, sorted: 215, rejected: 28 },
+        { hour: 14, sorted: 160, rejected: 19 },
+        { hour: 15, sorted: 95, rejected: 12 },
+    ];
+
+    const baseDate = new Date();
+    // Asset snapshot images corresponding to contamination events
+    const contaminationImages = [
+        'imgEventSnap',
+        'imgEventSnap1',
+        'imgEventSnap2',
+        'imgEventSnap3'
+    ];
+
+    throughputPlan.forEach(({ hour, sorted, rejected }) => {
+        // Seed Sorted items
+        for (let i = 0; i < sorted; i++) {
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const randomDevice = devices[Math.floor(Math.random() * devices.length)];
+            const timestamp = new Date(baseDate);
+            timestamp.setHours(hour, Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
+
+            processedItemsData.push({
+                deviceId: randomDevice.id,
+                category,
+                status: 'Sorted',
+                confidence: parseFloat((85 + Math.random() * 14.9).toFixed(1)),
+                actionTaken: 'AUTO_SORTED',
+                createdAt: timestamp,
+            });
+        }
+
+        // Seed Rejected (Contamination) items
+        for (let i = 0; i < rejected; i++) {
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const randomDevice = devices[Math.floor(Math.random() * devices.length)];
+            const reason = rejectionReasons[Math.floor(Math.random() * rejectionReasons.length)];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            const timestamp = new Date(baseDate);
+            timestamp.setHours(hour, Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
+            const imageIndex = Math.floor(Math.random() * contaminationImages.length);
+
+            processedItemsData.push({
+                deviceId: randomDevice.id,
+                category,
+                status: 'Rejected',
+                rejectionReason: reason,
+                confidence: parseFloat((90 + Math.random() * 9.9).toFixed(1)),
+                imageUrl: contaminationImages[imageIndex],
+                actionTaken: action,
+                createdAt: timestamp,
+            });
+        }
+    });
+
+    // Seed 5 weeks of historical data for analytics charts
+    const weeksData = [
+        { weeksAgo: 5, sorted: 250, rejected: 40 },
+        { weeksAgo: 4, sorted: 350, rejected: 50 },
+        { weeksAgo: 3, sorted: 500, rejected: 20 },
+        { weeksAgo: 2, sorted: 550, rejected: 10 },
+        { weeksAgo: 1, sorted: 650, rejected: 30 },
+    ];
+    
+    weeksData.forEach(({ weeksAgo, sorted, rejected }) => {
+        const pastDate = new Date(baseDate);
+        pastDate.setDate(pastDate.getDate() - (weeksAgo * 7));
+        
+        for (let i = 0; i < sorted; i++) {
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const randomDevice = devices[Math.floor(Math.random() * devices.length)];
+            processedItemsData.push({
+                deviceId: randomDevice.id,
+                category,
+                status: 'Sorted',
+                confidence: 90,
+                actionTaken: 'AUTO_SORTED',
+                createdAt: pastDate,
+            });
+        }
+        for (let i = 0; i < rejected; i++) {
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const randomDevice = devices[Math.floor(Math.random() * devices.length)];
+            processedItemsData.push({
+                deviceId: randomDevice.id,
+                category,
+                status: 'Rejected',
+                confidence: 90,
+                actionTaken: 'FLAG_OPERATOR',
+                createdAt: pastDate,
+            });
+        }
+    });
+
+    await prisma.processedItem.createMany({
+        data: processedItemsData,
     });
 
     console.log('Seeded mock data into Supabase successfully.');

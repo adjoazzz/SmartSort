@@ -243,12 +243,14 @@ export default function CollectionJobs() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS_DATA);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchJobs = async () => {
-    const response = await fetch(`${baseUrl}/api/jobs`);
+    const response = await fetch(`${baseUrl}/api/jobs?page=${page}&limit=${limit}`);
     if (!response.ok) {
       throw new Error("Failed to fetch collection jobs");
     }
@@ -256,18 +258,22 @@ export default function CollectionJobs() {
   };
 
   const {
-    data: jobsData,
+    data: jobsResponse,
     isLoading,
     refresh,
-  } = usePollingFetch<Job[]>(fetchJobs, {
+  } = usePollingFetch<any>(fetchJobs, {
     intervalMs: 5000,
   });
 
+  const jobsData = jobsResponse?.data || [];
+  const totalCount = jobsResponse?.totalCount || 0;
+  const totalPages = jobsResponse?.totalPages || 1;
+
   useEffect(() => {
-    if (jobsData) {
-      setJobs(jobsData);
+    if (jobsResponse?.data) {
+      setJobs(jobsResponse.data);
     }
-  }, [jobsData]);
+  }, [jobsResponse]);
 
   // Assigning collectors state
   const [localAssignments, setLocalAssignments] = useState<
@@ -835,6 +841,31 @@ export default function CollectionJobs() {
                 No collection tasks found matching current filters.
               </div>
             )}
+            
+            <div className="border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-3 flex items-center justify-between bg-white dark:bg-[#0b1c30]">
+              <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                Showing {jobs.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} jobs
+              </span>
+              <div className="flex gap-1">
+                <button 
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page === 1}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                
+                <button 
+                  onClick={() => setPage(Math.min(totalPages, page + 1))}
+                  disabled={page === totalPages || totalPages === 0}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* ── Bottom Bento Insights ── */}

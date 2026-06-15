@@ -11,42 +11,50 @@ model Device {
   customBinId    String          @unique
   location       String
   fillLevel      Int             @default(0)
-  status         String          @default("Active")
-  lastSortedItem String?
+  status         String          @default("Active") // Active, Offline, Maintenance
+  lastSortedItem String?         
+  deviceType     String          @default("bin")
   updatedAt      DateTime        @updatedAt
   createdAt      DateTime        @default(now())
   deviceType     String          @default("bin")
   Alert          Alert[]
   collectionJobs CollectionJob[]
-  ProcessedItem  ProcessedItem[]
+  alerts         Alert[]
+  processedItems ProcessedItem[]
 }
 
 model CollectionJob {
-  id          String     @id @default(uuid())
-  status      String     @default("Pending")
-  priority    String     @default("Normal")
-  createdAt   DateTime   @default(now())
+  id          String   @id @default(uuid())
+  status      String   @default("Pending") // Pending, In Progress, Completed
+  priority    String   @default("Normal")  // Normal, High, Urgent
+  wasteType   String   @default("MIXED")
+  createdAt   DateTime @default(now())
+
+  // Connecting the job to a specific device
+  device      Device   @relation(fields: [deviceId], references: [id])
   deviceId    String
-  collectorId String?
-  wasteType   String     @default("MIXED")
-  Collector   Collector? @relation(fields: [collectorId], references: [collectorId])
-  device      Device     @relation(fields: [deviceId], references: [id])
+
+  // Connecting this to a User (Collector)
+  collectorId String?  
+  collector   Collector? @relation(fields: [collectorId], references: [collectorId])
 }
 
 model Collector {
-  id            String          @id @default(uuid())
-  collectorId   String          @unique
-  name          String
-  region        String
-  status        String          @default("Active")
-  rating        Float           @default(0)
-  email         String?         @unique
-  joinedAt      DateTime        @default(now())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  CollectionJob CollectionJob[]
+  id          String   @id @default(uuid())
+  collectorId String   @unique
+  name        String
+  region      String
+  status      String   @default("Active")
+  rating      Float    @default(0)
+  email       String?  @unique
+  joinedAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  collectionJobs CollectionJob[]
 }
 
+// Admin and operational users
 model PlatformUser {
   id               String   @id @default(uuid())
   userId           String   @unique
@@ -65,36 +73,33 @@ model Feedback {
   message   String
   category  String
   createdAt DateTime @default(now())
-  location  String
-  status    String   @default("Pending")
-  userName  String
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Alert {
-  id          String   @id
-  deviceId    String
-  severity    String
-  title       String
-  description String
-  status      String   @default("Active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime
-  Device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+// Telemetry of sorted and rejected items
 model ProcessedItem {
-  id              String   @id
+  id              String   @id @default(uuid())
   deviceId        String
-  category        String
-  status          String
-  rejectionReason String?
+  category        String   // Plastic, Paper, Metal, Glass, Organic, Other
+  status          String   // Sorted, Rejected
+  rejectionReason String?  // BIOHAZARD, MEDICAL_WASTE, E_WASTE, BATTERY_LITHIUM
   confidence      Float
   imageUrl        String?
   actionTaken     String
   createdAt       DateTime @default(now())
-  Device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+// System notifications and alerts
+model Alert {
+  id          String   @id @default(uuid())
+  deviceId    String
+  severity    String   // CRITICAL, WARNING, INFO
+  title       String
+  description String
+  status      String   @default("Active") // Active, Read, Resolved
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
