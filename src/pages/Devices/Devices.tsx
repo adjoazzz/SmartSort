@@ -14,51 +14,7 @@ import {
 import { Progress } from "../../components/ui/progress";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
 
-// Event logs mock template
-const EVENT_LOGS = [
-  {
-    id: 1,
-    type: "SORTING EVENT",
-    time: "14:22:11",
-    desc: "Detected: Plastic Bottle (PET). Routed to Bin A.",
-    color: "text-[#10b981]",
-  },
-  {
-    id: 2,
-    type: "SORTING EVENT",
-    time: "14:21:55",
-    desc: "Detected: Aluminum Can. Routed to Bin A.",
-    color: "text-[#10b981]",
-  },
-  {
-    id: 3,
-    type: "SENSOR UPDATE",
-    time: "14:15:00",
-    desc: "Bin A reached threshold level (75%). Notification sent.",
-    color: "text-[#f59e0b]",
-  },
-  {
-    id: 4,
-    type: "NETWORK SYNC",
-    time: "14:00:02",
-    desc: "Cloud handshake successful. Log batch transmitted.",
-    color: "text-[#3b82f6]",
-  },
-  {
-    id: 5,
-    type: "POWER CYCLE",
-    time: "08:12:44",
-    desc: "Scheduled maintenance restart completed.",
-    color: "text-[#64748b] dark:text-[#cbd5e1]",
-  },
-  {
-    id: 6,
-    type: "SORTING EVENT",
-    time: "08:05:12",
-    desc: "Detected: Paperboard. Routed to Bin B.",
-    color: "text-[#10b981]",
-  },
-];
+// Mock EVENT_LOGS removed in favor of live data.
 
 // Skeleton row for main table
 function TableRowSkeleton() {
@@ -159,6 +115,7 @@ export default function Devices() {
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [page, setPage] = useState(1);
+  const [showSortingEvents, setShowSortingEvents] = useState(false);
   const limit = 10;
   
   const baseUrl =
@@ -174,6 +131,22 @@ export default function Devices() {
 
   const { data: devicesResponse, isLoading } = usePollingFetch<any>(
     fetchDevices,
+    {
+      intervalMs: 5000,
+    },
+  );
+
+  const fetchDeviceEvents = async () => {
+    if (!selectedDevice) return [];
+    const response = await authFetch(`${baseUrl}/api/devices/${selectedDevice}/events`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch device events");
+    }
+    return response.json();
+  };
+
+  const { data: eventsData, isLoading: eventsLoading } = usePollingFetch<any[]>(
+    fetchDeviceEvents,
     {
       intervalMs: 5000,
     },
@@ -226,6 +199,8 @@ export default function Devices() {
     ? ((currentDevice.fill * 7) % 15) + 3
     : 14;
   const currentUptime = `${currentUptimeDays}d 6h 12m`;
+
+  const displayedEvents = (eventsData || []).filter((event: any) => showSortingEvents || !event.isSortingEvent);
 
   return (
     <PageLayout
@@ -541,46 +516,69 @@ export default function Devices() {
                   <h3 className="text-xs font-bold text-[#0b1c30] dark:text-white tracking-wider uppercase">
                     Device Event Log
                   </h3>
-                  <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors cursor-pointer">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 2v6h-6"></path>
-                      <path d="M3 12a9 9 0 1 0 2.13-5.88L21 8"></path>
-                    </svg>
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={showSortingEvents}
+                          onChange={(e) => setShowSortingEvents(e.target.checked)}
+                        />
+                        <div className={`block w-8 h-5 rounded-full transition-colors ${showSortingEvents ? 'bg-[#10b981]' : 'bg-[#e2e8f0] dark:bg-[#334155]'}`}></div>
+                        <div className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${showSortingEvents ? 'transform translate-x-3' : ''}`}></div>
+                      </div>
+                      <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                        Show Sorting
+                      </span>
+                    </label>
+                    <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors cursor-pointer">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 2v6h-6"></path>
+                        <path d="M3 12a9 9 0 1 0 2.13-5.88L21 8"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="overflow-y-auto flex-1 p-2">
-                  <ul className="divide-y divide-[#f1f5f9]">
-                    {EVENT_LOGS.map((log) => (
-                      <li
-                        key={log.id}
-                        className="p-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors cursor-default"
-                      >
-                        <div className="flex justify-between items-start mb-1.5">
-                          <span
-                            className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}
-                          >
-                            {log.type}
-                          </span>
-                          <span className="text-[10px] text-[#94a3b8] dark:text-[#cbd5e1]">
-                            {log.time}
-                          </span>
-                        </div>
-                        <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                          {log.desc}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
+                  {eventsLoading ? (
+                    <div className="p-4 text-center text-sm text-[#94a3b8] dark:text-[#64748b]">Loading events...</div>
+                  ) : displayedEvents.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-[#94a3b8] dark:text-[#64748b]">No events recorded.</div>
+                  ) : (
+                    <ul className="divide-y divide-[#f1f5f9]">
+                      {displayedEvents.map((log: any) => (
+                        <li
+                          key={log.id}
+                          className="p-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors cursor-default"
+                        >
+                          <div className="flex justify-between items-start mb-1.5">
+                            <span
+                              className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}
+                            >
+                              {log.type}
+                            </span>
+                            <span className="text-[10px] text-[#94a3b8] dark:text-[#cbd5e1]">
+                              {log.time}
+                            </span>
+                          </div>
+                          <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                            {log.desc}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </>

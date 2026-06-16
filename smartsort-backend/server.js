@@ -239,6 +239,59 @@ app.get('/api/devices', async (req, res) => {
   }
 });
 
+// GET device event log combining DeviceEvent and ProcessedItem
+app.get('/api/devices/:id/events', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 100;
+    
+    // In a real scenario we might paginate properly across the union,
+    // but for simplicity we fetch latest from both and combine/sort in memory.
+    const [systemEvents, sortingEvents] = await Promise.all([
+      prisma.deviceEvent.findMany({
+        where: { device: { customBinId: id } },
+        orderBy: { createdAt: 'desc' },
+        take: limit
+      }),
+      prisma.processedItem.findMany({
+        where: { device: { customBinId: id } },
+        orderBy: { createdAt: 'desc' },
+        take: limit
+      })
+    ]);
+
+    const formattedSystemEvents = systemEvents.map(e => ({
+      id: e.id,
+      type: e.eventType,
+      time: new Date(e.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      desc: e.description,
+      color: e.severity === 'CRITICAL' ? 'text-[#ba1a1a]' : e.severity === 'WARNING' ? 'text-[#f59e0b]' : 'text-[#3b82f6]',
+      isSortingEvent: false,
+      timestamp: new Date(e.createdAt).getTime()
+    }));
+
+    const formattedSortingEvents = sortingEvents.map(e => ({
+      id: e.id,
+      type: 'SORTING EVENT',
+      time: new Date(e.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      desc: `Detected: ${e.category}. Action: ${e.actionTaken}.`,
+      color: 'text-[#10b981]',
+      isSortingEvent: true,
+      timestamp: new Date(e.createdAt).getTime()
+    }));
+
+    const combinedEvents = [...formattedSystemEvents, ...formattedSortingEvents]
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, limit);
+
+    res.status(200).json(combinedEvents);
+  } catch (error) {
+    console.error("Error fetching device events:", error);
+    res.status(500).json({ error: "Failed to fetch device events" });
+  }
+});
+
 // GET collectors for the collectors admin page
 app.get('/api/collectors', async (req, res) => {
   try {

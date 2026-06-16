@@ -15,10 +15,10 @@ async function main() {
     // Delete existing records
     await prisma.collectionJob.deleteMany();
     await prisma.processedItem.deleteMany();
+    await prisma.deviceEvent.deleteMany();
     await prisma.alert.deleteMany();
     await prisma.device.deleteMany();
-    await prisma.collector.deleteMany();
-    await prisma.platformUser.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.feedback.deleteMany();
 
     // Create Devices
@@ -101,56 +101,62 @@ async function main() {
 
     const deviceMap = Object.fromEntries(devices.map((device) => [device.customBinId, device]));
 
-    // Create Collectors
-    await prisma.collector.createMany({
+    // Create Collectors (Users with role COLLECTOR)
+    await prisma.user.createMany({
         data: [
             {
-                collectorId: 'COL-001',
+                id: 'COL-001',
                 name: 'Kwame Mensah',
                 region: 'North Sector',
                 status: 'Active',
                 rating: 4.8,
                 email: 'kwame.mensah@smartsort.com',
+                role: 'COLLECTOR'
             },
             {
-                collectorId: 'COL-002',
+                id: 'COL-002',
                 name: 'Abena Osei',
                 region: 'East Sector',
                 status: 'Active',
                 rating: 4.9,
                 email: 'abena.osei@smartsort.com',
+                role: 'COLLECTOR'
             },
             {
-                collectorId: 'COL-003',
+                id: 'COL-003',
                 name: 'Kofi Annan',
                 region: 'South Sector',
                 status: 'Inactive',
                 rating: 4.5,
                 email: 'kofi.annan@smartsort.com',
+                role: 'COLLECTOR'
             },
             {
-                collectorId: 'COL-004',
+                id: 'COL-004',
                 name: 'Ama Asare',
                 region: 'West Sector',
                 status: 'Active',
                 rating: 4.7,
                 email: 'ama.asare@smartsort.com',
+                role: 'COLLECTOR'
             },
             {
-                collectorId: 'COL-005',
+                id: 'COL-005',
                 name: 'Yaw Appiah',
                 region: 'Central Hub',
                 status: 'On Leave',
                 rating: 4.6,
                 email: 'yaw.appiah@smartsort.com',
+                role: 'COLLECTOR'
             },
             {
-                collectorId: 'COL-006',
+                id: 'COL-006',
                 name: 'Esi Adjei',
                 region: 'Northern Perimeter',
                 status: 'Pending',
                 rating: 4.4,
                 email: 'esi.adjei@smartsort.com',
+                role: 'COLLECTOR'
             },
         ],
     });
@@ -210,58 +216,58 @@ async function main() {
     });
 
     // Create Platform Users
-    await prisma.platformUser.createMany({
+    await prisma.user.createMany({
         data: [
             {
-                userId: 'USR-001',
+                id: 'USR-001',
                 name: 'Alexander Vance',
                 email: 'a.vance@smartsort.com',
-                role: 'Admin',
+                role: 'MANAGER',
                 status: 'ACTIVE',
                 assignedFacility: 'HQ Corporate Center',
                 avatar: null,
             },
             {
-                userId: 'USR-002',
+                id: 'USR-002',
                 name: 'Sarah Jenkins',
                 email: 's.jenkins@smartsort.com',
-                role: 'Manager',
+                role: 'MANAGER',
                 status: 'ACTIVE',
                 assignedFacility: 'East Side Recycling',
                 avatar: null,
             },
             {
-                userId: 'USR-003',
+                id: 'USR-003',
                 name: 'Marco Rossi',
                 email: 'm.rossi@logistics.net',
-                role: 'Collector',
+                role: 'COLLECTOR',
                 status: 'ACTIVE',
                 assignedFacility: 'South Hub Logistics',
                 avatar: null,
             },
             {
-                userId: 'USR-004',
+                id: 'USR-004',
                 name: 'Elena Rodriguez',
                 email: 'e.rod@archive.org',
-                role: 'Viewer',
+                role: 'VIEWER',
                 status: 'SUSPENDED',
                 assignedFacility: 'Global Read-Only',
                 avatar: null,
             },
             {
-                userId: 'USR-005',
+                id: 'USR-005',
                 name: 'Daniel Owusu',
                 email: 'daniel.owusu@smartsort.com',
-                role: 'Operator',
+                role: 'MANAGER',
                 status: 'PENDING',
                 assignedFacility: 'North Sector Hub',
                 avatar: null,
             },
             {
-                userId: 'USR-006',
+                id: 'USR-006',
                 name: 'Nana Boateng',
                 email: 'nana.boateng@smartsort.com',
-                role: 'Viewer',
+                role: 'VIEWER',
                 status: 'ACTIVE',
                 assignedFacility: 'Central Operations',
                 avatar: null,
@@ -273,39 +279,24 @@ async function main() {
     await prisma.feedback.createMany({
         data: [
             {
-                userName: 'Joana Mensah',
-                location: 'North Sector Hub 04',
                 message: 'Bin overflowed overnight and needs urgent pickup.',
                 category: 'Missed Pickup',
-                status: 'Pending',
             },
             {
-                userName: 'Eric Tetteh',
-                location: 'Downtown Plaza - East',
                 message: 'Lid is damaged and does not close properly.',
                 category: 'Damaged Bin',
-                status: 'In Progress',
             },
             {
-                userName: 'Grace Akoto',
-                location: 'Industrial Park - West Entrance',
                 message: 'Recycling bin was emptied late twice this week.',
                 category: 'Late Collection',
-                status: 'Resolved',
             },
             {
-                userName: 'Samuel Koomson',
-                location: 'Central Library Courtyard',
                 message: 'Requesting an additional bin near the loading bay.',
                 category: 'New Bin Request',
-                status: 'Pending',
             },
             {
-                userName: 'Miriam Danso',
-                location: 'Riverside Apartments B3',
                 message: 'Collection missed after holiday schedule change.',
                 category: 'Missed Pickup',
-                status: 'In Progress',
             },
         ],
     });
@@ -466,6 +457,41 @@ async function main() {
 
     await prisma.processedItem.createMany({
         data: processedItemsData,
+    });
+
+    // Create System and Maintenance Events
+    const deviceEventsData = [];
+    const eventTypes = ['POWER_CYCLE', 'NETWORK_SYNC', 'SENSOR_UPDATE', 'MAINTENANCE', 'FIRMWARE_UPDATE'];
+    const eventSeverities = ['INFO', 'WARNING', 'CRITICAL'];
+    
+    for (let i = 0; i < 30; i++) {
+        const randomDevice = devices[Math.floor(Math.random() * devices.length)];
+        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+        const severity = eventType === 'MAINTENANCE' ? 'WARNING' : (eventType === 'POWER_CYCLE' ? 'CRITICAL' : 'INFO');
+        
+        let description = '';
+        switch(eventType) {
+            case 'POWER_CYCLE': description = 'Scheduled maintenance restart completed.'; break;
+            case 'NETWORK_SYNC': description = 'Cloud handshake successful. Log batch transmitted.'; break;
+            case 'SENSOR_UPDATE': description = 'Sensor recalibration complete.'; break;
+            case 'MAINTENANCE': description = 'Bin was manually emptied and reset.'; break;
+            case 'FIRMWARE_UPDATE': description = 'Firmware updated to v2.4.1.'; break;
+        }
+
+        const pastDate = new Date(baseDate);
+        pastDate.setHours(pastDate.getHours() - Math.floor(Math.random() * 72)); // random time within last 72 hours
+
+        deviceEventsData.push({
+            deviceId: randomDevice.id,
+            eventType: eventType,
+            description: description,
+            severity: severity,
+            createdAt: pastDate,
+        });
+    }
+
+    await prisma.deviceEvent.createMany({
+        data: deviceEventsData,
     });
 
     console.log('Seeded mock data into Supabase successfully.');

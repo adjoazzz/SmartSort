@@ -16,11 +16,10 @@ model Device {
   deviceType     String          @default("bin")
   updatedAt      DateTime        @updatedAt
   createdAt      DateTime        @default(now())
-  deviceType     String          @default("bin")
-  Alert          Alert[]
   collectionJobs CollectionJob[]
   alerts         Alert[]
   processedItems ProcessedItem[]
+  deviceEvents   DeviceEvent[]
 }
 
 model CollectionJob {
@@ -89,6 +88,18 @@ model Alert {
   status      String   @default("Active") // Active, Read, Resolved
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+// System, maintenance, and operational events
+model DeviceEvent {
+  id          String   @id @default(uuid())
+  deviceId    String
+  eventType   String   // e.g., "POWER CYCLE", "NETWORK SYNC", "SENSOR UPDATE", "MAINTENANCE"
+  description String
+  severity    String   @default("INFO") // INFO, WARNING, CRITICAL
+  createdAt   DateTime @default(now())
 
   device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
