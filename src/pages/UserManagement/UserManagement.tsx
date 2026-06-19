@@ -591,11 +591,10 @@ function ActionMenu({
                       alert("Failed to update user. Please try again.");
                     }
                   }}
-                  className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
-                    item.danger
-                      ? "text-[#ba1a1a] hover:bg-[#ffdad6]/30"
-                      : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
-                  }`}
+                  className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${item.danger
+                    ? "text-[#ba1a1a] hover:bg-[#ffdad6]/30"
+                    : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
+                    }`}
                 >
                   <svg
                     width="15"
@@ -861,11 +860,10 @@ export default function UserManagement() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 border border-border dark:border-[#334155] px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
-              showFilters
-                ? "bg-[#0a5cf5]/10 border-[#0a5cf5] text-[#0a5cf5]"
-                : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
-            }`}
+            className={`flex items-center gap-2 border border-border dark:border-[#334155] px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${showFilters
+              ? "bg-[#0a5cf5]/10 border-[#0a5cf5] text-[#0a5cf5]"
+              : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
+              }`}
           >
             <svg
               width="16"
@@ -890,7 +888,9 @@ export default function UserManagement() {
             Filter
           </button>
           <button
-            onClick={handleExportPDF}
+            onClick={() => {
+              console.log("Exporting users data...");
+            }}
             className="flex items-center gap-2 border border-[#e2e8f0] dark:border-[#334155] bg-white dark:bg-[#0b1c30] px-4 py-2.5 rounded-lg text-sm font-semibold text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-all active:scale-95 shadow-sm"
           >
             <svg
@@ -1030,7 +1030,7 @@ export default function UserManagement() {
                           avatar={
                             user.avatar ??
                             [imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4][
-                              index % 4
+                            index % 4
                             ]
                           }
                         />
@@ -1139,7 +1139,7 @@ export default function UserManagement() {
             of {filteredData.length} users
           </p>
           <div className="flex items-center gap-1">
-            <button 
+            <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
@@ -1152,19 +1152,18 @@ export default function UserManagement() {
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => {
               // Simple logic: show first, last, current, and adjacent
               if (
-                pageNum === 1 || 
-                pageNum === totalPages || 
+                pageNum === 1 ||
+                pageNum === totalPages ||
                 (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
               ) {
                 return (
-                  <button 
+                  <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors cursor-pointer ${
-                      currentPage === pageNum 
-                        ? "bg-[#0a5cf5] text-white" 
-                        : "text-muted-foreground hover:bg-muted"
-                    }`}
+                    className={`w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors cursor-pointer ${currentPage === pageNum
+                      ? "bg-[#0a5cf5] text-white"
+                      : "text-muted-foreground hover:bg-muted"
+                      }`}
                   >
                     {pageNum}
                   </button>
@@ -1182,7 +1181,7 @@ export default function UserManagement() {
               return null;
             })}
 
-            <button 
+            <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"

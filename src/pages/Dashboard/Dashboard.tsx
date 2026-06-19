@@ -261,14 +261,7 @@ export default function Dashboard() {
       ...KPIS[1],
       value: metricsData?.totalItemsSorted ?? "42,891",
     },
-    {
-      ...KPIS[2],
-      value: metricsData?.recyclingRate ?? "84.2%",
-    },
-    {
-      ...KPIS[3],
-      value: metricsData?.contaminationRate ?? "4.1%",
-    },
+    ...KPIS.slice(1),
   ];
 
   const handleExportPDF = () => {
@@ -320,9 +313,10 @@ export default function Dashboard() {
     doc.save("operations-report.pdf");
   };
 
+  const binsOnly = devices.filter((d: any) => d.deviceType === "bin");
   const displayBins =
-    devices.length > 0
-      ? devices.slice(0, 4).map((d: any) => ({
+    binsOnly.length > 0
+      ? binsOnly.map((d: any) => ({
         label: d.location || d.customBinId,
         value: d.fillLevel ?? 0,
         color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
@@ -522,8 +516,8 @@ export default function Dashboard() {
         </div>
 
         {/* Waste Distribution Donut */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
-          <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white mb-4">
+        <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
+          <h2 className="text-lg font-semibold text-foreground dark:text-white mb-4">
             {t("dashboard.charts.wasteCategories")}
           </h2>
 
@@ -568,7 +562,7 @@ export default function Dashboard() {
                     return categories.map((cat: any, i: number) => {
                       const percent = cat.percentage;
                       if (percent <= 0) return null;
-                      
+
                       const strokeLength = (percent / 100) * 251.2;
                       const strokeOffset = 251.2 - strokeLength - (accumulatedPercent / 100) * 251.2;
                       accumulatedPercent += percent;
@@ -597,13 +591,34 @@ export default function Dashboard() {
                   <span className="text-xl font-bold text-foreground dark:text-white">
                     {(wasteCategoriesData?.total ?? 42891).toLocaleString()}
                   </span>
-                  <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                  <span className="text-[9px] font-bold text-muted-foreground uppercase">
                     {t("dashboard.charts.totalProcessed")}
                   </span>
                 </div>
               </div>
 
               <div className="w-full grid grid-cols-2 gap-3 mt-auto">
+                {(wasteCategoriesData?.categories ?? [
+                  { category: "Plastic", percentage: 35 },
+                  { category: "Paper", percentage: 22 },
+                  { category: "Metal", percentage: 18 },
+                  { category: "Other", percentage: 25 },
+                ]).map((cat: any, i: number) => {
+                  const colors: Record<string, string> = {
+                    Plastic: "bg-[#10b981]",
+                    Paper: "bg-[#60a5fa]",
+                    Metal: "bg-[#fbbf24]",
+                    Other: "bg-[#cbd5e1] dark:bg-slate-500",
+                  };
+                  return (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${colors[cat.category] ?? "bg-[#cbd5e1]"}`} />
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {cat.category} ({cat.percentage}%)
+                      </span>
+                    </div>
+                  );
+                })}
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#10b981]" />
                   <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
@@ -639,7 +654,7 @@ export default function Dashboard() {
         {/* Device Status */}
         <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col col-span-1">
           <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               {t("dashboard.bottom.deviceStatus")}
             </h2>
             <StatusBadge label="Live" variant="success" />
@@ -652,29 +667,43 @@ export default function Dashboard() {
                   className="flex flex-col gap-2 w-full animate-pulse"
                 >
                   <div className="flex justify-between items-center">
-                    <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                    <div className="h-4 w-8 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+                    <div className="h-4 w-8 bg-slate-100 dark:bg-secondary rounded"></div>
                   </div>
-                  <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full animate-pulse"></div>
+                  <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full animate-pulse"></div>
                 </div>
               ))
               : displayBins.map((bin, idx) => (
                 <div key={idx} className="flex flex-col gap-2 w-full">
                   <div className="flex justify-between items-center text-sm font-medium">
-                    <span className="text-[#0b1c30] dark:text-white">
+                    <span className="text-foreground dark:text-white">
                       {bin.label}
                     </span>
-                    <span className="text-[#515f74] dark:text-[#cbd5e1]">
+                    <span className="text-muted-foreground">
                       {bin.value}%
                     </span>
                   </div>
                   <Progress
                     value={bin.value}
-                    className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${bin.color === "bg-[#ba1a1a]"
+                    className={`h-2 bg-muted dark:bg-muted ${bin.color === "bg-[#ba1a1a]"
                       ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                       : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
-                      }`}
-                  />
+                      < div key={idx} className="flex flex-col gap-2 w-full">
+                    <div className="flex justify-between items-center text-sm font-medium">
+                      <span className="text-[#0b1c30] dark:text-white">
+                        {bin.label}
+                      </span>
+                      <span className="text-[#515f74] dark:text-[#cbd5e1]">
+                        {bin.value}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={bin.value}
+                      className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${bin.color === "bg-[#ba1a1a]"
+                        ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                        : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                        }`}
+                    />
                 </div>
               ))}
           </div>
@@ -689,9 +718,9 @@ export default function Dashboard() {
         </div>
 
         {/* Live Events Table */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
-          <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-white dark:bg-[#0b1c30]">
-            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+        <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
+          <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-card">
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               {t("dashboard.bottom.liveContaminationEvents")}
             </h2>
             <StatusBadge label={t("dashboard.bottom.actionRequired")} variant="danger" hasDot />
@@ -699,24 +728,24 @@ export default function Dashboard() {
 
           <Table className="min-w-[700px]">
             <TableHeader>
-              <TableRow className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#f1f5f9] dark:border-[#0f2942] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+              <TableRow className="bg-background dark:bg-secondary border-b border-[#f1f5f9] dark:border-[#0f2942] hover:bg-background dark:hover:bg-secondary">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {t("dashboard.table.timestamp")}
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {t("dashboard.table.source")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
                   {t("dashboard.table.detection")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  {t("dashboard.table.confidence")}
+                  Confidence
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  {t("dashboard.table.visual")}
+                  Visual
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  {t("dashboard.table.action")}
+                  Action
                 </TableHead>
               </TableRow>
             </TableHeader>
