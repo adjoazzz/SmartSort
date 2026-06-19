@@ -212,8 +212,7 @@ export default function CollectorDashboard() {
                           <StatusBadge label={job.status} variant="info" hasDot />
                           <button
                             onClick={() => handleCompleteJob(job.id)}
-                            className="px-4 py-2 bg-card text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors cursor-pointer"
-                          >
+                            className="px-4 py-2 bg-slate-800 dark:bg-card text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors cursor-pointer"                          >
                             Complete
                           </button>
                         </>

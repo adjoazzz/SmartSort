@@ -133,9 +133,9 @@ const KPI_DATA = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-card text-white p-3 rounded-lg shadow-xl text-sm border border-[#213145]">
-        <p className="font-bold mb-2 pb-2 border-b border-[#3c4a42]">
-          Oct 18, 2023
+      <div className="bg-card text-foreground p-3 rounded-lg shadow-xl text-sm border border-border">
+        <p className="font-bold mb-2 pb-2 border-b border-border">
+          {label}
         </p>
         <div className="flex justify-between gap-4 mb-1">
           <span className="text-muted-foreground">Recycling:</span>
@@ -145,8 +145,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           <span className="text-muted-foreground">Contam:</span>
           <span className="text-[#fca5a5] font-bold">{payload[1].value}%</span>
         </div>
-      </div>
-    );
+      </div>    );
   }
   return null;
 };
