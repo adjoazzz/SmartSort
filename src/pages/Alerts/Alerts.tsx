@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
+import { usePollingFetch } from "../../hooks/usePollingFetch";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";

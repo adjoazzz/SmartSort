@@ -46,6 +46,10 @@ export default function Collectors() {
     intervalMs: 5000,
   });
 
+  const collectors = collectorsResponse?.data || [];
+  const totalCount = collectorsResponse?.totalCount || 0;
+  const totalPages = collectorsResponse?.totalPages || 1;
+
   const filteredCollectors = (collectors ?? []).filter((collector) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -55,10 +59,6 @@ export default function Collectors() {
       collector.status.toLowerCase().includes(term)
     );
   });
-
-  const collectors = collectorsResponse?.data || [];
-  const totalCount = collectorsResponse?.totalCount || 0;
-  const totalPages = collectorsResponse?.totalPages || 1;
 
   return (
     <PageLayout
