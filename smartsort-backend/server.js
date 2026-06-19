@@ -304,6 +304,47 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+// Create platform users in bulk
+app.post('/api/users/bulk', async (req, res) => {
+  try {
+    const { users } = req.body;
+
+    if (!users || !Array.isArray(users)) {
+      return res.status(400).json({ error: 'An array of users is required' });
+    }
+
+    const createdUsers = [];
+    for (const u of users) {
+      const { name, email, role, status, assignedFacility } = u;
+
+      if (!name || !email || !role) {
+        continue;
+      }
+
+      const userId = await buildNextSequentialId(prisma.platformUser, 'userId', 'USR-');
+
+      const createdUser = await prisma.platformUser.create({
+        data: {
+          userId,
+          name,
+          email,
+          role,
+          status: status || 'PENDING',
+          assignedFacility: assignedFacility || 'Unassigned',
+          avatar: null,
+        },
+      });
+
+      createdUsers.push(formatPlatformUser(createdUser));
+    }
+
+    res.status(201).json(createdUsers);
+  } catch (error) {
+    console.error('Error in bulk import:', error);
+    res.status(500).json({ error: 'Failed to bulk import users' });
+  }
+});
+
 // Update a platform user record
 app.patch('/api/users/:id', async (req, res) => {
   try {

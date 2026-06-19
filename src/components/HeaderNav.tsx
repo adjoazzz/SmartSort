@@ -1,11 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { useTheme } from 'next-themes';
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import { SideNav } from './SideNav';
 import { AlertsSidebar } from './AlertsSidebar';
 import { ProfilePopup } from './ProfilePopup';
+import { useTranslation } from 'react-i18next';
 import '../styles/profile-popup.css';
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
+import { ALERTS_DATA } from "../pages/Alerts/Alerts";
 
 export interface HeaderNavProps {
   hideAlertsIcon?: boolean;
@@ -20,7 +30,59 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
 
+  const [isSSOEnabled, setIsSSOEnabled] = useState(() => {
+    return localStorage.getItem("sso_enabled") === "true";
+  });
+  const [isEmailNotifyEnabled, setIsEmailNotifyEnabled] = useState(() => {
+    return localStorage.getItem("email_notify_enabled") !== "false";
+  });
+
+  const handleSSOToggle = (val: boolean) => {
+    setIsSSOEnabled(val);
+    localStorage.setItem("sso_enabled", String(val));
+  };
+
+  const handleEmailNotifyToggle = (val: boolean) => {
+    setIsEmailNotifyEnabled(val);
+    localStorage.setItem("email_notify_enabled", String(val));
+  };
+
   const { theme: themeMode, setTheme: setThemeMode } = useTheme();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [openCommand, setOpenCommand] = useState(false);
+
+  const isDashboard = location.pathname === '/dashboard';
+
+  const [devices, setDevices] = useState<any[]>([]);
+  const [collectors, setCollectors] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (openCommand) {
+      const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+      fetch(`${baseUrl}/api/devices`).then(r => r.json()).then(setDevices).catch(() => {});
+      fetch(`${baseUrl}/api/collectors`).then(r => r.json()).then(setCollectors).catch(() => {});
+      fetch(`${baseUrl}/api/jobs`).then(r => r.json()).then(setJobs).catch(() => {});
+    }
+  }, [openCommand]);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpenCommand((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
+  const runCommand = (command: () => void) => {
+    setOpenCommand(false);
+    command();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -50,17 +112,112 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             </svg>
           </button>
 
-          <div className="flex items-center w-full bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl border border-transparent focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+          {isDashboard && (
+            <div 
+              onClick={() => setOpenCommand(true)}
+              className="flex items-center w-full bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl border border-transparent hover:border-[#cbd5e1] dark:hover:border-[#334155] hover:bg-white dark:hover:bg-[#0b1c30] hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer"
+            >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input 
-              type="text" 
-              placeholder="Search facilities or events..." 
-              className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-full"
-            />
-          </div>
+            <div className="flex-1 text-sm font-medium text-[#94a3b8] flex justify-between items-center">
+              <span>{t("headerNav.searchPlaceholder") || "Search or jump to..."}</span>
+              <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-[#cbd5e1] dark:border-[#1e3a5f] bg-[#f1f5f9] dark:bg-[#1a365d] px-1.5 font-mono text-[10px] font-medium text-[#64748b] dark:text-[#94a3b8]">
+                <span className="text-xs">⌘</span>K
+              </kbd>
+            </div>
+            </div>
+          )}
+          
+          <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
+            <CommandInput placeholder="Type a command or search pages..." />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup heading="Pages">
+                <CommandItem onSelect={() => runCommand(() => navigate("/dashboard"))}>
+                  Dashboard
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/analytics"))}>
+                  Analytics
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/devices"))}>
+                  Devices
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/collectors"))}>
+                  Collectors
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/jobs"))}>
+                  Collection Jobs
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/alerts"))}>
+                  Alerts
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/community-feedback"))}>
+                  Community Feedback
+                </CommandItem>
+                <CommandItem onSelect={() => runCommand(() => navigate("/admin"))}>
+                  User Management
+                </CommandItem>
+              </CommandGroup>
+              
+              {devices.length > 0 && (
+                <CommandGroup heading="Devices">
+                  {devices.map(d => (
+                    <CommandItem key={`device-${d.customBinId || d.id}`} onSelect={() => runCommand(() => navigate("/devices"))}>
+                      <div className="flex flex-col">
+                        <span>{d.customBinId || d.id}</span>
+                        <span className="text-xs text-muted-foreground">{d.location} • {d.status}</span>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+
+              {collectors.length > 0 && (
+                <CommandGroup heading="Collectors">
+                  {collectors.map(c => (
+                    <CommandItem key={`collector-${c.id}`} onSelect={() => runCommand(() => navigate("/collectors"))}>
+                      <div className="flex flex-col">
+                        <span>{c.name}</span>
+                        <span className="text-xs text-muted-foreground">{c.region} • {c.status}</span>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+
+              {jobs.length > 0 && (
+                <CommandGroup heading="Jobs">
+                  {jobs.map(j => (
+                    <CommandItem key={`job-${j.id}`} onSelect={() => runCommand(() => navigate("/jobs"))}>
+                       <div className="flex flex-col">
+                        <span>Job at {j.location}</span>
+                        <span className="text-xs text-muted-foreground">{j.urgency} • {j.status}</span>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+
+              <CommandGroup heading="Alerts">
+                {ALERTS_DATA.map(a => (
+                  <CommandItem key={`alert-${a.id}`} onSelect={() => runCommand(() => navigate("/alerts"))}>
+                    <div className="flex flex-col">
+                      <span>{a.messageTitle}</span>
+                      <span className="text-xs text-muted-foreground">{a.deviceName} • {a.severity}</span>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+
+              <CommandGroup heading="Account">
+                <CommandItem onSelect={() => runCommand(() => navigate("/profile"))}>
+                  Profile
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </CommandDialog>
         </div>
 
         <div className="flex items-center gap-6">
@@ -94,14 +251,18 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             {isSettingsOpen && (
               <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-lg z-50 flex flex-col py-1 animate-in fade-in zoom-in-95 duration-100">
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <h4 className="text-sm font-semibold text-[#0b1c30] dark:text-white">Settings</h4>
+                  <h4 className="text-sm font-semibold text-[#0b1c30] dark:text-white">{t("headerNav.settings")}</h4>
                 </div>
                 
                 {/* Language */}
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">Language</label>
+                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">{t("headerNav.language")}</label>
                   <div className="relative">
-                    <select className="w-full text-sm font-medium bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] text-[#0b1c30] dark:text-white appearance-none cursor-pointer">
+                    <select 
+                      className="w-full text-sm font-medium bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] text-[#0b1c30] dark:text-white appearance-none cursor-pointer"
+                      value={i18n.language || 'en'}
+                      onChange={(e) => i18n.changeLanguage(e.target.value)}
+                    >
                       <option value="en">English (US)</option>
                       <option value="es">Español</option>
                       <option value="fr">Français</option>
@@ -116,25 +277,73 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
                 {/* Theme */}
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">Theme</label>
+                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">{t("headerNav.theme")}</label>
                   <div className="flex bg-[#f8fafc] dark:bg-[#0f2942] p-1 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f]">
                     <button 
                       onClick={() => setThemeMode('light')}
                       className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'light' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
-                      Light
+                      {t("headerNav.light")}
                     </button>
                     <button 
                       onClick={() => setThemeMode('dark')}
                       className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'dark' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
-                      Dark
+                      {t("headerNav.dark")}
                     </button>
                     <button 
                       onClick={() => setThemeMode('system')}
                       className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'system' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
-                      System
+                      {t("headerNav.system")}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Notifications settings */}
+                <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">
+                    {t("headerNav.notifications")}
+                  </label>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#0b1c30] dark:text-[#cbd5e1] font-medium">
+                      {t("headerNav.emailAlerts")}
+                    </span>
+                    <button
+                      onClick={() => handleEmailNotifyToggle(!isEmailNotifyEnabled)}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        isEmailNotifyEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          isEmailNotifyEnabled ? "translate-x-4" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Enterprise Sync setting */}
+                <div className="px-4 py-3">
+                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">
+                    {t("headerNav.enterpriseSync")}
+                  </label>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#0b1c30] dark:text-[#cbd5e1] font-medium">
+                      {t("headerNav.activeDirectorySso")}
+                    </span>
+                    <button
+                      onClick={() => handleSSOToggle(!isSSOEnabled)}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        isSSOEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          isSSOEnabled ? "translate-x-4" : "translate-x-0"
+                        }`}
+                      />
                     </button>
                   </div>
                 </div>

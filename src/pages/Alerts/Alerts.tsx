@@ -3,8 +3,10 @@ import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
-const ALERTS_DATA = [
+export const ALERTS_DATA = [
   {
     id: "ALT-1",
     deviceIcon: "conveyor",
@@ -172,6 +174,41 @@ export default function Alerts() {
     setTimeRange("24h");
   };
 
+  const filteredAlerts = ALERTS_DATA.filter((alert) => {
+    if (severity !== "all" && alert.severity.toLowerCase() !== severity) return false;
+    if (deviceType === "conveyors" && alert.deviceIcon !== "conveyor") return false;
+    if (deviceType === "smartbins" && alert.deviceIcon !== "bin") return false;
+    if (timeRange === "24h" && !alert.timestampMain.includes("Today")) return false;
+    return true;
+  });
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text("System Alerts Report", 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+
+    const tableData = filteredAlerts.map(alert => [
+      alert.deviceName,
+      alert.deviceLocation,
+      alert.severity,
+      alert.messageTitle,
+      alert.timestampMain
+    ]);
+
+    autoTable(doc, {
+      startY: 40,
+      head: [['Device Name', 'Location', 'Severity', 'Message Title', 'Timestamp']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 108, 73] }
+    });
+
+    doc.save("smartsort-alerts-report.pdf");
+  };
+
   return (
     <PageLayout
       title="System Alerts"
@@ -323,7 +360,10 @@ export default function Alerts() {
               </svg>
               Clear Filters
             </button>
-            <button className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
+            <button 
+              onClick={handleExportPDF}
+              className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
+            >
               <svg
                 width="14"
                 height="14"
@@ -401,8 +441,14 @@ export default function Alerts() {
                     </TableCell>
                   </TableRow>
                 ))
+              ) : filteredAlerts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-32 text-center text-[#64748b] dark:text-[#94a3b8]">
+                    No alerts match the selected filters.
+                  </TableCell>
+                </TableRow>
               ) : (
-                ALERTS_DATA.map((alert) => (
+                filteredAlerts.map((alert) => (
                   <TableRow
                     key={alert.id}
                     className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"

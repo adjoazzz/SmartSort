@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import imgUserProfileAvatar from '../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png';
 
 interface ProfilePopupProps {
@@ -27,6 +28,7 @@ const otherAccounts: Account[] = [
 ];
 
 export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const popupRef = useRef<HTMLDivElement>(null);
   const [showAccounts, setShowAccounts] = useState(true);
@@ -135,7 +137,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
         </div>
         <h2 className="profile-popup__greeting">Hi, kf!</h2>
         <Link to="/profile" onClick={onClose} className="profile-popup__manage-btn">
-          Manage your Account
+          {t("profilePopup.manageAccount")}
         </Link>
       </div>
 
@@ -145,7 +147,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
           className="profile-popup__toggle"
           onClick={() => setShowAccounts((prev) => !prev)}
         >
-          <span>{showAccounts ? 'Hide more accounts' : 'Show more accounts'}</span>
+          <span>{showAccounts ? t("profilePopup.hideAccounts") : t("profilePopup.showAccounts")}</span>
           <svg
             width="18"
             height="18"
@@ -193,7 +195,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </div>
-          <span>Add another account</span>
+          <span>{t("profilePopup.addAccount")}</span>
         </Link>
       </div>
 
@@ -214,15 +216,15 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
           </div>
-          <span>Sign out</span>
+          <span>{t("profilePopup.signOut")}</span>
         </button>
       </div>
 
       {/* Footer */}
       <div className="profile-popup__footer">
-        <a href="#" className="profile-popup__footer-link">Privacy Policy</a>
+        <a href="#" className="profile-popup__footer-link">{t("profilePopup.privacyPolicy")}</a>
         <span className="profile-popup__footer-dot">·</span>
-        <a href="#" className="profile-popup__footer-link">Terms of Service</a>
+        <a href="#" className="profile-popup__footer-link">{t("profilePopup.termsOfService")}</a>
       </div>
     </div>,
     document.body

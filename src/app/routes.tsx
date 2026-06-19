@@ -12,6 +12,7 @@ import Alerts from "../pages/Alerts/Alerts";
 import CollectionJobs from "../pages/CollectionJobs/CollectionJobs";
 import Collectors from "../pages/Collectors/Collectors";
 import CollectorDashboard from "../pages/CollectorDashboard/CollectorDashboard";
+import CollectorMap from "../pages/CollectorDashboard/CollectorMap";
 import UserManagement from "../pages/UserManagement/UserManagement";
 import CommunityFeedback from "../pages/CommunityFeedback/CommunityFeedback";
 import Profile from "../pages/Profile/Profile";
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: "onboarding-3", Component: Onboarding2 },
       { path: "dashboard", Component: Dashboard },
       { path: "collector-dashboard", Component: CollectorDashboard },
+      { path: "collector-map", Component: CollectorMap },
       { path: "analytics", Component: Analytics },
       { path: "devices", Component: Devices },
       { path: "alerts", Component: Alerts },

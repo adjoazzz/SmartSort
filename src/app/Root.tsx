@@ -19,7 +19,7 @@ export function Root() {
     }
 
     if (role === "collector") {
-      const allowedPaths = ["/collector-dashboard", "/profile"];
+      const allowedPaths = ["/collector-dashboard", "/collector-map", "/profile"];
       if (!allowedPaths.includes(location.pathname)) {
         navigate("/collector-dashboard");
       }

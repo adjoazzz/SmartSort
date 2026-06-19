@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 interface InviteUserModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export function InviteUserModal({
   onClose,
   onCreated,
 }: InviteUserModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Viewer");
@@ -117,7 +119,7 @@ export function InviteUserModal({
               {/* Header */}
               <div className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
                 <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
-                  Invite New User
+                  {t("userModal.title")}
                 </h2>
                 <button
                   onClick={onClose}
@@ -157,14 +159,10 @@ export function InviteUserModal({
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
-                      Invite Sent!
+                      {t("userModal.inviteSent")}
                     </h3>
                     <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-2 leading-relaxed">
-                      An email has been sent to{" "}
-                      <span className="font-semibold text-[#0b1c30] dark:text-white">
-                        {email}
-                      </span>{" "}
-                      with instructions to join the platform as a {role}.
+                      {t("userModal.inviteMsg", { email, role })}
                     </p>
                   </div>
                 </div>
@@ -178,12 +176,12 @@ export function InviteUserModal({
                       htmlFor="name"
                       className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
                     >
-                      Full Name
+                      {t("userModal.fullName")}
                     </label>
                     <input
                       id="name"
                       type="text"
-                      placeholder="e.g., Alexander Vance"
+                      placeholder={t("userModal.namePlaceholder")}
                       value={name}
                       onChange={(e) => {
                         setName(e.target.value);
@@ -207,12 +205,12 @@ export function InviteUserModal({
                       htmlFor="email"
                       className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
                     >
-                      Email Address
+                      {t("userModal.emailAddress")}
                     </label>
                     <input
                       id="email"
                       type="email"
-                      placeholder="e.g., user@smartsort.com"
+                      placeholder={t("userModal.emailPlaceholder")}
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
@@ -236,7 +234,7 @@ export function InviteUserModal({
                       htmlFor="role"
                       className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
                     >
-                      Assigned Role
+                      {t("userModal.assignedRole")}
                     </label>
                     <select
                       id="role"
@@ -256,7 +254,7 @@ export function InviteUserModal({
                       htmlFor="facility"
                       className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
                     >
-                      Assigned Facility
+                      {t("userModal.assignedFacility")}
                     </label>
                     <select
                       id="facility"
@@ -292,10 +290,7 @@ export function InviteUserModal({
                       <line x1="12" y1="8" x2="12.01" y2="8"></line>
                     </svg>
                     <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                      The user will receive an email to set up their account and
-                      password. Their status will show as{" "}
-                      <span className="font-bold">Pending</span> until they
-                      complete registration.
+                      {t("userModal.infoText")}
                     </p>
                   </div>
 
@@ -305,14 +300,14 @@ export function InviteUserModal({
                       onClick={onClose}
                       className="px-4 py-2 text-sm font-semibold text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-lg transition-colors cursor-pointer"
                     >
-                      Cancel
+                      {t("userModal.cancel")}
                     </button>
                     <button
                       type="submit"
                       disabled={status === "sending"}
                       className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
                     >
-                      {status === "sending" ? "Saving..." : "Create User"}
+                      {status === "sending" ? t("userModal.saving") : t("userModal.createUser")}
                     </button>
                   </div>
                 </form>

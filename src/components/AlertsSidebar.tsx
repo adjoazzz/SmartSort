@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 interface Alert {
   id: string;
@@ -88,6 +89,7 @@ const itemVariants = {
 };
 
 export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
+  const { t } = useTranslation();
   const activeCount = RECENT_ALERTS.filter(a => a.status === 'Active').length;
 
   return (
@@ -122,8 +124,8 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-[#0b1c30] dark:text-white">Notifications</h2>
-                  <p className="text-xs text-[#64748b] dark:text-[#cbd5e1] font-medium">{activeCount} active alert{activeCount !== 1 ? 's' : ''}</p>
+                  <h2 className="text-base font-bold text-[#0b1c30] dark:text-white">{t("alertsSidebar.notifications")}</h2>
+                  <p className="text-xs text-[#64748b] dark:text-[#cbd5e1] font-medium">{activeCount} {activeCount !== 1 ? t("alertsSidebar.activeAlerts") : t("alertsSidebar.activeAlert")}</p>
                 </div>
               </div>
               <button
@@ -204,7 +206,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                 onClick={onClose}
                 className="w-full flex items-center justify-center gap-2 bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-semibold rounded-xl px-4 py-3 transition-colors no-underline"
               >
-                View All Alerts
+                {t("alertsSidebar.viewAll")}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>

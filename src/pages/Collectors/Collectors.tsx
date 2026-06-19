@@ -23,6 +23,7 @@ export default function Collectors() {
     null,
   );
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchCollectors = async () => {
     const response = await fetch(`${API_BASE_URL}/api/collectors`);
@@ -42,6 +43,16 @@ export default function Collectors() {
     intervalMs: 5000,
   });
 
+  const filteredCollectors = (collectors ?? []).filter((collector) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      collector.name.toLowerCase().includes(term) ||
+      collector.id.toLowerCase().includes(term) ||
+      collector.region.toLowerCase().includes(term) ||
+      collector.status.toLowerCase().includes(term)
+    );
+  });
+
   return (
     <PageLayout
       title="Collectors"
@@ -56,10 +67,33 @@ export default function Collectors() {
       }
     >
       <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center bg-[#f8fafc] dark:bg-[#0f2942]">
+        <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#f8fafc] dark:bg-[#0f2942] gap-4">
           <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
             Registered Personnel
           </h2>
+          <div className="flex items-center w-full sm:w-auto min-w-[250px] bg-white dark:bg-[#0b1c30] rounded-lg border border-black dark:border-[#1e3a5f] focus-within:border-black dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-3.5 py-2">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000000"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mr-2.5 dark:stroke-white"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search collectors..."
+              className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -110,7 +144,7 @@ export default function Collectors() {
                     </td>
                   </tr>
                 ))
-              ) : (collectors ?? []).length === 0 ? (
+              ) : filteredCollectors.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -120,7 +154,7 @@ export default function Collectors() {
                   </td>
                 </tr>
               ) : (
-                (collectors ?? []).map((collector) => (
+                filteredCollectors.map((collector) => (
                   <tr
                     key={collector.id}
                     className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"

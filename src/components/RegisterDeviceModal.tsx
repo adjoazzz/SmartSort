@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InputField } from './InputField';
+import { useTranslation } from 'react-i18next';
 
 interface RegisterDeviceModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface RegisterDeviceModalProps {
  * Extracted from OnboardingStep3 for reuse on the Devices page.
  */
 export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProps) {
+  const { t } = useTranslation();
   const [serial, setSerial] = useState('');
 
   const handleSave = () => {
@@ -49,8 +51,8 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
               {/* Header */}
               <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942]">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#0b1c30] dark:text-white">Register New Device</h3>
-                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">Connect a SmartSort unit to this facility</p>
+                  <h3 className="text-xl font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.title")}</h3>
+                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">{t("registerModal.subtitle")}</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -86,18 +88,17 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#0b1c30] dark:text-white">Scan QR Code on Device</p>
+                    <p className="text-sm font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.scanTitle")}</p>
                     <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed">
-                      Point your camera at the QR code on the bin to auto-fill the serial number.
+                      {t("registerModal.scanDesc")}
                     </p>
                   </div>
                 </div>
 
-                {/* Serial input */}
                 <div className="flex flex-col gap-2">
                   <InputField
                     id="modal-serial"
-                    label="DEVICE SERIAL NUMBER"
+                    label={t("registerModal.serialLabel")}
                     placeholder="SS-XXXX-XXXX-XXXX"
                     value={serial}
                     onChange={setSerial}
@@ -106,7 +107,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <path d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zM7 4v4M7 10.5v-.5" stroke="#515f74" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    Serial numbers start with 'SS' followed by 12 characters.
+                    {t("registerModal.serialHint")}
                   </p>
                 </div>
 
@@ -119,11 +120,11 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                       </svg>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-[#0b1c30] dark:text-white">Default Facility</span>
-                      <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">North Logistics Hub</span>
+                      <span className="text-xs font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.defaultFacility")}</span>
+                      <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">{t("registerModal.hubName")}</span>
                     </div>
                   </div>
-                  <button className="text-sm font-semibold text-[#006c49] hover:underline cursor-pointer">Change</button>
+                  <button className="text-sm font-semibold text-[#006c49] hover:underline cursor-pointer">{t("registerModal.changeBtn")}</button>
                 </div>
 
                 {/* Support Note */}
@@ -132,8 +133,8 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                   <div>
-                    <p className="text-xs font-semibold text-[#0b1c30] dark:text-white">Need help with installation?</p>
-                    <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5">Our technical team is available 24/7 for remote setup assistance.</p>
+                    <p className="text-xs font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.helpTitle")}</p>
+                    <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5">{t("registerModal.helpDesc")}</p>
                   </div>
                 </div>
               </div>
@@ -144,7 +145,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                   onClick={onClose}
                   className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t("registerModal.cancel")}
                 </button>
                 <button
                   onClick={handleSave}
@@ -153,7 +154,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" />
                   </svg>
-                  Save Device
+                  {t("registerModal.save")}
                 </button>
               </div>
             </motion.div>

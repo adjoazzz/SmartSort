@@ -21,6 +21,8 @@ import {
   TableCell,
 } from "../../components/ui/table";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const getCategoryVariant = (category: string) => {
   switch (category) {
@@ -328,13 +330,43 @@ export default function CommunityFeedback() {
     return matchesStatus && matchesCategory;
   });
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text("Community Feedback Report", 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+
+    const tableData = filteredFeedbacks.map(item => [
+      item.userName,
+      item.location,
+      item.category,
+      item.status,
+      formatDate(item.createdAt)
+    ]);
+
+    autoTable(doc, {
+      startY: 40,
+      head: [['User', 'Location', 'Category', 'Status', 'Date']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 108, 73] }
+    });
+
+    doc.save("smartsort-feedback-report.pdf");
+  };
+
   return (
     <PageLayout
       title="Community Feedback"
       description="Manage and resolve facility operational reports."
       actions={
         <>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] font-medium text-xs rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
+          <button 
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] font-medium text-xs rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+          >
             <svg
               width="16"
               height="16"

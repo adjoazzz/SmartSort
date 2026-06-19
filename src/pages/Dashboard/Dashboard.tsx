@@ -13,6 +13,9 @@ import {
   TableCell,
 } from "../../components/ui/table";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useTranslation } from "react-i18next";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 import imgEventSnap from "../../assets/9389a9333045e821be3474418e89b876d4fc0c10.png";
 import imgEventSnap1 from "../../assets/8811709787b7f35f6b7245b79da448b564be54ea.png";
@@ -180,7 +183,9 @@ const RECENT_EVENTS = [
 ];
 
 export default function Dashboard() {
-  const [activeRange, setActiveRange] = useState("24h");
+  const { t } = useTranslation();
+  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
+  const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0]);
   const navigate = useNavigate();
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -217,31 +222,91 @@ export default function Dashboard() {
     ...KPIS.slice(1),
   ];
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(20);
+    doc.text("SmartSort Operations Report", 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+
+    // Section 1: KPIs
+    doc.setFontSize(14);
+    doc.setTextColor(0);
+    doc.text("Key Performance Indicators", 14, 45);
+
+    const kpiData = dynamicKpis.map(kpi => [kpi.title, kpi.value, kpi.trend]);
+    autoTable(doc, {
+      startY: 50,
+      head: [['Metric', 'Value', 'Trend']],
+      body: kpiData,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 108, 73] }
+    });
+
+    // Section 2: Device Bins
+    doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
+    const deviceData = displayBins.map(bin => [bin.label, `${bin.value}%`]);
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 20,
+      head: [['Device', 'Fill Level']],
+      body: deviceData,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 108, 73] }
+    });
+
+    // Section 3: Recent Events
+    doc.text("Recent Contamination Events", 14, (doc as any).lastAutoTable.finalY + 15);
+    const eventData = RECENT_EVENTS.map(evt => [evt.time, evt.source, evt.detection, evt.confidence, evt.action]);
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 20,
+      head: [['Time', 'Source', 'Detection', 'Confidence', 'Action']],
+      body: eventData,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 108, 73] }
+    });
+
+    doc.save("operations-report.pdf");
+  };
+
   const displayBins =
     devices.length > 0
       ? devices.slice(0, 4).map((d: any) => ({
-          label: d.location || d.customBinId,
-          value: d.fillLevel ?? 0,
-          color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
-        }))
+        label: d.location || d.customBinId,
+        value: d.fillLevel ?? 0,
+        color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
+      }))
       : DEVICE_BINS;
 
   return (
     <PageLayout
-      title="Operations Overview"
-      description="Real-time waste processing and recovery metrics for North Sector Hub."
+      title={t("dashboard.title")}
+      description={t("dashboard.description")}
       actions={
         <>
-          <select
-            className="bg-white dark:bg-[#0b1c30] border border-[#bbcabf] dark:border-[#334155] text-[#3c4a42] dark:text-white text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 cursor-pointer"
-            value={activeRange}
-            onChange={(e) => setActiveRange(e.target.value)}
+          <div className="flex items-center gap-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg px-3 py-1 shadow-sm">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
+            />
+            <span className="text-[#94a3b8] dark:text-[#64748b] text-sm font-semibold">
+              to
+            </span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
+            />
+          </div>
+          <button
+            onClick={handleExportPDF}
+            className="no-print bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 flex items-center gap-2 transition-colors cursor-pointer"
           >
-            <option value="24h">Last 24 Hours</option>
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-          </select>
-          <button className="bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 flex items-center gap-2 transition-colors cursor-pointer">
             <svg
               width="14"
               height="14"
@@ -252,7 +317,7 @@ export default function Dashboard() {
             >
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
             </svg>
-            Export PDF
+            {t("dashboard.exportBtn")}
           </button>
         </>
       }
@@ -261,22 +326,26 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {isLoading
           ? Array.from({ length: 4 }).map((_, idx) => (
-              <div
-                key={idx}
-                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
-              >
-                <div className="flex justify-between items-center">
-                  <div className="h-3 w-24 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0f2942]"></div>
-                </div>
-                <div className="h-8 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                <div className="h-3 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+            <div
+              key={idx}
+              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
+            >
+              <div className="flex justify-between items-center">
+                <div className="h-3 w-24 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0f2942]"></div>
               </div>
-            ))
-          : dynamicKpis.map((kpi, idx) => (
+              <div className="h-8 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+              <div className="h-3 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+            </div>
+          ))
+          : dynamicKpis.map((kpi, idx) => {
+            // Map KPI index to keys for translation
+            const keyMap = ['activeDevices', 'totalItemsSorted', 'recyclingRate', 'contaminationRate'] as const;
+            const kpiKey = keyMap[idx];
+            return (
               <MetricCard
                 key={idx}
-                title={kpi.title}
+                title={t(`dashboard.kpi.${kpiKey}`)}
                 value={kpi.value}
                 trend={kpi.trend}
                 trendDirection={kpi.trendDirection}
@@ -285,7 +354,8 @@ export default function Dashboard() {
                 iconSvg={kpi.icon}
                 linkTo={"linkTo" in kpi ? (kpi as any).linkTo : undefined}
               />
-            ))}
+            )
+          })}
       </div>
 
       {/* Middle Charts Row */}
@@ -294,19 +364,19 @@ export default function Dashboard() {
         <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[360px]">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
-              Hourly Throughput
+              {t("dashboard.charts.hourlyThroughput")}
             </h2>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-[#10b981]" />
                 <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
-                  Sorted
+                  {t("dashboard.charts.sorted")}
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-[#e2e8f0]" />
                 <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
-                  Rejected
+                  {t("dashboard.charts.rejected")}
                 </span>
               </div>
             </div>
@@ -349,7 +419,7 @@ export default function Dashboard() {
         {/* Waste Distribution Donut */}
         <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
           <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white mb-4">
-            Waste Categories
+            {t("dashboard.charts.wasteCategories")}
           </h2>
 
           {isLoading ? (
@@ -377,7 +447,7 @@ export default function Dashboard() {
                     Total
                   </span>
                   <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
-                    Processed
+                    {t("dashboard.charts.totalProcessed")}
                   </span>
                 </div>
               </div>
@@ -386,25 +456,25 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#10b981]" />
                   <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Plastic (35%)
+                    {t("dashboard.charts.plastic")} (35%)
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#60a5fa]" />
                   <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Paper (22%)
+                    {t("dashboard.charts.paper")} (22%)
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
                   <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Metal (18%)
+                    {t("dashboard.charts.metal")} (18%)
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#cbd5e1]" />
                   <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    Other (25%)
+                    {t("dashboard.charts.other")} (25%)
                   </span>
                 </div>
               </div>
@@ -419,51 +489,50 @@ export default function Dashboard() {
         <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1">
           <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between">
             <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
-              Device Status
+              {t("dashboard.bottom.deviceStatus")}
             </h2>
             <StatusBadge label="Live" variant="success" />
           </div>
           <div className="p-6 flex flex-col gap-6 flex-1">
             {isLoading
               ? Array.from({ length: 4 }).map((_, idx) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col gap-2 w-full animate-pulse"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                      <div className="h-4 w-8 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                    </div>
-                    <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full animate-pulse"></div>
+                <div
+                  key={idx}
+                  className="flex flex-col gap-2 w-full animate-pulse"
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                    <div className="h-4 w-8 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
                   </div>
-                ))
+                  <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full animate-pulse"></div>
+                </div>
+              ))
               : displayBins.map((bin, idx) => (
-                  <div key={idx} className="flex flex-col gap-2 w-full">
-                    <div className="flex justify-between items-center text-sm font-medium">
-                      <span className="text-[#0b1c30] dark:text-white">
-                        {bin.label}
-                      </span>
-                      <span className="text-[#515f74] dark:text-[#cbd5e1]">
-                        {bin.value}%
-                      </span>
-                    </div>
-                    <Progress
-                      value={bin.value}
-                      className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${
-                        bin.color === "bg-[#ba1a1a]"
-                          ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                          : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
-                      }`}
-                    />
+                <div key={idx} className="flex flex-col gap-2 w-full">
+                  <div className="flex justify-between items-center text-sm font-medium">
+                    <span className="text-[#0b1c30] dark:text-white">
+                      {bin.label}
+                    </span>
+                    <span className="text-[#515f74] dark:text-[#cbd5e1]">
+                      {bin.value}%
+                    </span>
                   </div>
-                ))}
+                  <Progress
+                    value={bin.value}
+                    className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${bin.color === "bg-[#ba1a1a]"
+                      ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                      : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                      }`}
+                  />
+                </div>
+              ))}
           </div>
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942] rounded-b-xl">
             <button
               onClick={() => navigate("/devices")}
               className="w-full text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] tracking-widest uppercase hover:text-[#0b1c30] dark:text-white transition-colors py-2 cursor-pointer"
             >
-              Manage All Devices
+              {t("dashboard.bottom.manageAllDevices")}
             </button>
           </div>
         </div>
@@ -472,92 +541,92 @@ export default function Dashboard() {
         <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
           <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-white dark:bg-[#0b1c30]">
             <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
-              Live Contamination Events
+              {t("dashboard.bottom.liveContaminationEvents")}
             </h2>
-            <StatusBadge label="Action Required" variant="danger" hasDot />
+            <StatusBadge label={t("dashboard.bottom.actionRequired")} variant="danger" hasDot />
           </div>
 
           <Table className="min-w-[700px]">
             <TableHeader>
               <TableRow className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#f1f5f9] dark:border-[#0f2942] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  Timestamp
+                  {t("dashboard.table.timestamp")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  Source
+                  {t("dashboard.table.source")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  Detection
+                  {t("dashboard.table.detection")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  Confidence
+                  {t("dashboard.table.confidence")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  Visual
+                  {t("dashboard.table.visual")}
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
-                  Action
+                  {t("dashboard.table.action")}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y divide-[#f1f5f9]">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, idx) => (
-                    <TableRow key={idx} className="animate-pulse">
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-full"></div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-10 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-[#0f2942]"></div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  <TableRow key={idx} className="animate-pulse">
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-full"></div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-10 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-[#0f2942]"></div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                    </TableCell>
+                  </TableRow>
+                ))
                 : RECENT_EVENTS.map((evt) => (
-                    <TableRow
-                      key={evt.id}
-                      className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
-                    >
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                        {evt.time}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
-                        {evt.source}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <StatusBadge
-                          label={evt.detection}
-                          variant={evt.detectionType as any}
+                  <TableRow
+                    key={evt.id}
+                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                  >
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                      {evt.time}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                      {evt.source}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <StatusBadge
+                        label={evt.detection}
+                        variant={evt.detectionType as any}
+                      />
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
+                      {evt.confidence}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
+                      <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                        <img
+                          src={evt.img}
+                          alt="Snapshot"
+                          className="w-full h-full object-cover"
                         />
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
-                        {evt.confidence}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
-                          <img
-                            src={evt.img}
-                            alt="Snapshot"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
-                        {evt.action}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
+                      {evt.action}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>

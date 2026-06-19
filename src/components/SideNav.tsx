@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export interface SideNavProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const NAV_ITEMS = [
-  { path: '/dashboard', label: 'Dashboard', icon: (
+const getNavItems = (t: any) => [
+  { path: '/dashboard', label: t('sideNav.dashboard'), icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="9"></rect>
       <rect x="14" y="3" width="7" height="5"></rect>
@@ -15,20 +16,20 @@ const NAV_ITEMS = [
       <rect x="3" y="16" width="7" height="5"></rect>
     </svg>
   )},
-  { path: '/analytics', label: 'Analytics', icon: (
+  { path: '/analytics', label: t('sideNav.analytics'), icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="18" y1="20" x2="18" y2="10"></line>
       <line x1="12" y1="20" x2="12" y2="4"></line>
       <line x1="6" y1="20" x2="6" y2="14"></line>
     </svg>
   )},
-  { path: '/devices', label: 'Devices', icon: (
+  { path: '/devices', label: t('sideNav.devices'), icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
       <line x1="12" y1="18" x2="12.01" y2="18"></line>
     </svg>
   )},
-  { path: '/alerts', label: 'Alerts', icon: (
+  { path: '/alerts', label: t('sideNav.alerts'), icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
       <line x1="12" y1="9" x2="12" y2="13"></line>
@@ -37,7 +38,7 @@ const NAV_ITEMS = [
   )},
   { 
     path: '/jobs', 
-    label: 'Collection', 
+    label: t('sideNav.collection'), 
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
@@ -45,16 +46,16 @@ const NAV_ITEMS = [
       </svg>
     ),
     children: [
-      { path: '/jobs', label: 'Jobs' },
-      { path: '/collectors', label: 'Collectors' }
+      { path: '/jobs', label: t('sideNav.jobs') },
+      { path: '/collectors', label: t('sideNav.collectors') }
     ]
   },
-  { path: '/community-feedback', label: 'Community Feedback', icon: (
+  { path: '/community-feedback', label: t('sideNav.communityFeedback'), icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
     </svg>
   )},
-  { path: '/admin', label: 'User Management', icon: (
+  { path: '/admin', label: t('sideNav.userManagement'), icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
       <circle cx="9" cy="7" r="4"></circle>
@@ -65,6 +66,7 @@ const NAV_ITEMS = [
 ];
 
 export function SideNav({ isOpen, onClose }: SideNavProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const role = localStorage.getItem("userRole");
@@ -76,18 +78,26 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
     setExpandedItems(prev => ({ ...prev, [path]: !prev[path] }));
   };
 
+  const navItems = useMemo(() => getNavItems(t), [t]);
+
   const menuItems = role === "collector"
     ? [
-        { path: '/collector-dashboard', label: 'Collector Dashboard', icon: (
+        { path: '/collector-dashboard', label: t('sideNav.collectorDashboard'), icon: (
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="7" height="9"></rect>
             <rect x="14" y="3" width="7" height="5"></rect>
             <rect x="14" y="12" width="7" height="9"></rect>
             <rect x="3" y="16" width="7" height="5"></rect>
           </svg>
+        )},
+        { path: '/collector-map', label: t('sideNav.liveMap'), icon: (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
         )}
       ]
-    : NAV_ITEMS;
+    : navItems;
 
   return (
     <>
@@ -204,7 +214,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
-            Sign Out
+            {t('sideNav.signOut')}
           </button>
         </div>
       </div>

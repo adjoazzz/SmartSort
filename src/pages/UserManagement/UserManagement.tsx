@@ -2,7 +2,10 @@ import React, { useState, ReactNode } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { InviteUserModal } from "./InviteUserModal";
+import { BulkImportDocsModal } from "./BulkImportDocsModal";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 import imgAvatar1 from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import imgAvatar2 from "../../assets/0800bfda658966e2c00bc7ac63132f861621facb.png";
@@ -644,6 +647,7 @@ export default function UserManagement() {
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const fetchUsers = async () => {
     const response = await fetch(`${API_BASE_URL}/api/users`);
@@ -680,6 +684,106 @@ export default function UserManagement() {
   const pendingInvites = users.filter(
     (user) => user.status === "PENDING" || user.status === "Pending",
   ).length;
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text("User Management Report", 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+
+    const tableData = filteredData.map(user => [
+      user.name,
+      user.email,
+      user.role,
+      user.assignedFacility,
+      user.status
+    ]);
+
+    autoTable(doc, {
+      startY: 40,
+      head: [['Name', 'Email', 'Role', 'Assigned Facility', 'Status']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 108, 73] }
+    });
+
+    doc.save("smartsort-users-report.pdf");
+  };
+
+  const handleCSVUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const text = event.target?.result as string;
+      if (!text) return;
+
+      const lines = text.split(/\r?\n/);
+      if (lines.length <= 1) {
+        alert("The uploaded CSV file is empty or missing data rows.");
+        return;
+      }
+
+      const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
+      const nameIdx = headers.indexOf("name");
+      const emailIdx = headers.indexOf("email");
+      const roleIdx = headers.indexOf("role");
+      const facilityIdx = headers.indexOf("assignedfacility");
+      const statusIdx = headers.indexOf("status");
+
+      if (nameIdx === -1 || emailIdx === -1 || roleIdx === -1) {
+        alert("Invalid CSV structure. Headers must include: name, email, role");
+        return;
+      }
+
+      const usersToImport = [];
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        const cols = line.split(",").map((c) => c.trim().replace(/^["']|["']$/g, ""));
+        if (cols.length < 3) continue;
+
+        usersToImport.push({
+          name: cols[nameIdx] || "",
+          email: cols[emailIdx] || "",
+          role: cols[roleIdx] || "Viewer",
+          assignedFacility: facilityIdx !== -1 ? cols[facilityIdx] : "HQ Corporate Center",
+          status: statusIdx !== -1 ? cols[statusIdx].toUpperCase() : "PENDING",
+        });
+      }
+
+      if (usersToImport.length === 0) {
+        alert("No valid user rows found in CSV.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/users/bulk`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ users: usersToImport }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to bulk import users");
+        }
+
+        alert(`Successfully imported ${usersToImport.length} users!`);
+        refresh();
+      } catch (err) {
+        console.error("Bulk import failed:", err);
+        alert("Failed to import users. Please try again.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
 
   const TH =
     "px-6 py-4 text-[11px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider";
@@ -774,9 +878,7 @@ export default function UserManagement() {
             Filter
           </button>
           <button
-            onClick={() => {
-              console.log("Exporting users data...");
-            }}
+            onClick={handleExportPDF}
             className="flex items-center gap-2 border border-[#e2e8f0] dark:border-[#334155] bg-white dark:bg-[#0b1c30] px-4 py-2.5 rounded-lg text-sm font-semibold text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-all active:scale-95 shadow-sm"
           >
             <svg
@@ -1208,12 +1310,27 @@ export default function UserManagement() {
               provisioning.
             </p>
           </div>
-          <button
-            onClick={() => console.log("Documentation link clicked")}
-            className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-lg px-4 py-2 mt-4 self-start border border-white/25 transition-all active:scale-95 shadow-sm"
-          >
-            Documentation
-          </button>
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="bulk-import-file-input"
+              className="bg-white hover:bg-slate-100 text-[#4f46e5] text-xs font-bold rounded-lg px-4 py-2 mt-4 self-start transition-all active:scale-95 shadow-sm cursor-pointer"
+            >
+              Upload CSV
+            </label>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleCSVUpload}
+              className="hidden"
+              id="bulk-import-file-input"
+            />
+            <button
+              onClick={() => setIsDocsModalOpen(true)}
+              className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-lg px-4 py-2 mt-4 self-start border border-white/25 transition-all active:scale-95 shadow-sm"
+            >
+              Documentation
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1221,6 +1338,11 @@ export default function UserManagement() {
         isOpen={isInviteModalOpen}
         onClose={() => setIsInviteModalOpen(false)}
         onCreated={refresh}
+      />
+
+      <BulkImportDocsModal
+        isOpen={isDocsModalOpen}
+        onClose={() => setIsDocsModalOpen(false)}
       />
     </PageLayout>
   );
