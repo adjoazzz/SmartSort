@@ -587,7 +587,7 @@ export default function Landing() {
           </div>
 
           {/* Right Column (Inquiry Form Card) */}
-          <div className="bg-white text-foreground rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] shadow-xl relative z-10">
+          <div className="bg-white dark:bg-card text-foreground dark:text-white rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] dark:border-border shadow-xl relative z-10">
             {submitted ? (
               <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#10b981]/15 flex items-center justify-center text-[#10b981]">
@@ -623,10 +623,10 @@ export default function Landing() {
                     value={form.companyName}
                     onChange={e => handleCompanyNameChange(e.target.value)}
                     onBlur={handleCompanyNameBlur}
-                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
+                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 transition-all ${
                       errors.companyName
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
                     }`}
                   />
                   <FieldError message={errors.companyName} />
@@ -637,7 +637,7 @@ export default function Landing() {
                   <select 
                     value={form.tonsRange}
                     onChange={e => setForm({...form, tonsRange: e.target.value})}
-                    className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
+                    className="h-11 px-4 border border-[#cbd5e1] dark:border-border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
                   >
                     <option value="Less than 50">Less than 50 Tons</option>
                     <option value="50 - 200">50 - 200 Tons</option>
@@ -660,10 +660,10 @@ export default function Landing() {
                     value={form.email}
                     onChange={e => handleEmailChange(e.target.value)}
                     onBlur={handleEmailBlur}
-                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
+                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 transition-all ${
                       errors.email
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
                     }`}
                   />
                   <FieldError message={errors.email} />
@@ -683,7 +683,7 @@ export default function Landing() {
                     !errors.companyName &&
                     !errors.email
                       ? "bg-[#2563eb] hover:bg-[#1d4ed8] text-white active:scale-[0.98] cursor-pointer"
-                      : "bg-slate-100 text-slate-400 border border-transparent cursor-not-allowed"
+                      : "bg-slate-100 dark:bg-secondary text-slate-400 dark:text-slate-500 border border-transparent cursor-not-allowed"
                   }`}
                 >
                   Send Request
