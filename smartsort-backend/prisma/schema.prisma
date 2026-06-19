@@ -13,13 +13,11 @@ model Device {
   fillLevel      Int             @default(0)
   status         String          @default("Active") // Active, Offline, Maintenance
   lastSortedItem String?         
-  deviceType     String          @default("bin")
   updatedAt      DateTime        @updatedAt
   createdAt      DateTime        @default(now())
   deviceType     String          @default("bin")
   Alert          Alert[]
   collectionJobs CollectionJob[]
-  alerts         Alert[]
   processedItems ProcessedItem[]
 }
 
