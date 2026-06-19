@@ -28,7 +28,7 @@ const KPIS = [
     value: "18/20",
     trend: "System nominal",
     trendDirection: "neutral" as const,
-    iconColorClass: "text-[#515f74] dark:text-[#cbd5e1]",
+    iconColorClass: "text-muted-foreground",
     iconBgClass: "bg-[#515f74]/10",
     linkTo: "/devices",
     icon: (
@@ -294,7 +294,7 @@ export default function Dashboard() {
       actions={
         <>
           <select
-            className="bg-white dark:bg-[#0b1c30] border border-[#bbcabf] dark:border-[#334155] text-[#3c4a42] dark:text-white text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 cursor-pointer"
+            className="bg-card border border-[#bbcabf] dark:border-[#334155] text-[#3c4a42] dark:text-white text-sm font-medium rounded-lg pl-2 pr-1 py-2 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 cursor-pointer"
             value={activeRange}
             onChange={(e) => setActiveRange(e.target.value)}
           >
@@ -324,14 +324,14 @@ export default function Dashboard() {
           ? Array.from({ length: 4 }).map((_, idx) => (
               <div
                 key={idx}
-                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
+                className="bg-card border border-border rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
               >
                 <div className="flex justify-between items-center">
-                  <div className="h-3 w-24 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0f2942]"></div>
+                  <div className="h-3 w-24 bg-slate-200 dark:bg-muted rounded"></div>
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-secondary"></div>
                 </div>
-                <div className="h-8 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                <div className="h-3 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                <div className="h-8 w-16 bg-slate-200 dark:bg-muted rounded"></div>
+                <div className="h-3 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
               </div>
             ))
           : dynamicKpis.map((kpi, idx) => (
@@ -352,21 +352,21 @@ export default function Dashboard() {
       {/* Middle Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Hourly Throughput Bar Chart */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[360px]">
+        <div className="bg-card border border-border rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[360px]">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               Hourly Throughput
             </h2>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-[#10b981]" />
-                <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase">
                   Sorted
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-[#cbd5e1] dark:bg-slate-500" />
-                <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase">
                   Rejected
                 </span>
               </div>
@@ -380,8 +380,8 @@ export default function Dashboard() {
                   key={i}
                   className="flex-1 flex flex-col items-center justify-end h-full"
                 >
-                  <div className="w-full bg-slate-100 dark:bg-[#0f2942] rounded-t-xl h-[45%]" />
-                  <div className="h-3 w-8 bg-slate-200 dark:bg-[#1a365d] rounded mt-2" />
+                  <div className="w-full bg-slate-100 dark:bg-secondary rounded-t-xl h-[45%]" />
+                  <div className="h-3 w-8 bg-slate-200 dark:bg-muted rounded mt-2" />
                 </div>
               ))}
             </div>
@@ -398,7 +398,7 @@ export default function Dashboard() {
                     key={idx}
                     className="flex-1 flex flex-col items-center justify-end h-full group"
                   >
-                    <div className="w-full bg-[#f4f4f4] dark:bg-[#1e293b]/20 rounded-t-xl relative h-full flex items-end group-hover:bg-[#f1f5f9] dark:group-hover:bg-[#1e293b]/40 transition-colors">
+                    <div className="w-full bg-[#f4f4f4] dark:bg-[#1e293b]/20 rounded-t-xl relative h-full flex items-end group-hover:bg-muted dark:group-hover:bg-[#1e293b]/40 transition-colors">
                       {/* Tooltip */}
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-10">
                         <div className="bg-slate-900 dark:bg-slate-800 text-white text-[11px] rounded-lg py-1.5 px-2.5 shadow-lg border border-slate-700/50 flex flex-col gap-1 min-w-[110px]">
@@ -442,7 +442,7 @@ export default function Dashboard() {
                         />
                       </div>
                     </div>
-                    <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] mt-2 group-hover:text-[#515f74] dark:group-hover:text-[#cbd5e1]">
+                    <span className="text-[10px] text-muted-foreground mt-2 group-hover:text-muted-foreground dark:group-hover:text-muted-foreground">
                       {data.time}
                     </span>
                   </div>
@@ -453,21 +453,21 @@ export default function Dashboard() {
         </div>
 
         {/* Waste Distribution Donut */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
-          <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white mb-4">
+        <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col h-[360px]">
+          <h2 className="text-lg font-semibold text-foreground dark:text-white mb-4">
             Waste Categories
           </h2>
 
           {isLoading ? (
             <div className="flex-1 flex flex-col items-center justify-center relative animate-pulse w-full">
               <div className="w-40 h-40 rounded-full border-[16px] border-slate-100 dark:border-[#0f2942] flex items-center justify-center">
-                <div className="h-4 w-12 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                <div className="h-4 w-12 bg-slate-200 dark:bg-muted rounded"></div>
               </div>
               <div className="w-full grid grid-cols-2 gap-3 mt-6">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-[#1a365d]" />
-                    <div className="h-3.5 w-20 bg-slate-100 dark:bg-[#0f2942] rounded" />
+                    <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-muted" />
+                    <div className="h-3.5 w-20 bg-slate-100 dark:bg-secondary rounded" />
                   </div>
                 ))}
               </div>
@@ -525,10 +525,10 @@ export default function Dashboard() {
 
                 {/* Centered Total */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                  <span className="text-xl font-bold text-foreground dark:text-white">
                     {(wasteCategoriesData?.total ?? 42891).toLocaleString()}
                   </span>
-                  <span className="text-[9px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                  <span className="text-[9px] font-bold text-muted-foreground uppercase">
                     Processed
                   </span>
                 </div>
@@ -550,7 +550,7 @@ export default function Dashboard() {
                   return (
                     <div key={i} className="flex items-center gap-2">
                       <div className={`w-3 h-3 rounded-full ${colors[cat.category] ?? "bg-[#cbd5e1]"}`} />
-                      <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                      <span className="text-sm font-medium text-muted-foreground">
                         {cat.category} ({cat.percentage}%)
                       </span>
                     </div>
@@ -565,9 +565,9 @@ export default function Dashboard() {
       {/* Bottom Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Device Status */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1">
+        <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col col-span-1">
           <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               Device Status
             </h2>
             <StatusBadge label="Live" variant="success" />
@@ -580,25 +580,25 @@ export default function Dashboard() {
                     className="flex flex-col gap-2 w-full animate-pulse"
                   >
                     <div className="flex justify-between items-center">
-                      <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                      <div className="h-4 w-8 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+                      <div className="h-4 w-8 bg-slate-100 dark:bg-secondary rounded"></div>
                     </div>
-                    <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full animate-pulse"></div>
+                    <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full animate-pulse"></div>
                   </div>
                 ))
               : displayBins.map((bin, idx) => (
                   <div key={idx} className="flex flex-col gap-2 w-full">
                     <div className="flex justify-between items-center text-sm font-medium">
-                      <span className="text-[#0b1c30] dark:text-white">
+                      <span className="text-foreground dark:text-white">
                         {bin.label}
                       </span>
-                      <span className="text-[#515f74] dark:text-[#cbd5e1]">
+                      <span className="text-muted-foreground">
                         {bin.value}%
                       </span>
                     </div>
                     <Progress
                       value={bin.value}
-                      className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${
+                      className={`h-2 bg-muted dark:bg-muted ${
                         bin.color === "bg-[#ba1a1a]"
                           ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                           : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
@@ -607,10 +607,10 @@ export default function Dashboard() {
                   </div>
                 ))}
           </div>
-          <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942] rounded-b-xl">
+          <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-background dark:bg-secondary rounded-b-xl">
             <button
               onClick={() => navigate("/devices")}
-              className="w-full text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] tracking-widest uppercase hover:text-[#0b1c30] dark:text-white transition-colors py-2 cursor-pointer"
+              className="w-full text-xs font-bold text-muted-foreground tracking-widest uppercase hover:text-foreground dark:text-white transition-colors py-2 cursor-pointer"
             >
               Manage All Devices
             </button>
@@ -618,9 +618,9 @@ export default function Dashboard() {
         </div>
 
         {/* Live Events Table */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
-          <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-white dark:bg-[#0b1c30]">
-            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+        <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
+          <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-card">
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               Live Contamination Events
             </h2>
             <StatusBadge label="Action Required" variant="danger" hasDot />
@@ -628,23 +628,23 @@ export default function Dashboard() {
 
           <Table className="min-w-[700px]">
             <TableHeader>
-              <TableRow className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#f1f5f9] dark:border-[#0f2942] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+              <TableRow className="bg-background dark:bg-secondary border-b border-[#f1f5f9] dark:border-[#0f2942] hover:bg-background dark:hover:bg-secondary">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Timestamp
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Source
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Detection
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Confidence
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Visual
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Action
                 </TableHead>
               </TableRow>
@@ -654,34 +654,34 @@ export default function Dashboard() {
                 ? Array.from({ length: 4 }).map((_, idx) => (
                     <TableRow key={idx} className="animate-pulse">
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                        <div className="h-4 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                        <div className="h-4 w-20 bg-slate-200 dark:bg-muted rounded"></div>
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-full"></div>
+                        <div className="h-5 w-24 bg-slate-100 dark:bg-secondary rounded-full"></div>
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-10 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                        <div className="h-4 w-10 bg-slate-200 dark:bg-muted rounded"></div>
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-[#0f2942]"></div>
+                        <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-secondary"></div>
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                        <div className="h-4 w-28 bg-slate-100 dark:bg-secondary rounded"></div>
                       </TableCell>
                     </TableRow>
                   ))
                 : (contaminationEventsData ?? RECENT_EVENTS).map((evt) => (
                     <TableRow
                       key={evt.id}
-                      className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                      className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
                     >
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-muted-foreground">
                         {evt.time}
                       </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
                         {evt.source}
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
@@ -694,7 +694,7 @@ export default function Dashboard() {
                         {evt.confidence}
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                        <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
                           <img
                             src={eventImages[evt.img] ?? evt.img}
                             alt="Snapshot"
@@ -702,7 +702,7 @@ export default function Dashboard() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-muted-foreground font-mono bg-background dark:bg-secondary">
                         {evt.action}
                       </TableCell>
                     </TableRow>

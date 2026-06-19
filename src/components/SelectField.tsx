@@ -14,14 +14,14 @@ import React from "react";
 export function SelectField({ id, label, options, value, onChange, error }: any) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+      <label htmlFor={id} className="text-sm font-medium text-muted-foreground">
         {label}
       </label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`h-10 px-3 border rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer ${
+        className={`h-10 px-3 border rounded-lg text-sm bg-card text-foreground dark:text-white focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer ${
           error ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10" : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/10"
         }`}
         style={{

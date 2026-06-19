@@ -132,20 +132,20 @@ export default function Alerts() {
       description="Real-time notification center for facility sensor network."
       actions={
         isSummaryLoading ? (
-          <div className="flex bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden animate-pulse">
+          <div className="flex bg-card border border-border rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden animate-pulse">
             <div className="px-6 py-3 flex flex-col items-center justify-center">
-              <div className="h-3 w-14 bg-slate-200 dark:bg-[#1a365d] rounded mb-1"></div>
-              <div className="h-7 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+              <div className="h-3 w-14 bg-slate-200 dark:bg-muted rounded mb-1"></div>
+              <div className="h-7 w-8 bg-slate-200 dark:bg-muted rounded"></div>
             </div>
             <div className="px-6 py-3 flex flex-col items-center justify-center">
-              <div className="h-3 w-14 bg-slate-200 dark:bg-[#1a365d] rounded mb-1"></div>
-              <div className="h-7 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+              <div className="h-3 w-14 bg-slate-200 dark:bg-muted rounded mb-1"></div>
+              <div className="h-7 w-8 bg-slate-200 dark:bg-muted rounded"></div>
             </div>
           </div>
         ) : (
-          <div className="flex bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden">
+          <div className="flex bg-card border border-border rounded-xl shadow-sm divide-x divide-[#f1f5f9] overflow-hidden">
             <div className="px-6 py-3 flex flex-col items-center justify-center">
-              <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider uppercase mb-1">
+              <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-1">
                 CRITICAL
               </span>
               <span className="text-[28px] leading-none font-bold text-[#ba1a1a]">
@@ -153,7 +153,7 @@ export default function Alerts() {
               </span>
             </div>
             <div className="px-6 py-3 flex flex-col items-center justify-center">
-              <span className="text-[10px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider uppercase mb-1">
+              <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-1">
                 WARNINGS
               </span>
               <span className="text-[28px] leading-none font-bold text-[#0284c7]">
@@ -169,14 +169,14 @@ export default function Alerts() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex flex-col">
-              <label className="text-[10px] font-bold text-[#94a3b8] dark:text-[#64748b] uppercase mb-1.5 ml-1">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase mb-1.5 ml-1">
                 SEVERITY
               </label>
               <div className="relative">
                 <select
                   value={severity}
                   onChange={(e) => setSeverity(e.target.value)}
-                  className="appearance-none bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]"
+                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-background cursor-pointer min-w-[160px]"
                 >
                   <option value="all">All Severities</option>
                   <option value="critical">Critical</option>
@@ -191,14 +191,14 @@ export default function Alerts() {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-[10px] font-bold text-[#94a3b8] dark:text-[#64748b] uppercase mb-1.5 ml-1">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase mb-1.5 ml-1">
                 DEVICE TYPE
               </label>
               <div className="relative">
                 <select
                   value={deviceType}
                   onChange={(e) => setDeviceType(e.target.value)}
-                  className="appearance-none bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]"
+                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-background cursor-pointer min-w-[160px]"
                 >
                   <option value="all">All Devices</option>
                   <option value="conveyors">Conveyors</option>
@@ -213,14 +213,14 @@ export default function Alerts() {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-[10px] font-bold text-[#94a3b8] dark:text-[#64748b] uppercase mb-1.5 ml-1">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase mb-1.5 ml-1">
                 TIME RANGE
               </label>
               <div className="relative">
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
-                  className="appearance-none bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer min-w-[160px]"
+                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-background cursor-pointer min-w-[160px]"
                 >
                   <option value="24h">Last 24 Hours</option>
                   <option value="7d">Last 7 Days</option>
@@ -238,7 +238,7 @@ export default function Alerts() {
           <div className="flex items-center gap-3 h-[42px]">
             <button
               onClick={handleClearFilters}
-              className="h-full bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 hover:bg-[#f8fafc] transition-colors flex items-center gap-2 cursor-pointer"
+              className="h-full bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 hover:bg-background transition-colors flex items-center gap-2 cursor-pointer"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -261,23 +261,23 @@ export default function Alerts() {
         </div>
 
         {/* Data Table */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden flex flex-col">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
           <Table className="min-w-[900px]">
             <TableHeader>
-              <TableRow className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
-                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+              <TableRow className="border-b border-border hover:bg-background dark:hover:bg-secondary">
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-muted-foreground tracking-wider">
                   DEVICE
                 </TableHead>
-                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-muted-foreground tracking-wider">
                   SEVERITY
                 </TableHead>
-                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider w-[40%]">
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-muted-foreground tracking-wider w-[40%]">
                   MESSAGE
                 </TableHead>
-                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-muted-foreground tracking-wider">
                   TIMESTAMP
                 </TableHead>
-                <TableHead className="px-6 py-4 text-[11px] font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                <TableHead className="px-6 py-4 text-[11px] font-bold text-muted-foreground tracking-wider">
                   ACTIONS
                 </TableHead>
               </TableRow>
@@ -288,29 +288,29 @@ export default function Alerts() {
                   <TableRow key={idx} className="animate-pulse">
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-[#1a365d]" />
+                        <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-muted" />
                         <div className="flex flex-col gap-2">
-                          <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                          <div className="h-3 w-20 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                          <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+                          <div className="h-3 w-20 bg-slate-100 dark:bg-secondary rounded"></div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="px-6 py-5 whitespace-nowrap">
-                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-muted rounded-full"></div>
                     </TableCell>
                     <TableCell className="px-6 py-5">
-                      <div className="h-4 w-40 bg-slate-200 dark:bg-[#1a365d] rounded mb-2"></div>
-                      <div className="h-3.5 w-full bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
-                      <div className="h-3.5 w-2/3 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-40 bg-slate-200 dark:bg-muted rounded mb-2"></div>
+                      <div className="h-3.5 w-full bg-slate-100 dark:bg-secondary rounded mb-1.5"></div>
+                      <div className="h-3.5 w-2/3 bg-slate-100 dark:bg-secondary rounded"></div>
                     </TableCell>
                     <TableCell className="px-6 py-5 whitespace-nowrap">
-                      <div className="h-4 w-24 bg-slate-200 dark:bg-[#1a365d] rounded mb-2"></div>
-                      <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-24 bg-slate-200 dark:bg-muted rounded mb-2"></div>
+                      <div className="h-3 w-16 bg-slate-100 dark:bg-secondary rounded"></div>
                     </TableCell>
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex gap-2">
-                        <div className="h-8 w-24 bg-slate-200 dark:bg-[#1a365d] rounded-lg"></div>
-                        <div className="h-8 w-24 bg-slate-200 dark:bg-[#1a365d] rounded-lg"></div>
+                        <div className="h-8 w-24 bg-slate-200 dark:bg-muted rounded-lg"></div>
+                        <div className="h-8 w-24 bg-slate-200 dark:bg-muted rounded-lg"></div>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -319,18 +319,18 @@ export default function Alerts() {
                 alerts.map((alert: any) => (
                   <TableRow
                     key={alert.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                    className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
                   >
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-muted dark:bg-muted flex items-center justify-center">
                           <DeviceIcon type={alert.deviceIcon} />
                         </div>
                         <div>
-                          <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                          <div className="text-sm font-bold text-foreground dark:text-white">
                             {alert.deviceName}
                           </div>
-                          <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
+                          <div className="text-[12px] text-muted-foreground mt-0.5">
                             {alert.deviceLocation}
                           </div>
                         </div>
@@ -346,18 +346,18 @@ export default function Alerts() {
                       />
                     </TableCell>
                     <TableCell className="px-6 py-5">
-                      <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                      <div className="text-sm font-bold text-foreground dark:text-white">
                         {alert.messageTitle}
                       </div>
-                      <div className="text-[13px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed pr-4">
+                      <div className="text-[13px] text-muted-foreground mt-0.5 leading-relaxed pr-4">
                         {alert.messageDesc}
                       </div>
                     </TableCell>
                     <TableCell className="px-6 py-5 whitespace-nowrap">
-                      <div className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                      <div className="text-sm font-bold text-foreground dark:text-white">
                         {alert.timestampMain}
                       </div>
-                      <div className="text-[12px] text-[#64748b] dark:text-[#94a3b8] mt-0.5">
+                      <div className="text-[12px] text-muted-foreground mt-0.5">
                         {alert.timestampSub}
                       </div>
                     </TableCell>
@@ -369,7 +369,7 @@ export default function Alerts() {
                             className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors cursor-pointer ${
                               action.type === "primary"
                                 ? "bg-[#006c49] text-white hover:bg-[#005a3c]"
-                                : "bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#334155] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9]"
+                                : "bg-card border border-[#cbd5e1] dark:border-[#334155] text-muted-foreground hover:bg-muted"
                             }`}
                           >
                             {action.label}
@@ -383,15 +383,15 @@ export default function Alerts() {
             </TableBody>
           </Table>
 
-          <div className="border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-3 flex items-center justify-between bg-white dark:bg-[#0b1c30]">
-            <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
+          <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-card">
+            <span className="text-sm text-muted-foreground">
               Showing {alerts.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} active alerts
             </span>
             <div className="flex gap-1">
               <button 
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
@@ -400,7 +400,7 @@ export default function Alerts() {
               <button 
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages || totalPages === 0}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
@@ -412,9 +412,9 @@ export default function Alerts() {
         {/* Bottom Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Severity Trends */}
-          <div className="col-span-1 lg:col-span-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[320px]">
+          <div className="col-span-1 lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col h-[320px]">
             <div className="flex justify-between items-start mb-8">
-              <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+              <h2 className="text-lg font-bold text-foreground dark:text-white">
                 Severity Trends
               </h2>
               <span className="text-sm font-bold text-[#006c49]">
@@ -422,10 +422,10 @@ export default function Alerts() {
               </span>
             </div>
             {isLoading ? (
-              <div className="flex-1 w-full bg-slate-50/50 dark:bg-[#0f2942]/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
+              <div className="flex-1 w-full bg-slate-50/50 dark:bg-secondary/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="h-10 w-48 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                  <div className="h-4 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                  <div className="h-10 w-48 bg-slate-200 dark:bg-muted rounded"></div>
+                  <div className="h-4 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
                 </div>
               </div>
             ) : (
@@ -455,7 +455,7 @@ export default function Alerts() {
 
           {/* Maintenance AI */}
           {isLoading ? (
-            <div className="col-span-1 bg-[#0b1c30] rounded-xl p-6 shadow-sm flex flex-col justify-between animate-pulse min-h-[200px]">
+            <div className="col-span-1 bg-card rounded-xl p-6 shadow-sm flex flex-col justify-between animate-pulse min-h-[200px]">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-slate-700 rounded-full"></div>
@@ -468,7 +468,7 @@ export default function Alerts() {
               <div className="h-11 w-full bg-slate-700 rounded-lg mt-6"></div>
             </div>
           ) : (
-            <div className="col-span-1 bg-[#0b1c30] rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
+            <div className="col-span-1 bg-card rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-4 text-[#10b981]">
                   <svg
@@ -494,7 +494,7 @@ export default function Alerts() {
                   to prevent further critical alerts.
                 </p>
                 <div className="mt-auto">
-                  <button className="w-full bg-[#10b981] hover:bg-[#059669] text-[#0b1c30] dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm cursor-pointer">
+                  <button className="w-full bg-[#10b981] hover:bg-[#059669] text-foreground dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm cursor-pointer">
                     Schedule Preventive Check
                   </button>
                 </div>

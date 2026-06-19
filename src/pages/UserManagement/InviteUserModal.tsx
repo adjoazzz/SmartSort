@@ -1,5 +1,5 @@
 import { authFetch } from "../../lib/authFetch";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import emailjs from "@emailjs/browser";
 
@@ -178,18 +178,18 @@ export function InviteUserModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 12 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative pointer-events-auto"
+              className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
-                <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+              <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-background dark:bg-secondary">
+                <h2 className="text-lg font-bold text-foreground dark:text-white">
                   Invite New User
                 </h2>
                 <button
                   onClick={onClose}
                   disabled={status === "sending" || status === "success"}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] transition-colors disabled:opacity-50 cursor-pointer"
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   <svg
                     width="20"
@@ -223,12 +223,12 @@ export function InviteUserModal({
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                    <h3 className="text-xl font-bold text-foreground dark:text-white">
                       Invite Sent!
                     </h3>
-                    <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-2 leading-relaxed">
+                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                       An email has been sent to{" "}
-                      <span className="font-semibold text-[#0b1c30] dark:text-white">
+                      <span className="font-semibold text-foreground dark:text-white">
                         {email}
                       </span>{" "}
                       with instructions to join the platform as a {role}.
@@ -248,7 +248,7 @@ export function InviteUserModal({
                   <div className="flex flex-col gap-1.5">
                     <label
                       htmlFor="name"
-                      className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                      className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                     >
                       Full Name
                     </label>
@@ -261,7 +261,7 @@ export function InviteUserModal({
                         setName(e.target.value);
                         setNameError("");
                       }}
-                      className={`h-11 px-4 border rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
+                      className={`h-11 px-4 border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
                         nameError
                           ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
                           : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/20"
@@ -277,7 +277,7 @@ export function InviteUserModal({
                   <div className="flex flex-col gap-1.5">
                     <label
                       htmlFor="email"
-                      className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                      className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                     >
                       Email Address
                     </label>
@@ -290,7 +290,7 @@ export function InviteUserModal({
                         setEmail(e.target.value);
                         setEmailError("");
                       }}
-                      className={`h-11 px-4 border rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
+                      className={`h-11 px-4 border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
                         emailError
                           ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
                           : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/20"
@@ -306,7 +306,7 @@ export function InviteUserModal({
                   <div className="flex flex-col gap-1.5">
                     <label
                       htmlFor="role"
-                      className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                      className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                     >
                       Assigned Role
                     </label>
@@ -314,7 +314,7 @@ export function InviteUserModal({
                       id="role"
                       value={role}
                       onChange={(e) => setRole(e.target.value)}
-                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white bg-white dark:bg-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
                     >
                       <option value="Admin">Admin</option>
                       <option value="Manager">Manager</option>
@@ -326,7 +326,7 @@ export function InviteUserModal({
                   <div className="flex flex-col gap-1.5">
                     <label
                       htmlFor="facility"
-                      className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                      className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                     >
                       Assigned Facility
                     </label>
@@ -334,7 +334,7 @@ export function InviteUserModal({
                       id="facility"
                       value={assignedFacility}
                       onChange={(e) => setAssignedFacility(e.target.value)}
-                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white bg-white dark:bg-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
                     >
                       <option value="HQ Corporate Center">
                         HQ Corporate Center
@@ -349,7 +349,7 @@ export function InviteUserModal({
                     </select>
                   </div>
 
-                  <div className="bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-3 mt-2 flex gap-3 items-start">
+                  <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 mt-2 flex gap-3 items-start">
                     <svg
                       width="18"
                       height="18"
@@ -363,7 +363,7 @@ export function InviteUserModal({
                       <line x1="12" y1="16" x2="12" y2="12"></line>
                       <line x1="12" y1="8" x2="12.01" y2="8"></line>
                     </svg>
-                    <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
                       The user will receive an email to set up their account and
                       password. Their status will show as{" "}
                       <span className="font-bold">Pending</span> until they
@@ -375,7 +375,7 @@ export function InviteUserModal({
                     <button
                       type="button"
                       onClick={onClose}
-                      className="px-4 py-2 text-sm font-semibold text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-lg transition-colors cursor-pointer"
+                      className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>

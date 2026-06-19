@@ -110,10 +110,10 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-            className="fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white/80 dark:bg-[#0b1c30]/80 backdrop-blur-md border-l border-[#e2e8f0]/40 dark:border-[#1e3a5f]/40 shadow-2xl z-[70] flex flex-col"
+            className="fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white/80 dark:bg-card/80 backdrop-blur-md border-l border-border/40 dark:border-border/40 shadow-2xl z-[70] flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#e2e8f0]/40 dark:border-[#1e3a5f]/40 bg-transparent flex-shrink-0">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-border/40 dark:border-border/40 bg-transparent flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-[#ffdad6]/30 flex items-center justify-center text-[#ba1a1a]">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -122,13 +122,13 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-[#0b1c30] dark:text-white">Notifications</h2>
-                  <p className="text-xs text-[#64748b] dark:text-[#cbd5e1] font-medium">{activeCount} active alert{activeCount !== 1 ? 's' : ''}</p>
+                  <h2 className="text-base font-bold text-foreground dark:text-white">Notifications</h2>
+                  <p className="text-xs text-muted-foreground font-medium">{activeCount} active alert{activeCount !== 1 ? 's' : ''}</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] transition-colors cursor-pointer"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground dark:text-white hover:bg-muted dark:hover:bg-muted transition-colors cursor-pointer"
                 aria-label="Close notifications"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -171,22 +171,22 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                               <span className={`text-[10px] font-bold ${config.textColor} uppercase tracking-widest`}>
                                 {alert.severity}
                               </span>
-                              <span className="text-[10px] font-medium text-[#94a3b8] dark:text-[#cbd5e1]">{alert.timestamp}</span>
+                              <span className="text-[10px] font-medium text-muted-foreground">{alert.timestamp}</span>
                             </div>
 
                             {/* Message */}
-                            <p className="text-sm font-semibold text-[#0b1c30] dark:text-white mb-1 leading-snug">{alert.message}</p>
+                            <p className="text-sm font-semibold text-foreground dark:text-white mb-1 leading-snug">{alert.message}</p>
 
                             {/* Meta row */}
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-mono text-[#64748b] dark:text-[#cbd5e1]">{alert.device}</span>
-                              <span className="text-[#cbd5e1]">·</span>
-                              <span className="text-xs text-[#64748b] dark:text-[#cbd5e1]">{alert.type}</span>
+                              <span className="text-xs font-mono text-muted-foreground">{alert.device}</span>
+                              <span className="text-muted-foreground">·</span>
+                              <span className="text-xs text-muted-foreground">{alert.type}</span>
                             </div>
                           </div>
 
                           {/* Arrow on hover */}
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#cbd5e1] group-hover:text-[#006c49] transition-colors flex-shrink-0 mt-1" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-muted-foreground group-hover:text-[#006c49] transition-colors flex-shrink-0 mt-1" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
                           </svg>
                         </div>
@@ -198,7 +198,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-[#e2e8f0]/40 dark:border-[#1e3a5f]/40 bg-[#f8fafc]/50 dark:bg-[#0f2942]/50 flex-shrink-0">
+            <div className="px-6 py-4 border-t border-border/40 dark:border-border/40 bg-background/50 dark:bg-secondary/50 flex-shrink-0">
               <Link
                 to="/alerts"
                 onClick={onClose}

@@ -144,17 +144,17 @@ export function InviteCollectorModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-[#0b1c30]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-[#0b1c30] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative">
+    <div className="fixed inset-0 bg-card/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative">
         {/* Header */}
-        <div className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
-          <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+        <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-background dark:bg-secondary">
+          <h2 className="text-lg font-bold text-foreground dark:text-white">
             Invite New Collector
           </h2>
           <button
             onClick={onClose}
             disabled={status === "sending" || status === "success"}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] transition-colors disabled:opacity-50"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground transition-colors disabled:opacity-50"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -173,13 +173,13 @@ export function InviteCollectorModal({
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
+              <h3 className="text-xl font-bold text-foreground dark:text-white">
                 Invite Sent!
               </h3>
-              <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-2 leading-relaxed">
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                 A welcome email with a portal link and temporary password has been
                 sent to{" "}
-                <span className="font-semibold text-[#0b1c30] dark:text-white">
+                <span className="font-semibold text-foreground dark:text-white">
                   {email}
                 </span>
                 .
@@ -192,7 +192,7 @@ export function InviteCollectorModal({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="collector-name"
-                className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
               >
                 Collector Name
               </label>
@@ -203,7 +203,7 @@ export function InviteCollectorModal({
                 placeholder="e.g., Kwame Mensah"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-white dark:bg-[#0b1c30]"
+                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
               />
             </div>
 
@@ -211,7 +211,7 @@ export function InviteCollectorModal({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="collector-email"
-                className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
               >
                 Collector Email
               </label>
@@ -222,7 +222,7 @@ export function InviteCollectorModal({
                 placeholder="e.g., kwame@smartsort.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-white dark:bg-[#0b1c30]"
+                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
               />
             </div>
 
@@ -230,7 +230,7 @@ export function InviteCollectorModal({
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="collector-facility"
-                className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider"
+                className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
               >
                 Assigned Facility
               </label>
@@ -238,7 +238,7 @@ export function InviteCollectorModal({
                 id="collector-facility"
                 value={facility}
                 onChange={(e) => setFacility(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-[#0b1c30] dark:text-white bg-white dark:bg-[#0b1c30] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
               >
                 <option value="Facility 1">Facility 1</option>
                 <option value="Facility 2">Facility 2</option>
@@ -249,13 +249,13 @@ export function InviteCollectorModal({
             </div>
 
             {/* Info banner */}
-            <div className="bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-3 flex gap-3 items-start">
+            <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 flex gap-3 items-start">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2" className="shrink-0 mt-0.5">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
               </svg>
-              <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
                 A welcome email will be sent with a link to the collector portal
                 and a secure, system-generated temporary password.
               </p>
@@ -285,7 +285,7 @@ export function InviteCollectorModal({
                   setErrorMessage("");
                 }}
                 disabled={status === "sending"}
-                className="px-4 py-2 text-sm font-semibold text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-lg transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted dark:hover:bg-muted rounded-lg transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

@@ -29,8 +29,8 @@ export function StatusBadge({ label, variant = 'neutral', hasDot = false }: Stat
       dot: 'bg-[#38bdf8]'
     },
     neutral: {
-      bg: 'bg-[#f1f5f9] dark:bg-[#1a365d]',
-      text: 'text-[#475569]',
+      bg: 'bg-muted dark:bg-muted',
+      text: 'text-muted-foreground',
       dot: 'bg-[#94a3b8]'
     }
   };

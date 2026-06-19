@@ -128,13 +128,13 @@ export default function CollectorDashboard() {
         />
       </div>
 
-      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
         <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full gap-0">
           {/* Tabs */}
-          <TabsList className="flex w-full justify-start rounded-none bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f] p-0 h-auto gap-0">
+          <TabsList className="flex w-full justify-start rounded-none bg-background dark:bg-secondary border-b border-border p-0 h-auto gap-0">
             <TabsTrigger
               value="available_jobs"
-              className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-[#0b1c30] text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
+              className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
             >
               Available Jobs (
               {
@@ -145,7 +145,7 @@ export default function CollectorDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="my_jobs"
-              className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-[#0b1c30] text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
+              className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
             >
               My Assignments (
               {
@@ -160,18 +160,18 @@ export default function CollectorDashboard() {
             {/* List */}
             <div className="p-4 flex flex-col gap-4">
               {displayedJobs.length === 0 ? (
-                <div className="text-center py-12 text-[#94a3b8] dark:text-[#64748b] text-sm">
+                <div className="text-center py-12 text-muted-foreground text-sm">
                   No jobs to show here.
                 </div>
               ) : (
                 displayedJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-white dark:bg-[#0b1c30]"
+                    className="border border-border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#cbd5e1] dark:hover:border-[#334155] transition-colors bg-card"
                   >
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-base font-bold text-[#0b1c30] dark:text-white">
+                        <span className="text-base font-bold text-foreground dark:text-white">
                           {job.location}
                         </span>
                         <StatusBadge
@@ -185,13 +185,13 @@ export default function CollectorDashboard() {
                           }
                         />
                       </div>
-                      <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                      <span className="text-sm font-mono text-muted-foreground">
                         {job.device} • {job.zone}
                       </span>
                       <div className="flex items-center gap-2 mt-2">
                         <Progress
                           value={job.fill}
-                          className="w-24 h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                          className="w-24 h-1.5 bg-muted dark:bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                         />
                         <span className="text-xs font-bold text-[#ba1a1a]">
                           {job.fill}% Full
@@ -212,7 +212,7 @@ export default function CollectorDashboard() {
                           <StatusBadge label={job.status} variant="info" hasDot />
                           <button
                             onClick={() => handleCompleteJob(job.id)}
-                            className="px-4 py-2 bg-[#0b1c30] text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors cursor-pointer"
+                            className="px-4 py-2 bg-card text-white text-sm font-bold rounded-lg hover:bg-[#1e293b] transition-colors cursor-pointer"
                           >
                             Complete
                           </button>

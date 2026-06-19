@@ -336,7 +336,7 @@ export default function CommunityFeedback() {
       description="Manage and resolve facility operational reports."
       actions={
         <>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] font-medium text-xs rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-muted-foreground font-medium text-xs rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors">
             <svg
               width="16"
               height="16"
@@ -388,13 +388,13 @@ export default function CommunityFeedback() {
       </div>
 
       {/* Main Feedback Table Container */}
-      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden mt-6 flex flex-col min-h-[400px]">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden mt-6 flex flex-col min-h-[400px]">
         {/* Filters Header */}
-        <div className="px-6 py-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
+        <div className="px-6 py-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-background dark:bg-secondary">
           <div className="flex items-center gap-4">
             <div className="relative">
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94a3b8] dark:text-[#64748b]"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -410,7 +410,7 @@ export default function CommunityFeedback() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="block pl-9 pr-10 py-1.5 border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg bg-white dark:bg-[#0b1c30] text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 appearance-none outline-none"
+                className="block pl-9 pr-10 py-1.5 border border-border rounded-lg bg-card text-muted-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 appearance-none outline-none"
               >
                 <option>Status: All</option>
                 <option>Pending</option>
@@ -422,7 +422,7 @@ export default function CommunityFeedback() {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="block px-4 py-1.5 border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg bg-white dark:bg-[#0b1c30] text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 appearance-none pr-8 outline-none"
+                className="block px-4 py-1.5 border border-border rounded-lg bg-card text-muted-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 appearance-none pr-8 outline-none"
               >
                 <option>Category: All</option>
                 <option>Overflowing Bin</option>
@@ -435,7 +435,7 @@ export default function CommunityFeedback() {
               </select>
             </div>
           </div>
-          <div className="text-xs text-[#94a3b8] dark:text-[#64748b] font-medium hidden sm:block">
+          <div className="text-xs text-muted-foreground font-medium hidden sm:block">
             Showing {filteredFeedbacks.length} of {feedbacks.length} entries
           </div>
         </div>
@@ -455,13 +455,13 @@ export default function CommunityFeedback() {
               ))}
             </div>
           ) : filteredFeedbacks.length === 0 ? (
-            <div className="flex items-center justify-center p-12 text-[#94a3b8] dark:text-[#64748b] text-sm font-medium">
+            <div className="flex items-center justify-center p-12 text-muted-foreground text-sm font-medium">
               No reports found matching selected filters.
             </div>
           ) : (
             <Table className="min-w-[800px]">
               <TableHeader>
-                <TableRow className="hover:bg-transparent bg-white dark:bg-[#0b1c30] text-[#515f74] dark:text-[#cbd5e1] text-[11px] font-bold uppercase tracking-wider border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
+                <TableRow className="hover:bg-transparent bg-card text-muted-foreground text-[11px] font-bold uppercase tracking-wider border-b border-border">
                   <TableHead className="px-6 py-4">User / Location</TableHead>
                   <TableHead className="px-6 py-4">Issue Category</TableHead>
                   <TableHead className="px-6 py-4">Description</TableHead>
@@ -476,18 +476,18 @@ export default function CommunityFeedback() {
                 {filteredFeedbacks.map((item) => (
                   <TableRow
                     key={item.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                    className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
                   >
                     <TableCell className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1] font-bold text-xs">
+                        <div className="w-8 h-8 rounded-full bg-muted dark:bg-muted flex items-center justify-center text-muted-foreground font-bold text-xs">
                           {getInitials(item.userName)}
                         </div>
                         <div>
-                          <div className="font-semibold text-[#0b1c30] dark:text-white text-sm">
+                          <div className="font-semibold text-foreground dark:text-white text-sm">
                             {item.userName}
                           </div>
-                          <div className="text-[#515f74] dark:text-[#cbd5e1] text-xs mt-0.5">
+                          <div className="text-muted-foreground text-xs mt-0.5">
                             {item.location}
                           </div>
                         </div>
@@ -501,7 +501,7 @@ export default function CommunityFeedback() {
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       <p
-                        className="text-[#515f74] dark:text-[#cbd5e1] text-xs line-clamp-1 max-w-[200px]"
+                        className="text-muted-foreground text-xs line-clamp-1 max-w-[200px]"
                         title={item.message}
                       >
                         {item.message}
@@ -514,13 +514,13 @@ export default function CommunityFeedback() {
                         hasDot
                       />
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-[#515f74] dark:text-[#cbd5e1] text-xs font-mono">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-muted-foreground text-xs font-mono">
                       {formatDate(item.createdAt)}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-1.5">
                         <button
-                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors cursor-pointer"
                           title="Convert to Job"
                         >
                           <svg
@@ -541,7 +541,7 @@ export default function CommunityFeedback() {
                           onClick={() =>
                             handleUpdateStatus(item.id, item.status)
                           }
-                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors cursor-pointer"
                           title={`Update status: ${item.status === "Pending" ? "In Progress" : item.status === "In Progress" ? "Resolved" : "Pending"}`}
                         >
                           <svg
@@ -556,7 +556,7 @@ export default function CommunityFeedback() {
                           </svg>
                         </button>
                         <button
-                          className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white hover:bg-[#e2e8f0] rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-foreground dark:text-white hover:bg-[#e2e8f0] rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
                           <svg
@@ -581,15 +581,15 @@ export default function CommunityFeedback() {
         </div>
 
         {/* Pagination Footer */}
-        <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between mt-auto bg-white dark:bg-[#0b1c30]">
-          <div className="text-xs text-[#515f74] dark:text-[#cbd5e1]">
+        <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between mt-auto bg-card">
+          <div className="text-xs text-muted-foreground">
             Page{" "}
-            <span className="font-bold text-[#0b1c30] dark:text-white">1</span>{" "}
+            <span className="font-bold text-foreground dark:text-white">1</span>{" "}
             of 12
           </div>
           <div className="flex items-center gap-1">
             <button
-              className="p-1 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white disabled:opacity-30 cursor-not-allowed"
+              className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-not-allowed"
               disabled
             >
               <svg
@@ -608,19 +608,19 @@ export default function CommunityFeedback() {
             <button className="px-3 py-1 bg-[#006c49]/10 text-[#006c49] text-xs font-bold rounded-md">
               1
             </button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">
+            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
               2
             </button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">
+            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
               3
             </button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">
+            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
               ...
             </button>
-            <button className="px-3 py-1 text-[#515f74] dark:text-[#cbd5e1] text-xs font-medium hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] rounded-md transition-colors">
+            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
               12
             </button>
-            <button className="p-1 text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors">
+            <button className="p-1 text-muted-foreground hover:text-foreground dark:text-white transition-colors">
               <svg
                 width="16"
                 height="16"
@@ -640,21 +640,21 @@ export default function CommunityFeedback() {
 
       {/* Contextual Insights / Bento Grid Element */}
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm">
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-semibold text-[#0b1c30] dark:text-white text-sm tracking-wide">
+            <h3 className="font-semibold text-foreground dark:text-white text-sm tracking-wide">
               Feedback Volume Trend
             </h3>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-md bg-[#10b981]"></span>
-                <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Reports
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-md bg-[#0284c7]"></span>
-                <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Resolved
                 </span>
               </div>
@@ -665,62 +665,62 @@ export default function CommunityFeedback() {
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981]/20 h-1/4 rounded-t-sm group-hover:bg-[#10b981]/30 transition-colors"></div>
               <div className="w-full bg-[#0284c7]/20 h-1/6 rounded-t-sm group-hover:bg-[#0284c7]/30 transition-colors"></div>
-              <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Mon
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981]/40 h-2/4 rounded-t-sm group-hover:bg-[#10b981]/50 transition-colors"></div>
               <div className="w-full bg-[#0284c7]/40 h-1/4 rounded-t-sm group-hover:bg-[#0284c7]/50 transition-colors"></div>
-              <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Tue
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981] h-4/5 rounded-t-sm transition-colors"></div>
               <div className="w-full bg-[#0284c7] h-3/5 rounded-t-sm transition-colors"></div>
-              <span className="text-[10px] text-[#0b1c30] dark:text-white text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-foreground dark:text-white text-center mt-2 font-bold uppercase">
                 Wed
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981]/40 h-2/5 rounded-t-sm group-hover:bg-[#10b981]/50 transition-colors"></div>
               <div className="w-full bg-[#0284c7]/40 h-1/5 rounded-t-sm group-hover:bg-[#0284c7]/50 transition-colors"></div>
-              <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Thu
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981]/60 h-3/5 rounded-t-sm group-hover:bg-[#10b981]/70 transition-colors"></div>
               <div className="w-full bg-[#0284c7]/60 h-2/5 rounded-t-sm group-hover:bg-[#0284c7]/70 transition-colors"></div>
-              <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Fri
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981]/20 h-1/5 rounded-t-sm group-hover:bg-[#10b981]/30 transition-colors"></div>
               <div className="w-full bg-[#0284c7]/20 h-1/6 rounded-t-sm group-hover:bg-[#0284c7]/30 transition-colors"></div>
-              <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Sat
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
               <div className="w-full bg-[#10b981]/20 h-[10%] rounded-t-sm group-hover:bg-[#10b981]/30 transition-colors"></div>
               <div className="w-full bg-[#0284c7]/20 h-[5%] rounded-t-sm group-hover:bg-[#0284c7]/30 transition-colors"></div>
-              <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] text-center mt-2 font-bold uppercase">
+              <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Sun
               </span>
             </div>
           </div>
         </div>
 
-        <div className="bg-[#0b1c30] rounded-xl p-6 text-white flex flex-col justify-between overflow-hidden relative shadow-lg">
+        <div className="bg-card rounded-xl p-6 text-white flex flex-col justify-between overflow-hidden relative shadow-lg">
           <div className="relative z-10">
             <span className="text-[#10b981] font-bold text-[10px] uppercase tracking-widest">
               Sustainability Highlight
             </span>
             <h3 className="text-3xl font-bold mt-3 text-white">4.2 Tons</h3>
-            <p className="text-[#94a3b8] dark:text-[#64748b] text-sm mt-2 leading-relaxed">
+            <p className="text-muted-foreground text-sm mt-2 leading-relaxed">
               Diverted through proactive user reporting this month.
             </p>
           </div>
@@ -748,12 +748,12 @@ export default function CommunityFeedback() {
 
       {/* Manual Entry Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-2xl w-full max-w-lg p-0 gap-0 overflow-hidden flex flex-col">
+        <DialogContent className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-lg p-0 gap-0 overflow-hidden flex flex-col">
           <DialogHeader className="px-6 pt-6 pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942] text-left sm:text-left flex flex-col gap-1">
-            <DialogTitle className="text-xl font-semibold text-[#0b1c30] dark:text-white">
+            <DialogTitle className="text-xl font-semibold text-foreground dark:text-white">
               Add Feedback
             </DialogTitle>
-            <DialogDescription className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">
+            <DialogDescription className="text-xs text-muted-foreground mt-0.5">
               Manually submit a community report or observation.
             </DialogDescription>
           </DialogHeader>
@@ -791,7 +791,7 @@ export default function CommunityFeedback() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="feedback-description"
-                className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]"
+                className="text-sm font-medium text-muted-foreground"
               >
                 Feedback Description
               </label>
@@ -801,7 +801,7 @@ export default function CommunityFeedback() {
                 placeholder="Describe the issue in detail..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="px-3 py-2.5 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
+                className="px-3 py-2.5 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
               />
             </div>
           </div>
@@ -810,7 +810,7 @@ export default function CommunityFeedback() {
           <div className="px-6 pb-6 pt-2 flex items-center gap-3">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="flex-1 h-11 border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors cursor-pointer"
+              className="flex-1 h-11 border border-border text-muted-foreground text-sm font-semibold rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors cursor-pointer"
             >
               Cancel
             </button>
