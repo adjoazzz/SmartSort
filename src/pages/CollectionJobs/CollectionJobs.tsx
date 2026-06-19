@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useEffect, useState } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -174,8 +175,8 @@ const KPIS = [
     value: "08",
     trend: "/ 12 Total",
     trendDirection: "neutral" as const,
-    iconColorClass: "text-[#515f74] dark:text-[#cbd5e1]",
-    iconBgClass: "bg-[#f1f5f9] dark:bg-[#1a365d]",
+    iconColorClass: "text-muted-foreground",
+    iconBgClass: "bg-muted dark:bg-muted",
     icon: (
       <svg
         width="16"
@@ -241,14 +242,18 @@ export default function CollectionJobs() {
   // Switched layouts: Board View vs List View
   const [currentView, setCurrentView] = useState<"board" | "list">("board");
 
+  const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS_DATA);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
-  const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS_DATA);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchJobs = async () => {
-    const response = await fetch(`${baseUrl}/api/jobs`);
+    const response = await authFetch(`${baseUrl}/api/jobs?page=${page}&limit=${limit}`);
     if (!response.ok) {
       throw new Error("Failed to fetch collection jobs");
     }
@@ -256,18 +261,22 @@ export default function CollectionJobs() {
   };
 
   const {
-    data: jobsData,
+    data: jobsResponse,
     isLoading,
     refresh,
-  } = usePollingFetch<Job[]>(fetchJobs, {
+  } = usePollingFetch<any>(fetchJobs, {
     intervalMs: 5000,
   });
 
+  const jobsData = jobsResponse?.data || [];
+  const totalCount = jobsResponse?.totalCount || 0;
+  const totalPages = jobsResponse?.totalPages || 1;
+
   useEffect(() => {
-    if (jobsData) {
-      setJobs(jobsData);
+    if (jobsResponse?.data) {
+      setJobs(jobsResponse.data);
     }
-  }, [jobsData]);
+  }, [jobsResponse]);
 
   // Assigning collectors state
   const [localAssignments, setLocalAssignments] = useState<
@@ -309,7 +318,7 @@ export default function CollectionJobs() {
     if (!assignedCollector || assignedCollector === "Unassigned") return;
 
     try {
-      const response = await fetch(`${baseUrl}/api/jobs/${jobId}`, {
+      const response = await authFetch(`${baseUrl}/api/jobs/${jobId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -331,7 +340,7 @@ export default function CollectionJobs() {
   // Complete job (moves In Transit -> Completed)
   const handleCompleteJob = async (jobId: string) => {
     try {
-      const response = await fetch(`${baseUrl}/api/jobs/${jobId}`, {
+      const response = await authFetch(`${baseUrl}/api/jobs/${jobId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -362,7 +371,7 @@ export default function CollectionJobs() {
     if (Object.values(newErrors).some((err) => err)) return;
 
     try {
-      const response = await fetch(`${baseUrl}/api/jobs`, {
+      const response = await authFetch(`${baseUrl}/api/jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -416,9 +425,9 @@ export default function CollectionJobs() {
       hideAlertsIcon={false}
     >
       {/* ── BREADCRUMB AND HEADER NAVIGATION CONTROLS ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#cbd5e1]/30 dark:border-[#1e3a5f]/30 pb-5 -mt-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#cbd5e1]/30 dark:border-border/30 pb-5 -mt-2">
         <Breadcrumb>
-          <BreadcrumbList className="flex items-center gap-2 text-xs font-semibold text-[#64748b] uppercase tracking-wider">
+          <BreadcrumbList className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             <BreadcrumbItem>
               <BreadcrumbLink
                 href="#"
@@ -441,13 +450,13 @@ export default function CollectionJobs() {
         {/* View Switchers + Filters row */}
         <div className="flex flex-wrap items-center gap-3.5 w-full sm:w-auto">
           {/* Segmented view switcher */}
-          <div className="bg-slate-100 dark:bg-[#0f2942] p-1 rounded-xl flex gap-1 border border-slate-200/50 dark:border-[#1e3a5f]/50">
+          <div className="bg-slate-100 dark:bg-secondary p-1 rounded-xl flex gap-1 border border-slate-200/50 dark:border-border/50">
             <button
               onClick={() => setCurrentView("board")}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 currentView === "board"
-                  ? "bg-white dark:bg-[#0b1c30] shadow-sm text-[#006c49] dark:text-emerald-400"
-                  : "text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0f172a]"
+                  ? "bg-card shadow-sm text-[#006c49] dark:text-emerald-400"
+                  : "text-muted-foreground hover:text-[#0f172a]"
               }`}
             >
               Board View
@@ -456,15 +465,15 @@ export default function CollectionJobs() {
               onClick={() => setCurrentView("list")}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 currentView === "list"
-                  ? "bg-white dark:bg-[#0b1c30] shadow-sm text-[#006c49] dark:text-emerald-400"
-                  : "text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0f172a]"
+                  ? "bg-card shadow-sm text-[#006c49] dark:text-emerald-400"
+                  : "text-muted-foreground hover:text-[#0f172a]"
               }`}
             >
               List View
             </button>
           </div>
 
-          <button className="px-4 py-2.5 bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#1e3a5f] hover:bg-slate-50 dark:hover:bg-[#0f2942] text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
+          <button className="px-4 py-2.5 bg-card border border-[#cbd5e1] dark:border-border hover:bg-slate-50 dark:hover:bg-secondary text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
             <svg
               width="14"
               height="14"
@@ -502,15 +511,15 @@ export default function CollectionJobs() {
         /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start mt-2">
           {/* COLUMN 1: OPEN */}
-          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-[#0b1c30]/20 border border-slate-200/40 dark:border-[#1e3a5f]/40 p-4.5 rounded-2xl min-h-[500px]">
+          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-2xl min-h-[500px]">
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 bg-slate-400 dark:bg-[#94a3b8] rounded-full" />
-                <span className="text-sm font-black tracking-wider text-[#0f172a] dark:text-white uppercase">
+                <span className="text-sm font-black tracking-wider text-foreground uppercase">
                   Open
                 </span>
-                <span className="bg-slate-200/70 dark:bg-[#0f2942] text-[10px] font-black px-2 py-0.5 rounded-full text-slate-600 dark:text-[#cbd5e1]">
+                <span className="bg-slate-200/70 dark:bg-secondary text-[10px] font-black px-2 py-0.5 rounded-full text-slate-600 dark:text-muted-foreground">
                   {String(pendingJobs.length).padStart(2, "0")}
                 </span>
               </div>
@@ -534,7 +543,7 @@ export default function CollectionJobs() {
               ))}
 
               {pendingJobs.length === 0 && (
-                <div className="text-center py-12 text-xs text-[#94a3b8] dark:text-[#64748b] italic border-2 border-dashed border-slate-200 dark:border-[#1e3a5f] rounded-2xl">
+                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-2xl">
                   No pending tasks in queue.
                 </div>
               )}
@@ -542,15 +551,15 @@ export default function CollectionJobs() {
           </div>
 
           {/* COLUMN 2: IN PROGRESS */}
-          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-[#0b1c30]/20 border border-slate-200/40 dark:border-[#1e3a5f]/40 p-4.5 rounded-2xl min-h-[500px]">
+          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-2xl min-h-[500px]">
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 bg-[#2563eb] rounded-full" />
-                <span className="text-sm font-black tracking-wider text-[#0f172a] dark:text-white uppercase">
+                <span className="text-sm font-black tracking-wider text-foreground uppercase">
                   In Progress
                 </span>
-                <span className="bg-blue-100/70 dark:bg-[#0f2942] text-[10px] font-black px-2 py-0.5 rounded-full text-blue-700 dark:text-blue-400">
+                <span className="bg-blue-100/70 dark:bg-secondary text-[10px] font-black px-2 py-0.5 rounded-full text-blue-700 dark:text-blue-400">
                   {String(inProgressJobs.length).padStart(2, "0")}
                 </span>
               </div>
@@ -574,7 +583,7 @@ export default function CollectionJobs() {
               ))}
 
               {inProgressJobs.length === 0 && (
-                <div className="text-center py-12 text-xs text-[#94a3b8] dark:text-[#64748b] italic border-2 border-dashed border-slate-200 dark:border-[#1e3a5f] rounded-2xl">
+                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-2xl">
                   No active dispatches.
                 </div>
               )}
@@ -582,15 +591,15 @@ export default function CollectionJobs() {
           </div>
 
           {/* COLUMN 3: COMPLETE */}
-          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-[#0b1c30]/20 border border-slate-200/40 dark:border-[#1e3a5f]/40 p-4.5 rounded-2xl min-h-[500px]">
+          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-2xl min-h-[500px]">
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 bg-green-500 rounded-full" />
-                <span className="text-sm font-black tracking-wider text-[#0f172a] dark:text-white uppercase">
+                <span className="text-sm font-black tracking-wider text-foreground uppercase">
                   Complete
                 </span>
-                <span className="bg-green-100/70 dark:bg-[#0f2942] text-[10px] font-black px-2 py-0.5 rounded-full text-green-700 dark:text-green-400">
+                <span className="bg-green-100/70 dark:bg-secondary text-[10px] font-black px-2 py-0.5 rounded-full text-green-700 dark:text-green-400">
                   {String(completedJobs.length).padStart(2, "0")}
                 </span>
               </div>
@@ -628,13 +637,13 @@ export default function CollectionJobs() {
               ))}
 
               {completedJobs.length > 0 && (
-                <button className="w-full py-3 border border-dashed border-slate-300 dark:border-[#1e3a5f] hover:bg-slate-50 dark:hover:bg-[#0f2942]/40 rounded-2xl text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] text-center transition-colors">
+                <button className="w-full py-3 border border-dashed border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-secondary/40 rounded-2xl text-xs font-bold text-muted-foreground text-center transition-colors">
                   View 10 More Completed Jobs
                 </button>
               )}
 
               {completedJobs.length === 0 && (
-                <div className="text-center py-12 text-xs text-[#94a3b8] dark:text-[#64748b] italic border-2 border-dashed border-slate-200 dark:border-[#1e3a5f] rounded-2xl">
+                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-2xl">
                   No completed jobs.
                 </div>
               )}
@@ -663,15 +672,15 @@ export default function CollectionJobs() {
           </div>
 
           {/* Tabular Job Queue Card */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#cbd5e1]/50 dark:border-[#1e3a5f] rounded-2xl shadow-sm flex flex-col overflow-hidden">
+          <div className="bg-card border border-[#cbd5e1]/50 dark:border-border rounded-2xl shadow-sm flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="px-6 py-4.5 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc]/50 dark:bg-[#0f2942]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
+            <div className="px-6 py-4.5 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-background/50 dark:bg-secondary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h3 className="font-bold text-foreground dark:text-white text-base">
                 Job Queue
               </h3>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center bg-white dark:bg-[#0b1c30] rounded-xl border border-[#cbd5e1] dark:border-[#1e3a5f] focus-within:border-[#006c49] transition-all overflow-hidden px-3.5 py-2">
+                <div className="flex items-center bg-card rounded-xl border border-[#cbd5e1] dark:border-border focus-within:border-[#006c49] transition-all overflow-hidden px-3.5 py-2">
                   <svg
                     width="14"
                     height="14"
@@ -687,14 +696,14 @@ export default function CollectionJobs() {
                   <input
                     type="text"
                     placeholder="Search jobs..."
-                    className="bg-transparent border-none outline-none text-xs font-semibold text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-48"
+                    className="bg-transparent border-none outline-none text-xs font-semibold text-foreground dark:text-white placeholder-[#94a3b8] w-48"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
                 <select
-                  className="bg-white dark:bg-[#0b1c30] border border-[#cbd5e1] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-xs font-bold rounded-xl px-3.5 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                  className="bg-card border border-[#cbd5e1] dark:border-border text-muted-foreground text-xs font-bold rounded-xl px-3.5 py-2 hover:bg-background dark:hover:bg-secondary cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
@@ -710,26 +719,26 @@ export default function CollectionJobs() {
             <div className="overflow-x-auto">
               <Table className="min-w-[900px]">
                 <TableHeader>
-                  <TableRow className="hover:bg-transparent bg-slate-50/50 dark:bg-[#0f2942] border-b border-[#cbd5e1]/40 dark:border-[#1e3a5f]/40">
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider">
+                  <TableRow className="hover:bg-transparent bg-slate-50/50 dark:bg-secondary border-b border-[#cbd5e1]/40 dark:border-border/40">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Bin Location
                     </TableHead>
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Device ID
                     </TableHead>
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Fill Level
                     </TableHead>
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Urgency
                     </TableHead>
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Status
                     </TableHead>
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Assigned
                     </TableHead>
-                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-[#cbd5e1] uppercase tracking-wider text-right">
+                    <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider text-right">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -738,19 +747,19 @@ export default function CollectionJobs() {
                   {filteredData.map((job) => (
                     <TableRow
                       key={job.id}
-                      className="hover:bg-slate-50/50 dark:hover:bg-[#0f2942]/30 transition-colors border-b border-[#cbd5e1]/20 dark:border-[#1e3a5f]/20 group"
+                      className="hover:bg-slate-50/50 dark:hover:bg-secondary/30 transition-colors border-b border-[#cbd5e1]/20 dark:border-border/20 group"
                     >
                       <TableCell className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                          <span className="text-sm font-bold text-foreground dark:text-white">
                             {job.location}
                           </span>
-                          <span className="text-[10px] text-slate-500 dark:text-[#cbd5e1] mt-0.5">
+                          <span className="text-[10px] text-slate-500 dark:text-muted-foreground mt-0.5">
                             {job.zone}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-mono text-muted-foreground">
                         {job.device}
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">
@@ -835,11 +844,36 @@ export default function CollectionJobs() {
                 No collection tasks found matching current filters.
               </div>
             )}
+            
+            <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-card">
+              <span className="text-sm text-muted-foreground">
+                Showing {jobs.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} jobs
+              </span>
+              <div className="flex gap-1">
+                <button 
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page === 1}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                
+                <button 
+                  onClick={() => setPage(Math.min(totalPages, page + 1))}
+                  disabled={page === totalPages || totalPages === 0}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* ── Bottom Bento Insights ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-[#0b1c30] text-white p-6 rounded-2xl relative overflow-hidden shadow-md">
+            <div className="lg:col-span-2 bg-card text-white p-6 rounded-2xl relative overflow-hidden shadow-md">
               <div className="relative z-10 flex flex-col gap-2 max-w-md">
                 <h4 className="font-bold text-base">Optimization Insight</h4>
                 <p className="text-xs text-slate-400 leading-relaxed">
@@ -857,7 +891,7 @@ export default function CollectionJobs() {
               <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#006c49]/20 rounded-full blur-[60px]" />
             </div>
 
-            <div className="bg-white dark:bg-[#0b1c30] border border-[#cbd5e1]/50 dark:border-[#1e3a5f] p-6 rounded-2xl flex flex-col gap-4 shadow-sm">
+            <div className="bg-card border border-[#cbd5e1]/50 dark:border-border p-6 rounded-2xl flex flex-col gap-4 shadow-sm">
               <h4 className="font-bold text-sm">Facility Load</h4>
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between text-xs font-semibold">

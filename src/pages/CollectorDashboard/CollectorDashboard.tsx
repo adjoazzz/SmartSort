@@ -65,7 +65,7 @@ export default function CollectorDashboard() {
   const [activeTab, setActiveTab] = useState<"my_jobs" | "available_jobs">(
     "available_jobs",
   );
-  
+
   // Sync state with localStorage
   const [jobs, setJobs] = useState(() => {
     const saved = localStorage.getItem("collector_jobs");
@@ -123,10 +123,10 @@ export default function CollectorDashboard() {
   const activeAssignments = jobs.filter((j) => j.isAssignedToMe && j.status !== "Completed");
   const completedToday = jobs.filter((j) => j.isAssignedToMe && j.status === "Completed").length;
   const totalMyAssignments = jobs.filter((j) => j.isAssignedToMe).length;
-  
+
   // Calculate quota percentage
-  const quotaPercentage = totalMyAssignments > 0 
-    ? Math.round((completedToday / totalMyAssignments) * 100) 
+  const quotaPercentage = totalMyAssignments > 0
+    ? Math.round((completedToday / totalMyAssignments) * 100)
     : 0;
 
   // Create optimized sequence list
@@ -205,14 +205,12 @@ export default function CollectorDashboard() {
           </div>
           <button
             onClick={() => setIsOffline(!isOffline)}
-            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              isOffline ? "bg-amber-500" : "bg-[#006c49]"
-            }`}
+            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isOffline ? "bg-amber-500" : "bg-[#006c49]"
+              }`}
           >
             <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                isOffline ? "translate-x-4" : "translate-x-0"
-              }`}
+              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isOffline ? "translate-x-4" : "translate-x-0"
+                }`}
             />
           </button>
         </div>
@@ -248,7 +246,7 @@ export default function CollectorDashboard() {
 
       {/* Main Full-Width Section */}
       <div className="flex flex-col gap-6">
-        
+
         {/* Optimized Route Panel / Map Navigation Banner */}
         {activeTab === "my_jobs" && activeAssignments.length > 0 && (
           <div className="bg-gradient-to-r from-[#0284c7]/10 to-[#0369a1]/5 dark:from-[#0c4a6e]/30 dark:to-[#082f49]/20 border border-[#0284c7]/20 dark:border-[#0284c7]/40 rounded-xl p-5 shadow-sm">
@@ -268,21 +266,19 @@ export default function CollectorDashboard() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-4 self-start md:self-center">
                 {/* Auto Optimize Toggle */}
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1]">Auto-Optimize</span>
                   <button
                     onClick={() => setIsOptimized(!isOptimized)}
-                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                      isOptimized ? "bg-[#0284c7]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
-                    }`}
+                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isOptimized ? "bg-[#0284c7]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                      }`}
                   >
                     <span
-                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        isOptimized ? "translate-x-4" : "translate-x-0"
-                      }`}
+                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isOptimized ? "translate-x-4" : "translate-x-0"
+                        }`}
                     />
                   </button>
                 </div>
@@ -309,7 +305,7 @@ export default function CollectorDashboard() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 overflow-x-auto pb-1">
                   {optimizedRoute.map((job, idx) => (
                     <React.Fragment key={job.id}>
-                      <div 
+                      <div
                         onClick={() => navigate("/collector-map")}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] bg-white/50 dark:bg-[#0b1c30]/50 hover:bg-white dark:hover:bg-[#0f2942] transition-all cursor-pointer"
                       >
@@ -480,7 +476,7 @@ export default function CollectorDashboard() {
                     </div>
                   </div>
                   <button onClick={() => setRemindJobId(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors mt-0.5">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                   </button>
                 </div>
 

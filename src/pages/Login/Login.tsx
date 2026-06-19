@@ -1,5 +1,7 @@
+import { authFetch } from "../../lib/authFetch";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { supabase } from "../../lib/supabaseClient";
 import imgAiCore from "../../assets/smartsort_ai_core.png";
 
 // --- Custom SVGs for UI Icons ---
@@ -158,6 +160,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
 
   // Selected Login Role Toggle
   const [selectedRole, setSelectedRole] = useState<"manager" | "collector">("manager");
@@ -208,50 +212,87 @@ export default function Login() {
     setTimeout(() => setShaking(false), 500);
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Run full validation
     const emailErr = validateEmail(email);
     const passwordErr = validatePassword(password);
     const newErrors: ValidationErrors = { email: emailErr, password: passwordErr };
     setErrors(newErrors);
     setTouched({ email: true, password: true });
 
-    // If there are validation errors, shake the form and stop
     if (emailErr || passwordErr) {
       triggerShake();
       return;
     }
 
-    // Set selected role to localStorage to drive role-based menu configurations
-    localStorage.setItem("userRole", selectedRole);
+    setIsLoading(true);
 
-    // Dynamic role based routing
-    if (selectedRole === "collector") {
-      navigate("/collector-dashboard");
-    } else {
-      navigate("/dashboard");
+    try {
+      if (isSignup) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        
+        if (error) throw error;
+        
+        // Sync user role with backend
+        if (data.user) {
+          await authFetch((import.meta as any).env?.VITE_API_BASE_URL + "/api/auth/sync" || "http://localhost:5000/api/auth/sync", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: data.user.id,
+              email: data.user.email,
+              role: selectedRole === "manager" ? "MANAGER" : "COLLECTOR"
+            })
+          }).catch(console.error);
+        }
+        
+        // Signed up successfully, you can login directly
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+      }
+      
+      localStorage.setItem("userRole", selectedRole);
+      
+      if (selectedRole === "collector") {
+        navigate("/collector-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch(err: any) {
+      setErrors({ email: err.message });
+      triggerShake();
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   const hasEmailError = !!errors.email;
   const hasPasswordError = !!errors.password;
   const isFormValid = email.trim() !== "" && password !== "" && !hasEmailError && !hasPasswordError;
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-[#0b1c30] text-[#0f172a] dark:text-white transition-colors duration-300 font-sans">
+    <div className="min-h-screen flex flex-col md:flex-row bg-card text-foreground transition-colors duration-300 font-sans">
       {/* Inject shake animation */}
       <style>{shakeKeyframes}</style>
 
       {/* LEFT PANEL: Form and Branding */}
-      <div className="w-full md:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-white dark:bg-[#0b1c30] relative">
+      <div className="w-full md:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-card relative">
         
         {/* Top Branding Header */}
         <div className="flex items-center gap-3">
           <LogoSvg />
           <div className="flex flex-col">
-            <span className="text-lg font-black tracking-tight text-[#0f172a] dark:text-white">SmartSort</span>
+            <span className="text-lg font-black tracking-tight text-foreground">SmartSort</span>
             <span className="text-[9px] font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase -mt-1">Air</span>
           </div>
         </div>
@@ -259,8 +300,8 @@ export default function Login() {
         {/* Login Form Container */}
         <div className="max-w-md w-full mx-auto my-auto py-10 flex flex-col gap-8">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-[#0f172a] dark:text-white">Welcome</h2>
-            <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-1.5">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">Welcome</h2>
+            <p className="text-sm text-muted-foreground mt-1.5">
               Please log in with your login details to start working!
             </p>
           </div>
@@ -273,14 +314,14 @@ export default function Login() {
           >
             
             {/* Role segmented toggle */}
-            <div className="bg-slate-100 dark:bg-[#0f2942] p-1 rounded-xl flex gap-1 border border-slate-200/50 dark:border-[#1e3a5f]/50">
+            <div className="bg-slate-100 dark:bg-secondary p-1 rounded-xl flex gap-1 border border-slate-200/50 dark:border-border/50">
               <button
                 type="button"
                 onClick={() => setSelectedRole("manager")}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                   selectedRole === "manager"
-                    ? "bg-white dark:bg-[#0b1c30] shadow-sm text-blue-600 dark:text-blue-400"
-                    : "text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0f172a] dark:hover:text-white"
+                    ? "bg-card shadow-sm text-blue-600 dark:text-blue-400"
+                    : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
                 }`}
               >
                 <ShieldLockIcon />
@@ -291,8 +332,8 @@ export default function Login() {
                 onClick={() => setSelectedRole("collector")}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                   selectedRole === "collector"
-                    ? "bg-white dark:bg-[#0b1c30] shadow-sm text-blue-600 dark:text-blue-400"
-                    : "text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0f172a] dark:hover:text-white"
+                    ? "bg-card shadow-sm text-blue-600 dark:text-blue-400"
+                    : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
                 }`}
               >
                 <TruckIcon />
@@ -306,14 +347,14 @@ export default function Login() {
                 className={`relative py-3 transition-colors flex items-center gap-3 border-b ${
                   hasEmailError
                     ? "border-red-500 dark:border-red-500"
-                    : "border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400"
+                    : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
                 }`}
               >
                 <UserIcon
                   className={`w-5 h-5 flex-shrink-0 ${
                     hasEmailError
                       ? "text-red-500"
-                      : "text-slate-400 dark:text-[#94a3b8]"
+                      : "text-slate-400 dark:text-muted-foreground"
                   }`}
                 />
                 <input
@@ -325,7 +366,7 @@ export default function Login() {
                   onBlur={handleEmailBlur}
                   aria-invalid={hasEmailError}
                   aria-describedby={hasEmailError ? "login-email-error" : undefined}
-                  className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
+                  className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder-slate-400 dark:placeholder-slate-500"
                 />
               </div>
               <div id="login-email-error">
@@ -339,14 +380,14 @@ export default function Login() {
                 className={`relative py-3 transition-colors flex items-center gap-3 border-b ${
                   hasPasswordError
                     ? "border-red-500 dark:border-red-500"
-                    : "border-slate-200 dark:border-[#1e3a5f] focus-within:border-blue-600 dark:focus-within:border-blue-400"
+                    : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
                 }`}
               >
                 <PasswordLockIcon
                   className={`w-5 h-5 flex-shrink-0 ${
                     hasPasswordError
                       ? "text-red-500"
-                      : "text-slate-400 dark:text-[#94a3b8]"
+                      : "text-slate-400 dark:text-muted-foreground"
                   }`}
                 />
                 <input
@@ -358,12 +399,12 @@ export default function Login() {
                   onBlur={handlePasswordBlur}
                   aria-invalid={hasPasswordError}
                   aria-describedby={hasPasswordError ? "login-password-error" : undefined}
-                  className="bg-transparent border-none outline-none text-sm w-full text-[#0f172a] dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
+                  className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder-slate-400 dark:placeholder-slate-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 dark:text-[#94a3b8] hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-slate-400 dark:text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400"
                 >
                   {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                 </button>
@@ -377,18 +418,21 @@ export default function Login() {
             <button
               id="login-submit"
               type="submit"
+              disabled={isLoading || !isFormValid}
               className={`h-12 w-full rounded-lg font-bold text-sm tracking-wide transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 ${
-                isFormValid
+                isFormValid && !isLoading
                   ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-blue-600/10"
-                  : "bg-slate-100 dark:bg-[#0f2942] text-slate-400 dark:text-slate-600 cursor-not-allowed border border-transparent"
+                  : "bg-slate-100 dark:bg-secondary text-slate-400 dark:text-slate-600 cursor-not-allowed border border-transparent"
               }`}
             >
-              <LoginArrowIcon />
-              LOGIN
+              {isLoading ? "PLEASE WAIT..." : isSignup ? "SIGN UP" : "LOGIN"}
             </button>
 
             {/* Inquiry & links */}
             <div className="flex flex-col gap-4 items-center justify-center text-xs mt-2">
+              <button type="button" onClick={() => setIsSignup(!isSignup)} className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
+                {isSignup ? "Already have an account? Log in" : "Need an account? Sign up"}
+              </button>
               <a href="#" className="font-semibold text-slate-500 hover:text-blue-600 transition-colors">
                 Forgot password?
               </a>
@@ -398,9 +442,9 @@ export default function Login() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-slate-300 dark:border-[#1e3a5f] text-blue-600 focus:ring-blue-500 bg-slate-50 dark:bg-[#0b1c30]"
+                  className="rounded border-slate-300 dark:border-border text-blue-600 focus:ring-blue-500 bg-slate-50 dark:bg-card"
                 />
-                <span className="text-slate-500 dark:text-[#cbd5e1] font-medium">Stay signed in for 30 days</span>
+                <span className="text-slate-500 dark:text-muted-foreground font-medium">Stay signed in for 30 days</span>
               </label>
             </div>
 
@@ -408,8 +452,8 @@ export default function Login() {
         </div>
 
         {/* Bottom Status Panel */}
-        <div className="flex items-center gap-4 text-[10px] font-bold text-[#64748b] tracking-wider uppercase">
-          <span className="inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-[#1e3a5f] rounded-full px-3 py-1 bg-slate-50 dark:bg-[#0f2942]">
+        <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
+          <span className="inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-border rounded-full px-3 py-1 bg-slate-50 dark:bg-secondary">
             <span className="w-1.5 h-1.5 bg-[#22c55e] rounded-full animate-pulse" />
             Systems Operational
           </span>
@@ -463,7 +507,7 @@ export default function Login() {
             <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Revolutionary Waste Management
             </h3>
-            <p className="text-xs sm:text-sm text-[#94a3b8] leading-relaxed font-light">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">
               SmartSort is the next generation waste management software which growth with its users. Built with the best practices in mind it fits your needs no matter if you need the whole software or just one component. Is there still something missing? Get in touch so that we can tailor it to your needs.
             </p>
           </div>

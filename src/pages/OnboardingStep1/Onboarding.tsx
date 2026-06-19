@@ -17,17 +17,17 @@ import { InputField } from "../../components/InputField";
  */
 function FeatureCard({ iconBg, iconColor, title, description, icon }: any) {
   return (
-    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-4">
+    <div className="bg-card border border-border rounded-xl p-4">
       <div
         className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"
         style={{ background: iconBg }}
       >
         {icon}
       </div>
-      <h3 className="text-sm font-semibold text-[#0b1c30] dark:text-white mb-1">
+      <h3 className="text-sm font-semibold text-foreground dark:text-white mb-1">
         {title}
       </h3>
-      <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+      <p className="text-xs text-muted-foreground leading-relaxed">
         {description}
       </p>
     </div>
@@ -128,12 +128,12 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8f9ff] to-[#f0faf5] dark:from-[#08121e] dark:to-[#050b12]">
       {/* Header */}
-      <header className="h-16 bg-white dark:bg-[#0b1c30] border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
-        <span className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+      <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
+        <span className="text-lg font-semibold text-foreground dark:text-white">
           Smart<span className="text-[#006c49]">Sort</span>
         </span>
         <div className="flex gap-2">
-          <button className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
+          <button className="px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors">
             Help
           </button>
         </div>
@@ -151,13 +151,13 @@ export default function Onboarding() {
             </div>
 
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-[#0b1c30] dark:text-white leading-tight">
+              <h1 className="text-3xl sm:text-4xl font-bold text-foreground dark:text-white leading-tight">
                 Transform waste into{" "}
                 <span className="text-[#006c49] dark:text-emerald-400">
                   environmental intelligence.
                 </span>
               </h1>
-              <p className="mt-4 text-base text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+              <p className="mt-4 text-base text-muted-foreground leading-relaxed">
                 SmartSort Analytics provides enterprise-grade stewardship tools
                 to track, manage, and optimize your organization's
                 sustainability footprint in real time.
@@ -179,7 +179,7 @@ export default function Onboarding() {
               />
             </div>
  
-            <p className="text-xs text-[#94a3b8] dark:text-slate-400 flex items-center gap-1.5">
+            <p className="text-xs text-muted-foreground dark:text-slate-400 flex items-center gap-1.5">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zm2.5 3.5L5.5 8.5 4 7"
@@ -194,12 +194,12 @@ export default function Onboarding() {
           </div>
 
           {/* Right — Form */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-5">
+          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-5">
             <div>
-              <h2 className="text-xl font-semibold text-[#0b1c30] dark:text-white">
+              <h2 className="text-xl font-semibold text-foreground dark:text-white">
                 Create your account
               </h2>
-              <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Start your free 14-day trial — no credit card required.
               </p>
             </div>
@@ -262,7 +262,7 @@ export default function Onboarding() {
 
               <div className="flex items-center justify-between">
                 <StepDots current={0} total={2} />
-                 <p className="text-xs text-[#94a3b8] dark:text-slate-400">
+                 <p className="text-xs text-muted-foreground dark:text-slate-400">
                   Already have an account?{" "}
                   <Link
                     to="/login"
@@ -278,12 +278,12 @@ export default function Onboarding() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <footer className="bg-background dark:bg-secondary border-t border-border px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold text-[#334155] dark:text-[#cbd5e1]">
+          <p className="text-xs font-semibold text-[#334155] dark:text-muted-foreground">
             SmartSort Analytics
           </p>
-          <p className="text-xs text-[#64748b] dark:text-[#cbd5e1]">
+          <p className="text-xs text-muted-foreground">
             © 2026 SmartSort Analytics. Professional waste stewardship.
           </p>
         </div>
@@ -297,7 +297,7 @@ export default function Onboarding() {
             <a
               key={l}
               href="#"
-              className="text-xs text-[#64748b] dark:text-slate-400 hover:text-[#006c49] dark:hover:text-emerald-400 transition-colors"
+              className="text-xs text-muted-foreground dark:text-slate-400 hover:text-[#006c49] dark:hover:text-emerald-400 transition-colors"
             >
               {l}
             </a>

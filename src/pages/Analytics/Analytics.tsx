@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { useTranslation } from "react-i18next";
@@ -14,76 +15,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const CHART_DATA = [
-  { name: "OCT 01", recycling: 25, contamination: 4 },
-  { name: "OCT 08", recycling: 35, contamination: 5 },
-  { name: "OCT 15", recycling: 50, contamination: 2 },
-  { name: "OCT 22", recycling: 55, contamination: -2 },
-  { name: "OCT 31", recycling: 65, contamination: 3 },
-];
+// Removed static CHART_DATA, TONNAGE_DATA, and CATEGORY_DATA.
 
-const TONNAGE_DATA = [
-  {
-    name: "Corrugated Cardboard",
-    value: "420t (34%)",
-    percent: 34,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Mixed Plastics (PET/HDPE)",
-    value: "312t (25%)",
-    percent: 25,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Aluminum & Metals",
-    value: "224t (18%)",
-    percent: 18,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Glass (Clear/Amber)",
-    value: "187t (15%)",
-    percent: 15,
-    color: "bg-[#10b981]",
-  },
-  {
-    name: "Residual Waste",
-    value: "105t (8%)",
-    percent: 8,
-    color: "bg-[#cbd5e1]",
-  },
-];
-
-const CATEGORY_DATA = [
-  {
-    icon: "boxes",
-    name: "Recycled Paper & Pulp",
-    volume: "582.4",
-    growth: "+8.2%",
-    growthTrend: "up",
-    goal: 92,
-    goalColor: "bg-[#10b981]",
-  },
-  {
-    icon: "magnet",
-    name: "Ferrous Metals",
-    volume: "144.9",
-    growth: "-2.1%",
-    growthTrend: "down",
-    goal: 78,
-    goalColor: "bg-[#10b981]",
-  },
-  {
-    icon: "drop",
-    name: "Liquid Contaminants",
-    volume: "22.8",
-    growth: "+0.4%",
-    growthTrend: "neutral",
-    goal: 12,
-    goalColor: "bg-[#ba1a1a]",
-  },
-];
 
 const KPI_DATA = [
   {
@@ -126,7 +59,7 @@ const KPI_DATA = [
         />
       </svg>
     ),
-    iconBg: "bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]",
+    iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#10b981]",
     progressWidth: "74%",
     trendColors: "bg-[#bbf7d0]/50 text-[#006c49]",
@@ -178,7 +111,7 @@ const KPI_DATA = [
         <path d="M16 10a4 4 0 0 1-8 0"></path>
       </svg>
     ),
-    iconBg: "bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]",
+    iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#3b82f6]",
     progressWidth: "75%",
     trendColors: "bg-[#dbeafe] text-[#2563eb]",
@@ -189,11 +122,11 @@ const KPI_DATA = [
     trend: "15.0%",
     trendDirection: "up",
     icon: (
-      <span className="text-xs font-bold text-[#64748b] dark:text-[#cbd5e1]">
+      <span className="text-xs font-bold text-muted-foreground">
         CO<sub className="text-[8px]">2</sub>
       </span>
     ),
-    iconBg: "bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]",
+    iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#334155]",
     progressWidth: "40%",
     trendColors: "bg-[#bbf7d0]/50 text-[#006c49]",
@@ -203,27 +136,26 @@ const KPI_DATA = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#0b1c30] text-white p-3 rounded-lg shadow-xl text-sm border border-[#213145]">
-        <p className="font-bold mb-2 pb-2 border-b border-[#3c4a42]">
-          Oct 18, 2023
+      <div className="bg-card text-foreground p-3 rounded-lg shadow-xl text-sm border border-border">
+        <p className="font-bold mb-2 pb-2 border-b border-border">
+          {label}
         </p>
         <div className="flex justify-between gap-4 mb-1">
-          <span className="text-[#94a3b8] dark:text-[#64748b]">Recycling:</span>
+          <span className="text-muted-foreground">Recycling:</span>
           <span className="text-[#10b981] font-bold">{payload[0].value}%</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-[#94a3b8] dark:text-[#64748b]">Contam:</span>
+          <span className="text-muted-foreground">Contam:</span>
           <span className="text-[#fca5a5] font-bold">{payload[1].value}%</span>
         </div>
-      </div>
-    );
+      </div>);
   }
   return null;
 };
 
 function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
   return (
-    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
+    <div className="bg-card border border-border rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
       <div className="flex justify-between items-start mb-6">
         <div
           className={`w-10 h-10 rounded-lg flex items-center justify-center ${data.iconBg}`}
@@ -257,14 +189,14 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
         </div>
       </div>
       <div>
-        <h3 className="text-xs font-bold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase mb-1">
+        <h3 className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-1">
           {data.title}
         </h3>
-        <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
+        <p className="text-2xl font-bold text-foreground dark:text-white">
           {data.value}
         </p>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-[#f1f5f9] dark:bg-[#1a365d]">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-muted dark:bg-muted">
         <div
           className={`h-full ${data.progressColor}`}
           style={{ width: data.progressWidth }}
@@ -335,16 +267,34 @@ export default function Analytics() {
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchSummary = async () => {
-    const response = await fetch(`${baseUrl}/api/dashboard/summary`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/summary`);
     if (!response.ok) {
       throw new Error("Failed to fetch analytics summary");
     }
     return response.json();
   };
+  const { data: summary, isLoading: isLoadingSummary } = usePollingFetch<any>(fetchSummary, { intervalMs: 5000 });
 
-  const { data: summary, isLoading } = usePollingFetch<any>(fetchSummary, {
-    intervalMs: 5000,
-  });
+  const fetchHistorical = async () => {
+    const response = await authFetch(`${baseUrl}/api/analytics/historical`);
+    if (!response.ok) throw new Error("Failed to fetch historical data");
+    return response.json();
+  };
+  const { data: historicalData, isLoading: isLoadingHistorical } = usePollingFetch<any[]>(fetchHistorical, { intervalMs: 5000 });
+
+  const fetchTonnage = async () => {
+    const response = await authFetch(`${baseUrl}/api/analytics/tonnage`);
+    if (!response.ok) throw new Error("Failed to fetch tonnage data");
+    return response.json();
+  };
+  const { data: tonnageData, isLoading: isLoadingTonnage } = usePollingFetch<any[]>(fetchTonnage, { intervalMs: 5000 });
+
+  const fetchCategories = async () => {
+    const response = await authFetch(`${baseUrl}/api/analytics/categories`);
+    if (!response.ok) throw new Error("Failed to fetch categories data");
+    return response.json();
+  };
+  const { data: categoriesData, isLoading: isLoadingCategories } = usePollingFetch<any[]>(fetchCategories, { intervalMs: 5000 });
 
   const totalDevices = summary?.devices?.total ?? 0;
   const activeDevices = summary?.devices?.active ?? 0;
@@ -422,72 +372,72 @@ export default function Analytics() {
       description={t("analytics.description")}
       actions={
         <div className="flex gap-2">
-        <button 
-          onClick={handleExportPDF}
-          className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <button
+            onClick={handleExportPDF}
+            className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
           >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Export PDF
-        </button>
-        <div className="flex items-center gap-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg px-3 py-1 shadow-sm">
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
-          />
-          <span className="text-[#94a3b8] dark:text-[#64748b] text-sm font-semibold">
-            to
-          </span>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
-          />
-        </div>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Export PDF
+          </button>
+          <div className="flex items-center gap-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg px-3 py-1 shadow-sm">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
+            />
+            <span className="text-[#94a3b8] dark:text-[#64748b] text-sm font-semibold">
+              to
+            </span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
+            />
+          </div>
         </div>
       }
     >
       <div className="flex flex-col gap-6">
         {/* KPIs Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {isLoading
+          {isLoadingSummary
             ? Array.from({ length: 4 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-[150px]"
-                >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-[#1a365d]" />
-                    <div className="h-6 w-14 bg-slate-100 dark:bg-[#0f2942] rounded" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="h-3.5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded" />
-                    <div className="h-7 w-20 bg-slate-200 dark:bg-[#1a365d] rounded" />
-                  </div>
+              <div
+                key={idx}
+                className="bg-card border border-border rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-[150px]"
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-muted" />
+                  <div className="h-6 w-14 bg-slate-100 dark:bg-secondary rounded" />
                 </div>
-              ))
+                <div className="flex flex-col gap-2">
+                  <div className="h-3.5 w-24 bg-slate-100 dark:bg-secondary rounded" />
+                  <div className="h-7 w-20 bg-slate-200 dark:bg-muted rounded" />
+                </div>
+              </div>
+            ))
             : liveKpis.map((kpi, idx) => <KpiCard key={idx} data={kpi} />)}
         </div>
 
         {/* Middle Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Rate Comparison Over Time */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
+          <div className="bg-card border border-border rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
@@ -512,18 +462,18 @@ export default function Analytics() {
                 </div>
               </div>
             </div>
-            {isLoading ? (
-              <div className="flex-1 w-full bg-slate-50/50 dark:bg-[#0f2942]/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
+            {isLoadingHistorical ? (
+              <div className="flex-1 w-full bg-slate-50/50 dark:bg-secondary/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="h-10 w-40 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                  <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                  <div className="h-10 w-40 bg-slate-200 dark:bg-muted rounded"></div>
+                  <div className="h-4 w-28 bg-slate-100 dark:bg-secondary rounded"></div>
                 </div>
               </div>
             ) : (
               <div className="flex-1 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={CHART_DATA}
+                    data={historicalData ?? []}
                     margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
                     <CartesianGrid
@@ -582,31 +532,31 @@ export default function Analytics() {
               {t("analytics.tonnageTitle")}
             </h2>
 
-            {isLoading ? (
+            {isLoadingTonnage ? (
               <div className="flex flex-col gap-[18px] flex-1 animate-pulse">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex flex-col gap-2">
                     <div className="flex justify-between">
-                      <div className="h-4 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                      <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-32 bg-slate-200 dark:bg-muted rounded"></div>
+                      <div className="h-3 w-16 bg-slate-100 dark:bg-secondary rounded"></div>
                     </div>
-                    <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full"></div>
+                    <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full"></div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="flex flex-col gap-[18px] flex-1">
-                {TONNAGE_DATA.map((item, idx) => (
+                {(tonnageData ?? []).map((item, idx) => (
                   <div key={idx}>
                     <div className="flex justify-between items-end mb-1.5">
-                      <span className="text-[13px] font-bold text-[#0b1c30] dark:text-white">
+                      <span className="text-[13px] font-bold text-foreground dark:text-white">
                         {item.name}
                       </span>
-                      <span className="text-xs text-[#64748b] dark:text-[#cbd5e1]">
+                      <span className="text-xs text-muted-foreground">
                         {item.value}
                       </span>
                     </div>
-                    <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-2">
+                    <div className="w-full bg-muted dark:bg-muted rounded-full h-2">
                       <div
                         className={`h-full rounded-full ${item.color}`}
                         style={{ width: `${item.percent}%` }}
@@ -622,7 +572,7 @@ export default function Analytics() {
                 <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">
                   {t("analytics.captureRate")}
                 </p>
-                <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
+                <p className="text-2xl font-bold text-foreground dark:text-white">
                   92.4%
                 </p>
               </div>
@@ -630,7 +580,7 @@ export default function Analytics() {
                 <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">
                   {t("analytics.efficiency")}
                 </p>
-                <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
+                <p className="text-2xl font-bold text-foreground dark:text-white">
                   88.2%
                 </p>
               </div>
@@ -639,12 +589,12 @@ export default function Analytics() {
         </div>
 
         {/* Bottom Row - Category Breakdown */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
           <div className="p-5 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
             <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
               {t("analytics.categoryBreakdown")}
             </h2>
-            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors flex items-center gap-2 cursor-pointer">
+            <button className="bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary transition-colors flex items-center gap-2 cursor-pointer">
               <svg
                 width="14"
                 height="14"
@@ -734,138 +684,137 @@ export default function Analytics() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f1f5f9]">
-                {isLoading
+                {isLoadingCategories
                   ? Array.from({ length: 3 }).map((_, idx) => (
-                      <tr key={idx} className="animate-pulse">
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded bg-slate-200 dark:bg-[#1a365d]" />
-                            <div className="h-4 w-36 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                    <tr key={idx} className="animate-pulse">
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-slate-200 dark:bg-muted" />
+                          <div className="h-4 w-36 bg-slate-200 dark:bg-muted rounded"></div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="h-4 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="h-6 w-14 bg-slate-200 dark:bg-muted rounded-full"></div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3 w-32">
+                          <div className="w-full bg-slate-100 dark:bg-secondary rounded-full h-1.5" />
+                          <div className="h-4 w-8 bg-slate-200 dark:bg-muted rounded"></div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap text-right">
+                        <div className="w-6 h-6 bg-slate-100 dark:bg-secondary rounded ml-auto" />
+                      </td>
+                    </tr>
+                  ))
+                  : (categoriesData ?? []).map((row, idx) => (
+                    <tr
+                      key={idx}
+                      className="hover:bg-background dark:hover:bg-secondary transition-colors"
+                    >
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-muted dark:bg-muted flex items-center justify-center text-muted-foreground">
+                            <CategoryIcon type={row.icon} />
                           </div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="h-6 w-14 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="flex items-center gap-3 w-32">
-                            <div className="w-full bg-slate-100 dark:bg-[#0f2942] rounded-full h-1.5" />
-                            <div className="h-4 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap text-right">
-                          <div className="w-6 h-6 bg-slate-100 dark:bg-[#0f2942] rounded ml-auto" />
-                        </td>
-                      </tr>
-                    ))
-                  : CATEGORY_DATA.map((row, idx) => (
-                      <tr
-                        key={idx}
-                        className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
-                      >
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1]">
-                              <CategoryIcon type={row.icon} />
-                            </div>
-                            <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
-                              {row.name}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
-                            {row.volume}
+                          <span className="text-sm font-bold text-foreground dark:text-white">
+                            {row.name}
                           </span>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div
-                            className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold
-                          ${
-                            row.growthTrend === "up"
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <span className="text-sm text-muted-foreground">
+                          {row.volume}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold
+                          ${row.growthTrend === "up"
                               ? "bg-[#bbf7d0]/50 text-[#006c49]"
                               : row.growthTrend === "down"
                                 ? "bg-[#ffdad6] text-[#ba1a1a]"
-                                : "bg-[#f1f5f9] dark:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8]"
-                          }
+                                : "bg-muted dark:bg-muted text-muted-foreground"
+                            }
                         `}
-                          >
-                            {row.growthTrend === "up" && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                              >
-                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                <polyline points="17 6 23 6 23 12"></polyline>
-                              </svg>
-                            )}
-                            {row.growthTrend === "down" && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                              >
-                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                                <polyline points="17 18 23 18 23 12"></polyline>
-                              </svg>
-                            )}
-                            {row.growthTrend === "neutral" && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                              >
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                              </svg>
-                            )}
-                            {row.growth}
-                          </div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="flex items-center gap-3 w-32">
-                            <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-1.5 overflow-hidden">
-                              <div
-                                className={`h-full rounded-full ${row.goalColor}`}
-                                style={{ width: `${row.goal}%` }}
-                              />
-                            </div>
-                            <span className="text-sm font-bold text-[#334155] dark:text-[#cbd5e1]">
-                              {row.goal}%
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5 whitespace-nowrap text-right">
-                          <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors p-1 cursor-pointer">
+                        >
+                          {row.growthTrend === "up" && (
                             <svg
-                              width="18"
-                              height="18"
+                              width="10"
+                              height="10"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                              strokeWidth="3"
                             >
-                              <circle cx="12" cy="12" r="1"></circle>
-                              <circle cx="12" cy="5" r="1"></circle>
-                              <circle cx="12" cy="19" r="1"></circle>
+                              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                              <polyline points="17 6 23 6 23 12"></polyline>
                             </svg>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                          )}
+                          {row.growthTrend === "down" && (
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                            >
+                              <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                              <polyline points="17 18 23 18 23 12"></polyline>
+                            </svg>
+                          )}
+                          {row.growthTrend === "neutral" && (
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                            >
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                          )}
+                          {row.growth}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <div className="flex items-center gap-3 w-32">
+                          <div className="w-full bg-muted dark:bg-muted rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${row.goalColor}`}
+                              style={{ width: `${row.goal}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-bold text-[#334155] dark:text-muted-foreground">
+                            {row.goal}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 whitespace-nowrap text-right">
+                        <button className="text-muted-foreground hover:text-foreground dark:text-white transition-colors p-1 cursor-pointer">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

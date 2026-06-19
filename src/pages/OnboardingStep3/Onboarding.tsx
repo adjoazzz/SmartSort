@@ -166,12 +166,12 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8f9ff] to-[#f0faf5] dark:from-[#08121e] dark:to-[#050b12]">
       {/* Header */}
-      <header className="h-16 bg-white dark:bg-[#0b1c30] border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
-        <span className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+      <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
+        <span className="text-lg font-semibold text-foreground dark:text-white">
           Smart<span className="text-[#006c49]">Sort</span>
         </span>
         <div className="flex gap-2">
-          <button className="px-3 py-1.5 text-sm text-[#515f74] dark:text-[#cbd5e1] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors">
+          <button className="px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors">
             Help
           </button>
         </div>
@@ -182,7 +182,7 @@ export default function Onboarding() {
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* Left — Visual Info */}
-          <div className="flex flex-col gap-8 bg-[#eff4ff] dark:bg-[#071321] border border-[#bbcabf] dark:border-[#1e3a5f] p-10 rounded-2xl relative overflow-hidden shadow-sm h-full flex items-center justify-center">
+          <div className="flex flex-col gap-8 bg-[#eff4ff] dark:bg-background border border-[#bbcabf] dark:border-border p-10 rounded-2xl relative overflow-hidden shadow-sm h-full flex items-center justify-center">
             {/* The background green glow effect from the original */}
             <div className="absolute w-64 h-64 bg-[#10b981] rounded-full blur-[80px] opacity-20" />
             
@@ -293,14 +293,14 @@ export default function Onboarding() {
 
               {/* Instructional text */}
               <div className="text-center flex flex-col items-center gap-1.5">
-                <p className="text-sm font-semibold text-[#0b1c30] dark:text-white">
+                <p className="text-sm font-semibold text-foreground dark:text-white">
                   {cameraState === "success" 
                     ? "Device Synced Successfully" 
                     : cameraState === "permission_denied" 
                     ? "Manual Entry Ready" 
                     : "Scan QR Code on Device"}
                 </p>
-                <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] max-w-[200px] leading-relaxed">
+                <p className="text-xs text-muted-foreground max-w-[200px] leading-relaxed">
                   {cameraState === "success"
                     ? "Serial code populated. Press 'Register & Finish' to activate."
                     : cameraState === "permission_denied"
@@ -357,11 +357,11 @@ export default function Onboarding() {
           </div>
 
           {/* Right — Form */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
+          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] tracking-widest uppercase mb-1">STEP 3 OF 3</h2>
-                <h3 className="text-2xl font-semibold text-[#0b1c30] dark:text-white">Connect First Device</h3>
+                <h2 className="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-1">STEP 3 OF 3</h2>
+                <h3 className="text-2xl font-semibold text-foreground dark:text-white">Connect First Device</h3>
               </div>
               <div className="flex flex-col items-end gap-1 hidden sm:flex">
                 <span className="text-sm font-semibold text-[#006c49] dark:text-emerald-400">Configuration</span>
@@ -373,7 +373,7 @@ export default function Onboarding() {
               </div>
             </div>
 
-            <p className="text-[#515f74] dark:text-[#cbd5e1] text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Enter the unique 12-digit serial number located on the side panel of your SmartSort unit to activate its analytics core.
             </p>
 
@@ -385,8 +385,8 @@ export default function Onboarding() {
                 value={serial}
                 onChange={setSerial}
               />
-              <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-[#515f74] dark:text-[#cbd5e1]">
+              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-muted-foreground">
                   <path d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zM7 4v4M7 10.5v-.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 Serial numbers start with 'SS' followed by 12 characters.
@@ -394,16 +394,16 @@ export default function Onboarding() {
             </div>
 
             {/* Contextual Facility Switcher */}
-            <div className="bg-[#eff4ff] dark:bg-[#071321] border border-[#bbcabf] dark:border-[#1e3a5f] rounded-lg p-4 flex items-center justify-between mt-2">
+            <div className="bg-[#eff4ff] dark:bg-background border border-[#bbcabf] dark:border-border rounded-lg p-4 flex items-center justify-between mt-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white dark:bg-[#0b1c30] border border-[#bbcabf] dark:border-[#1e3a5f] rounded-md flex items-center justify-center text-[#006c49] dark:text-emerald-400">
+                <div className="w-10 h-10 bg-card border border-[#bbcabf] dark:border-border rounded-md flex items-center justify-center text-[#006c49] dark:text-emerald-400">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-[#0b1c30] dark:text-white">Default Facility</span>
-                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">North Logistics Hub</span>
+                  <span className="text-xs font-semibold text-foreground dark:text-white">Default Facility</span>
+                  <span className="text-sm text-muted-foreground">North Logistics Hub</span>
                 </div>
               </div>
               <button className="text-sm font-semibold text-[#006c49] dark:text-emerald-400 hover:underline dark:hover:text-emerald-300">
@@ -424,19 +424,19 @@ export default function Onboarding() {
               
               <button 
                 onClick={() => navigate("/dashboard")}
-                className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:text-white transition-colors text-center"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground dark:text-white transition-colors text-center"
               >
                 Skip for Now
               </button>
             </div>
 
-            <div className="mt-4 border border-[#bbcabf]/50 dark:border-[#1e3a5f] bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg p-4 flex items-start gap-3">
+            <div className="mt-4 border border-[#bbcabf]/50 dark:border-border bg-background dark:bg-secondary rounded-lg p-4 flex items-start gap-3">
               <svg className="w-5 h-5 text-[#23acf1] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
               <div>
-                <p className="text-sm font-semibold text-[#0b1c30] dark:text-white">Need help with installation?</p>
-                <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">Our technical team is available 24/7 for remote setup assistance.</p>
+                <p className="text-sm font-semibold text-foreground dark:text-white">Need help with installation?</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Our technical team is available 24/7 for remote setup assistance.</p>
               </div>
             </div>
 
@@ -445,14 +445,14 @@ export default function Onboarding() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#f8fafc] dark:bg-[#0f2942] border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <footer className="bg-background dark:bg-secondary border-t border-border px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold text-[#334155] dark:text-[#cbd5e1]">SmartSort Analytics</p>
-          <p className="text-xs text-[#64748b] dark:text-[#cbd5e1]">© 2026 SmartSort Analytics. Professional waste stewardship.</p>
+          <p className="text-xs font-semibold text-[#334155] dark:text-muted-foreground">SmartSort Analytics</p>
+          <p className="text-xs text-muted-foreground">© 2026 SmartSort Analytics. Professional waste stewardship.</p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-1">
           {["Privacy policy", "Terms of service", "Environmental compliance", "Support"].map((l) => (
-            <a key={l} href="#" className="text-xs text-[#64748b] dark:text-slate-400 hover:text-[#006c49] dark:hover:text-emerald-400 transition-colors">
+            <a key={l} href="#" className="text-xs text-muted-foreground dark:text-slate-400 hover:text-[#006c49] dark:hover:text-emerald-400 transition-colors">
               {l}
             </a>
           ))}

@@ -103,21 +103,21 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
     <>
       {/* Overlay backdrop */}
       <div 
-        className={`fixed inset-0 bg-[#0b1c30]/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-card/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
       
       {/* Sliding sidebar */}
       <div 
-        className={`fixed top-0 left-0 bottom-0 w-64 bg-white dark:bg-[#0b1c30] border-r border-[#e2e8f0] dark:border-[#1e3a5f] shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 left-0 bottom-0 w-64 bg-card border-r border-border shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className="h-16 border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-6 shrink-0">
+        <div className="h-16 border-b border-border flex items-center justify-between px-6 shrink-0">
           <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
             Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
           </span>
           <button 
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -141,11 +141,11 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                     className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group w-full ${
                       isActive 
                         ? 'bg-[#006c49]/10 text-[#006c49] dark:bg-emerald-500/10 dark:text-emerald-400 font-bold' 
-                        : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] hover:text-[#0b1c30] dark:hover:text-white font-semibold'
+                        : 'text-muted-foreground hover:bg-background dark:hover:bg-secondary hover:text-foreground dark:hover:text-white font-semibold'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`${isActive ? 'text-[#006c49] dark:text-emerald-400' : 'text-[#94a3b8] dark:text-[#cbd5e1] group-hover:text-[#515f74] dark:group-hover:text-white'}`}>
+                      <div className={`${isActive ? 'text-[#006c49] dark:text-emerald-400' : 'text-muted-foreground group-hover:text-muted-foreground dark:group-hover:text-white'}`}>
                         {item.icon}
                       </div>
                       {item.label}
@@ -164,10 +164,10 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                       isActive 
                         ? 'bg-[#006c49]/10 text-[#006c49] dark:bg-emerald-500/10 dark:text-emerald-400 font-bold' 
-                        : 'text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] hover:text-[#0b1c30] dark:hover:text-white font-semibold'
+                        : 'text-muted-foreground hover:bg-background dark:hover:bg-secondary hover:text-foreground dark:hover:text-white font-semibold'
                     }`}
                   >
-                    <div className={`${isActive ? 'text-[#006c49] dark:text-emerald-400' : 'text-[#94a3b8] dark:text-[#cbd5e1] group-hover:text-[#515f74] dark:group-hover:text-white'}`}>
+                    <div className={`${isActive ? 'text-[#006c49] dark:text-emerald-400' : 'text-muted-foreground group-hover:text-muted-foreground dark:group-hover:text-white'}`}>
                       {item.icon}
                     </div>
                     {item.label}
@@ -186,7 +186,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                           className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
                             isChildItemActive 
                               ? 'text-[#006c49] dark:text-emerald-400 font-bold bg-[#006c49]/5 dark:bg-emerald-500/5' 
-                              : 'text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:hover:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] font-medium'
+                              : 'text-muted-foreground hover:text-foreground dark:hover:text-white hover:bg-background dark:hover:bg-secondary font-medium'
                           }`}
                         >
                           {child.label}
@@ -200,7 +200,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
           })}
         </nav>
 
-        <div className="p-4 border-t border-[#e2e8f0] dark:border-[#1e3a5f]">
+        <div className="p-4 border-t border-border">
           <button
             onClick={() => {
               localStorage.removeItem("userRole");

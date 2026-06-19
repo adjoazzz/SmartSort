@@ -1,3 +1,4 @@
+import { authFetch } from "../../lib/authFetch";
 import React, { useState } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -23,10 +24,12 @@ export default function Collectors() {
     null,
   );
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const limit = 10;
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchCollectors = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/collectors`);
+    const response = await authFetch(`${API_BASE_URL}/api/collectors?page=${page}&limit=${limit}`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch collectors");
@@ -36,10 +39,10 @@ export default function Collectors() {
   };
 
   const {
-    data: collectors,
+    data: collectorsResponse,
     isLoading,
     refresh,
-  } = usePollingFetch<Collector[]>(fetchCollectors, {
+  } = usePollingFetch<any>(fetchCollectors, {
     intervalMs: 5000,
   });
 
@@ -52,6 +55,10 @@ export default function Collectors() {
       collector.status.toLowerCase().includes(term)
     );
   });
+
+  const collectors = collectorsResponse?.data || [];
+  const totalCount = collectorsResponse?.totalCount || 0;
+  const totalPages = collectorsResponse?.totalPages || 1;
 
   return (
     <PageLayout
@@ -66,9 +73,9 @@ export default function Collectors() {
         </button>
       }
     >
-      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#f8fafc] dark:bg-[#0f2942] gap-4">
-          <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex flex-col sm:flex-row justify-between items-start sm:items-center bg-background dark:bg-secondary gap-4">
+          <h2 className="text-lg font-semibold text-foreground dark:text-white">
             Registered Personnel
           </h2>
           <div className="flex items-center w-full sm:w-auto min-w-[250px] bg-white dark:bg-[#0b1c30] rounded-lg border border-black dark:border-[#1e3a5f] focus-within:border-black dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-3.5 py-2">
@@ -99,23 +106,23 @@ export default function Collectors() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[700px]">
             <thead>
-              <tr className="bg-white dark:bg-[#0b1c30] border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+              <tr className="bg-card border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                <th className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   ID
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Region
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Rating
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider text-right">
+                <th className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">
                   Actions
                 </th>
               </tr>
@@ -125,22 +132,22 @@ export default function Collectors() {
                 Array.from({ length: 5 }).map((_, index) => (
                   <tr key={index} className="animate-pulse">
                     <td className="px-6 py-4">
-                      <div className="h-4 w-24 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                      <div className="h-4 w-24 bg-slate-200 dark:bg-muted rounded" />
                     </td>
                     <td className="px-6 py-4">
-                      <div className="h-4 w-32 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                      <div className="h-4 w-32 bg-slate-200 dark:bg-muted rounded" />
                     </td>
                     <td className="px-6 py-4">
-                      <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                      <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded" />
                     </td>
                     <td className="px-6 py-4">
-                      <div className="h-4 w-16 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                      <div className="h-4 w-16 bg-slate-200 dark:bg-muted rounded" />
                     </td>
                     <td className="px-6 py-4">
-                      <div className="h-6 w-20 bg-slate-200 dark:bg-[#1a365d] rounded-full" />
+                      <div className="h-6 w-20 bg-slate-200 dark:bg-muted rounded-full" />
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded ml-auto" />
+                      <div className="h-4 w-20 bg-slate-200 dark:bg-muted rounded ml-auto" />
                     </td>
                   </tr>
                 ))
@@ -148,7 +155,7 @@ export default function Collectors() {
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-6 py-12 text-center text-sm text-[#94a3b8] dark:text-[#64748b]"
+                    className="px-6 py-12 text-center text-sm text-muted-foreground"
                   >
                     No collectors found.
                   </td>
@@ -157,15 +164,15 @@ export default function Collectors() {
                 filteredCollectors.map((collector) => (
                   <tr
                     key={collector.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+                    className="hover:bg-background dark:hover:bg-secondary transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-muted-foreground">
                       {collector.id}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
                       {collector.name}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {collector.region}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#006c49]">
@@ -196,6 +203,31 @@ export default function Collectors() {
               )}
             </tbody>
           </table>
+
+          <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-card">
+            <span className="text-sm text-muted-foreground">
+              Showing {collectors.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} collectors
+            </span>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setPage(Math.max(1, page - 1))}
+                disabled={page === 1}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+
+              <button
+                onClick={() => setPage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages || totalPages === 0}
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

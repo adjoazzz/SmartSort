@@ -62,9 +62,9 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
   useEffect(() => {
     if (openCommand) {
       const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
-      fetch(`${baseUrl}/api/devices`).then(r => r.json()).then(setDevices).catch(() => {});
-      fetch(`${baseUrl}/api/collectors`).then(r => r.json()).then(setCollectors).catch(() => {});
-      fetch(`${baseUrl}/api/jobs`).then(r => r.json()).then(setJobs).catch(() => {});
+      fetch(`${baseUrl}/api/devices`).then(r => r.json()).then(setDevices).catch(() => { });
+      fetch(`${baseUrl}/api/collectors`).then(r => r.json()).then(setCollectors).catch(() => { });
+      fetch(`${baseUrl}/api/jobs`).then(r => r.json()).then(setJobs).catch(() => { });
     }
   }, [openCommand]);
 
@@ -98,11 +98,11 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
   return (
     <>
-      <header className="h-16 bg-white dark:bg-[#0b1c30] border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between px-6 flex-shrink-0 sticky top-0 z-50 shadow-sm">
+      <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 flex-shrink-0 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-4 w-full max-w-lg">
-          <button 
+          <button
             onClick={() => setIsNavOpen(true)}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] hover:text-[#0b1c30] dark:text-white transition-colors"
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted dark:hover:bg-muted hover:text-foreground dark:text-white transition-colors"
             aria-label="Open Menu"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -113,23 +113,23 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           </button>
 
           {isDashboard && (
-            <div 
+            <div
               onClick={() => setOpenCommand(true)}
               className="flex items-center w-full bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl border border-transparent hover:border-[#cbd5e1] dark:hover:border-[#334155] hover:bg-white dark:hover:bg-[#0b1c30] hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer"
             >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <div className="flex-1 text-sm font-medium text-[#94a3b8] flex justify-between items-center">
-              <span>{t("headerNav.searchPlaceholder") || "Search or jump to..."}</span>
-              <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-[#cbd5e1] dark:border-[#1e3a5f] bg-[#f1f5f9] dark:bg-[#1a365d] px-1.5 font-mono text-[10px] font-medium text-[#64748b] dark:text-[#94a3b8]">
-                <span className="text-xs">⌘</span>K
-              </kbd>
-            </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <div className="flex-1 text-sm font-medium text-[#94a3b8] flex justify-between items-center">
+                <span>{t("headerNav.searchPlaceholder") || "Search or jump to..."}</span>
+                <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-[#cbd5e1] dark:border-[#1e3a5f] bg-[#f1f5f9] dark:bg-[#1a365d] px-1.5 font-mono text-[10px] font-medium text-[#64748b] dark:text-[#94a3b8]">
+                  <span className="text-xs">⌘</span>K
+                </kbd>
+              </div>
             </div>
           )}
-          
+
           <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
             <CommandInput placeholder="Type a command or search pages..." />
             <CommandList>
@@ -160,7 +160,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                   User Management
                 </CommandItem>
               </CommandGroup>
-              
+
               {devices.length > 0 && (
                 <CommandGroup heading="Devices">
                   {devices.map(d => (
@@ -191,7 +191,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                 <CommandGroup heading="Jobs">
                   {jobs.map(j => (
                     <CommandItem key={`job-${j.id}`} onSelect={() => runCommand(() => navigate("/jobs"))}>
-                       <div className="flex flex-col">
+                      <div className="flex flex-col">
                         <span>Job at {j.location}</span>
                         <span className="text-xs text-muted-foreground">{j.urgency} • {j.status}</span>
                       </div>
@@ -222,9 +222,9 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
         <div className="flex items-center gap-6">
           {!hideAlertsIcon && (
-            <button 
+            <button
               onClick={() => setIsAlertsOpen(true)}
-            className="text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white transition-colors relative"
+              className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors relative"
               aria-label="Open alerts"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -237,9 +237,9 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
           {/* Settings Menu */}
           <div className="relative" ref={settingsRef}>
-            <button 
+            <button
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className={`text-[#64748b] dark:text-[#cbd5e1] transition-colors ${isSettingsOpen ? 'text-[#0b1c30] dark:text-white' : 'hover:text-[#0b1c30] dark:hover:text-white'}`}
+              className={`text-muted-foreground transition-colors ${isSettingsOpen ? 'text-foreground dark:text-white' : 'hover:text-foreground dark:hover:text-white'}`}
               aria-label="Settings"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -247,18 +247,18 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
               </svg>
             </button>
-            
+
             {isSettingsOpen && (
-              <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-lg z-50 flex flex-col py-1 animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-card border border-border rounded-xl shadow-lg z-50 flex flex-col py-1 animate-in fade-in zoom-in-95 duration-100">
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
                   <h4 className="text-sm font-semibold text-[#0b1c30] dark:text-white">{t("headerNav.settings")}</h4>
                 </div>
-                
+
                 {/* Language */}
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
                   <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">{t("headerNav.language")}</label>
                   <div className="relative">
-                    <select 
+                    <select
                       className="w-full text-sm font-medium bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] text-[#0b1c30] dark:text-white appearance-none cursor-pointer"
                       value={i18n.language || 'en'}
                       onChange={(e) => i18n.changeLanguage(e.target.value)}
@@ -267,7 +267,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                       <option value="es">Español</option>
                       <option value="fr">Français</option>
                     </select>
-                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#515f74] dark:text-[#cbd5e1]">
+                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                       </svg>
@@ -279,19 +279,19 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
                   <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">{t("headerNav.theme")}</label>
                   <div className="flex bg-[#f8fafc] dark:bg-[#0f2942] p-1 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f]">
-                    <button 
+                    <button
                       onClick={() => setThemeMode('light')}
-                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'light' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
+                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'light' ? 'bg-card shadow-sm text-foreground dark:text-white border border-border' : 'text-muted-foreground hover:text-foreground dark:hover:text-white'}`}
                     >
                       {t("headerNav.light")}
                     </button>
-                    <button 
+                    <button
                       onClick={() => setThemeMode('dark')}
-                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'dark' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
+                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'dark' ? 'bg-card shadow-sm text-foreground dark:text-white border border-border' : 'text-muted-foreground hover:text-foreground dark:hover:text-white'}`}
                     >
                       {t("headerNav.dark")}
                     </button>
-                    <button 
+                    <button
                       onClick={() => setThemeMode('system')}
                       className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'system' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
                     >
@@ -311,14 +311,12 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                     </span>
                     <button
                       onClick={() => handleEmailNotifyToggle(!isEmailNotifyEnabled)}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        isEmailNotifyEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
-                      }`}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isEmailNotifyEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                        }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          isEmailNotifyEnabled ? "translate-x-4" : "translate-x-0"
-                        }`}
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isEmailNotifyEnabled ? "translate-x-4" : "translate-x-0"
+                          }`}
                       />
                     </button>
                   </div>
@@ -335,14 +333,12 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                     </span>
                     <button
                       onClick={() => handleSSOToggle(!isSSOEnabled)}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        isSSOEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
-                      }`}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isSSOEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                        }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          isSSOEnabled ? "translate-x-4" : "translate-x-0"
-                        }`}
+                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isSSOEnabled ? "translate-x-4" : "translate-x-0"
+                          }`}
                       />
                     </button>
                   </div>

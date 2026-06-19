@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,71 +6,98 @@ datasource db {
   provider = "postgresql"
 }
 
-// The Smart Bin Device
 model Device {
   id             String          @id @default(uuid())
-  customBinId    String          @unique // e.g., "BIN_001"
+  customBinId    String          @unique
   location       String
   fillLevel      Int             @default(0)
   status         String          @default("Active") // Active, Offline, Maintenance
   lastSortedItem String?         
   updatedAt      DateTime        @updatedAt
   createdAt      DateTime        @default(now())
-
-  // Relationships
   collectionJobs CollectionJob[]
+  processedItems ProcessedItem[]
+  deviceEvents   DeviceEvent[]
 }
 
-// Collection Jobs for the Collectors
 model CollectionJob {
   id          String   @id @default(uuid())
   status      String   @default("Pending") // Pending, In Progress, Completed
   priority    String   @default("Normal")  // Normal, High, Urgent
+  wasteType   String   @default("MIXED")
   createdAt   DateTime @default(now())
 
   // Connecting the job to a specific device
   device      Device   @relation(fields: [deviceId], references: [id])
   deviceId    String
 
-  // Eventually, you will connect this to a User (Collector)
+  // Connecting this to a User (Collector)
   collectorId String?  
+  collector   User?    @relation(fields: [collectorId], references: [id])
 }
 
-// Collectors who handle collection routes
-model Collector {
-  id          String   @id @default(uuid())
-  collectorId String   @unique
-  name        String
-  region      String
-  status      String   @default("Active")
-  rating      Float    @default(0)
-  email       String?  @unique
-  joinedAt    DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-// Admin and operational users
-model PlatformUser {
+// Unified User model for both Managers and Collectors
+model User {
   id               String   @id @default(uuid())
-  userId           String   @unique
-  name             String
+  authId           String?  @unique // Supabase auth.users.id
   email            String   @unique
-  role             String
+  name             String
+  role             String   // e.g. "MANAGER", "COLLECTOR"
   status           String   @default("ACTIVE")
-  assignedFacility String
   avatar           String?
+  assignedFacility String?
+  region           String?
+  rating           Float?   @default(0)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  collectionJobs CollectionJob[] // For collectors
 }
 
-// Community Feedback
 model Feedback {
   id        String   @id @default(uuid())
-  userName  String
-  location  String
   message   String
-  category  String   // e.g., "Missed Pickup", "Damaged Bin"
-  status    String   @default("Pending") // Pending, In Progress, Resolved
+  category  String
   createdAt DateTime @default(now())
+}
+
+// Telemetry of sorted and rejected items
+model ProcessedItem {
+  id              String   @id @default(uuid())
+  deviceId        String
+  category        String   // Plastic, Paper, Metal, Glass, Organic, Other
+  status          String   // Sorted, Rejected
+  rejectionReason String?  // BIOHAZARD, MEDICAL_WASTE, E_WASTE, BATTERY_LITHIUM
+  confidence      Float
+  imageUrl        String?
+  actionTaken     String
+  createdAt       DateTime @default(now())
+
+  device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+// System notifications and alerts
+model Alert {
+  id          String   @id @default(uuid())
+  deviceId    String
+  severity    String   // CRITICAL, WARNING, INFO
+  title       String
+  description String
+  status      String   @default("Active") // Active, Read, Resolved
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+// System, maintenance, and operational events
+model DeviceEvent {
+  id          String   @id @default(uuid())
+  deviceId    String
+  eventType   String   // e.g., "POWER CYCLE", "NETWORK SYNC", "SENSOR UPDATE", "MAINTENANCE"
+  description String
+  severity    String   @default("INFO") // INFO, WARNING, CRITICAL
+  createdAt   DateTime @default(now())
+
+  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
