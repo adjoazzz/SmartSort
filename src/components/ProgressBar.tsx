@@ -16,10 +16,10 @@ export function ProgressBar({
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="flex justify-between items-center text-sm font-medium">
-        <span className="text-[#0b1c30] dark:text-white">{label}</span>
-        <span className="text-[#515f74] dark:text-[#cbd5e1]">{valueLabel || `${value}%`}</span>
+        <span className="text-foreground dark:text-white">{label}</span>
+        <span className="text-muted-foreground">{valueLabel || `${value}%`}</span>
       </div>
-      <div className="w-full h-2 bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-muted dark:bg-muted rounded-full overflow-hidden">
         <div 
           className={`h-full rounded-full ${colorClass} transition-all duration-500 ease-in-out`} 
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}

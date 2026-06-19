@@ -11,16 +11,16 @@ export interface PageLayoutProps {
 
 export function PageLayout({ title, description, actions, children, hideAlertsIcon }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#f1f5f9] dark:bg-[#1a365d] flex flex-col font-sans">
+    <div className="min-h-screen bg-muted dark:bg-muted flex flex-col font-sans">
       <HeaderNav hideAlertsIcon={hideAlertsIcon} />
 
       <main className="flex-1 p-6 flex flex-col gap-6 max-w-[1920px] mx-auto w-full">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold text-[#0b1c30] dark:text-white">{title}</h1>
+            <h1 className="text-2xl font-semibold text-foreground dark:text-white">{title}</h1>
             {description && (
-              <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-1">{description}</p>
+              <p className="text-sm text-muted-foreground mt-1">{description}</p>
             )}
           </div>
           

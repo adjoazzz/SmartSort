@@ -56,7 +56,7 @@ const KPI_DATA = [
         />
       </svg>
     ),
-    iconBg: "bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]",
+    iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#10b981]",
     progressWidth: "74%",
     trendColors: "bg-[#bbf7d0]/50 text-[#006c49]",
@@ -108,7 +108,7 @@ const KPI_DATA = [
         <path d="M16 10a4 4 0 0 1-8 0"></path>
       </svg>
     ),
-    iconBg: "bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]",
+    iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#3b82f6]",
     progressWidth: "75%",
     trendColors: "bg-[#dbeafe] text-[#2563eb]",
@@ -119,11 +119,11 @@ const KPI_DATA = [
     trend: "15.0%",
     trendDirection: "up",
     icon: (
-      <span className="text-xs font-bold text-[#64748b] dark:text-[#cbd5e1]">
+      <span className="text-xs font-bold text-muted-foreground">
         CO<sub className="text-[8px]">2</sub>
       </span>
     ),
-    iconBg: "bg-transparent border border-[#e2e8f0] dark:border-[#1e3a5f]",
+    iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#334155]",
     progressWidth: "40%",
     trendColors: "bg-[#bbf7d0]/50 text-[#006c49]",
@@ -133,27 +133,26 @@ const KPI_DATA = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#0b1c30] text-white p-3 rounded-lg shadow-xl text-sm border border-[#213145]">
-        <p className="font-bold mb-2 pb-2 border-b border-[#3c4a42]">
-          Oct 18, 2023
+      <div className="bg-card text-foreground p-3 rounded-lg shadow-xl text-sm border border-border">
+        <p className="font-bold mb-2 pb-2 border-b border-border">
+          {label}
         </p>
         <div className="flex justify-between gap-4 mb-1">
-          <span className="text-[#94a3b8] dark:text-[#64748b]">Recycling:</span>
+          <span className="text-muted-foreground">Recycling:</span>
           <span className="text-[#10b981] font-bold">{payload[0].value}%</span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-[#94a3b8] dark:text-[#64748b]">Contam:</span>
+          <span className="text-muted-foreground">Contam:</span>
           <span className="text-[#fca5a5] font-bold">{payload[1].value}%</span>
         </div>
-      </div>
-    );
+      </div>    );
   }
   return null;
 };
 
 function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
   return (
-    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
+    <div className="bg-card border border-border rounded-xl p-5 shadow-sm relative overflow-hidden flex flex-col justify-between">
       <div className="flex justify-between items-start mb-6">
         <div
           className={`w-10 h-10 rounded-lg flex items-center justify-center ${data.iconBg}`}
@@ -187,14 +186,14 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
         </div>
       </div>
       <div>
-        <h3 className="text-xs font-bold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase mb-1">
+        <h3 className="text-xs font-bold text-muted-foreground tracking-wider uppercase mb-1">
           {data.title}
         </h3>
-        <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
+        <p className="text-2xl font-bold text-foreground dark:text-white">
           {data.value}
         </p>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-[#f1f5f9] dark:bg-[#1a365d]">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-muted dark:bg-muted">
         <div
           className={`h-full ${data.progressColor}`}
           style={{ width: data.progressWidth }}
@@ -339,7 +338,7 @@ export default function Analytics() {
       title="Waste Intelligence Analytics"
       description="Real-time performance metrics across your facility network."
       actions={
-        <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#0b1c30] dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
+        <button className="bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
           <svg
             width="16"
             height="16"
@@ -374,15 +373,15 @@ export default function Analytics() {
             ? Array.from({ length: 4 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-[150px]"
+                  className="bg-card border border-border rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-[150px]"
                 >
                   <div className="flex justify-between items-start mb-6">
-                    <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-[#1a365d]" />
-                    <div className="h-6 w-14 bg-slate-100 dark:bg-[#0f2942] rounded" />
+                    <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-muted" />
+                    <div className="h-6 w-14 bg-slate-100 dark:bg-secondary rounded" />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <div className="h-3.5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded" />
-                    <div className="h-7 w-20 bg-slate-200 dark:bg-[#1a365d] rounded" />
+                    <div className="h-3.5 w-24 bg-slate-100 dark:bg-secondary rounded" />
+                    <div className="h-7 w-20 bg-slate-200 dark:bg-muted rounded" />
                   </div>
                 </div>
               ))
@@ -392,36 +391,36 @@ export default function Analytics() {
         {/* Middle Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Rate Comparison Over Time */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
+          <div className="bg-card border border-border rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                <h2 className="text-lg font-bold text-foreground dark:text-white">
                   Rate Comparison Over Time
                 </h2>
-                <p className="text-sm text-[#64748b] dark:text-[#cbd5e1] mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Recycling performance vs. contamination threshold
                 </p>
               </div>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></div>
-                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1] font-medium">
+                  <span className="text-sm text-muted-foreground font-medium">
                     Recycling
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#fca5a5]"></div>
-                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1] font-medium">
+                  <span className="text-sm text-muted-foreground font-medium">
                     Contamination
                   </span>
                 </div>
               </div>
             </div>
             {isLoadingHistorical ? (
-              <div className="flex-1 w-full bg-slate-50/50 dark:bg-[#0f2942]/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
+              <div className="flex-1 w-full bg-slate-50/50 dark:bg-secondary/10 rounded-lg flex items-center justify-center animate-pulse border border-dashed border-slate-200 dark:border-slate-800">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="h-10 w-40 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                  <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                  <div className="h-10 w-40 bg-slate-200 dark:bg-muted rounded"></div>
+                  <div className="h-4 w-28 bg-slate-100 dark:bg-secondary rounded"></div>
                 </div>
               </div>
             ) : (
@@ -482,8 +481,8 @@ export default function Analytics() {
           </div>
 
           {/* Tonnage by Material */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[400px]">
-            <h2 className="text-[17px] font-bold text-[#0b1c30] dark:text-white mb-5">
+          <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col h-[400px]">
+            <h2 className="text-[17px] font-bold text-foreground dark:text-white mb-5">
               Tonnage by Material
             </h2>
 
@@ -492,10 +491,10 @@ export default function Analytics() {
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex flex-col gap-2">
                     <div className="flex justify-between">
-                      <div className="h-4 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                      <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-32 bg-slate-200 dark:bg-muted rounded"></div>
+                      <div className="h-3 w-16 bg-slate-100 dark:bg-secondary rounded"></div>
                     </div>
-                    <div className="h-2 bg-slate-100 dark:bg-[#0f2942] rounded-full w-full"></div>
+                    <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full"></div>
                   </div>
                 ))}
               </div>
@@ -504,14 +503,14 @@ export default function Analytics() {
                 {(tonnageData ?? []).map((item, idx) => (
                   <div key={idx}>
                     <div className="flex justify-between items-end mb-1.5">
-                      <span className="text-[13px] font-bold text-[#0b1c30] dark:text-white">
+                      <span className="text-[13px] font-bold text-foreground dark:text-white">
                         {item.name}
                       </span>
-                      <span className="text-xs text-[#64748b] dark:text-[#cbd5e1]">
+                      <span className="text-xs text-muted-foreground">
                         {item.value}
                       </span>
                     </div>
-                    <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-2">
+                    <div className="w-full bg-muted dark:bg-muted rounded-full h-2">
                       <div
                         className={`h-full rounded-full ${item.color}`}
                         style={{ width: `${item.percent}%` }}
@@ -524,18 +523,18 @@ export default function Analytics() {
 
             <div className="border-t border-[#f1f5f9] dark:border-[#0f2942] mt-auto pt-4 grid grid-cols-2 divide-x divide-[#f1f5f9]">
               <div className="pr-4">
-                <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">
+                <p className="text-xs text-muted-foreground font-semibold mb-1">
                   Capture Rate
                 </p>
-                <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
+                <p className="text-2xl font-bold text-foreground dark:text-white">
                   92.4%
                 </p>
               </div>
               <div className="pl-4 text-right">
-                <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">
+                <p className="text-xs text-muted-foreground font-semibold mb-1">
                   Efficiency
                 </p>
-                <p className="text-2xl font-bold text-[#0b1c30] dark:text-white">
+                <p className="text-2xl font-bold text-foreground dark:text-white">
                   88.2%
                 </p>
               </div>
@@ -544,12 +543,12 @@ export default function Analytics() {
         </div>
 
         {/* Bottom Row - Category Breakdown */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
           <div className="p-5 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
-            <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+            <h2 className="text-lg font-bold text-foreground dark:text-white">
               Category Breakdown
             </h2>
-            <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors flex items-center gap-2 cursor-pointer">
+            <button className="bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary transition-colors flex items-center gap-2 cursor-pointer">
               <svg
                 width="14"
                 height="14"
@@ -577,8 +576,8 @@ export default function Analytics() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white dark:bg-[#0b1c30] border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider flex items-center gap-1">
+                <tr className="bg-card border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider flex items-center gap-1">
                     MATERIAL CATEGORY{" "}
                     <svg
                       width="12"
@@ -591,7 +590,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     VOLUME (METRIC TONS){" "}
                     <svg
                       width="12"
@@ -605,7 +604,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     MOM GROWTH{" "}
                     <svg
                       width="12"
@@ -619,7 +618,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     TARGET GOAL{" "}
                     <svg
                       width="12"
@@ -633,7 +632,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider text-right">
                     ACTION
                   </th>
                 </tr>
@@ -644,44 +643,44 @@ export default function Analytics() {
                       <tr key={idx} className="animate-pulse">
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded bg-slate-200 dark:bg-[#1a365d]" />
-                            <div className="h-4 w-36 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                            <div className="w-8 h-8 rounded bg-slate-200 dark:bg-muted" />
+                            <div className="h-4 w-36 bg-slate-200 dark:bg-muted rounded"></div>
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                          <div className="h-4 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="h-6 w-14 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                          <div className="h-6 w-14 bg-slate-200 dark:bg-muted rounded-full"></div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="flex items-center gap-3 w-32">
-                            <div className="w-full bg-slate-100 dark:bg-[#0f2942] rounded-full h-1.5" />
-                            <div className="h-4 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                            <div className="w-full bg-slate-100 dark:bg-secondary rounded-full h-1.5" />
+                            <div className="h-4 w-8 bg-slate-200 dark:bg-muted rounded"></div>
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-right">
-                          <div className="w-6 h-6 bg-slate-100 dark:bg-[#0f2942] rounded ml-auto" />
+                          <div className="w-6 h-6 bg-slate-100 dark:bg-secondary rounded ml-auto" />
                         </td>
                       </tr>
                     ))
                   : (categoriesData ?? []).map((row, idx) => (
                       <tr
                         key={idx}
-                        className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+                        className="hover:bg-background dark:hover:bg-secondary transition-colors"
                       >
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded bg-[#f1f5f9] dark:bg-[#1a365d] flex items-center justify-center text-[#515f74] dark:text-[#cbd5e1]">
+                            <div className="w-8 h-8 rounded bg-muted dark:bg-muted flex items-center justify-center text-muted-foreground">
                               <CategoryIcon type={row.icon} />
                             </div>
-                            <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                            <span className="text-sm font-bold text-foreground dark:text-white">
                               {row.name}
                             </span>
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
-                          <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                          <span className="text-sm text-muted-foreground">
                             {row.volume}
                           </span>
                         </td>
@@ -693,7 +692,7 @@ export default function Analytics() {
                               ? "bg-[#bbf7d0]/50 text-[#006c49]"
                               : row.growthTrend === "down"
                                 ? "bg-[#ffdad6] text-[#ba1a1a]"
-                                : "bg-[#f1f5f9] dark:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8]"
+                                : "bg-muted dark:bg-muted text-muted-foreground"
                           }
                         `}
                           >
@@ -740,19 +739,19 @@ export default function Analytics() {
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="flex items-center gap-3 w-32">
-                            <div className="w-full bg-[#f1f5f9] dark:bg-[#1a365d] rounded-full h-1.5 overflow-hidden">
+                            <div className="w-full bg-muted dark:bg-muted rounded-full h-1.5 overflow-hidden">
                               <div
                                 className={`h-full rounded-full ${row.goalColor}`}
                                 style={{ width: `${row.goal}%` }}
                               />
                             </div>
-                            <span className="text-sm font-bold text-[#334155] dark:text-[#cbd5e1]">
+                            <span className="text-sm font-bold text-[#334155] dark:text-muted-foreground">
                               {row.goal}%
                             </span>
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-right">
-                          <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors p-1 cursor-pointer">
+                          <button className="text-muted-foreground hover:text-foreground dark:text-white transition-colors p-1 cursor-pointer">
                             <svg
                               width="18"
                               height="18"

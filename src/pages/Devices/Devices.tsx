@@ -14,51 +14,7 @@ import {
 import { Progress } from "../../components/ui/progress";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
 
-// Event logs mock template
-const EVENT_LOGS = [
-  {
-    id: 1,
-    type: "SORTING EVENT",
-    time: "14:22:11",
-    desc: "Detected: Plastic Bottle (PET). Routed to Bin A.",
-    color: "text-[#10b981]",
-  },
-  {
-    id: 2,
-    type: "SORTING EVENT",
-    time: "14:21:55",
-    desc: "Detected: Aluminum Can. Routed to Bin A.",
-    color: "text-[#10b981]",
-  },
-  {
-    id: 3,
-    type: "SENSOR UPDATE",
-    time: "14:15:00",
-    desc: "Bin A reached threshold level (75%). Notification sent.",
-    color: "text-[#f59e0b]",
-  },
-  {
-    id: 4,
-    type: "NETWORK SYNC",
-    time: "14:00:02",
-    desc: "Cloud handshake successful. Log batch transmitted.",
-    color: "text-[#3b82f6]",
-  },
-  {
-    id: 5,
-    type: "POWER CYCLE",
-    time: "08:12:44",
-    desc: "Scheduled maintenance restart completed.",
-    color: "text-[#64748b] dark:text-[#cbd5e1]",
-  },
-  {
-    id: 6,
-    type: "SORTING EVENT",
-    time: "08:05:12",
-    desc: "Detected: Paperboard. Routed to Bin B.",
-    color: "text-[#10b981]",
-  },
-];
+// Mock EVENT_LOGS removed in favor of live data.
 
 // Skeleton row for main table
 function TableRowSkeleton() {
@@ -66,27 +22,27 @@ function TableRowSkeleton() {
     <TableRow className="animate-pulse">
       <TableCell className="px-6 py-5 whitespace-nowrap">
         <div className="flex flex-col gap-2">
-          <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-          <div className="h-3 w-20 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+          <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+          <div className="h-3 w-20 bg-slate-100 dark:bg-secondary rounded"></div>
         </div>
       </TableCell>
       <TableCell className="px-6 py-5 whitespace-nowrap">
-        <div className="h-4 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+        <div className="h-4 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
       </TableCell>
       <TableCell className="px-6 py-5 whitespace-nowrap">
-        <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+        <div className="h-5 w-16 bg-slate-200 dark:bg-muted rounded-full"></div>
       </TableCell>
       <TableCell className="px-6 py-5 whitespace-nowrap">
         <div className="flex items-center gap-3 w-24">
-          <div className="h-2 w-16 bg-slate-100 dark:bg-[#0f2942] rounded-full flex-1"></div>
-          <div className="h-4 w-8 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+          <div className="h-2 w-16 bg-slate-100 dark:bg-secondary rounded-full flex-1"></div>
+          <div className="h-4 w-8 bg-slate-200 dark:bg-muted rounded"></div>
         </div>
       </TableCell>
       <TableCell className="px-6 py-5 whitespace-nowrap">
-        <div className="h-4 w-24 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+        <div className="h-4 w-24 bg-slate-100 dark:bg-secondary rounded"></div>
       </TableCell>
       <TableCell className="px-6 py-5 whitespace-nowrap">
-        <div className="h-4 w-10 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+        <div className="h-4 w-10 bg-slate-100 dark:bg-secondary rounded"></div>
       </TableCell>
     </TableRow>
   );
@@ -95,34 +51,34 @@ function TableRowSkeleton() {
 // Skeleton details panel
 function SidebarDetailsSkeleton() {
   return (
-    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm p-6 animate-pulse w-full">
+    <div className="bg-card border border-border rounded-xl shadow-sm p-6 animate-pulse w-full">
       <div className="flex justify-between items-start mb-6">
         <div>
-          <div className="h-6 w-32 bg-slate-200 dark:bg-[#1a365d] rounded-md mb-2"></div>
-          <div className="h-4 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-md"></div>
+          <div className="h-6 w-32 bg-slate-200 dark:bg-muted rounded-md mb-2"></div>
+          <div className="h-4 w-24 bg-slate-100 dark:bg-secondary rounded-md"></div>
         </div>
-        <div className="h-4 w-12 bg-slate-200 dark:bg-[#1a365d] rounded-md"></div>
+        <div className="h-4 w-12 bg-slate-200 dark:bg-muted rounded-md"></div>
       </div>
 
       <div className="flex justify-between gap-3 mb-8">
         {[1, 2, 3].map((i) => (
           <div key={i} className="flex flex-col items-center flex-1">
-            <div className="w-full h-32 bg-slate-50 dark:bg-[#0f2942]/30 rounded-t-md relative flex flex-col justify-end border-b-2 border-slate-200 dark:border-slate-800">
-              <div className="absolute inset-x-0 bottom-0 bg-slate-200 dark:bg-[#1a365d] h-[40%]" />
+            <div className="w-full h-32 bg-slate-50 dark:bg-secondary/30 rounded-t-md relative flex flex-col justify-end border-b-2 border-slate-200 dark:border-slate-800">
+              <div className="absolute inset-x-0 bottom-0 bg-slate-200 dark:bg-muted h-[40%]" />
             </div>
-            <div className="h-3 w-12 bg-slate-200 dark:bg-[#1a365d] rounded mt-3"></div>
+            <div className="h-3 w-12 bg-slate-200 dark:bg-muted rounded mt-3"></div>
           </div>
         ))}
       </div>
 
       <div className="flex justify-between border-t border-[#f1f5f9] dark:border-[#0f2942] pt-5">
         <div>
-          <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
-          <div className="h-5 w-12 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+          <div className="h-3 w-16 bg-slate-100 dark:bg-secondary rounded mb-1.5"></div>
+          <div className="h-5 w-12 bg-slate-200 dark:bg-muted rounded"></div>
         </div>
         <div className="text-right flex flex-col items-end">
-          <div className="h-3 w-16 bg-slate-100 dark:bg-[#0f2942] rounded mb-1.5"></div>
-          <div className="h-5 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+          <div className="h-3 w-16 bg-slate-100 dark:bg-secondary rounded mb-1.5"></div>
+          <div className="h-5 w-20 bg-slate-200 dark:bg-muted rounded"></div>
         </div>
       </div>
     </div>
@@ -132,21 +88,21 @@ function SidebarDetailsSkeleton() {
 // Skeleton event log
 function EventLogSkeleton() {
   return (
-    <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col h-[320px] animate-pulse w-full">
+    <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col h-[320px] animate-pulse w-full">
       <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
-        <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-        <div className="h-4 w-4 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+        <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+        <div className="h-4 w-4 bg-slate-200 dark:bg-muted rounded-full"></div>
       </div>
 
       <div className="p-4 flex-1 flex flex-col gap-4 overflow-hidden">
         {[1, 2].map((i) => (
           <div key={i} className="flex flex-col gap-2">
             <div className="flex justify-between">
-              <div className="h-3 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-              <div className="h-3 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+              <div className="h-3 w-20 bg-slate-200 dark:bg-muted rounded"></div>
+              <div className="h-3 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
             </div>
-            <div className="h-4 w-full bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-            <div className="h-4.5 w-2/3 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+            <div className="h-4 w-full bg-slate-100 dark:bg-secondary rounded"></div>
+            <div className="h-4.5 w-2/3 bg-slate-100 dark:bg-secondary rounded"></div>
           </div>
         ))}
       </div>
@@ -159,6 +115,7 @@ export default function Devices() {
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [page, setPage] = useState(1);
+  const [showSortingEvents, setShowSortingEvents] = useState(false);
   const limit = 10;
   
   const baseUrl =
@@ -174,6 +131,22 @@ export default function Devices() {
 
   const { data: devicesResponse, isLoading } = usePollingFetch<any>(
     fetchDevices,
+    {
+      intervalMs: 5000,
+    },
+  );
+
+  const fetchDeviceEvents = async () => {
+    if (!selectedDevice) return [];
+    const response = await authFetch(`${baseUrl}/api/devices/${selectedDevice}/events`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch device events");
+    }
+    return response.json();
+  };
+
+  const { data: eventsData, isLoading: eventsLoading } = usePollingFetch<any[]>(
+    fetchDeviceEvents,
     {
       intervalMs: 5000,
     },
@@ -227,13 +200,15 @@ export default function Devices() {
     : 14;
   const currentUptime = `${currentUptimeDays}d 6h 12m`;
 
+  const displayedEvents = (eventsData || []).filter((event: any) => showSortingEvents || !event.isSortingEvent);
+
   return (
     <PageLayout
       title="Device Fleet"
       description={`Managing ${totalCount} active hardware units across facilities.`}
       actions={
         <div className="flex gap-3">
-          <button className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
+          <button className="bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
             <svg
               width="14"
               height="14"
@@ -267,10 +242,10 @@ export default function Devices() {
       }
     >
       <div className="flex flex-col lg:flex-row gap-6 items-start">
-        <div className="flex-1 w-full bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
+        <div className="flex-1 w-full bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
           {/* Local Table Search Bar */}
-          <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex items-center">
-            <div className="flex items-center w-full max-w-md bg-[#f8fafc] dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-white dark:bg-[#0b1c30] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+          <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-card flex items-center">
+            <div className="flex items-center w-full max-w-md bg-background dark:bg-secondary rounded-lg border border-border focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-card focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
               <svg
                 width="16"
                 height="16"
@@ -288,7 +263,7 @@ export default function Devices() {
               <input
                 type="text"
                 placeholder="Search devices, locations, or serials..."
-                className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-full"
+                className="bg-transparent border-none outline-none text-sm font-medium text-foreground dark:text-white placeholder-[#94a3b8] w-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -298,23 +273,23 @@ export default function Devices() {
           {/* Data Table */}
           <Table className="min-w-[700px]">
             <TableHeader>
-              <TableRow className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f] hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]">
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+              <TableRow className="bg-background dark:bg-secondary border-b border-border hover:bg-background dark:hover:bg-secondary">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Unit Name
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Location
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Status
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Fill %
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Last Active
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Firmware
                 </TableHead>
               </TableRow>
@@ -328,7 +303,7 @@ export default function Devices() {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="px-6 py-12 text-center text-[#94a3b8] dark:text-[#64748b] text-sm"
+                    className="px-6 py-12 text-center text-muted-foreground text-sm"
                   >
                     No devices found matching "{searchTerm}"
                   </TableCell>
@@ -338,7 +313,7 @@ export default function Devices() {
                   <TableRow
                     key={device.id}
                     onClick={() => setSelectedDevice(device.id)}
-                    className={`hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group cursor-pointer relative border-b border-[#f1f5f9] ${selectedDevice === device.id ? "bg-[#f8fafc] dark:bg-[#0f2942]" : ""}`}
+                    className={`hover:bg-background dark:hover:bg-secondary transition-colors group cursor-pointer relative border-b border-[#f1f5f9] ${selectedDevice === device.id ? "bg-background dark:bg-secondary" : ""}`}
                   >
                     <TableCell className="px-6 py-4 whitespace-nowrap relative">
                       {selectedDevice === device.id && (
@@ -346,16 +321,16 @@ export default function Devices() {
                       )}
                       <div className="flex flex-col">
                         <span
-                          className={`text-sm font-medium ${selectedDevice === device.id ? "text-[#065f46] dark:text-[#6ffbbe]" : "text-[#0b1c30] dark:text-white group-hover:text-[#006c49] dark:group-hover:text-[#6ffbbe]"}`}
+                          className={`text-sm font-medium ${selectedDevice === device.id ? "text-[#065f46] dark:text-[#6ffbbe]" : "text-foreground dark:text-white group-hover:text-[#006c49] dark:group-hover:text-[#6ffbbe]"}`}
                         >
                           {device.name}
                         </span>
-                        <span className="text-[10px] text-[#94a3b8] dark:text-[#64748b] font-mono mt-0.5">
+                        <span className="text-[10px] text-muted-foreground font-mono mt-0.5">
                           ID: {device.id}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {device.location}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
@@ -382,23 +357,23 @@ export default function Devices() {
                       <div className="flex items-center gap-3 w-24">
                         <Progress
                           value={device.fill}
-                          className={`h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] ${
+                          className={`h-1.5 bg-muted dark:bg-muted ${
                             device.fill > 85
                               ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                               : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
                           }`}
                         />
                         <span
-                          className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-[#0b1c30] dark:text-white"} w-8`}
+                          className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-foreground dark:text-white"} w-8`}
                         >
                           {device.fill}%
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-[#515f74] dark:text-[#cbd5e1]">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {device.lastActive}
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs text-[#94a3b8] dark:text-[#64748b]">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs text-muted-foreground">
                       {device.firmware}
                     </TableCell>
                   </TableRow>
@@ -408,15 +383,15 @@ export default function Devices() {
           </Table>
 
           {/* Pagination Footer */}
-          <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-white dark:bg-[#0b1c30] flex items-center justify-between mt-auto">
-            <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">
+          <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-card flex items-center justify-between mt-auto">
+            <span className="text-sm text-muted-foreground">
               Showing {devices.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} devices
             </span>
             <div className="flex gap-1">
               <button 
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#94a3b8] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
@@ -425,7 +400,7 @@ export default function Devices() {
               <button 
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages || totalPages === 0}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f8fafc] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
@@ -444,13 +419,13 @@ export default function Devices() {
           ) : (
             <>
               {/* Live Status Card */}
-              <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm p-6">
+              <div className="bg-card border border-border rounded-xl shadow-sm p-6">
                 <div className="flex justify-between items-start mb-6">
                   <div>
-                    <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                    <h3 className="text-xl font-bold text-foreground dark:text-white">
                       {currentDevice?.name || "No Device Selected"}
                     </h3>
-                    <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       Live Status &amp; Levels
                     </p>
                   </div>
@@ -462,54 +437,54 @@ export default function Devices() {
                 <div className="flex justify-between gap-3 mb-8">
                   {/* Recycling Bar */}
                   <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#89ceff]">
+                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#89ceff]">
                       <div
                         className="w-full bg-[#89ceff] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
                         style={{ height: `${recyclingFill}%` }}
                       ></div>
                       <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                        <span className="text-lg font-bold text-foreground dark:text-white">
                           {recyclingFill}%
                         </span>
                       </div>
                     </div>
-                    <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase text-center">
+                    <div className="mt-3 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center">
                       Recycling
                     </div>
                   </div>
 
                   {/* Organics Bar */}
                   <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#6ffbbe]">
+                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#6ffbbe]">
                       <div
                         className="w-full bg-[#6ffbbe] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
                         style={{ height: `${organicsFill}%` }}
                       ></div>
                       <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                        <span className="text-lg font-bold text-foreground dark:text-white">
                           {organicsFill}%
                         </span>
                       </div>
                     </div>
-                    <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase text-center">
+                    <div className="mt-3 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center">
                       Organics
                     </div>
                   </div>
 
                   {/* General Bar */}
                   <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-[#f8fafc] dark:bg-[#0f2942] rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#cbd5e1] dark:border-[#334155]">
+                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#cbd5e1] dark:border-[#334155]">
                       <div
                         className="w-full bg-[#cbd5e1] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
                         style={{ height: `${generalFill}%` }}
                       ></div>
                       <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                        <span className="text-lg font-bold text-foreground dark:text-white">
                           {generalFill}%
                         </span>
                       </div>
                     </div>
-                    <div className="mt-3 text-[10px] font-semibold text-[#64748b] dark:text-[#cbd5e1] tracking-wider uppercase text-center">
+                    <div className="mt-3 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center">
                       General
                     </div>
                   </div>
@@ -517,18 +492,18 @@ export default function Devices() {
 
                 <div className="flex justify-between border-t border-[#f1f5f9] dark:border-[#0f2942] pt-5">
                   <div>
-                    <p className="text-[10px] font-semibold text-[#94a3b8] dark:text-[#cbd5e1] tracking-wider uppercase">
+                    <p className="text-[10px] font-semibold text-muted-foreground tracking-wider uppercase">
                       Internal Temp
                     </p>
-                    <p className="text-base font-bold text-[#0b1c30] dark:text-white mt-1">
+                    <p className="text-base font-bold text-foreground dark:text-white mt-1">
                       {currentTemp}°C
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] font-semibold text-[#94a3b8] dark:text-[#cbd5e1] tracking-wider uppercase">
+                    <p className="text-[10px] font-semibold text-muted-foreground tracking-wider uppercase">
                       Uptime
                     </p>
-                    <p className="text-base font-bold text-[#0b1c30] dark:text-white mt-1">
+                    <p className="text-base font-bold text-foreground dark:text-white mt-1">
                       {currentUptime}
                     </p>
                   </div>
@@ -536,51 +511,74 @@ export default function Devices() {
               </div>
 
               {/* Event Log Card */}
-              <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col h-full max-h-[500px]">
-                <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center bg-white dark:bg-[#0b1c30] rounded-t-xl sticky top-0">
-                  <h3 className="text-xs font-bold text-[#0b1c30] dark:text-white tracking-wider uppercase">
+              <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col h-full max-h-[500px]">
+                <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center bg-card rounded-t-xl sticky top-0">
+                  <h3 className="text-xs font-bold text-foreground dark:text-white tracking-wider uppercase">
                     Device Event Log
                   </h3>
-                  <button className="text-[#94a3b8] dark:text-[#64748b] hover:text-[#0b1c30] dark:text-white transition-colors cursor-pointer">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 2v6h-6"></path>
-                      <path d="M3 12a9 9 0 1 0 2.13-5.88L21 8"></path>
-                    </svg>
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={showSortingEvents}
+                          onChange={(e) => setShowSortingEvents(e.target.checked)}
+                        />
+                        <div className={`block w-8 h-5 rounded-full transition-colors ${showSortingEvents ? 'bg-[#10b981]' : 'bg-[#e2e8f0] dark:bg-[#334155]'}`}></div>
+                        <div className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${showSortingEvents ? 'transform translate-x-3' : ''}`}></div>
+                      </div>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                        Show Sorting
+                      </span>
+                    </label>
+                    <button className="text-muted-foreground hover:text-foreground dark:text-white transition-colors cursor-pointer">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 2v6h-6"></path>
+                        <path d="M3 12a9 9 0 1 0 2.13-5.88L21 8"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="overflow-y-auto flex-1 p-2">
-                  <ul className="divide-y divide-[#f1f5f9]">
-                    {EVENT_LOGS.map((log) => (
-                      <li
-                        key={log.id}
-                        className="p-3 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] rounded-lg transition-colors cursor-default"
-                      >
-                        <div className="flex justify-between items-start mb-1.5">
-                          <span
-                            className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}
-                          >
-                            {log.type}
-                          </span>
-                          <span className="text-[10px] text-[#94a3b8] dark:text-[#cbd5e1]">
-                            {log.time}
-                          </span>
-                        </div>
-                        <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
-                          {log.desc}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
+                  {eventsLoading ? (
+                    <div className="p-4 text-center text-sm text-muted-foreground">Loading events...</div>
+                  ) : displayedEvents.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-muted-foreground">No events recorded.</div>
+                  ) : (
+                    <ul className="divide-y divide-[#f1f5f9]">
+                      {displayedEvents.map((log: any) => (
+                        <li
+                          key={log.id}
+                          className="p-3 hover:bg-background dark:hover:bg-secondary rounded-lg transition-colors cursor-default"
+                        >
+                          <div className="flex justify-between items-start mb-1.5">
+                            <span
+                              className={`text-[10px] font-bold tracking-wider uppercase ${log.color}`}
+                            >
+                              {log.type}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground">
+                              {log.time}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            {log.desc}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </>

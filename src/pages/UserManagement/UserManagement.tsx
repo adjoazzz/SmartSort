@@ -113,8 +113,8 @@ const KPIS = [
     value: "98%",
     trend: "Excellent",
     trendDirection: "up" as const,
-    iconColorClass: "text-[#515f74] dark:text-[#cbd5e1]",
-    iconBgClass: "bg-[#f1f5f9] dark:bg-[#1a365d]",
+    iconColorClass: "text-muted-foreground",
+    iconBgClass: "bg-muted dark:bg-muted",
     icon: (
       <svg
         width="16"
@@ -137,28 +137,28 @@ const AUDIT_LOG: AuditEntry[] = [
     title: "User Role Updated",
     desc: (
       <>
-        <span className="font-bold text-[#0b1c30] dark:text-white">
+        <span className="font-bold text-foreground dark:text-white">
           Sarah Chen
         </span>{" "}
         changed{" "}
-        <span className="font-bold text-[#0b1c30] dark:text-white">
+        <span className="font-bold text-foreground dark:text-white">
           Marcus Wright's
         </span>{" "}
         role from Viewer to Manager.
       </>
     ),
-    color: "text-[#0b1c30] dark:text-white",
+    color: "text-foreground dark:text-white",
   },
   {
     time: "12:05",
     title: "New User Invited",
     desc: (
       <>
-        <span className="font-bold text-[#0b1c30] dark:text-white">
+        <span className="font-bold text-foreground dark:text-white">
           Sarah Chen
         </span>{" "}
         invited{" "}
-        <span className="font-bold text-[#0b1c30] dark:text-white">
+        <span className="font-bold text-foreground dark:text-white">
           Elena Rodriguez
         </span>{" "}
         as Viewer.
@@ -172,7 +172,7 @@ const AUDIT_LOG: AuditEntry[] = [
     desc: (
       <>
         Failed login attempt for user{" "}
-        <span className="font-bold text-[#0b1c30] dark:text-white">
+        <span className="font-bold text-foreground dark:text-white">
           j.smith@unknown.com
         </span>{" "}
         from IP 192.168.1.104.
@@ -186,19 +186,19 @@ const AUDIT_LOG: AuditEntry[] = [
     desc: (
       <>
         Device sensitivity thresholds adjusted globally by{" "}
-        <span className="font-bold text-[#0b1c30] dark:text-white">
+        <span className="font-bold text-foreground dark:text-white">
           Marcus Wright
         </span>
         .
       </>
     ),
-    color: "text-[#0b1c30] dark:text-white",
+    color: "text-foreground dark:text-white",
   },
   {
     time: "Yesterday",
     title: "Scheduled Backup Completed",
     desc: <>System automated backup completed successfully. 4.2GB archived.</>,
-    color: "text-[#0b1c30] dark:text-white",
+    color: "text-foreground dark:text-white",
   },
 ];
 
@@ -231,9 +231,9 @@ const PERMISSIONS: PermGroup[] = [
   },
   {
     role: "Viewer",
-    badgeBg: "bg-[#f1f5f9] dark:bg-[#1a365d]",
-    badgeText: "text-[#515f74] dark:text-[#cbd5e1]",
-    badgeBorder: "border-[#e2e8f0] dark:border-[#1e3a5f]",
+    badgeBg: "bg-muted dark:bg-muted",
+    badgeText: "text-muted-foreground",
+    badgeBorder: "border-border",
     badgeLabel: "Read Only",
     perms: [
       { label: "Control Actions", granted: false },
@@ -356,7 +356,7 @@ const renderFacility = (facility: string) => {
   }
 
   return (
-    <div className="flex items-center gap-2 text-[#475569] dark:text-[#94a3b8] font-medium text-sm">
+    <div className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
       {icon}
       <span>{facility}</span>
     </div>
@@ -384,8 +384,8 @@ const getRoleBadge = (role: string) => {
       hasChevron: false,
     },
     Viewer: {
-      bg: "bg-[#f1f5f9] dark:bg-[#64748b]/10",
-      text: "text-[#64748b]",
+      bg: "bg-muted dark:bg-[#64748b]/10",
+      text: "text-muted-foreground",
       hasChevron: true,
     },
   };
@@ -483,7 +483,7 @@ function PermIcon({ granted }: { granted: boolean }) {
       height="14"
       viewBox="0 0 24 24"
       fill="none"
-      className="text-[#cbd5e1] shrink-0"
+      className="text-muted-foreground shrink-0"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
@@ -498,11 +498,11 @@ function PermIcon({ granted }: { granted: boolean }) {
 /** User avatar with image fallback to initials */
 function UserAvatar({ name, avatar }: { name: string; avatar: string | null }) {
   return (
-    <div className="w-9 h-9 rounded-full bg-[#f1f5f9] dark:bg-[#1a365d] overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-center shrink-0">
+    <div className="w-9 h-9 rounded-full bg-muted dark:bg-muted overflow-hidden border border-border flex items-center justify-center shrink-0">
       {avatar ? (
         <img src={avatar} alt={name} className="w-full h-full object-cover" />
       ) : (
-        <span className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1]">
+        <span className="text-xs font-bold text-muted-foreground">
           {getInitials(name)}
         </span>
       )}
@@ -554,7 +554,7 @@ function ActionMenu({
     <div className="relative inline-block">
       <button
         onClick={onToggle}
-        className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors"
+        className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors"
         title="More actions"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -567,7 +567,7 @@ function ActionMenu({
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={onClose} />
-          <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg shadow-lg z-50 py-1">
+          <div className="absolute right-0 top-full mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 py-1">
             {ACTION_MENU_ITEMS.map((item) => (
               <React.Fragment key={item.key}>
                 {item.danger && (
@@ -591,7 +591,7 @@ function ActionMenu({
                   className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
                     item.danger
                       ? "text-[#ba1a1a] hover:bg-[#ffdad6]/30"
-                      : "text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]"
+                      : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
                   }`}
                 >
                   <svg
@@ -626,9 +626,9 @@ function PanelCard({
   children: ReactNode;
 }) {
   return (
-    <div className="bg-white dark:bg-[#0b1c30] rounded-xl border border-[#e2e8f0] dark:border-[#1e3a5f] shadow-sm flex flex-col h-[400px]">
-      <div className="px-6 py-4 border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex items-center justify-between shrink-0">
-        <h3 className="font-semibold text-[#0b1c30] dark:text-white text-sm">
+    <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col h-[400px]">
+      <div className="px-6 py-4 border-b border-border flex items-center justify-between shrink-0">
+        <h3 className="font-semibold text-foreground dark:text-white text-sm">
           {title}
         </h3>
         {action}
@@ -646,6 +646,13 @@ export default function UserManagement() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, roleFilter]);
+
   const fetchUsers = async () => {
     const response = await authFetch(`${API_BASE_URL}/api/users`);
 
@@ -674,6 +681,10 @@ export default function UserManagement() {
     return matchesSearch && matchesRole;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
   const totalUsers = users.length;
   const activeUsers = users.filter(
     (user) => user.status !== "SUSPENDED",
@@ -683,7 +694,7 @@ export default function UserManagement() {
   ).length;
 
   const TH =
-    "px-6 py-4 text-[11px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider";
+    "px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider";
 
   return (
     <PageLayout
@@ -715,25 +726,25 @@ export default function UserManagement() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           {/* Total Users Box */}
-          <div className="flex items-center gap-2.5 bg-[#f1f5f9] dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-[#e2e8f0] dark:border-[#334155]">
-            <span className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+          <div className="flex items-center gap-2.5 bg-muted dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-border dark:border-[#334155]">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Total Users
             </span>
             {isLoading ? (
-              <div className="h-5 w-12 bg-slate-200 dark:bg-[#1a365d] rounded animate-pulse"></div>
+              <div className="h-5 w-12 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
             ) : (
-              <span className="text-lg font-bold text-[#0b1c30] dark:text-white">
+              <span className="text-lg font-bold text-foreground dark:text-white">
                 {totalUsers.toLocaleString()}
               </span>
             )}
           </div>
           {/* Active Now Box */}
-          <div className="flex items-center gap-2.5 bg-[#f1f5f9] dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-[#e2e8f0] dark:border-[#334155]">
-            <span className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider">
+          <div className="flex items-center gap-2.5 bg-muted dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-border dark:border-[#334155]">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Active Now
             </span>
             {isLoading ? (
-              <div className="h-5 w-10 bg-slate-200 dark:bg-[#1a365d] rounded animate-pulse"></div>
+              <div className="h-5 w-10 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
             ) : (
               <span className="text-lg font-bold text-[#15803d]">
                 {activeUsers}
@@ -746,10 +757,10 @@ export default function UserManagement() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 border border-[#e2e8f0] dark:border-[#334155] px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
+            className={`flex items-center gap-2 border border-border dark:border-[#334155] px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
               showFilters
                 ? "bg-[#0a5cf5]/10 border-[#0a5cf5] text-[#0a5cf5]"
-                : "bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942]"
+                : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
             }`}
           >
             <svg
@@ -778,7 +789,7 @@ export default function UserManagement() {
             onClick={() => {
               console.log("Exporting users data...");
             }}
-            className="flex items-center gap-2 border border-[#e2e8f0] dark:border-[#334155] bg-white dark:bg-[#0b1c30] px-4 py-2.5 rounded-lg text-sm font-semibold text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 border border-border dark:border-[#334155] bg-card px-4 py-2.5 rounded-lg text-sm font-semibold text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary transition-all active:scale-95 shadow-sm"
           >
             <svg
               width="16"
@@ -800,11 +811,11 @@ export default function UserManagement() {
       </div>
 
       {/* ── User Table ────────────────────────────────────── */}
-      <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden mb-6">
+      <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden mb-6">
         {/* Collapsible Toolbar */}
         {showFilters && (
-          <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0b1c30] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center w-full max-w-md bg-white dark:bg-[#0f2942] rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+          <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-background dark:bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center w-full max-w-md bg-white dark:bg-secondary rounded-lg border border-border focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
               <svg
                 width="16"
                 height="16"
@@ -822,13 +833,13 @@ export default function UserManagement() {
               <input
                 type="text"
                 placeholder="Search by name or email..."
-                className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-full"
+                className="bg-transparent border-none outline-none text-sm font-medium text-foreground dark:text-white placeholder-[#94a3b8] w-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <select
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] text-sm font-medium rounded-lg px-4 py-2 hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+              className="bg-card border border-border text-muted-foreground text-sm font-medium rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
             >
@@ -845,7 +856,7 @@ export default function UserManagement() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
+              <tr className="bg-background dark:bg-secondary border-b border-border">
                 {[
                   "Name & Identity",
                   "Role Type",
@@ -866,31 +877,31 @@ export default function UserManagement() {
                     {/* Name & Identity */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-[#1a365d]"></div>
+                        <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-muted"></div>
                         <div className="flex flex-col gap-2">
-                          <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                          <div className="h-3 w-36 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                          <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+                          <div className="h-3 w-36 bg-slate-100 dark:bg-secondary rounded"></div>
                         </div>
                       </div>
                     </td>
                     {/* Role Type */}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-muted rounded-full"></div>
                     </td>
                     {/* Assigned Facility */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                        <div className="h-4 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                        <div className="w-4 h-4 bg-slate-200 dark:bg-muted rounded"></div>
+                        <div className="h-4 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
                       </div>
                     </td>
                     {/* Status */}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-5 w-16 bg-slate-200 dark:bg-[#1a365d] rounded-full"></div>
+                      <div className="h-5 w-16 bg-slate-200 dark:bg-muted rounded-full"></div>
                     </td>
                     {/* Actions */}
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="h-8 w-8 bg-slate-200 dark:bg-[#1a365d] rounded-lg ml-auto"></div>
+                      <div className="h-8 w-8 bg-slate-200 dark:bg-muted rounded-lg ml-auto"></div>
                     </td>
                   </tr>
                 ))
@@ -898,16 +909,16 @@ export default function UserManagement() {
                 <tr>
                   <td
                     colSpan={5}
-                    className="px-6 py-12 text-center text-[#94a3b8] dark:text-[#64748b] text-sm"
+                    className="px-6 py-12 text-center text-muted-foreground text-sm"
                   >
                     No users found matching your criteria
                   </td>
                 </tr>
               ) : (
-                filteredData.map((user, index) => (
+                paginatedData.map((user, index) => (
                   <tr
                     key={user.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors group"
+                    className="hover:bg-background dark:hover:bg-secondary transition-colors group"
                   >
                     {/* Name & Identity */}
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -922,10 +933,10 @@ export default function UserManagement() {
                           }
                         />
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                          <span className="text-sm font-bold text-foreground dark:text-white">
                             {user.name}
                           </span>
-                          <span className="text-xs text-[#94a3b8] dark:text-[#64748b]">
+                          <span className="text-xs text-muted-foreground">
                             {user.email}
                           </span>
                         </div>
@@ -1017,55 +1028,64 @@ export default function UserManagement() {
         </div>
 
         {/* Pagination Footer */}
-        <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-[#f8fafc] dark:bg-[#0f2942]/50 flex items-center justify-between mt-auto">
-          <p className="text-sm text-[#64748b] dark:text-[#94a3b8]">
+        <div className="px-6 py-4 border-t border-border bg-background dark:bg-secondary/50 flex items-center justify-between mt-auto">
+          <p className="text-sm text-muted-foreground">
             Showing{" "}
-            <span className="font-semibold text-[#475569] dark:text-[#cbd5e1]">
-              {isLoading ? 0 : filteredData.length}
+            <span className="font-semibold text-muted-foreground">
+              {isLoading ? 0 : Math.min(startIndex + 1, filteredData.length)} - {Math.min(startIndex + itemsPerPage, filteredData.length)}
             </span>{" "}
-            of {totalUsers} team members
+            of {filteredData.length} users
           </p>
           <div className="flex items-center gap-1">
-            <button className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#475569] dark:hover:text-[#cbd5e1] transition-colors">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors bg-[#0a5cf5] text-white">
-              1
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]">
-              2
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]">
-              3
-            </button>
-            <span className="text-[#94a3b8] dark:text-[#64748b] px-1 text-sm font-semibold">
-              ...
-            </span>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors text-[#515f74] dark:text-[#cbd5e1] hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d]">
-              32
-            </button>
-            <button className="p-1.5 text-[#94a3b8] dark:text-[#64748b] hover:text-[#475569] dark:hover:text-[#cbd5e1] transition-colors">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => {
+              // Simple logic: show first, last, current, and adjacent
+              if (
+                pageNum === 1 || 
+                pageNum === totalPages || 
+                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+              ) {
+                return (
+                  <button 
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors cursor-pointer ${
+                      currentPage === pageNum 
+                        ? "bg-[#0a5cf5] text-white" 
+                        : "text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              } else if (
+                pageNum === currentPage - 2 ||
+                pageNum === currentPage + 2
+              ) {
+                return (
+                  <span key={pageNum} className="text-muted-foreground px-1 text-sm font-semibold">
+                    ...
+                  </span>
+                );
+              }
+              return null;
+            })}
+
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
@@ -1077,21 +1097,21 @@ export default function UserManagement() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
         {/* Permission Audit Card */}
         {isLoading ? (
-          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
+          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-[#1a365d]"></div>
-                <div className="h-5 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-muted"></div>
+                <div className="h-5 w-32 bg-slate-200 dark:bg-muted rounded"></div>
               </div>
               <div className="flex flex-col gap-2">
-                <div className="h-3 w-full bg-slate-100 dark:bg-[#0f2942] rounded"></div>
-                <div className="h-3 w-5/6 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                <div className="h-3 w-full bg-slate-100 dark:bg-secondary rounded"></div>
+                <div className="h-3 w-5/6 bg-slate-100 dark:bg-secondary rounded"></div>
               </div>
             </div>
-            <div className="h-4 w-28 bg-slate-200 dark:bg-[#1a365d] rounded mt-4"></div>
+            <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded mt-4"></div>
           </div>
         ) : (
-          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
+          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
@@ -1108,11 +1128,11 @@ export default function UserManagement() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
+                <h3 className="font-bold text-foreground dark:text-white text-base">
                   Permission Audit
                 </h3>
               </div>
-              <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Regularly review high-privilege roles. 14 users currently have
                 Administrative access. We recommend keeping this under 10.
               </p>
@@ -1140,25 +1160,25 @@ export default function UserManagement() {
 
         {/* Pending Invites Card */}
         {isLoading ? (
-          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
+          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-[#1a365d]"></div>
-                <div className="h-5 w-32 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-muted"></div>
+                <div className="h-5 w-32 bg-slate-200 dark:bg-muted rounded"></div>
               </div>
               <div className="flex items-center gap-4 py-1">
                 <div className="flex -space-x-3 overflow-hidden">
-                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-[#1a365d] ring-2 ring-white dark:ring-[#0b1c30]" />
-                  <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#0f2942] ring-2 ring-white dark:ring-[#0b1c30]" />
-                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-[#1a365d] ring-2 ring-white dark:ring-[#0b1c30]" />
+                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-muted ring-2 ring-white dark:ring-[#0b1c30]" />
+                  <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-secondary ring-2 ring-white dark:ring-[#0b1c30]" />
+                  <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-muted ring-2 ring-white dark:ring-[#0b1c30]" />
                 </div>
-                <div className="h-4 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                <div className="h-4 w-16 bg-slate-200 dark:bg-muted rounded"></div>
               </div>
             </div>
-            <div className="h-3 w-48 bg-slate-100 dark:bg-[#0f2942] rounded mt-2"></div>
+            <div className="h-3 w-48 bg-slate-100 dark:bg-secondary rounded mt-2"></div>
           </div>
         ) : (
-          <div className="bg-white dark:bg-[#0b1c30] rounded-2xl border border-[#e2e8f0] dark:border-[#1e3a5f] p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
+          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
@@ -1178,7 +1198,7 @@ export default function UserManagement() {
                     <line x1="3" y1="10" x2="21" y2="10" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-[#0b1c30] dark:text-white text-base">
+                <h3 className="font-bold text-foreground dark:text-white text-base">
                   Pending Invites
                 </h3>
               </div>
@@ -1189,7 +1209,7 @@ export default function UserManagement() {
                   <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#cbd5e1] dark:bg-slate-600" />
                   <div className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-[#0b1c30] bg-[#94a3b8] dark:bg-slate-500" />
                 </div>
-                <span className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                <span className="text-sm font-bold text-foreground dark:text-white">
                   {pendingInvites} Pending
                 </span>
               </div>
