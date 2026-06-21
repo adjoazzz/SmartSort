@@ -177,6 +177,24 @@ export default function Login() {
     if (isCollectorInvite) {
       setSelectedRole("collector");
     }
+
+    const initialEmail = searchParams.get("email");
+    if (initialEmail) {
+      setEmail(initialEmail);
+      const savedAccountsStr = localStorage.getItem("savedAccounts");
+      if (savedAccountsStr) {
+        try {
+          const savedAccounts = JSON.parse(savedAccountsStr);
+          const account = savedAccounts.find((a: any) => a.email === initialEmail);
+          if (account) {
+            setRememberMe(account.rememberMe);
+            if (account.rememberMe && account.password) {
+              setPassword(account.password);
+            }
+          }
+        } catch (e) {}
+      }
+    }
   }, [searchParams]);
 
   // Clear field error on change when the new value is valid
@@ -260,6 +278,32 @@ export default function Login() {
         if (error) throw error;
       }
       
+      // Save account to localStorage for multi-account support
+      const savedAccountsStr = localStorage.getItem("savedAccounts");
+      let savedAccounts = [];
+      if (savedAccountsStr) {
+        try {
+          savedAccounts = JSON.parse(savedAccountsStr);
+        } catch (e) {}
+      }
+      
+      const existingIdx = savedAccounts.findIndex((a: any) => a.email === email);
+      const newAccount = {
+        email,
+        name: email.split('@')[0],
+        initials: email.charAt(0).toUpperCase(),
+        color: '#78909C',
+        rememberMe,
+        password: rememberMe ? password : null
+      };
+
+      if (existingIdx >= 0) {
+        savedAccounts[existingIdx] = newAccount;
+      } else {
+        savedAccounts.push(newAccount);
+      }
+      localStorage.setItem("savedAccounts", JSON.stringify(savedAccounts));
+
       localStorage.setItem("userRole", selectedRole);
       
       if (selectedRole === "collector") {
