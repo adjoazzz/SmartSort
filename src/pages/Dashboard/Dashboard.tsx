@@ -323,8 +323,9 @@ export default function Dashboard() {
       }))
       : DEVICE_BINS;
 
-  const chartData = throughputData ?? THROUGHPUT_DATA;
-  const maxTotal = Math.max(...chartData.map(d => (d.sorted ?? 0) + (d.rejected ?? 0)), 1);
+  const hasValidThroughput = throughputData?.some((d: any) => d.sorted > 0 || d.rejected > 0);
+  const chartData = hasValidThroughput ? throughputData : THROUGHPUT_DATA;
+  const maxTotal = Math.max(...chartData.map((d: any) => (d.sorted ?? 0) + (d.rejected ?? 0)), 1);
 
   // Map database string to visual asset image
   const eventImages: Record<string, string> = {
@@ -450,11 +451,11 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="flex-1 flex items-end gap-3 w-full border-b border-l border-[#f1f5f9] dark:border-[#0f2942] pt-4 pl-1 pb-1 relative">
-              {chartData.map((data, idx) => {
+              {chartData.map((data: any, idx: number) => {
                 const total = data.sorted + data.rejected;
                 const totalHeightPercent = (total / maxTotal) * 100;
-                const sortedHeightPercent = (data.sorted / total) * 100;
-                const rejectedHeightPercent = (data.rejected / total) * 100;
+                const sortedHeightPercent = total > 0 ? (data.sorted / total) * 100 : 0;
+                const rejectedHeightPercent = total > 0 ? (data.rejected / total) * 100 : 0;
 
                 return (
                   <div
