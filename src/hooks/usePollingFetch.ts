@@ -36,7 +36,7 @@ export function usePollingFetch<T>(fetcher: Fetcher<T>, options: Options = {}) {
       if (!isErrorToastShownRef.current) {
         toast.error(`Sync failed: ${nextError.message || "Unable to reach server"}`, {
           id: "polling-error",
-          duration: Infinity,
+          duration: 2000,
         });
         isErrorToastShownRef.current = true;
       }
