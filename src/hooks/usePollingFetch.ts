@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 type Fetcher<T> = () => Promise<T>;
 
@@ -14,6 +15,7 @@ export function usePollingFetch<T>(fetcher: Fetcher<T>, options: Options = {}) {
   const [error, setError] = useState<unknown>(null);
   const fetcherRef = useRef(fetcher);
   const timerRef = useRef<number | undefined>(undefined);
+  const isErrorToastShownRef = useRef(false);
 
   useEffect(() => {
     fetcherRef.current = fetcher;
@@ -24,9 +26,20 @@ export function usePollingFetch<T>(fetcher: Fetcher<T>, options: Options = {}) {
       const nextData = await fetcherRef.current();
       setData(nextData);
       setError(null);
+      if (isErrorToastShownRef.current) {
+        toast.success("Connection restored", { id: "polling-error" });
+        isErrorToastShownRef.current = false;
+      }
       return nextData;
-    } catch (nextError) {
+    } catch (nextError: any) {
       setError(nextError);
+      if (!isErrorToastShownRef.current) {
+        toast.error(`Sync failed: ${nextError.message || "Unable to reach server"}`, {
+          id: "polling-error",
+          duration: Infinity,
+        });
+        isErrorToastShownRef.current = true;
+      }
       throw nextError;
     } finally {
       setIsLoading(false);

@@ -8,70 +8,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from ".
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export const ALERTS_DATA = [
-  {
-    id: "ALT-1",
-    deviceIcon: "conveyor",
-    deviceName: "Conveyor-B42",
-    deviceLocation: "Floor 2 North",
-    severity: "CRITICAL",
-    messageTitle: "Contamination Spike Detected",
-    messageDesc:
-      "Non-recyclable high-density plastic in paper stream exceeds 15% threshold.",
-    timestampMain: "Today, 14:22:05",
-    timestampSub: "3 mins ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Dispatch Tech", type: "primary" },
-    ],
-  },
-  {
-    id: "ALT-2",
-    deviceIcon: "bin",
-    deviceName: "SmartBin-009",
-    deviceLocation: "Loading Dock A",
-    severity: "WARNING",
-    messageTitle: "Fill Capacity Exceeded",
-    messageDesc: "Device reported 98% capacity. Pick-up scheduled for 18:00.",
-    timestampMain: "Today, 13:45:12",
-    timestampSub: "40 mins ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Acknowledge", type: "secondary" },
-    ],
-  },
-  {
-    id: "ALT-3",
-    deviceIcon: "sensor",
-    deviceName: "Sensor-T10",
-    deviceLocation: "Outdoor Staging",
-    severity: "WARNING",
-    messageTitle: "Battery Level Critical",
-    messageDesc: "Sensor battery at 4%. Shutdown imminent within 2 hours.",
-    timestampMain: "Today, 12:10:00",
-    timestampSub: "2 hours ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Dispatch Tech", type: "primary" },
-    ],
-  },
-  {
-    id: "ALT-4",
-    deviceIcon: "compactor",
-    deviceName: "Compactor-02",
-    deviceLocation: "Main Processing Room",
-    severity: "CRITICAL",
-    messageTitle: "Emergency Stop Engaged",
-    messageDesc:
-      "Manual emergency stop triggered. System lockout active. Investigation required.",
-    timestampMain: "Today, 11:55:30",
-    timestampSub: "2.5 hours ago",
-    actions: [
-      { label: "Mark as Read", type: "secondary" },
-      { label: "Dispatch Tech", type: "primary" },
-    ],
-  },
-];
+// Removed ALERTS_DATA since we use live data
 
 const TRENDS_DATA = [
   { name: "MON", value: 25 },
@@ -162,12 +99,20 @@ export default function Alerts() {
   const [deviceType, setDeviceType] = useState("all");
   const [timeRange, setTimeRange] = useState("24h");
   const [page, setPage] = useState(1);
+  const [isExporting, setIsExporting] = useState(false);
   const limit = 10;
 
   const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchAlerts = async () => {
-    const response = await authFetch(`${baseUrl}/api/alerts?page=${page}&limit=${limit}`);
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      severity,
+      deviceType,
+      timeRange
+    });
+    const response = await authFetch(`${baseUrl}/api/alerts?${searchParams}`);
     if (!response.ok) throw new Error("Failed to fetch alerts");
     return response.json();
   };
@@ -202,39 +147,41 @@ export default function Alerts() {
     setTimeRange("24h");
   };
 
-  const filteredAlerts = ALERTS_DATA.filter((alert) => {
-    if (severity !== "all" && alert.severity.toLowerCase() !== severity) return false;
-    if (deviceType === "conveyors" && alert.deviceIcon !== "conveyor") return false;
-    if (deviceType === "smartbins" && alert.deviceIcon !== "bin") return false;
-    if (timeRange === "24h" && !alert.timestampMain.includes("Today")) return false;
-    return true;
-  });
+  const filteredAlerts = alerts;
 
   const handleExportPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text("System Alerts Report", 14, 22);
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+    setIsExporting(true);
+    // Use setTimeout to allow UI to update to loading state before jsPDF blocks thread
+    setTimeout(() => {
+      try {
+        const doc = new jsPDF();
+        doc.setFontSize(20);
+        doc.text("System Alerts Report", 14, 22);
+        doc.setFontSize(11);
+        doc.setTextColor(100);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
 
-    const tableData = filteredAlerts.map(alert => [
-      alert.deviceName,
-      alert.deviceLocation,
-      alert.severity,
-      alert.messageTitle,
-      alert.timestampMain
-    ]);
+        const tableData = filteredAlerts.map((alert: any) => [
+          alert.deviceName,
+          alert.deviceLocation,
+          alert.severity,
+          alert.messageTitle,
+          alert.timestampMain
+        ]);
 
-    autoTable(doc, {
-      startY: 40,
-      head: [['Device Name', 'Location', 'Severity', 'Message Title', 'Timestamp']],
-      body: tableData,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 108, 73] }
-    });
+        autoTable(doc, {
+          startY: 40,
+          head: [['Device Name', 'Location', 'Severity', 'Message Title', 'Timestamp']],
+          body: tableData,
+          theme: 'grid',
+          headStyles: { fillColor: [0, 108, 73] }
+        });
 
-    doc.save("smartsort-alerts-report.pdf");
+        doc.save("smartsort-alerts-report.pdf");
+      } finally {
+        setIsExporting(false);
+      }
+    }, 100);
   };
 
   return (
@@ -362,21 +309,34 @@ export default function Alerts() {
             </button>
             <button
               onClick={handleExportPDF}
-              className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
+              disabled={isExporting}
+              className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Export Logs
+              {isExporting ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Export Logs
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -594,7 +554,7 @@ export default function Alerts() {
               <div className="h-11 w-full bg-slate-700 rounded-lg mt-6"></div>
             </div>
           ) : (
-            <div className="col-span-1 bg-card rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
+            <div className="col-span-1 bg-[#1e293b] dark:bg-[#0f172a] rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-4 text-[#10b981]">
                   <svg
@@ -613,7 +573,7 @@ export default function Alerts() {
                     MAINTENANCE AI
                   </span>
                 </div>
-                <p className="text-[15px] leading-relaxed text-white/90 font-medium mb-8">
+                <p className="text-[15px] leading-relaxed text-slate-300 font-medium mb-8">
                   Based on recent contamination patterns,{" "}
                   <strong className="text-white font-bold">Conveyor-B42</strong>{" "}
                   is predicted to require sensor calibration in the next 48 hours

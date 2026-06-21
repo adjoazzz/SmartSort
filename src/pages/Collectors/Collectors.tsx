@@ -29,7 +29,12 @@ export default function Collectors() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchCollectors = async () => {
-    const response = await authFetch(`${API_BASE_URL}/api/collectors?page=${page}&limit=${limit}`);
+    const searchParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...(searchTerm ? { search: searchTerm } : {})
+    });
+    const response = await authFetch(`${API_BASE_URL}/api/collectors?${searchParams}`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch collectors");
@@ -50,15 +55,8 @@ export default function Collectors() {
   const totalCount = collectorsResponse?.totalCount || 0;
   const totalPages = collectorsResponse?.totalPages || 1;
 
-  const filteredCollectors = (collectors ?? []).filter((collector) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      collector.name.toLowerCase().includes(term) ||
-      collector.id.toLowerCase().includes(term) ||
-      collector.region.toLowerCase().includes(term) ||
-      collector.status.toLowerCase().includes(term)
-    );
-  });
+  // The server handles search now, so we just use the raw array
+  const filteredCollectors = collectors;
 
   return (
     <PageLayout

@@ -298,14 +298,28 @@ app.get('/api/collectors', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+
+    const whereClause = {
+      role: 'COLLECTOR',
+      ...(search ? {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { collectorId: { contains: search, mode: 'insensitive' } },
+          { region: { contains: search, mode: 'insensitive' } },
+          { status: { contains: search, mode: 'insensitive' } },
+        ]
+      } : {})
+    };
 
     const [collectors, totalCount] = await Promise.all([
       prisma.user.findMany({
+        where: whereClause,
         orderBy: { updatedAt: 'desc' },
         skip,
         take: limit,
       }),
-      prisma.user.count({ where: { role: 'COLLECTOR' } }),
+      prisma.user.count({ where: whereClause }),
     ]);
 
     res.status(200).json({
@@ -799,14 +813,52 @@ app.get('/api/alerts', async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    const severity = req.query.severity;
+    const deviceType = req.query.deviceType;
+    const timeRange = req.query.timeRange;
+
+    const whereClause = {};
+
+    if (severity && severity !== 'all') {
+      whereClause.severity = severity.toUpperCase();
+    }
+
+    if (deviceType && deviceType !== 'all') {
+      const typeMap = {
+        'conveyors': 'conveyor',
+        'smartbins': 'bin'
+      };
+      if (typeMap[deviceType]) {
+        whereClause.device = {
+          deviceType: typeMap[deviceType]
+        };
+      }
+    }
+
+    if (timeRange && timeRange !== 'all') {
+      const now = new Date();
+      let fromDate;
+      if (timeRange === '24h') {
+        fromDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      } else if (timeRange === '7d') {
+        fromDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      } else if (timeRange === '30d') {
+        fromDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      }
+      if (fromDate) {
+        whereClause.createdAt = { gte: fromDate };
+      }
+    }
+
     const [alerts, totalCount] = await Promise.all([
       prisma.alert.findMany({
+        where: whereClause,
         orderBy: { createdAt: 'desc' },
         include: { device: true },
         skip,
         take: limit,
       }),
-      prisma.alert.count(),
+      prisma.alert.count({ where: whereClause }),
     ]);
 
     const formattedAlerts = alerts.map((alert) => {

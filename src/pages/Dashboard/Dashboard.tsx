@@ -17,6 +17,9 @@ import { usePollingFetch } from "../../hooks/usePollingFetch";
 import { useTranslation } from "react-i18next";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+import { Calendar } from "../../components/ui/calendar";
+import { format } from "date-fns";
 
 import imgEventSnap from "../../assets/9389a9333045e821be3474418e89b876d4fc0c10.png";
 import imgEventSnap1 from "../../assets/8811709787b7f35f6b7245b79da448b564be54ea.png";
@@ -185,8 +188,9 @@ const RECENT_EVENTS = [
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
-  const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0]);
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -265,52 +269,59 @@ export default function Dashboard() {
   ];
 
   const handleExportPDF = () => {
-    const doc = new jsPDF();
+    setIsExporting(true);
+    setTimeout(() => {
+      try {
+        const doc = new jsPDF();
 
-    // Header
-    doc.setFontSize(20);
-    doc.text("SmartSort Operations Report", 14, 22);
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+        // Header
+        doc.setFontSize(20);
+        doc.text("SmartSort Operations Report", 14, 22);
+        doc.setFontSize(11);
+        doc.setTextColor(100);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
 
-    // Section 1: KPIs
-    doc.setFontSize(14);
-    doc.setTextColor(0);
-    doc.text("Key Performance Indicators", 14, 45);
+        // Section 1: KPIs
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text("Key Performance Indicators", 14, 45);
 
-    const kpiData = dynamicKpis.map(kpi => [kpi.title, kpi.value, kpi.trend]);
-    autoTable(doc, {
-      startY: 50,
-      head: [['Metric', 'Value', 'Trend']],
-      body: kpiData,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 108, 73] }
-    });
+        const kpiData = dynamicKpis.map(kpi => [kpi.title, kpi.value, kpi.trend]);
+        autoTable(doc, {
+          startY: 50,
+          head: [['Metric', 'Value', 'Trend']],
+          body: kpiData,
+          theme: 'grid',
+          headStyles: { fillColor: [0, 108, 73] }
+        });
 
-    // Section 2: Device Bins
-    doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
-    const deviceData = displayBins.map(bin => [bin.label, `${bin.value}%`]);
-    autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 20,
-      head: [['Device', 'Fill Level']],
-      body: deviceData,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 108, 73] }
-    });
+        // Section 2: Device Bins
+        doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
+        const deviceData = displayBins.map(bin => [bin.label, `${bin.value}%`]);
+        autoTable(doc, {
+          startY: (doc as any).lastAutoTable.finalY + 20,
+          head: [['Device', 'Fill Level']],
+          body: deviceData,
+          theme: 'grid',
+          headStyles: { fillColor: [0, 108, 73] }
+        });
 
-    // Section 3: Recent Events
-    doc.text("Recent Contamination Events", 14, (doc as any).lastAutoTable.finalY + 15);
-    const eventData = RECENT_EVENTS.map(evt => [evt.time, evt.source, evt.detection, evt.confidence, evt.action]);
-    autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 20,
-      head: [['Time', 'Source', 'Detection', 'Confidence', 'Action']],
-      body: eventData,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 108, 73] }
-    });
+        // Section 3: Recent Events
+        doc.text("Recent Contamination Events", 14, (doc as any).lastAutoTable.finalY + 15);
+        const eventData = RECENT_EVENTS.map(evt => [evt.time, evt.source, evt.detection, evt.confidence, evt.action]);
+        autoTable(doc, {
+          startY: (doc as any).lastAutoTable.finalY + 20,
+          head: [['Time', 'Source', 'Detection', 'Confidence', 'Action']],
+          body: eventData,
+          theme: 'grid',
+          headStyles: { fillColor: [0, 108, 73] }
+        });
 
-    doc.save("operations-report.pdf");
+        doc.save("operations-report.pdf");
+      } finally {
+        setIsExporting(false);
+      }
+    }, 100);
   };
 
   const binsOnly = devices.filter((d: any) => d.deviceType === "bin");
@@ -342,37 +353,68 @@ export default function Dashboard() {
       actions={
         <>
           <div className="flex items-center gap-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg px-3 py-1 shadow-sm">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px] text-left">
+                  {startDate ? format(startDate, "MMM dd, yyyy") : "Start Date"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 z-50 bg-card" align="start">
+                <Calendar
+                  mode="single"
+                  selected={startDate}
+                  onSelect={(date) => date && setStartDate(date)}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
             <span className="text-[#94a3b8] dark:text-[#64748b] text-sm font-semibold">
               to
             </span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px] text-left">
+                  {endDate ? format(endDate, "MMM dd, yyyy") : "End Date"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 z-50 bg-card" align="end">
+                <Calendar
+                  mode="single"
+                  selected={endDate}
+                  onSelect={(date) => date && setEndDate(date)}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <button
             onClick={handleExportPDF}
-            className="no-print bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 flex items-center gap-2 transition-colors cursor-pointer"
+            disabled={isExporting}
+            className="no-print bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 flex items-center gap-2 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-wait"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            {t("dashboard.exportBtn")}
+            {isExporting ? (
+              <>
+                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Exporting...
+              </>
+            ) : (
+              <>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                {t("dashboard.exportBtn")}
+              </>
+            )}
           </button>
         </>
       }
