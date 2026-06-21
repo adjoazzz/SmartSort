@@ -1,43 +1,33 @@
 import { createBrowserRouter } from "react-router";
 import { Root } from "./Root";
-import Landing from "../pages/Landing/Landing";
-import Login from "../pages/Login/Login";
-import Onboarding from "../pages/OnboardingStep1/Onboarding";
-import Onboarding1 from "../pages/OnboardingStep2/Onboarding";
-import Onboarding2 from "../pages/OnboardingStep3/Onboarding";
-import Dashboard from "../pages/Dashboard/Dashboard";
-import Analytics from "../pages/Analytics/Analytics";
-import Devices from "../pages/Devices/Devices";
-import Alerts from "../pages/Alerts/Alerts";
-import CollectionJobs from "../pages/CollectionJobs/CollectionJobs";
-import Collectors from "../pages/Collectors/Collectors";
-import CollectorDashboard from "../pages/CollectorDashboard/CollectorDashboard";
-import CollectorMap from "../pages/CollectorDashboard/CollectorMap";
-import UserManagement from "../pages/UserManagement/UserManagement";
-import CommunityFeedback from "../pages/CommunityFeedback/CommunityFeedback";
-import Profile from "../pages/Profile/Profile";
+
+// Helper for dynamic imports since components are default exports
+const lazyRoute = (importFn: () => Promise<any>) => async () => {
+  const m = await importFn();
+  return { Component: m.default };
+};
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
     children: [
-      { index: true, Component: Landing },
-      { path: "login", Component: Login },
-      { path: "onboarding-1", Component: Onboarding },
-      { path: "onboarding-2", Component: Onboarding1 },
-      { path: "onboarding-3", Component: Onboarding2 },
-      { path: "dashboard", Component: Dashboard },
-      { path: "collector-dashboard", Component: CollectorDashboard },
-      { path: "collector-map", Component: CollectorMap },
-      { path: "analytics", Component: Analytics },
-      { path: "devices", Component: Devices },
-      { path: "alerts", Component: Alerts },
-      { path: "jobs", Component: CollectionJobs },
-      { path: "collectors", Component: Collectors },
-      { path: "community-feedback", Component: CommunityFeedback },
-      { path: "admin", Component: UserManagement },
-      { path: "profile", Component: Profile },
+      { index: true, lazy: lazyRoute(() => import("../pages/Landing/Landing")) },
+      { path: "login", lazy: lazyRoute(() => import("../pages/Login/Login")) },
+      { path: "onboarding-1", lazy: lazyRoute(() => import("../pages/OnboardingStep1/Onboarding")) },
+      { path: "onboarding-2", lazy: lazyRoute(() => import("../pages/OnboardingStep2/Onboarding")) },
+      { path: "onboarding-3", lazy: lazyRoute(() => import("../pages/OnboardingStep3/Onboarding")) },
+      { path: "dashboard", lazy: lazyRoute(() => import("../pages/Dashboard/Dashboard")) },
+      { path: "collector-dashboard", lazy: lazyRoute(() => import("../pages/CollectorDashboard/CollectorDashboard")) },
+      { path: "collector-map", lazy: lazyRoute(() => import("../pages/CollectorDashboard/CollectorMap")) },
+      { path: "analytics", lazy: lazyRoute(() => import("../pages/Analytics/Analytics")) },
+      { path: "devices", lazy: lazyRoute(() => import("../pages/Devices/Devices")) },
+      { path: "alerts", lazy: lazyRoute(() => import("../pages/Alerts/Alerts")) },
+      { path: "jobs", lazy: lazyRoute(() => import("../pages/CollectionJobs/CollectionJobs")) },
+      { path: "collectors", lazy: lazyRoute(() => import("../pages/Collectors/Collectors")) },
+      { path: "community-feedback", lazy: lazyRoute(() => import("../pages/CommunityFeedback/CommunityFeedback")) },
+      { path: "admin", lazy: lazyRoute(() => import("../pages/UserManagement/UserManagement")) },
+      { path: "profile", lazy: lazyRoute(() => import("../pages/Profile/Profile")) },
     ],
   },
 ]);

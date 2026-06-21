@@ -20,6 +20,8 @@ model Device {
   processedItems ProcessedItem[]
   deviceEvents   DeviceEvent[]
   alerts         Alert[]
+
+  @@index([status])
 }
 
 model CollectionJob {
@@ -76,6 +78,10 @@ model ProcessedItem {
   createdAt       DateTime @default(now())
 
   device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([category, status])
 }
 
 // System notifications and alerts
