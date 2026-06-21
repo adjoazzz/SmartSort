@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '../lib/supabaseClient';
 import imgUserProfileAvatar from '../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png';
 
 interface ProfilePopupProps {
@@ -10,22 +11,7 @@ interface ProfilePopupProps {
   anchorRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-interface Account {
-  initials: string;
-  name: string;
-  email: string;
-  color: string;
-  ringColor?: string;
-}
 
-const otherAccounts: Account[] = [
-  {
-    initials: 'J',
-    name: 'Jane Simmons',
-    email: 'JaneSimmons@user.com',
-    color: '#78909C',
-  },
-];
 
 export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) {
   const { t } = useTranslation();
@@ -33,6 +19,32 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
   const popupRef = useRef<HTMLDivElement>(null);
   const [showAccounts, setShowAccounts] = useState(true);
   const [position, setPosition] = useState({ top: 0, right: 0 });
+  const [userEmail, setUserEmail] = useState<string>("Loading...");
+  const [userName, setUserName] = useState<string>("User");
+  const [otherAccounts, setOtherAccounts] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      let currentEmail = "";
+      if (user && user.email) {
+        currentEmail = user.email;
+        setUserEmail(user.email);
+        setUserName(user.email.split('@')[0]);
+      } else {
+        setUserEmail("Not logged in");
+        setUserName("Guest");
+      }
+
+      const savedAccountsStr = localStorage.getItem("savedAccounts");
+      if (savedAccountsStr) {
+        try {
+          const savedAccounts = JSON.parse(savedAccountsStr);
+          const others = savedAccounts.filter((a: any) => a.email !== currentEmail);
+          setOtherAccounts(others);
+        } catch (e) {}
+      }
+    });
+  }, []);
 
   // Calculate position relative to anchor button
   useEffect(() => {
@@ -109,7 +121,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
     >
       {/* Top: Email + Close */}
       <div className="profile-popup__header">
-        <span className="profile-popup__email">jayycrypt@gmail.com</span>
+        <span className="profile-popup__email">{userEmail}</span>
         <button
           onClick={onClose}
           className="profile-popup__close"
@@ -135,7 +147,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
             </svg>
           </button>
         </div>
-        <h2 className="profile-popup__greeting">Hi, kf!</h2>
+        <h2 className="profile-popup__greeting">Hi, {userName}!</h2>
         <Link to="/profile" onClick={onClose} className="profile-popup__manage-btn">
           {t("profilePopup.manageAccount")}
         </Link>
@@ -166,11 +178,18 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
         {showAccounts && (
           <div className="profile-popup__account-list">
             {otherAccounts.map((account) => (
-              <button key={account.email} className="profile-popup__account-row">
+              <button
+                key={account.email}
+                className="profile-popup__account-row"
+                onClick={() => {
+                  onClose();
+                  navigate(`/login?email=${encodeURIComponent(account.email)}`);
+                }}
+              >
                 <div
                   className="profile-popup__account-avatar"
                   style={{
-                    backgroundColor: account.color,
+                    backgroundColor: account.color || '#78909C',
                     boxShadow: account.ringColor
                       ? `0 0 0 2px ${account.ringColor}`
                       : undefined,
@@ -202,7 +221,8 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
       {/* Sign out */}
       <div className="profile-popup__signout-section">
         <button
-          onClick={() => {
+          onClick={async () => {
+            await supabase.auth.signOut();
             localStorage.removeItem("userRole");
             onClose();
             navigate("/login");
