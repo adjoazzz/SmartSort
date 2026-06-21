@@ -182,7 +182,7 @@ export default function CollectorMap() {
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
         <button
           onClick={() => navigate("/collector-dashboard")}
-          className="px-4 py-2 border border-[#e2e8f0] dark:border-[#1e3a5f] bg-white dark:bg-[#0b1c30] text-[#0b1c30] dark:text-white text-xs font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-[#0f2942] transition-colors flex items-center gap-2 cursor-pointer shadow-sm self-start"
+          className="px-4 py-2 border border-border bg-card text-foreground dark:text-white text-xs font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-secondary transition-colors flex items-center gap-2 cursor-pointer shadow-sm self-start"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -191,7 +191,7 @@ export default function CollectorMap() {
           Back to Dashboard
         </button>
 
-        <div className="flex items-center gap-4 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] px-4 py-2.5 rounded-xl shadow-sm">
+        <div className="flex items-center gap-4 bg-card border border-border px-4 py-2.5 rounded-xl shadow-sm">
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Accepted Bins:</span>
           <span className="text-sm font-black text-[#0284c7]">{activeAssignments.length} In-Transit</span>
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
@@ -203,14 +203,14 @@ export default function CollectorMap() {
         
         {/* Left Column: List of Accepted Jobs / Active Routing steps */}
         <div className="lg:col-span-1 flex flex-col gap-4">
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-sm p-4 flex flex-col h-full">
-            <h3 className="text-sm font-black text-[#0b1c30] dark:text-white uppercase tracking-wider mb-4 border-b border-[#f1f5f9] dark:border-[#0f2942] pb-2">
+          <div className="bg-card border border-border rounded-xl shadow-sm p-4 flex flex-col h-full">
+            <h3 className="text-sm font-black text-foreground dark:text-white uppercase tracking-wider mb-4 border-b border-[#f1f5f9] dark:border-[#0f2942] pb-2">
               Route Stop Sequence
             </h3>
             
             <div className="flex flex-col gap-3 overflow-y-auto max-h-[500px] pr-1">
               {optimizedRoute.length === 0 ? (
-                <div className="text-center py-12 text-[#94a3b8] dark:text-[#64748b] text-xs">
+                <div className="text-center py-12 text-muted-foreground text-xs">
                   No accepted jobs to display. Go back to dashboard to claim available tasks.
                 </div>
               ) : (
@@ -223,7 +223,7 @@ export default function CollectorMap() {
                       className={`border rounded-xl p-3.5 transition-all cursor-pointer relative ${
                         isSelected 
                           ? "border-[#0284c7] bg-[#0284c7]/5 dark:bg-[#0c4a6e]/20 shadow-sm"
-                          : "border-slate-100 dark:border-[#1e3a5f] hover:border-slate-200 dark:hover:border-[#334155] bg-white dark:bg-[#0b1c30]"
+                          : "border-slate-100 dark:border-border hover:border-slate-200 dark:hover:border-border bg-card"
                       }`}
                     >
                       {/* Step Indicator badge */}
@@ -233,7 +233,7 @@ export default function CollectorMap() {
                       
                       <div className="pl-7 flex flex-col gap-1">
                         <div className="flex justify-between items-start gap-2">
-                          <span className="text-xs font-bold text-[#0b1c30] dark:text-white truncate">
+                          <span className="text-xs font-bold text-foreground dark:text-white truncate">
                             {job.location}
                           </span>
                           <StatusBadge label={job.urgency} variant={job.urgency === "Critical" ? "danger" : job.urgency === "High" ? "warning" : "success"} />
@@ -263,7 +263,7 @@ export default function CollectorMap() {
                           </button>
                           <button
                             onClick={() => setRemindJobId(job.id)}
-                            className="flex-1 py-1.5 bg-[#006c49] text-white text-[10px] font-bold rounded-md hover:bg-[#005a3c] transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
+                            className="flex-1 py-1.5 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
                           >
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="20 6 9 17 4 12"></polyline>
@@ -282,18 +282,18 @@ export default function CollectorMap() {
 
         {/* Right Column: Fullscreen Map visualizer */}
         <div className="lg:col-span-2">
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-sm overflow-hidden flex flex-col h-full">
-            <div className="px-5 py-4 border-b border-[#e2e8f0] dark:border-[#1e3a5f] flex justify-between items-center bg-slate-50/50 dark:bg-[#0f2942]/30">
+          <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
+            <div className="px-5 py-4 border-b border-border flex justify-between items-center bg-slate-50/50 dark:bg-secondary/30">
               <div className="flex items-center gap-2">
                 <span className="flex h-2.5 w-2.5 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                 </span>
-                <h3 className="font-bold text-sm text-[#0b1c30] dark:text-white">
+                <h3 className="font-bold text-sm text-foreground dark:text-white">
                   Real-time Interactive Corridor Routing
                 </h3>
               </div>
-              <span className="text-[10px] bg-slate-100 dark:bg-[#1a365d] text-slate-600 dark:text-[#94a3b8] px-2 py-0.5 rounded font-mono font-bold">
+              <span className="text-[10px] bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground px-2 py-0.5 rounded font-mono font-bold">
                 COORD SYSTEM: ACTIVE
               </span>
             </div>
@@ -301,7 +301,7 @@ export default function CollectorMap() {
             <div className="p-5 flex-1 flex flex-col gap-4 justify-between">
               <div className="relative w-full" style={{aspectRatio:'16/9', maxHeight:'520px'}}>
                 {/* Map Legend */}
-                <div className="absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#0b1c30]/90 backdrop-blur-sm border border-slate-200 dark:border-[#1e3a5f] rounded-lg p-2 shadow-md flex flex-col gap-1.5">
+                <div className="absolute top-3 right-3 z-10 bg-white/90 dark:bg-card/90 backdrop-blur-sm border border-slate-200 dark:border-border rounded-lg p-2 shadow-md flex flex-col gap-1.5">
                   <p className="text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5">Legend</p>
                   {[['#ef4444','Critical'],['#f59e0b','High'],['#3b82f6','Normal'],['#10b981','Completed']].map(([c,l])=>(
                     <div key={l} className="flex items-center gap-1.5">
@@ -420,7 +420,7 @@ export default function CollectorMap() {
               </div>
 
               {/* Detail drawer at bottom */}
-              <div className="bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl p-3 border border-[#e2e8f0] dark:border-[#1e3a5f] mt-auto">
+              <div className="bg-background dark:bg-secondary rounded-xl p-3 border border-border mt-auto">
                 {selectedJobId ? (() => {
                   const selectedJob = jobs.find((j: any) => j.id === selectedJobId);
                   if (!selectedJob) return null;
@@ -428,7 +428,7 @@ export default function CollectorMap() {
                     <div className="flex flex-col gap-2">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-black text-[#0b1c30] dark:text-white truncate">
+                          <span className="text-xs font-black text-foreground dark:text-white truncate">
                             {selectedJob.location}
                           </span>
                           <span className="text-[10px] font-mono text-[#0284c7] font-bold">({selectedJob.device})</span>
@@ -438,14 +438,14 @@ export default function CollectorMap() {
                           variant={selectedJob.status === "Completed" ? "success" : "info"}
                         />
                       </div>
-                      <div className="flex justify-between text-[11px] text-[#515f74] dark:text-[#cbd5e1] border-t border-slate-100 dark:border-[#0f2942] pt-2">
+                      <div className="flex justify-between text-[11px] text-muted-foreground border-t border-slate-100 dark:border-[#0f2942] pt-2">
                         <span>Zone: <strong className="font-semibold">{selectedJob.zone}</strong></span>
                         <span>Fill Density: <strong className="text-[#ba1a1a]">{selectedJob.fill}%</strong></span>
                       </div>
                     </div>
                   );
                 })() : (
-                  <div className="text-center py-2 text-xs text-[#94a3b8] dark:text-[#64748b]">
+                  <div className="text-center py-2 text-xs text-muted-foreground">
                     Select any route node on the map or left list to view telemetry details.
                   </div>
                 )}
@@ -465,14 +465,14 @@ export default function CollectorMap() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-black/10"
           >
-            <div className="bg-white dark:bg-[#0b1c30] border border-[#006c49] rounded-2xl px-8 py-6 shadow-2xl flex flex-col items-center gap-3">
+            <div className="bg-card border border-[#006c49] rounded-xl px-8 py-6 shadow-md flex flex-col items-center gap-3">
               <div className="h-14 w-14 rounded-full bg-[#10b981]/15 text-[#10b981] flex items-center justify-center animate-[bounce_1s_infinite]">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               </div>
-              <h3 className="font-black text-lg text-[#0b1c30] dark:text-white">Bin Cleared Successfully!</h3>
-              <p className="text-xs text-[#515f74] dark:text-[#cbd5e1]">
+              <h3 className="font-black text-lg text-foreground dark:text-white">Bin Cleared Successfully!</h3>
+              <p className="text-xs text-muted-foreground">
                 Your progress has been synchronized with the main database.
               </p>
             </div>
@@ -507,13 +507,13 @@ export default function CollectorMap() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-[#0b1c30]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-card/85 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             >
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl max-w-md w-full p-6 shadow-2xl relative overflow-hidden flex flex-col gap-6"
+                className="bg-card border border-border rounded-xl max-w-md w-full p-6 shadow-md relative overflow-hidden flex flex-col gap-6"
               >
                 <div className="flex justify-between items-center border-b border-[#f1f5f9] dark:border-[#0f2942] pb-3">
                   <div className="flex items-center gap-2 text-[#0284c7]">
@@ -527,7 +527,7 @@ export default function CollectorMap() {
                       setIsNavigating(false);
                       setNavigatingJobId(null);
                     }}
-                    className="text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:hover:text-white transition-colors"
+                    className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -536,8 +536,8 @@ export default function CollectorMap() {
                   </button>
                 </div>
 
-                <div className="flex flex-col items-center text-center gap-4 bg-slate-50 dark:bg-[#0f2942]/60 rounded-xl p-5 border border-slate-100 dark:border-[#1e3a5f]">
-                  <div className="relative h-20 w-20 flex items-center justify-center bg-white dark:bg-[#0b1c30] rounded-full shadow-md border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                <div className="flex flex-col items-center text-center gap-4 bg-slate-50 dark:bg-secondary/60 rounded-xl p-5 border border-slate-100 dark:border-border">
+                  <div className="relative h-20 w-20 flex items-center justify-center bg-card rounded-full shadow-md border border-border">
                     <svg
                       width="36"
                       height="36"
@@ -556,7 +556,7 @@ export default function CollectorMap() {
                   </div>
                   
                   <div className="flex flex-col">
-                    <span className="text-3xl font-black text-[#0b1c30] dark:text-white tracking-tight">
+                    <span className="text-3xl font-black text-foreground dark:text-white tracking-tight">
                       {navDistance} <span className="text-base font-bold text-slate-400 dark:text-slate-500">feet</span>
                     </span>
                     <span className="text-sm font-semibold text-[#0284c7] mt-1">
@@ -567,11 +567,11 @@ export default function CollectorMap() {
 
                 <div className="flex flex-col gap-2 border-t border-[#f1f5f9] dark:border-[#0f2942] pt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">Destination</span>
-                    <span className="text-xs font-mono font-bold text-[#0b1c30] dark:text-white">{job.device}</span>
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Destination</span>
+                    <span className="text-xs font-mono font-bold text-foreground dark:text-white">{job.device}</span>
                   </div>
-                  <p className="text-sm font-bold text-[#0b1c30] dark:text-white">{job.location}</p>
-                  <p className="text-xs text-[#64748b] dark:text-[#94a3b8]">{job.zone}</p>
+                  <p className="text-sm font-bold text-foreground dark:text-white">{job.location}</p>
+                  <p className="text-xs text-muted-foreground">{job.zone}</p>
                 </div>
 
                 <button
@@ -580,7 +580,7 @@ export default function CollectorMap() {
                     setNavigatingJobId(null);
                     setRemindJobId(job.id);
                   }}
-                  className="w-full py-3 bg-[#006c49] text-white font-bold rounded-xl hover:bg-[#005a3c] transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -610,26 +610,26 @@ export default function CollectorMap() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-[#0b1c30]/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4"
+              className="fixed inset-0 bg-card/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4"
             >
               <motion.div
                 initial={{ y: 60, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 60, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl w-full max-w-sm p-6 shadow-2xl flex flex-col gap-5"
+                className="bg-card border border-border rounded-xl w-full max-w-sm p-6 shadow-md flex flex-col gap-5"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-[#006c49]/10 text-[#006c49] flex items-center justify-center shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] flex items-center justify-center shrink-0">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 11l3 3L22 4"></path>
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-[#0b1c30] dark:text-white">Task Completion Checklist</h3>
+                      <h3 className="text-sm font-black text-foreground dark:text-white">Task Completion Checklist</h3>
                       <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{job.location}</p>
                     </div>
                   </div>
@@ -639,9 +639,9 @@ export default function CollectorMap() {
                 </div>
 
                 {/* Job details strip */}
-                <div className="bg-slate-50 dark:bg-[#0f2942] rounded-xl px-4 py-3 flex justify-between items-center border border-slate-100 dark:border-[#1e3a5f]">
+                <div className="bg-slate-50 dark:bg-secondary rounded-xl px-4 py-3 flex justify-between items-center border border-slate-100 dark:border-border">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400">Device</span>
-                  <span className="text-[11px] font-mono font-bold text-[#0b1c30] dark:text-white">{job.device}</span>
+                  <span className="text-[11px] font-mono font-bold text-foreground dark:text-white">{job.device}</span>
                   <span className="text-[11px] text-slate-500 dark:text-slate-400">Fill</span>
                   <span className="text-[11px] font-bold text-[#ba1a1a]">{job.fill}%</span>
                 </div>
@@ -651,12 +651,12 @@ export default function CollectorMap() {
                   <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Before marking complete, confirm:</p>
                   {checklist.map((item, i) => (
                     <div key={i} className="flex items-start gap-2.5">
-                      <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-[#006c49]/10 flex items-center justify-center shrink-0">
+                      <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-primary/10 flex items-center justify-center shrink-0">
                         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#006c49" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                       </div>
-                      <span className="text-xs text-[#0b1c30] dark:text-[#cbd5e1]">{item}</span>
+                      <span className="text-xs text-foreground dark:text-muted-foreground">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -665,7 +665,7 @@ export default function CollectorMap() {
                 <div className="flex gap-3 pt-1 border-t border-slate-100 dark:border-[#0f2942]">
                   <button
                     onClick={() => setRemindJobId(null)}
-                    className="flex-1 py-2.5 border border-slate-200 dark:border-[#1e3a5f] text-slate-500 dark:text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-[#0f2942] transition-colors cursor-pointer"
+                    className="flex-1 py-2.5 border border-slate-200 dark:border-border text-slate-500 dark:text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-secondary transition-colors cursor-pointer"
                   >
                     Not Yet
                   </button>
@@ -676,7 +676,7 @@ export default function CollectorMap() {
                       setShowConfetti(true);
                       setTimeout(() => setShowConfetti(false), 4000);
                     }}
-                    className="flex-1 py-2.5 bg-[#006c49] text-white text-xs font-bold rounded-xl hover:bg-[#005a3c] transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="flex-1 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>

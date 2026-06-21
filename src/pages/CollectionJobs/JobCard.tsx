@@ -34,7 +34,7 @@ const getTypeColorClasses = (type: string) => {
     case "GLASS":
       return "bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/50";
     case "PAPER":
-      return "bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border border-blue-200/50 dark:border-blue-900/50";
+      return "bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-primary border border-blue-200/50 dark:border-blue-900/50";
     default:
       return "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-slate-200 dark:border-slate-800";
   }
@@ -50,11 +50,11 @@ export function JobCard({
 }: JobCardProps) {
   if (job.status === "Pending") {
     return (
-      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 relative flex flex-col gap-4 group">
+      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 relative flex flex-col gap-4 group">
         {/* Top Tags */}
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <span className="bg-blue-50 dark:bg-secondary text-blue-700 dark:text-blue-400 text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase border border-blue-100/30">
+            <span className="bg-blue-50 dark:bg-secondary text-blue-700 dark:text-primary text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase border border-blue-100/30">
               {job.device}
             </span>
             <span className={`text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase ${getTypeColorClasses(job.type)}`}>
@@ -106,8 +106,8 @@ export function JobCard({
             disabled={!localAssignment || localAssignment === "Unassigned"}
             className={`h-10 w-full rounded-xl text-xs font-bold tracking-wide transition-all active:scale-[0.98] ${
               localAssignment && localAssignment !== "Unassigned"
-                ? "bg-[#006c49] hover:bg-[#005a3c] text-white cursor-pointer"
-                : "bg-[#006c49]/10 dark:bg-[#006c49]/20 text-[#006c49]/50 dark:text-emerald-500/50 cursor-not-allowed border border-transparent"
+                ? "bg-primary hover:bg-primary/90 text-white cursor-pointer"
+                : "bg-primary/10 dark:bg-primary/20 text-[#006c49]/50 dark:text-emerald-500/50 cursor-not-allowed border border-transparent"
             }`}
           >
             Accept Job
@@ -119,11 +119,11 @@ export function JobCard({
 
   if (job.status === "In Transit") {
     return (
-      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 flex flex-col gap-4 group">
+      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 flex flex-col gap-4 group">
         {/* Top Tags */}
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <span className="bg-blue-50 dark:bg-secondary text-blue-700 dark:text-blue-400 text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase border border-blue-100/30">
+            <span className="bg-blue-50 dark:bg-secondary text-blue-700 dark:text-primary text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase border border-blue-100/30">
               {job.device}
             </span>
             <span className={`text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase ${getTypeColorClasses(job.type)}`}>
@@ -176,7 +176,7 @@ export function JobCard({
 
   // Completed
   return (
-    <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 flex flex-col gap-4 group">
+    <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 flex flex-col gap-4 group">
       {/* Top tags */}
       <div className="flex items-center justify-between">
         <span className="bg-slate-50 dark:bg-secondary text-slate-500 dark:text-muted-foreground text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase border border-slate-200/20">

@@ -15,7 +15,6 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/command";
-import { ALERTS_DATA } from "../pages/Alerts/Alerts";
 
 export interface HeaderNavProps {
   hideAlertsIcon?: boolean;
@@ -58,6 +57,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
   const [devices, setDevices] = useState<any[]>([]);
   const [collectors, setCollectors] = useState<any[]>([]);
   const [jobs, setJobs] = useState<any[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
 
   useEffect(() => {
     if (openCommand) {
@@ -65,6 +65,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
       fetch(`${baseUrl}/api/devices`).then(r => r.json()).then(setDevices).catch(() => { });
       fetch(`${baseUrl}/api/collectors`).then(r => r.json()).then(setCollectors).catch(() => { });
       fetch(`${baseUrl}/api/jobs`).then(r => r.json()).then(setJobs).catch(() => { });
+      fetch(`${baseUrl}/api/alerts`).then(r => r.json()).then(setAlerts).catch(() => { });
     }
   }, [openCommand]);
 
@@ -115,15 +116,15 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           {isDashboard && (
             <div
               onClick={() => setOpenCommand(true)}
-              className="flex items-center w-full bg-[#f8fafc] dark:bg-[#0f2942] rounded-xl border border-transparent hover:border-[#cbd5e1] dark:hover:border-[#334155] hover:bg-white dark:hover:bg-[#0b1c30] hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer"
+              className="flex items-center w-full bg-background dark:bg-secondary rounded-xl border border-transparent hover:border-border dark:hover:border-border hover:bg-white dark:hover:bg-card hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-3">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <div className="flex-1 text-sm font-medium text-[#94a3b8] flex justify-between items-center">
+              <div className="flex-1 text-sm font-medium text-muted-foreground flex justify-between items-center">
                 <span>{t("headerNav.searchPlaceholder") || "Search or jump to..."}</span>
-                <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-[#cbd5e1] dark:border-[#1e3a5f] bg-[#f1f5f9] dark:bg-[#1a365d] px-1.5 font-mono text-[10px] font-medium text-[#64748b] dark:text-[#94a3b8]">
+                <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                   <span className="text-xs">⌘</span>K
                 </kbd>
               </div>
@@ -200,16 +201,18 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                 </CommandGroup>
               )}
 
-              <CommandGroup heading="Alerts">
-                {ALERTS_DATA.map(a => (
-                  <CommandItem key={`alert-${a.id}`} onSelect={() => runCommand(() => navigate("/alerts"))}>
-                    <div className="flex flex-col">
-                      <span>{a.messageTitle}</span>
-                      <span className="text-xs text-muted-foreground">{a.deviceName} • {a.severity}</span>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {alerts.length > 0 && (
+                <CommandGroup heading="Alerts">
+                  {alerts.map(a => (
+                    <CommandItem key={`alert-${a.id}`} onSelect={() => runCommand(() => navigate("/alerts"))}>
+                      <div className="flex flex-col">
+                        <span>{a.messageTitle}</span>
+                        <span className="text-xs text-muted-foreground">{a.deviceName} • {a.severity}</span>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
 
               <CommandGroup heading="Account">
                 <CommandItem onSelect={() => runCommand(() => navigate("/profile"))}>
@@ -251,15 +254,15 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             {isSettingsOpen && (
               <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-card border border-border rounded-xl shadow-lg z-50 flex flex-col py-1 animate-in fade-in zoom-in-95 duration-100">
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <h4 className="text-sm font-semibold text-[#0b1c30] dark:text-white">{t("headerNav.settings")}</h4>
+                  <h4 className="text-sm font-semibold text-foreground dark:text-white">{t("headerNav.settings")}</h4>
                 </div>
 
                 {/* Language */}
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">{t("headerNav.language")}</label>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">{t("headerNav.language")}</label>
                   <div className="relative">
                     <select
-                      className="w-full text-sm font-medium bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] text-[#0b1c30] dark:text-white appearance-none cursor-pointer"
+                      className="w-full text-sm font-medium bg-background dark:bg-secondary border border-border rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] text-foreground dark:text-white appearance-none cursor-pointer"
                       value={i18n.language || 'en'}
                       onChange={(e) => i18n.changeLanguage(e.target.value)}
                     >
@@ -277,8 +280,8 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
                 {/* Theme */}
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">{t("headerNav.theme")}</label>
-                  <div className="flex bg-[#f8fafc] dark:bg-[#0f2942] p-1 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">{t("headerNav.theme")}</label>
+                  <div className="flex bg-background dark:bg-secondary p-1 rounded-lg border border-border">
                     <button
                       onClick={() => setThemeMode('light')}
                       className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'light' ? 'bg-card shadow-sm text-foreground dark:text-white border border-border' : 'text-muted-foreground hover:text-foreground dark:hover:text-white'}`}
@@ -293,7 +296,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                     </button>
                     <button
                       onClick={() => setThemeMode('system')}
-                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'system' ? 'bg-white dark:bg-[#0b1c30] shadow-sm text-[#0b1c30] dark:text-white border border-[#e2e8f0] dark:border-[#1e3a5f]' : 'text-[#64748b] dark:text-[#cbd5e1] hover:text-[#0b1c30] dark:hover:text-white'}`}
+                      className={`flex-1 py-1.5 text-[11px] font-bold rounded-md transition-colors ${themeMode === 'system' ? 'bg-card shadow-sm text-foreground dark:text-white border border-border' : 'text-muted-foreground hover:text-foreground dark:hover:text-white'}`}
                     >
                       {t("headerNav.system")}
                     </button>
@@ -302,16 +305,16 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
                 {/* Notifications settings */}
                 <div className="px-4 py-3 border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
                     {t("headerNav.notifications")}
                   </label>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#0b1c30] dark:text-[#cbd5e1] font-medium">
+                    <span className="text-xs text-foreground dark:text-muted-foreground font-medium">
                       {t("headerNav.emailAlerts")}
                     </span>
                     <button
                       onClick={() => handleEmailNotifyToggle(!isEmailNotifyEnabled)}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isEmailNotifyEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isEmailNotifyEnabled ? "bg-primary" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
                         }`}
                     >
                       <span
@@ -324,16 +327,16 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
 
                 {/* Enterprise Sync setting */}
                 <div className="px-4 py-3">
-                  <label className="text-xs font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider mb-2 block">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
                     {t("headerNav.enterpriseSync")}
                   </label>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#0b1c30] dark:text-[#cbd5e1] font-medium">
+                    <span className="text-xs text-foreground dark:text-muted-foreground font-medium">
                       {t("headerNav.activeDirectorySso")}
                     </span>
                     <button
                       onClick={() => handleSSOToggle(!isSSOEnabled)}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isSSOEnabled ? "bg-[#006c49]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isSSOEnabled ? "bg-primary" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
                         }`}
                     >
                       <span

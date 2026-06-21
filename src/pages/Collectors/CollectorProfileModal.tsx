@@ -67,7 +67,7 @@ export function CollectorProfileModal({
 
   return (
     <div className="fixed inset-0 bg-card/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-background dark:bg-secondary rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col relative">
+      <div className="bg-background dark:bg-secondary rounded-xl shadow-md w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col relative">
         {/* Header */}
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between z-10 shrink-0">
           <h2 className="text-xl font-bold text-foreground dark:text-white">
@@ -75,7 +75,7 @@ export function CollectorProfileModal({
           </h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground dark:text-muted-foreground transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground transition-colors"
           >
             <svg
               width="20"
@@ -105,7 +105,7 @@ export function CollectorProfileModal({
               <h2 className="text-xl font-bold text-foreground dark:text-white">
                 {collector.name}
               </h2>
-              <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground mb-4">
+              <p className="text-sm font-medium text-muted-foreground mb-4">
                 ID: {collector.id}
               </p>
               <StatusBadge
@@ -162,7 +162,7 @@ export function CollectorProfileModal({
                   type="button"
                   onClick={handleSave}
                   disabled={saving || !name || !region}
-                  className="mt-2 h-11 rounded-lg bg-[#006c49] text-white text-sm font-semibold hover:bg-[#005a3c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="mt-2 h-11 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
@@ -170,7 +170,7 @@ export function CollectorProfileModal({
 
               <div className="w-full mt-6 pt-6 border-t border-border flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+                  <span className="text-sm font-medium text-muted-foreground">
                     Region
                   </span>
                   <span className="text-sm font-semibold text-foreground dark:text-white">
@@ -178,7 +178,7 @@ export function CollectorProfileModal({
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+                  <span className="text-sm font-medium text-muted-foreground">
                     Joined
                   </span>
                   <span className="text-sm font-semibold text-foreground dark:text-white">
@@ -186,7 +186,7 @@ export function CollectorProfileModal({
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+                  <span className="text-sm font-medium text-muted-foreground">
                     Contact
                   </span>
                   <span className="text-sm font-semibold text-[#006c49]">
@@ -202,7 +202,7 @@ export function CollectorProfileModal({
             {/* Stats Row */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="bg-card border border-border rounded-xl p-4 shadow-sm flex flex-col">
-                <span className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider mb-1">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   Total Collections
                 </span>
                 <span className="text-2xl font-bold text-foreground dark:text-white">
@@ -210,7 +210,7 @@ export function CollectorProfileModal({
                 </span>
               </div>
               <div className="bg-card border border-border rounded-xl p-4 shadow-sm flex flex-col">
-                <span className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider mb-1">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   Avg Rating
                 </span>
                 <span className="text-2xl font-bold text-foreground dark:text-white">
@@ -219,7 +219,7 @@ export function CollectorProfileModal({
                 </span>
               </div>
               <div className="bg-card border border-border rounded-xl p-4 shadow-sm flex flex-col col-span-2 md:col-span-1">
-                <span className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider mb-1">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                   On-Time Rate
                 </span>
                 <span className="text-2xl font-bold text-foreground dark:text-white">
@@ -239,16 +239,16 @@ export function CollectorProfileModal({
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-card border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
+                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Date
                       </th>
-                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
+                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Location
                       </th>
-                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
+                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Volume
                       </th>
-                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground dark:text-muted-foreground uppercase tracking-wider">
+                      <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Status
                       </th>
                     </tr>

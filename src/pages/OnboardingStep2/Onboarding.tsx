@@ -81,7 +81,7 @@ export default function Onboarding() {
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10">
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left — Marketing / Info */}
-          <div className="flex flex-col gap-8 bg-[#006c49] p-10 rounded-2xl text-white relative overflow-hidden shadow-lg h-full">
+          <div className="flex flex-col gap-8 bg-primary p-10 rounded-xl text-white relative overflow-hidden shadow-lg h-full">
             {/* Decorative background blurs to match the original design intent */}
             <div className="absolute bg-card/20 blur-[40px] w-64 h-64 rounded-full -bottom-10 -right-10 pointer-events-none" />
             <div className="absolute bg-card/10 blur-[40px] w-64 h-64 rounded-full -top-10 -left-10 pointer-events-none" />
@@ -127,7 +127,7 @@ export default function Onboarding() {
           </div>
 
           {/* Right — Form */}
-          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
+          <div className="bg-card border border-border rounded-xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-xs font-semibold text-[#006c49] tracking-widest uppercase mb-1">
@@ -297,7 +297,7 @@ export default function Onboarding() {
       {/* Verification Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-card/40 backdrop-blur-sm">
-          <div className="bg-card rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden flex flex-col">
+          <div className="bg-card rounded-xl shadow-md max-w-sm w-full overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 flex flex-col gap-4 text-center items-center">
               <div className="w-16 h-16 bg-[#e1f5ee] rounded-full flex items-center justify-center mb-2">
                 <svg

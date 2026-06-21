@@ -8,7 +8,7 @@ import imgAiCore from "../../assets/smartsort_ai_core.png";
 
 function LogoSvg() {
   return (
-    <svg width="36" height="36" viewBox="0 0 100 100" fill="none" className="text-blue-600">
+    <svg width="36" height="36" viewBox="0 0 100 100" fill="none" className="text-primary">
       <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" stroke="currentColor" strokeWidth="8" strokeLinejoin="round" fill="none"/>
       <line x1="50" y1="5" x2="50" y2="50" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
       <line x1="50" y1="50" x2="90" y2="72.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
@@ -337,7 +337,7 @@ export default function Login() {
           <LogoSvg />
           <div className="flex flex-col">
             <span className="text-lg font-black tracking-tight text-foreground">SmartSort</span>
-            <span className="text-[9px] font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase -mt-1">Air</span>
+            <span className="text-[9px] font-bold tracking-widest text-primary dark:text-primary uppercase -mt-1">Air</span>
           </div>
         </div>
 
@@ -364,7 +364,7 @@ export default function Login() {
                 onClick={() => setSelectedRole("manager")}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                   selectedRole === "manager"
-                    ? "bg-card shadow-sm text-blue-600 dark:text-blue-400"
+                    ? "bg-card shadow-sm text-primary dark:text-primary"
                     : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
                 }`}
               >
@@ -376,7 +376,7 @@ export default function Login() {
                 onClick={() => setSelectedRole("collector")}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                   selectedRole === "collector"
-                    ? "bg-card shadow-sm text-blue-600 dark:text-blue-400"
+                    ? "bg-card shadow-sm text-primary dark:text-primary"
                     : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
                 }`}
               >
@@ -448,7 +448,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 dark:text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400"
+                  className="text-slate-400 dark:text-muted-foreground hover:text-primary dark:hover:text-blue-400"
                 >
                   {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
                 </button>
@@ -465,7 +465,7 @@ export default function Login() {
               disabled={isLoading || !isFormValid}
               className={`h-12 w-full rounded-lg font-bold text-sm tracking-wide transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 ${
                 isFormValid && !isLoading
-                  ? "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-blue-600/10"
+                  ? "bg-primary hover:bg-primary/90 text-white cursor-pointer shadow-blue-600/10"
                   : "bg-slate-100 dark:bg-secondary text-slate-400 dark:text-slate-600 cursor-not-allowed border border-transparent"
               }`}
             >
@@ -474,10 +474,10 @@ export default function Login() {
 
             {/* Inquiry & links */}
             <div className="flex flex-col gap-4 items-center justify-center text-xs mt-2">
-              <button type="button" onClick={() => setIsSignup(!isSignup)} className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
+              <button type="button" onClick={() => setIsSignup(!isSignup)} className="font-semibold text-primary hover:text-blue-500 transition-colors">
                 {isSignup ? "Already have an account? Log in" : "Need an account? Sign up"}
               </button>
-              <a href="#" className="font-semibold text-slate-500 hover:text-blue-600 transition-colors">
+              <a href="#" className="font-semibold text-slate-500 hover:text-primary transition-colors">
                 Forgot password?
               </a>
               
@@ -486,7 +486,7 @@ export default function Login() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-slate-300 dark:border-border text-blue-600 focus:ring-blue-500 bg-slate-50 dark:bg-card"
+                  className="rounded border-slate-300 dark:border-border text-primary focus:ring-blue-500 bg-slate-50 dark:bg-card"
                 />
                 <span className="text-slate-500 dark:text-muted-foreground font-medium">Stay signed in for 30 days</span>
               </label>
@@ -516,14 +516,14 @@ export default function Login() {
         }}
       >
         {/* Glow ambient background effects */}
-        <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="absolute w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
         <div className="max-w-md w-full flex flex-col items-center gap-10 relative z-10">
           
           {/* Circular float card */}
-          <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-[#07132a]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl flex flex-col items-center justify-center gap-3 p-6 group hover:border-blue-500/30 transition-all duration-500">
+          <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-[#07132a]/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-md flex flex-col items-center justify-center gap-3 p-6 group hover:border-blue-500/30 transition-all duration-500">
             {/* AI badge */}
-            <span className="absolute top-4 right-4 bg-blue-600 text-[8px] font-extrabold tracking-widest px-2 py-0.5 rounded uppercase">
+            <span className="absolute top-4 right-4 bg-primary text-[8px] font-extrabold tracking-widest px-2 py-0.5 rounded uppercase">
               AI Engine
             </span>
             

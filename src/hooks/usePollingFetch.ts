@@ -9,7 +9,7 @@ type Options = {
 };
 
 export function usePollingFetch<T>(fetcher: Fetcher<T>, options: Options = {}) {
-  const { intervalMs = 5000, enabled = true } = options;
+  const { intervalMs = 15000, enabled = true } = options;
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);

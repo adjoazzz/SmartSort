@@ -194,7 +194,7 @@ export default function Onboarding() {
           </div>
 
           {/* Right — Form */}
-          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-5">
+          <div className="bg-card border border-border rounded-xl shadow-sm p-6 sm:p-8 flex flex-col gap-5">
             <div>
               <h2 className="text-xl font-semibold text-foreground dark:text-white">
                 Create your account
@@ -255,7 +255,7 @@ export default function Onboarding() {
             <div className="flex flex-col gap-3 pt-1">
               <button
                 onClick={handleSubmit}
-                className="w-full h-11 bg-[#006c49] hover:bg-[#005a3c] active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all"
+                className="w-full h-11 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all"
               >
                 GET STARTED →
               </button>

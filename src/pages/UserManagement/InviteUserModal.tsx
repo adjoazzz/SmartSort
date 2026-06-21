@@ -180,12 +180,12 @@ export function InviteUserModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 12 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative pointer-events-auto"
+              className="bg-card border border-border rounded-xl shadow-md w-full max-w-md overflow-hidden flex flex-col relative pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
-                <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+              <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-background dark:bg-secondary">
+                <h2 className="text-lg font-bold text-foreground dark:text-white">
                   {t("userModal.title")}
                 </h2>
                 <button
@@ -225,10 +225,10 @@ export function InviteUserModal({
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#0b1c30] dark:text-white">
+                    <h3 className="text-xl font-bold text-foreground dark:text-white">
                       {t("userModal.inviteSent")}
                     </h3>
-                    <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] mt-2 leading-relaxed">
+                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                       {t("userModal.inviteMsg", { email, role })}
                     </p>
                     {submitError && (
@@ -262,7 +262,7 @@ export function InviteUserModal({
                       className={`h-11 px-4 border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
                         nameError
                           ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
-                          : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/20"
+                          : "border-border focus:border-[#006c49] focus:ring-[#006c49]/20"
                       }`}
                     />
                     {nameError && (
@@ -291,7 +291,7 @@ export function InviteUserModal({
                       className={`h-11 px-4 border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
                         emailError
                           ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
-                          : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/20"
+                          : "border-border focus:border-[#006c49] focus:ring-[#006c49]/20"
                       }`}
                     />
                     {emailError && (
@@ -312,7 +312,7 @@ export function InviteUserModal({
                       id="role"
                       value={role}
                       onChange={(e) => setRole(e.target.value)}
-                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
                     >
                       <option value="Admin">Admin</option>
                       <option value="Manager">Manager</option>
@@ -332,7 +332,7 @@ export function InviteUserModal({
                       id="facility"
                       value={assignedFacility}
                       onChange={(e) => setAssignedFacility(e.target.value)}
-                      className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
                     >
                       <option value="HQ Corporate Center">
                         HQ Corporate Center
@@ -361,7 +361,7 @@ export function InviteUserModal({
                       <line x1="12" y1="16" x2="12" y2="12"></line>
                       <line x1="12" y1="8" x2="12.01" y2="8"></line>
                     </svg>
-                    <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
                       {t("userModal.infoText")}
                     </p>
                   </div>
@@ -377,7 +377,7 @@ export function InviteUserModal({
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
+                      className="px-5 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
                     >
                       {status === "sending" ? t("userModal.saving") : t("userModal.createUser")}
                     </button>

@@ -38,11 +38,11 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 12 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col relative pointer-events-auto max-h-[85vh]"
+              className="bg-card border border-border rounded-xl shadow-md w-full max-w-lg overflow-hidden flex flex-col relative pointer-events-auto max-h-[85vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="border-b border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex items-center justify-between bg-[#f8fafc] dark:bg-[#0f2942]">
+              <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-background dark:bg-secondary">
                 <div className="flex items-center gap-2.5">
                   <svg
                     width="20"
@@ -60,13 +60,13 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                     <line x1="16" y1="17" x2="8" y2="17" />
                     <polyline points="10 9 9 9 8 9" />
                   </svg>
-                  <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                  <h2 className="text-lg font-bold text-foreground dark:text-white">
                     Bulk Import Documentation
                   </h2>
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#f1f5f9] dark:hover:bg-[#1a365d] text-[#64748b] dark:text-[#94a3b8] transition-colors cursor-pointer"
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground transition-colors cursor-pointer"
                 >
                   <svg
                     width="20"
@@ -87,30 +87,30 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                 
                 {/* Intro Section */}
                 <div>
-                  <p className="text-sm text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Automate your team provisioning process. You can provision users in bulk by uploading a structured comma-separated values (CSV) file, or by establishing an Active Directory sync.
                   </p>
                 </div>
 
                 {/* CSV Instructions */}
                 <div className="flex flex-col gap-3">
-                  <h3 className="text-sm font-bold text-[#0b1c30] dark:text-white uppercase tracking-wider">
+                  <h3 className="text-sm font-bold text-foreground dark:text-white uppercase tracking-wider">
                     1. CSV File Specifications
                   </h3>
-                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     Ensure your CSV file contains the following exact column headers (case-sensitive) and format rules:
                   </p>
 
-                  <div className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl overflow-hidden text-xs">
+                  <div className="border border-border rounded-xl overflow-hidden text-xs">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f]">
-                          <th className="px-4 py-2 font-bold text-[#515f74] dark:text-[#cbd5e1]">Column</th>
-                          <th className="px-4 py-2 font-bold text-[#515f74] dark:text-[#cbd5e1]">Type</th>
-                          <th className="px-4 py-2 font-bold text-[#515f74] dark:text-[#cbd5e1]">Allowed Values</th>
+                        <tr className="bg-background dark:bg-secondary border-b border-border">
+                          <th className="px-4 py-2 font-bold text-muted-foreground">Column</th>
+                          <th className="px-4 py-2 font-bold text-muted-foreground">Type</th>
+                          <th className="px-4 py-2 font-bold text-muted-foreground">Allowed Values</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-[#f1f5f9] dark:divide-[#0f2942] text-[#515f74] dark:text-[#cbd5e1]">
+                      <tbody className="divide-y divide-[#f1f5f9] dark:divide-[#0f2942] text-muted-foreground">
                         <tr>
                           <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">name</td>
                           <td className="px-4 py-2">String</td>
@@ -144,7 +144,7 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                 {/* Sample Code Block */}
                 <div className="flex flex-col gap-2.5">
                   <div className="flex justify-between items-center">
-                    <h4 className="text-xs font-bold text-[#0b1c30] dark:text-white uppercase tracking-wider">
+                    <h4 className="text-xs font-bold text-foreground dark:text-white uppercase tracking-wider">
                       Sample CSV Content
                     </h4>
                     <button
@@ -158,17 +158,17 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                       Copy Sample
                     </button>
                   </div>
-                  <pre className="bg-[#f8fafc] dark:bg-[#0f2942] border border-[#e2e8f0] dark:border-[#1e3a5f] p-4 rounded-xl font-mono text-xs text-[#0b1c30] dark:text-[#cbd5e1] overflow-x-auto whitespace-pre">
+                  <pre className="bg-background dark:bg-secondary border border-border p-4 rounded-xl font-mono text-xs text-foreground dark:text-muted-foreground overflow-x-auto whitespace-pre">
                     {sampleCSV}
                   </pre>
                 </div>
 
                 {/* Active Directory Sync */}
                 <div className="flex flex-col gap-2.5">
-                  <h3 className="text-sm font-bold text-[#0b1c30] dark:text-white uppercase tracking-wider">
+                  <h3 className="text-sm font-bold text-foreground dark:text-white uppercase tracking-wider">
                     2. Active Directory Federation
                   </h3>
-                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     To set up dynamic synchronization via SAML 2.0 or SCIM protocols, please navigate to the <strong>Settings &gt; Authentication</strong> panel. This allows automated onboarding/offboarding based on your enterprise directory groups.
                   </p>
                 </div>
@@ -176,11 +176,11 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
               </div>
 
               {/* Footer */}
-              <div className="border-t border-[#e2e8f0] dark:border-[#1e3a5f] px-6 py-4 flex justify-end bg-[#f8fafc] dark:bg-[#0f2942]">
+              <div className="border-t border-border px-6 py-4 flex justify-end bg-background dark:bg-secondary">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors cursor-pointer"
+                  className="px-5 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Got it
                 </button>

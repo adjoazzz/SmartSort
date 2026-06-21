@@ -12,12 +12,14 @@ model Device {
   location       String
   fillLevel      Int             @default(0)
   status         String          @default("Active") // Active, Offline, Maintenance
+  deviceType     String          @default("bin")
   lastSortedItem String?         
   updatedAt      DateTime        @updatedAt
   createdAt      DateTime        @default(now())
   collectionJobs CollectionJob[]
   processedItems ProcessedItem[]
   deviceEvents   DeviceEvent[]
+  alerts         Alert[]
 }
 
 model CollectionJob {
@@ -88,6 +90,10 @@ model Alert {
   updatedAt   DateTime @updatedAt
 
   device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([severity, createdAt])
+  @@index([deviceId, createdAt])
+  @@index([createdAt])
 }
 
 // System, maintenance, and operational events

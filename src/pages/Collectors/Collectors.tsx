@@ -65,7 +65,7 @@ export default function Collectors() {
       actions={
         <button
           onClick={() => setIsInviteModalOpen(true)}
-          className="bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
+          className="bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
         >
           <span className="text-lg font-bold">+</span> Add New Collector
         </button>
@@ -76,7 +76,7 @@ export default function Collectors() {
           <h2 className="text-lg font-semibold text-foreground dark:text-white">
             Registered Personnel
           </h2>
-          <div className="flex items-center w-full sm:w-auto min-w-[250px] bg-white dark:bg-[#0b1c30] rounded-lg border border-black dark:border-[#1e3a5f] focus-within:border-black dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-3.5 py-2">
+          <div className="flex items-center w-full sm:w-auto min-w-[250px] bg-card rounded-lg border border-black dark:border-border focus-within:border-black dark:focus-within:border-border focus-within:shadow-sm transition-all overflow-hidden px-3.5 py-2">
             <svg
               width="16"
               height="16"
@@ -94,7 +94,7 @@ export default function Collectors() {
             <input
               type="text"
               placeholder="Search collectors..."
-              className="bg-transparent border-none outline-none text-sm font-medium text-[#0b1c30] dark:text-white placeholder-[#94a3b8] w-full"
+              className="bg-transparent border-none outline-none text-sm font-medium text-foreground dark:text-white placeholder-[#94a3b8] w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

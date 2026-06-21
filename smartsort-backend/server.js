@@ -21,6 +21,13 @@ const prisma = new PrismaClient({
 // Initialize the Express app
 const app = express();
 
+const withTimeout = (promise, ms = 5000) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Database query timed out')), ms))
+  ]);
+};
+
 
 // Middleware
 app.use(cors()); // Allows your React app to make requests here
@@ -850,7 +857,7 @@ app.get('/api/alerts', async (req, res) => {
       }
     }
 
-    const [alerts, totalCount] = await Promise.all([
+    const [alerts, totalCount] = await withTimeout(Promise.all([
       prisma.alert.findMany({
         where: whereClause,
         orderBy: { createdAt: 'desc' },
@@ -859,7 +866,7 @@ app.get('/api/alerts', async (req, res) => {
         take: limit,
       }),
       prisma.alert.count({ where: whereClause }),
-    ]);
+    ]), 5000);
 
     const formattedAlerts = alerts.map((alert) => {
       const diffMs = new Date() - new Date(alert.createdAt);
@@ -896,13 +903,24 @@ app.get('/api/alerts', async (req, res) => {
   }
 });
 
+let cachedSummary = null;
+let lastSummaryFetch = 0;
+
 // GET Alerts Summary
 app.get('/api/alerts/summary', async (req, res) => {
   try {
-    const alerts = await prisma.alert.findMany();
-    const critical = alerts.filter(a => a.severity === 'CRITICAL').length;
-    const warning = alerts.filter(a => a.severity === 'WARNING').length;
-    res.status(200).json({ critical, warning });
+    const now = Date.now();
+    if (cachedSummary && (now - lastSummaryFetch < 10000)) {
+      return res.status(200).json(cachedSummary);
+    }
+    const [critical, warning] = await withTimeout(Promise.all([
+      prisma.alert.count({ where: { severity: 'CRITICAL' } }),
+      prisma.alert.count({ where: { severity: 'WARNING' } })
+    ]), 5000);
+    
+    cachedSummary = { critical, warning };
+    lastSummaryFetch = now;
+    res.status(200).json(cachedSummary);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch alerts summary' });
   }

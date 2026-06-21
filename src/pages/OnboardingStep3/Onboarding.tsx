@@ -182,7 +182,7 @@ export default function Onboarding() {
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* Left — Visual Info */}
-          <div className="flex flex-col gap-8 bg-[#eff4ff] dark:bg-background border border-[#bbcabf] dark:border-border p-10 rounded-2xl relative overflow-hidden shadow-sm h-full flex items-center justify-center">
+          <div className="flex flex-col gap-8 bg-[#eff4ff] dark:bg-background border border-[#bbcabf] dark:border-border p-10 rounded-xl relative overflow-hidden shadow-sm h-full flex items-center justify-center">
             {/* The background green glow effect from the original */}
             <div className="absolute w-64 h-64 bg-[#10b981] rounded-full blur-[80px] opacity-20" />
             
@@ -321,7 +321,7 @@ export default function Onboarding() {
                   {cameraState !== "success" && (
                     <button
                       onClick={handleSimulateScan}
-                      className="px-3 py-1 bg-[#006c49] hover:bg-[#005a3c] text-white text-xs font-semibold rounded shadow-sm transition-all flex items-center gap-1 cursor-pointer"
+                      className="px-3 py-1 bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded shadow-sm transition-all flex items-center gap-1 cursor-pointer"
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
@@ -348,7 +348,7 @@ export default function Onboarding() {
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 flex items-center justify-center">
-                    <div className="w-2.5 h-2.5 bg-[#006c49] dark:bg-emerald-400 rounded-sm ring-2 ring-[#006c49] dark:ring-emerald-400 ring-offset-4 ring-offset-[#eff4ff] dark:ring-offset-[#071321]" />
+                    <div className="w-2.5 h-2.5 bg-primary dark:bg-emerald-400 rounded-sm ring-2 ring-[#006c49] dark:ring-emerald-400 ring-offset-4 ring-offset-[#eff4ff] dark:ring-offset-[#071321]" />
                   </div>
                   <span className="font-semibold text-[#006c49] dark:text-emerald-400 tracking-wide text-sm hidden sm:block">Facility Mapping</span>
                 </div>
@@ -357,7 +357,7 @@ export default function Onboarding() {
           </div>
 
           {/* Right — Form */}
-          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
+          <div className="bg-card border border-border rounded-xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-xs font-semibold text-muted-foreground tracking-widest uppercase mb-1">STEP 3 OF 3</h2>
@@ -366,9 +366,9 @@ export default function Onboarding() {
               <div className="flex flex-col items-end gap-1 hidden sm:flex">
                 <span className="text-sm font-semibold text-[#006c49] dark:text-emerald-400">Configuration</span>
                 <div className="flex gap-1.5">
-                  <div className="w-6 h-1.5 bg-[#006c49] dark:bg-emerald-500 rounded-full" />
-                  <div className="w-6 h-1.5 bg-[#006c49] dark:bg-emerald-500 rounded-full" />
-                  <div className="w-6 h-1.5 bg-[#006c49] dark:bg-emerald-500 rounded-full" />
+                  <div className="w-6 h-1.5 bg-primary dark:bg-emerald-500 rounded-full" />
+                  <div className="w-6 h-1.5 bg-primary dark:bg-emerald-500 rounded-full" />
+                  <div className="w-6 h-1.5 bg-primary dark:bg-emerald-500 rounded-full" />
                 </div>
               </div>
             </div>
@@ -414,7 +414,7 @@ export default function Onboarding() {
             <div className="border-t border-[#bbcabf] pt-6 flex flex-col gap-4 mt-2">
               <button
                 onClick={handleSubmit}
-                className="h-12 w-full bg-[#006c49] hover:bg-[#005a3c] active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
+                className="h-12 w-full bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
               >
                 Register & Finish
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

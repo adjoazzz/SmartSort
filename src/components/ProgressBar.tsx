@@ -19,7 +19,7 @@ export function ProgressBar({
         <span className="text-foreground dark:text-white">{label}</span>
         <span className="text-muted-foreground">{valueLabel || `${value}%`}</span>
       </div>
-      <div className="w-full h-2 bg-muted dark:bg-muted rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
         <div 
           className={`h-full rounded-full ${colorClass} transition-all duration-500 ease-in-out`} 
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}

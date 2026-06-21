@@ -223,7 +223,7 @@ export default function Devices() {
           </button>
           <button
             onClick={() => setShowRegisterModal(true)}
-            className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
+            className="bg-primary text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
           >
             <svg
               width="14"
@@ -245,7 +245,7 @@ export default function Devices() {
         <div className="flex-1 w-full bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
           {/* Local Table Search Bar */}
           <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-card flex items-center">
-            <div className="flex items-center w-full max-w-md bg-background dark:bg-secondary rounded-lg border border-border focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:bg-card focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+            <div className="flex items-center w-full max-w-md bg-background dark:bg-secondary rounded-lg border border-border focus-within:border-border dark:focus-within:border-border focus-within:bg-card focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
               <svg
                 width="16"
                 height="16"
@@ -357,7 +357,7 @@ export default function Devices() {
                       <div className="flex items-center gap-3 w-24">
                         <Progress
                           value={device.fill}
-                          className={`h-1.5 bg-muted dark:bg-muted ${
+                          className={`h-1.5 bg-muted ${
                             device.fill > 85
                               ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                               : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
@@ -473,7 +473,7 @@ export default function Devices() {
 
                   {/* General Bar */}
                   <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#cbd5e1] dark:border-[#334155]">
+                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-border">
                       <div
                         className="w-full bg-[#cbd5e1] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
                         style={{ height: `${generalFill}%` }}

@@ -196,7 +196,7 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
           {data.value}
         </p>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-muted dark:bg-muted">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-muted">
         <div
           className={`h-full ${data.progressColor}`}
           style={{ width: data.progressWidth }}
@@ -374,7 +374,7 @@ export default function Analytics() {
         <div className="flex gap-2">
           <button
             onClick={handleExportPDF}
-            className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
+            className="bg-primary text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
           >
             <svg
               width="16"
@@ -392,21 +392,21 @@ export default function Analytics() {
             </svg>
             Export PDF
           </button>
-          <div className="flex items-center gap-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg px-3 py-1 shadow-sm">
+          <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1 shadow-sm">
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
+              className="bg-transparent text-foreground dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
             />
-            <span className="text-[#94a3b8] dark:text-[#64748b] text-sm font-semibold">
+            <span className="text-muted-foreground text-sm font-semibold">
               to
             </span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
+              className="bg-transparent text-foreground dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px]"
             />
           </div>
         </div>
@@ -440,23 +440,23 @@ export default function Analytics() {
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[400px]">
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+                <h2 className="text-lg font-bold text-foreground dark:text-white">
                   {t("analytics.rateComparison")}
                 </h2>
-                <p className="text-sm text-[#64748b] dark:text-[#cbd5e1] mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   {t("analytics.rateDesc")}
                 </p>
               </div>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></div>
-                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1] font-medium">
+                  <span className="text-sm text-muted-foreground font-medium">
                     {t("analytics.recycling")}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#fca5a5]"></div>
-                  <span className="text-sm text-[#515f74] dark:text-[#cbd5e1] font-medium">
+                  <span className="text-sm text-muted-foreground font-medium">
                     {t("analytics.contamination")}
                   </span>
                 </div>
@@ -527,8 +527,8 @@ export default function Analytics() {
           </div>
 
           {/* Tonnage by Material */}
-          <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm flex flex-col h-[400px]">
-            <h2 className="text-[17px] font-bold text-[#0b1c30] dark:text-white mb-5">
+          <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col h-[400px]">
+            <h2 className="text-[17px] font-bold text-foreground dark:text-white mb-5">
               {t("analytics.tonnageTitle")}
             </h2>
 
@@ -556,7 +556,7 @@ export default function Analytics() {
                         {item.value}
                       </span>
                     </div>
-                    <div className="w-full bg-muted dark:bg-muted rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className={`h-full rounded-full ${item.color}`}
                         style={{ width: `${item.percent}%` }}
@@ -569,7 +569,7 @@ export default function Analytics() {
 
             <div className="border-t border-[#f1f5f9] dark:border-[#0f2942] mt-auto pt-4 grid grid-cols-2 divide-x divide-[#f1f5f9]">
               <div className="pr-4">
-                <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">
+                <p className="text-xs text-muted-foreground font-semibold mb-1">
                   {t("analytics.captureRate")}
                 </p>
                 <p className="text-2xl font-bold text-foreground dark:text-white">
@@ -577,7 +577,7 @@ export default function Analytics() {
                 </p>
               </div>
               <div className="pl-4 text-right">
-                <p className="text-xs text-[#94a3b8] dark:text-[#64748b] font-semibold mb-1">
+                <p className="text-xs text-muted-foreground font-semibold mb-1">
                   {t("analytics.efficiency")}
                 </p>
                 <p className="text-2xl font-bold text-foreground dark:text-white">
@@ -591,7 +591,7 @@ export default function Analytics() {
         {/* Bottom Row - Category Breakdown */}
         <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
           <div className="p-5 border-b border-[#f1f5f9] dark:border-[#0f2942] flex justify-between items-center">
-            <h2 className="text-lg font-bold text-[#0b1c30] dark:text-white">
+            <h2 className="text-lg font-bold text-foreground dark:text-white">
               {t("analytics.categoryBreakdown")}
             </h2>
             <button className="bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary transition-colors flex items-center gap-2 cursor-pointer">
@@ -622,8 +622,8 @@ export default function Analytics() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white dark:bg-[#0b1c30] border-b border-[#f1f5f9] dark:border-[#0f2942]">
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider flex items-center gap-1">
+                <tr className="bg-card border-b border-[#f1f5f9] dark:border-[#0f2942]">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider flex items-center gap-1">
                     {t("analytics.tableMatCat")}
                     <svg
                       width="12"
@@ -636,7 +636,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     {t("analytics.tableVol")}
                     <svg
                       width="12"
@@ -650,7 +650,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     {t("analytics.tableMom")}
                     <svg
                       width="12"
@@ -664,7 +664,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     {t("analytics.tableTarget")}
                     <svg
                       width="12"
@@ -678,7 +678,7 @@ export default function Analytics() {
                       <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
                     </svg>
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748b] dark:text-[#94a3b8] tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider text-right">
                     {t("analytics.tableAction")}
                   </th>
                 </tr>
@@ -717,7 +717,7 @@ export default function Analytics() {
                     >
                       <td className="px-6 py-5 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded bg-muted dark:bg-muted flex items-center justify-center text-muted-foreground">
+                          <div className="w-8 h-8 rounded bg-muted flex items-center justify-center text-muted-foreground">
                             <CategoryIcon type={row.icon} />
                           </div>
                           <span className="text-sm font-bold text-foreground dark:text-white">
@@ -737,7 +737,7 @@ export default function Analytics() {
                               ? "bg-[#bbf7d0]/50 text-[#006c49]"
                               : row.growthTrend === "down"
                                 ? "bg-[#ffdad6] text-[#ba1a1a]"
-                                : "bg-muted dark:bg-muted text-muted-foreground"
+                                : "bg-muted text-muted-foreground"
                             }
                         `}
                         >
@@ -784,7 +784,7 @@ export default function Analytics() {
                       </td>
                       <td className="px-6 py-5 whitespace-nowrap">
                         <div className="flex items-center gap-3 w-32">
-                          <div className="w-full bg-muted dark:bg-muted rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                             <div
                               className={`h-full rounded-full ${row.goalColor}`}
                               style={{ width: `${row.goal}%` }}

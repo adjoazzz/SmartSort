@@ -145,7 +145,7 @@ export function InviteCollectorModal({
 
   return (
     <div className="fixed inset-0 bg-card/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col relative">
+      <div className="bg-card rounded-xl shadow-md w-full max-w-md overflow-hidden flex flex-col relative">
         {/* Header */}
         <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-background dark:bg-secondary">
           <h2 className="text-lg font-bold text-foreground dark:text-white">
@@ -203,7 +203,7 @@ export function InviteCollectorModal({
                 placeholder="e.g., Kwame Mensah"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
               />
             </div>
 
@@ -222,7 +222,7 @@ export function InviteCollectorModal({
                 placeholder="e.g., kwame@smartsort.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
               />
             </div>
 
@@ -238,7 +238,7 @@ export function InviteCollectorModal({
                 id="collector-facility"
                 value={facility}
                 onChange={(e) => setFacility(e.target.value)}
-                className="h-11 px-4 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
               >
                 <option value="Facility 1">Facility 1</option>
                 <option value="Facility 2">Facility 2</option>
@@ -292,7 +292,7 @@ export function InviteCollectorModal({
               <button
                 type="submit"
                 disabled={status === "sending" || !name || !email}
-                className="px-5 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-5 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {status === "sending" ? (
                   <>

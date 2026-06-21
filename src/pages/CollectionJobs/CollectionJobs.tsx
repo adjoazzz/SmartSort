@@ -176,7 +176,7 @@ const KPIS = [
     trend: "/ 12 Total",
     trendDirection: "neutral" as const,
     iconColorClass: "text-muted-foreground",
-    iconBgClass: "bg-muted dark:bg-muted",
+    iconBgClass: "bg-muted",
     icon: (
       <svg
         width="16"
@@ -425,7 +425,7 @@ export default function CollectionJobs() {
       hideAlertsIcon={false}
     >
       {/* ── BREADCRUMB AND HEADER NAVIGATION CONTROLS ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#cbd5e1]/30 dark:border-border/30 pb-5 -mt-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/30 dark:border-border/30 pb-5 -mt-2">
         <Breadcrumb>
           <BreadcrumbList className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             <BreadcrumbItem>
@@ -473,7 +473,7 @@ export default function CollectionJobs() {
             </button>
           </div>
 
-          <button className="px-4 py-2.5 bg-card border border-[#cbd5e1] dark:border-border hover:bg-slate-50 dark:hover:bg-secondary text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
+          <button className="px-4 py-2.5 bg-card border border-border hover:bg-slate-50 dark:hover:bg-secondary text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
             <svg
               width="14"
               height="14"
@@ -487,7 +487,7 @@ export default function CollectionJobs() {
             Filters
           </button>
 
-          <button className="px-4 py-2.5 bg-[#006c49] hover:bg-[#005a3c] text-white text-xs font-bold rounded-xl flex items-center gap-2 shadow-md transition-all active:scale-[0.98] cursor-pointer">
+          <button className="px-4 py-2.5 bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-xl flex items-center gap-2 shadow-md transition-all active:scale-[0.98] cursor-pointer">
             <svg
               width="14"
               height="14"
@@ -511,7 +511,7 @@ export default function CollectionJobs() {
         /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start mt-2">
           {/* COLUMN 1: OPEN */}
-          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-2xl min-h-[500px]">
+          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-xl min-h-[500px]">
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
@@ -543,7 +543,7 @@ export default function CollectionJobs() {
               ))}
 
               {pendingJobs.length === 0 && (
-                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-2xl">
+                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-xl">
                   No pending tasks in queue.
                 </div>
               )}
@@ -551,7 +551,7 @@ export default function CollectionJobs() {
           </div>
 
           {/* COLUMN 2: IN PROGRESS */}
-          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-2xl min-h-[500px]">
+          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-xl min-h-[500px]">
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
@@ -559,7 +559,7 @@ export default function CollectionJobs() {
                 <span className="text-sm font-black tracking-wider text-foreground uppercase">
                   In Progress
                 </span>
-                <span className="bg-blue-100/70 dark:bg-secondary text-[10px] font-black px-2 py-0.5 rounded-full text-blue-700 dark:text-blue-400">
+                <span className="bg-blue-100/70 dark:bg-secondary text-[10px] font-black px-2 py-0.5 rounded-full text-blue-700 dark:text-primary">
                   {String(inProgressJobs.length).padStart(2, "0")}
                 </span>
               </div>
@@ -583,7 +583,7 @@ export default function CollectionJobs() {
               ))}
 
               {inProgressJobs.length === 0 && (
-                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-2xl">
+                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-xl">
                   No active dispatches.
                 </div>
               )}
@@ -591,7 +591,7 @@ export default function CollectionJobs() {
           </div>
 
           {/* COLUMN 3: COMPLETE */}
-          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-2xl min-h-[500px]">
+          <div className="flex flex-col gap-5 bg-slate-50/50 dark:bg-card/20 border border-slate-200/40 dark:border-border/40 p-4.5 rounded-xl min-h-[500px]">
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
@@ -637,13 +637,13 @@ export default function CollectionJobs() {
               ))}
 
               {completedJobs.length > 0 && (
-                <button className="w-full py-3 border border-dashed border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-secondary/40 rounded-2xl text-xs font-bold text-muted-foreground text-center transition-colors">
+                <button className="w-full py-3 border border-dashed border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-secondary/40 rounded-xl text-xs font-bold text-muted-foreground text-center transition-colors">
                   View 10 More Completed Jobs
                 </button>
               )}
 
               {completedJobs.length === 0 && (
-                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-2xl">
+                <div className="text-center py-12 text-xs text-muted-foreground italic border-2 border-dashed border-slate-200 dark:border-border rounded-xl">
                   No completed jobs.
                 </div>
               )}
@@ -672,7 +672,7 @@ export default function CollectionJobs() {
           </div>
 
           {/* Tabular Job Queue Card */}
-          <div className="bg-card border border-[#cbd5e1]/50 dark:border-border rounded-2xl shadow-sm flex flex-col overflow-hidden">
+          <div className="bg-card border border-border/50 dark:border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
             {/* Header */}
             <div className="px-6 py-4.5 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-background/50 dark:bg-secondary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h3 className="font-bold text-foreground dark:text-white text-base">
@@ -680,7 +680,7 @@ export default function CollectionJobs() {
               </h3>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center bg-card rounded-xl border border-[#cbd5e1] dark:border-border focus-within:border-[#006c49] transition-all overflow-hidden px-3.5 py-2">
+                <div className="flex items-center bg-card rounded-xl border border-border focus-within:border-[#006c49] transition-all overflow-hidden px-3.5 py-2">
                   <svg
                     width="14"
                     height="14"
@@ -703,7 +703,7 @@ export default function CollectionJobs() {
                 </div>
 
                 <select
-                  className="bg-card border border-[#cbd5e1] dark:border-border text-muted-foreground text-xs font-bold rounded-xl px-3.5 py-2 hover:bg-background dark:hover:bg-secondary cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                  className="bg-card border border-border text-muted-foreground text-xs font-bold rounded-xl px-3.5 py-2 hover:bg-background dark:hover:bg-secondary cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
@@ -719,7 +719,7 @@ export default function CollectionJobs() {
             <div className="overflow-x-auto">
               <Table className="min-w-[900px]">
                 <TableHeader>
-                  <TableRow className="hover:bg-transparent bg-slate-50/50 dark:bg-secondary border-b border-[#cbd5e1]/40 dark:border-border/40">
+                  <TableRow className="hover:bg-transparent bg-slate-50/50 dark:bg-secondary border-b border-border/40 dark:border-border/40">
                     <TableHead className="px-6 py-4.5 text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">
                       Bin Location
                     </TableHead>
@@ -747,7 +747,7 @@ export default function CollectionJobs() {
                   {filteredData.map((job) => (
                     <TableRow
                       key={job.id}
-                      className="hover:bg-slate-50/50 dark:hover:bg-secondary/30 transition-colors border-b border-[#cbd5e1]/20 dark:border-border/20 group"
+                      className="hover:bg-slate-50/50 dark:hover:bg-secondary/30 transition-colors border-b border-border/20 dark:border-border/20 group"
                     >
                       <TableCell className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col">
@@ -817,7 +817,7 @@ export default function CollectionJobs() {
                                     AVAILABLE_COLLECTORS[0],
                                   )
                                 }
-                                className="px-3 py-1.5 bg-[#006c49]/10 text-[#006c49] font-bold rounded-lg hover:bg-[#006c49]/20 transition-all cursor-pointer"
+                                className="px-3 py-1.5 bg-primary/10 text-[#006c49] font-bold rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
                               >
                                 Select Collector
                               </button>
@@ -873,7 +873,7 @@ export default function CollectionJobs() {
 
           {/* ── Bottom Bento Insights ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-card text-white p-6 rounded-2xl relative overflow-hidden shadow-md">
+            <div className="lg:col-span-2 bg-card text-white p-6 rounded-xl relative overflow-hidden shadow-md">
               <div className="relative z-10 flex flex-col gap-2 max-w-md">
                 <h4 className="font-bold text-base">Optimization Insight</h4>
                 <p className="text-xs text-slate-400 leading-relaxed">
@@ -884,14 +884,14 @@ export default function CollectionJobs() {
                   are reaching capacity. Suggesting a batch collection route to
                   save 12 minutes of transit time.
                 </p>
-                <button className="w-fit mt-2 px-4 py-2 bg-[#006c49] hover:bg-[#005a3c] text-white text-[11px] font-bold rounded-lg transition-colors">
+                <button className="w-fit mt-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-[11px] font-bold rounded-lg transition-colors">
                   Deploy Batch Route
                 </button>
               </div>
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#006c49]/20 rounded-full blur-[60px]" />
+              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/20 rounded-full blur-[60px]" />
             </div>
 
-            <div className="bg-card border border-[#cbd5e1]/50 dark:border-border p-6 rounded-2xl flex flex-col gap-4 shadow-sm">
+            <div className="bg-card border border-border/50 dark:border-border p-6 rounded-xl flex flex-col gap-4 shadow-sm">
               <h4 className="font-bold text-sm">Facility Load</h4>
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between text-xs font-semibold">
@@ -900,7 +900,7 @@ export default function CollectionJobs() {
                 </div>
                 <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-[#006c49] rounded-full"
+                    className="h-full bg-primary rounded-full"
                     style={{ width: "92%" }}
                   />
                 </div>

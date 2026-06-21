@@ -352,10 +352,10 @@ export default function Dashboard() {
       description={t("dashboard.description")}
       actions={
         <>
-          <div className="flex items-center gap-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg px-3 py-1 shadow-sm">
+          <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1 shadow-sm">
             <Popover>
               <PopoverTrigger asChild>
-                <button className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px] text-left">
+                <button className="bg-transparent text-foreground dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px] text-left">
                   {startDate ? format(startDate, "MMM dd, yyyy") : "Start Date"}
                 </button>
               </PopoverTrigger>
@@ -368,12 +368,12 @@ export default function Dashboard() {
                 />
               </PopoverContent>
             </Popover>
-            <span className="text-[#94a3b8] dark:text-[#64748b] text-sm font-semibold">
+            <span className="text-muted-foreground text-sm font-semibold">
               to
             </span>
             <Popover>
               <PopoverTrigger asChild>
-                <button className="bg-transparent text-[#0b1c30] dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px] text-left">
+                <button className="bg-transparent text-foreground dark:text-white text-sm font-semibold focus:outline-none focus:ring-0 cursor-pointer w-[120px] text-left">
                   {endDate ? format(endDate, "MMM dd, yyyy") : "End Date"}
                 </button>
               </PopoverTrigger>
@@ -390,7 +390,7 @@ export default function Dashboard() {
           <button
             onClick={handleExportPDF}
             disabled={isExporting}
-            className="no-print bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-medium rounded-lg px-4 py-2 flex items-center gap-2 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+            className="no-print bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-lg px-4 py-2 flex items-center gap-2 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-wait"
           >
             {isExporting ? (
               <>
@@ -425,14 +425,14 @@ export default function Dashboard() {
           ? Array.from({ length: 4 }).map((_, idx) => (
             <div
               key={idx}
-              className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
+              className="bg-card border border-border rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
             >
               <div className="flex justify-between items-center">
-                <div className="h-3 w-24 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#0f2942]"></div>
+                <div className="h-3 w-24 bg-slate-200 dark:bg-muted rounded"></div>
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-secondary"></div>
               </div>
-              <div className="h-8 w-16 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
-              <div className="h-3 w-32 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+              <div className="h-8 w-16 bg-slate-200 dark:bg-muted rounded"></div>
+              <div className="h-3 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
             </div>
           ))
           : dynamicKpis.map((kpi, idx) => {
@@ -460,19 +460,19 @@ export default function Dashboard() {
         {/* Hourly Throughput Bar Chart */}
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm col-span-1 lg:col-span-2 flex flex-col h-[360px]">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-[#0b1c30] dark:text-white">
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               {t("dashboard.charts.hourlyThroughput")}
             </h2>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-[#10b981]" />
-                <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase">
                   {t("dashboard.charts.sorted")}
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-[#e2e8f0]" />
-                <span className="text-[10px] font-bold text-[#515f74] dark:text-[#cbd5e1] uppercase">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase">
                   {t("dashboard.charts.rejected")}
                 </span>
               </div>
@@ -504,7 +504,7 @@ export default function Dashboard() {
                     key={idx}
                     className="flex-1 flex flex-col items-center justify-end h-full group"
                   >
-                    <div className="w-full bg-[#f4f4f4] dark:bg-[#1e293b]/20 rounded-t-xl relative h-full flex items-end group-hover:bg-muted dark:group-hover:bg-[#1e293b]/40 transition-colors">
+                    <div className="w-full bg-[#f4f4f4] dark:bg-card/20 rounded-t-xl relative h-full flex items-end group-hover:bg-muted dark:group-hover:bg-card/40 transition-colors">
                       {/* Tooltip */}
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-10">
                         <div className="bg-slate-900 dark:bg-slate-800 text-white text-[11px] rounded-lg py-1.5 px-2.5 shadow-lg border border-slate-700/50 flex flex-col gap-1 min-w-[110px]">
@@ -712,7 +712,7 @@ export default function Dashboard() {
                   </div>
                   <Progress
                     value={bin.value}
-                    className={`h-2 bg-muted dark:bg-muted ${bin.color === "bg-[#ba1a1a]"
+                    className={`h-2 bg-muted ${bin.color === "bg-[#ba1a1a]"
                       ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                       : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
                       }`}
@@ -748,16 +748,16 @@ export default function Dashboard() {
                 <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {t("dashboard.table.source")}
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {t("dashboard.table.detection")}
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Confidence
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Visual
                 </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] uppercase tracking-wider">
+                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Action
                 </TableHead>
               </TableRow>
@@ -767,34 +767,34 @@ export default function Dashboard() {
                 ? Array.from({ length: 4 }).map((_, idx) => (
                   <TableRow key={idx} className="animate-pulse">
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-12 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-20 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                      <div className="h-4 w-20 bg-slate-200 dark:bg-muted rounded"></div>
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-5 w-24 bg-slate-100 dark:bg-[#0f2942] rounded-full"></div>
+                      <div className="h-5 w-24 bg-slate-100 dark:bg-secondary rounded-full"></div>
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-10 bg-slate-200 dark:bg-[#1a365d] rounded"></div>
+                      <div className="h-4 w-10 bg-slate-200 dark:bg-muted rounded"></div>
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-[#0f2942]"></div>
+                      <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-secondary"></div>
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-28 bg-slate-100 dark:bg-[#0f2942] rounded"></div>
+                      <div className="h-4 w-28 bg-slate-100 dark:bg-secondary rounded"></div>
                     </TableCell>
                   </TableRow>
                 ))
                 : RECENT_EVENTS.map((evt) => (
                   <TableRow
                     key={evt.id}
-                    className="hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors border-b border-[#f1f5f9]"
+                    className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
                   >
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-muted-foreground">
                       {evt.time}
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#0b1c30] dark:text-white">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
                       {evt.source}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
@@ -807,7 +807,7 @@ export default function Dashboard() {
                       {evt.confidence}
                     </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md overflow-hidden border border-[#e2e8f0] dark:border-[#1e3a5f]">
+                      <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
                         <img
                           src={evt.img}
                           alt="Snapshot"
@@ -815,7 +815,7 @@ export default function Dashboard() {
                         />
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1] font-mono bg-[#f8fafc] dark:bg-[#0f2942]">
+                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-muted-foreground font-mono bg-background dark:bg-secondary">
                       {evt.action}
                     </TableCell>
                   </TableRow>

@@ -112,7 +112,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-            className="fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white/80 dark:bg-card/80 backdrop-blur-md border-l border-border/40 dark:border-border/40 shadow-2xl z-[70] flex flex-col"
+            className="fixed top-0 right-0 h-full w-[400px] max-w-[90vw] bg-white/80 dark:bg-card/80 backdrop-blur-md border-l border-border/40 dark:border-border/40 shadow-md z-[70] flex flex-col"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-border/40 dark:border-border/40 bg-transparent flex-shrink-0">
@@ -204,7 +204,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
               <Link
                 to="/alerts"
                 onClick={onClose}
-                className="w-full flex items-center justify-center gap-2 bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-semibold rounded-xl px-4 py-3 transition-colors no-underline"
+                className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-xl px-4 py-3 transition-colors no-underline"
               >
                 {t("alertsSidebar.viewAll")}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

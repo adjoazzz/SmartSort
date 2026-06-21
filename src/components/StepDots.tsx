@@ -14,7 +14,7 @@ export function StepDots({ current = 0, total = 3 }) {
         <div
           key={i}
           className={`h-2 rounded-full transition-all ${
-            i === current ? "w-10 bg-[#006c49]" : "w-7 bg-[#bbcabf]"
+            i === current ? "w-10 bg-primary" : "w-7 bg-[#bbcabf]"
           }`}
         />
       ))}

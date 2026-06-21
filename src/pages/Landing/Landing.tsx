@@ -184,7 +184,7 @@ export default function Landing() {
           </button>
           <button 
             onClick={scrollToInquiry}
-            className="px-5 py-2.5 bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-bold rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer"
+            className="px-5 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer"
           >
             Request a Demo
           </button>
@@ -274,8 +274,8 @@ export default function Landing() {
           className="lg:col-span-7 relative"
         >
           {/* Card Border wrapper with blur glows */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb] to-[#006c49] opacity-20 blur-[60px] rounded-3xl" />
-          <div className="relative rounded-2xl overflow-hidden border border-[#cbd5e1] dark:border-border shadow-2xl bg-[#0f172a]">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2563eb] to-[#006c49] opacity-20 blur-[60px] rounded-xl" />
+          <div className="relative rounded-xl overflow-hidden border border-border shadow-md bg-background">
             <img 
               src={imgHero} 
               alt="Futuristic SmartSort Bin Conveyor Line" 
@@ -344,7 +344,7 @@ export default function Landing() {
             viewport={{ once: true, margin: "-100px" }}
             whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(37,99,235,0.15)" }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-8 bg-gradient-to-br from-[#eff6ff] to-[#f8fafc] dark:from-[#0b1c30] dark:to-[#0f2942] border border-[#cbd5e1]/60 dark:border-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 overflow-hidden shadow-sm hover:shadow-md cursor-pointer"
+            className="md:col-span-8 bg-gradient-to-br from-[#eff6ff] to-[#f8fafc] dark:from-[#0b1c30] dark:to-[#0f2942] border border-border/60 dark:border-border rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 overflow-hidden shadow-sm hover:shadow-md cursor-pointer"
           >
             <div className="flex-1 flex flex-col justify-between gap-6">
               <div className="flex flex-col gap-4">
@@ -363,7 +363,7 @@ export default function Landing() {
                 Explore Data Models →
               </a>
             </div>
-            <div className="flex-1 -mb-10 -mr-6 sm:-mr-12 rounded-tl-xl overflow-hidden border-t border-l border-[#cbd5e1] dark:border-border">
+            <div className="flex-1 -mb-10 -mr-6 sm:-mr-12 rounded-tl-xl overflow-hidden border-t border-l border-border">
               <img src={imgLaptopUi} alt="Dashboard Interface Preview" className="w-full h-full object-cover" />
             </div>
           </motion.div>
@@ -375,7 +375,7 @@ export default function Landing() {
             viewport={{ once: true, margin: "-100px" }}
             whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(139,92,246,0.2)" }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-4 bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] rounded-2xl p-6 sm:p-8 text-white flex flex-col justify-between gap-12 shadow-md hover:shadow-lg cursor-pointer"
+            className="md:col-span-4 bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] rounded-xl p-6 sm:p-8 text-white flex flex-col justify-between gap-12 shadow-md hover:shadow-lg cursor-pointer"
           >
             <div className="flex flex-col gap-4">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -404,7 +404,7 @@ export default function Landing() {
             viewport={{ once: true, margin: "-100px" }}
             whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)" }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-4 bg-card text-white border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
+            className="md:col-span-4 bg-card text-white border border-white/10 rounded-xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
           >
             <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-[#3b82f6]">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -427,7 +427,7 @@ export default function Landing() {
             viewport={{ once: true, margin: "-100px" }}
             whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(37,99,235,0.1)" }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-8 bg-[#eff6ff] dark:bg-[#1e293b]/50 border border-[#cbd5e1]/60 dark:border-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:shadow-md cursor-pointer"
+            className="md:col-span-8 bg-[#eff6ff] dark:bg-card/50 border border-border/60 dark:border-border rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 hover:shadow-md cursor-pointer"
           >
             <div className="flex-1 flex flex-col gap-4">
               <h3 className="text-xl font-bold">ESG Compliance Ready</h3>
@@ -436,7 +436,7 @@ export default function Landing() {
               </p>
             </div>
             {/* Visual representation of ESG scores */}
-            <div className="flex-1 w-full max-w-[280px] bg-card border border-[#cbd5e1]/50 dark:border-white/5 rounded-xl p-4.5 flex flex-col gap-3">
+            <div className="flex-1 w-full max-w-[280px] bg-card border border-border/50 dark:border-white/5 rounded-xl p-4.5 flex flex-col gap-3">
               {[
                 { label: "ENVIRONMENTAL SCORE", value: 92, color: "bg-[#10b981]" },
                 { label: "SOCIAL RESPONSIBILITY", value: 84, color: "bg-[#2563eb]" },
@@ -465,7 +465,7 @@ export default function Landing() {
       </section>
 
       {/* 5. How SmartSort Operates Section */}
-      <section id="process" className="bg-[#eff6ff]/50 dark:bg-secondary/10 border-y border-[#cbd5e1]/40 dark:border-border/40 py-20 sm:py-28 px-6">
+      <section id="process" className="bg-[#eff6ff]/50 dark:bg-secondary/10 border-y border-border/40 dark:border-border/40 py-20 sm:py-28 px-6">
         <div className="max-w-7xl mx-auto flex flex-col gap-16">
           <div className="text-center flex flex-col gap-3 max-w-xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground dark:text-white tracking-tight">
@@ -499,7 +499,7 @@ export default function Landing() {
               }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#2563eb]">
+              <div className="w-16 h-16 rounded-xl bg-card border border-border shadow-sm flex items-center justify-center text-[#2563eb]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                   <circle cx="12" cy="13" r="4"></circle>
@@ -520,7 +520,7 @@ export default function Landing() {
               }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#10b981]">
+              <div className="w-16 h-16 rounded-xl bg-card border border-border shadow-sm flex items-center justify-center text-[#10b981]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polygon points="12 2 2 7 12 12 22 7 12 2 12 2"></polygon>
                   <polyline points="2 17 12 22 22 17"></polyline>
@@ -542,7 +542,7 @@ export default function Landing() {
               }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#8b5cf6]">
+              <div className="w-16 h-16 rounded-xl bg-card border border-border shadow-sm flex items-center justify-center text-[#8b5cf6]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
@@ -559,7 +559,7 @@ export default function Landing() {
 
       {/* 6. CTA / Inquiry Form Section */}
       <section id="inquiry-section" className="px-6 sm:px-12 py-20 sm:py-28 max-w-7xl mx-auto">
-        <div className="bg-card text-white border border-white/10 rounded-3xl p-8 sm:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative overflow-hidden shadow-2xl">
+        <div className="bg-card text-white border border-white/10 rounded-xl p-8 sm:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative overflow-hidden shadow-md">
           <div className="absolute w-80 h-80 bg-[#2563eb]/20 rounded-full blur-[100px] -bottom-20 -left-20 pointer-events-none" />
 
           {/* Left Column */}
@@ -587,7 +587,7 @@ export default function Landing() {
           </div>
 
           {/* Right Column (Inquiry Form Card) */}
-          <div className="bg-white dark:bg-card text-foreground dark:text-white rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] dark:border-border shadow-xl relative z-10">
+          <div className="bg-card text-foreground dark:text-white rounded-xl p-6 sm:p-8 border border-border shadow-xl relative z-10">
             {submitted ? (
               <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#10b981]/15 flex items-center justify-center text-[#10b981]">
@@ -626,7 +626,7 @@ export default function Landing() {
                     className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 transition-all ${
                       errors.companyName
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
                     }`}
                   />
                   <FieldError message={errors.companyName} />
@@ -637,7 +637,7 @@ export default function Landing() {
                   <select 
                     value={form.tonsRange}
                     onChange={e => setForm({...form, tonsRange: e.target.value})}
-                    className="h-11 px-4 border border-[#cbd5e1] dark:border-border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
+                    className="h-11 px-4 border border-border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
                   >
                     <option value="Less than 50">Less than 50 Tons</option>
                     <option value="50 - 200">50 - 200 Tons</option>
@@ -663,7 +663,7 @@ export default function Landing() {
                     className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-background focus:outline-none focus:ring-2 transition-all ${
                       errors.email
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
                     }`}
                   />
                   <FieldError message={errors.email} />

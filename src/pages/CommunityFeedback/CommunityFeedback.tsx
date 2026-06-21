@@ -367,7 +367,7 @@ export default function CommunityFeedback() {
         <>
           <button
             onClick={handleExportPDF}
-            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] text-[#515f74] dark:text-[#cbd5e1] font-medium text-xs rounded-lg hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-muted-foreground font-medium text-xs rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors"
           >
             <svg
               width="16"
@@ -385,7 +385,7 @@ export default function CommunityFeedback() {
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#006c49] text-white font-medium text-xs rounded-lg hover:bg-[#005a3c] transition-colors shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-medium text-xs rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
           >
             <svg
               width="16"
@@ -512,7 +512,7 @@ export default function CommunityFeedback() {
                   >
                     <TableCell className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-muted dark:bg-muted flex items-center justify-center text-muted-foreground font-bold text-xs">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-bold text-xs">
                           {getInitials(item.userName)}
                         </div>
                         <div>
@@ -552,7 +552,7 @@ export default function CommunityFeedback() {
                     <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-1.5">
                         <button
-                          className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
                           title="Convert to Job"
                         >
                           <svg
@@ -637,7 +637,7 @@ export default function CommunityFeedback() {
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
-            <button className="px-3 py-1 bg-[#006c49]/10 text-[#006c49] text-xs font-bold rounded-md">
+            <button className="px-3 py-1 bg-primary/10 text-[#006c49] text-xs font-bold rounded-md">
               1
             </button>
             <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
@@ -757,12 +757,12 @@ export default function CommunityFeedback() {
             </p>
           </div>
           <div className="relative z-10 mt-8">
-            <button className="w-full py-2.5 bg-[#006c49] text-white font-bold text-xs rounded-lg hover:bg-[#005a3c] transition-colors shadow-sm tracking-wide">
+            <button className="w-full py-2.5 bg-primary text-white font-bold text-xs rounded-lg hover:bg-primary/90 transition-colors shadow-sm tracking-wide">
               View Impact Report
             </button>
           </div>
           {/* Decorative background pattern */}
-          <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-[#006c49]/40 rounded-full blur-3xl"></div>
+          <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-primary/40 rounded-full blur-3xl"></div>
           <div className="absolute right-4 top-4 text-[#006c49]/30">
             <svg
               width="80"
@@ -780,7 +780,7 @@ export default function CommunityFeedback() {
 
       {/* Manual Entry Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-lg p-0 gap-0 overflow-hidden flex flex-col">
+        <DialogContent className="bg-card border border-border rounded-xl shadow-md w-full max-w-lg p-0 gap-0 overflow-hidden flex flex-col">
           <DialogHeader className="px-6 pt-6 pb-4 border-b border-[#f1f5f9] dark:border-[#0f2942] text-left sm:text-left flex flex-col gap-1">
             <DialogTitle className="text-xl font-semibold text-foreground dark:text-white">
               Add Feedback
@@ -833,7 +833,7 @@ export default function CommunityFeedback() {
                 placeholder="Describe the issue in detail..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="px-3 py-2.5 border border-[#cbd5e1] dark:border-[#334155] rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
+                className="px-3 py-2.5 border border-border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
               />
             </div>
           </div>
@@ -848,7 +848,7 @@ export default function CommunityFeedback() {
             </button>
             <button
               onClick={handleSubmitFeedback}
-              className="flex-1 h-11 bg-[#006c49] hover:bg-[#005a3c] active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 h-11 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
               <svg
                 width="16"

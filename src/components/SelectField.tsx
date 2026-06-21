@@ -22,7 +22,7 @@ export function SelectField({ id, label, options, value, onChange, error }: any)
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`h-10 px-3 border rounded-lg text-sm bg-card text-foreground dark:text-white focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer ${
-          error ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10" : "border-[#cbd5e1] dark:border-[#334155] focus:border-[#006c49] focus:ring-[#006c49]/10"
+          error ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10" : "border-border focus:border-[#006c49] focus:ring-[#006c49]/10"
         }`}
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23515f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,

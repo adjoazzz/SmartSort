@@ -123,8 +123,8 @@ export default function Alerts() {
     return response.json();
   };
 
-  const { data: alertsData, isLoading } = usePollingFetch<any>(fetchAlerts, { intervalMs: 5000 });
-  const { data: summaryData, isLoading: isSummaryLoading } = usePollingFetch<any>(fetchSummary, { intervalMs: 5000 });
+  const { data: alertsData, isLoading } = usePollingFetch<any>(fetchAlerts, { intervalMs: 30000 });
+  const { data: summaryData, isLoading: isSummaryLoading } = usePollingFetch<any>(fetchSummary, { intervalMs: 30000 });
 
   const alerts = alertsData?.data || [];
   const totalCount = alertsData?.totalCount || 0;
@@ -234,7 +234,7 @@ export default function Alerts() {
                 <select
                   value={severity}
                   onChange={(e) => setSeverity(e.target.value)}
-                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-background cursor-pointer min-w-[160px]"
+                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-border hover:bg-background cursor-pointer min-w-[160px]"
                 >
                   <option value="all">All Severities</option>
                   <option value="critical">Critical</option>
@@ -256,7 +256,7 @@ export default function Alerts() {
                 <select
                   value={deviceType}
                   onChange={(e) => setDeviceType(e.target.value)}
-                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-background cursor-pointer min-w-[160px]"
+                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-border hover:bg-background cursor-pointer min-w-[160px]"
                 >
                   <option value="all">All Devices</option>
                   <option value="conveyors">Conveyors</option>
@@ -278,7 +278,7 @@ export default function Alerts() {
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
-                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-[#cbd5e1] hover:bg-background cursor-pointer min-w-[160px]"
+                  className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-border hover:bg-background cursor-pointer min-w-[160px]"
                 >
                   <option value="24h">Last 24 Hours</option>
                   <option value="7d">Last 7 Days</option>
@@ -310,7 +310,7 @@ export default function Alerts() {
             <button
               onClick={handleExportPDF}
               disabled={isExporting}
-              className="h-full bg-[#006c49] text-white text-sm font-semibold rounded-lg px-4 hover:bg-[#005a3c] transition-colors shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+              className="h-full bg-primary text-white text-sm font-semibold rounded-lg px-4 hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
             >
               {isExporting ? (
                 <>
@@ -398,7 +398,7 @@ export default function Alerts() {
                 ))
               ) : filteredAlerts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center text-[#64748b] dark:text-[#94a3b8]">
+                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
                     No alerts match the selected filters.
                   </TableCell>
                 </TableRow>
@@ -410,7 +410,7 @@ export default function Alerts() {
                   >
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-muted dark:bg-muted flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
                           <DeviceIcon type={alert.deviceIcon} />
                         </div>
                         <div>
@@ -454,8 +454,8 @@ export default function Alerts() {
                           <button
                             key={i}
                             className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors cursor-pointer ${action.type === "primary"
-                                ? "bg-[#006c49] text-white hover:bg-[#005a3c]"
-                                : "bg-card border border-[#cbd5e1] dark:border-[#334155] text-muted-foreground hover:bg-muted"
+                                ? "bg-primary text-white hover:bg-primary/90"
+                                : "bg-card border border-border text-muted-foreground hover:bg-muted"
                               }`}
                           >
                             {action.label}
@@ -554,7 +554,7 @@ export default function Alerts() {
               <div className="h-11 w-full bg-slate-700 rounded-lg mt-6"></div>
             </div>
           ) : (
-            <div className="col-span-1 bg-[#1e293b] dark:bg-[#0f172a] rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
+            <div className="col-span-1 bg-card dark:bg-background rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-4 text-[#10b981]">
                   <svg

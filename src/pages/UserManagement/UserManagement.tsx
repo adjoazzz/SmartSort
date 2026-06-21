@@ -117,7 +117,7 @@ const KPIS = [
     trend: "Excellent",
     trendDirection: "up" as const,
     iconColorClass: "text-muted-foreground",
-    iconBgClass: "bg-muted dark:bg-muted",
+    iconBgClass: "bg-muted",
     icon: (
       <svg
         width="16"
@@ -234,7 +234,7 @@ const PERMISSIONS: PermGroup[] = [
   },
   {
     role: "Viewer",
-    badgeBg: "bg-muted dark:bg-muted",
+    badgeBg: "bg-muted",
     badgeText: "text-muted-foreground",
     badgeBorder: "border-border",
     badgeLabel: "Read Only",
@@ -501,7 +501,7 @@ function PermIcon({ granted }: { granted: boolean }) {
 /** User avatar with image fallback to initials */
 function UserAvatar({ name, avatar }: { name: string; avatar: string | null }) {
   return (
-    <div className="w-9 h-9 rounded-full bg-muted dark:bg-muted overflow-hidden border border-border flex items-center justify-center shrink-0">
+    <div className="w-9 h-9 rounded-full bg-muted overflow-hidden border border-border flex items-center justify-center shrink-0">
       {avatar ? (
         <img src={avatar} alt={name} className="w-full h-full object-cover" />
       ) : (
@@ -557,7 +557,7 @@ function ActionMenu({
     <div className="relative inline-block">
       <button
         onClick={onToggle}
-        className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-[#006c49]/10 rounded-lg transition-colors"
+        className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-primary/10 rounded-lg transition-colors"
         title="More actions"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -806,7 +806,7 @@ export default function UserManagement() {
       actions={
         <button
           onClick={() => setIsInviteModalOpen(true)}
-          className="bg-[#006c49] text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-[#005a3c] transition-all shadow-sm flex items-center gap-2 active:scale-95"
+          className="bg-primary text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-primary/90 transition-all shadow-sm flex items-center gap-2 active:scale-95"
         >
           <svg
             width="16"
@@ -829,7 +829,7 @@ export default function UserManagement() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           {/* Total Users Box */}
-          <div className="flex items-center gap-2.5 bg-muted dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-border dark:border-[#334155]">
+          <div className="flex items-center gap-2.5 bg-muted dark:bg-card/50 px-4 py-2.5 rounded-lg border border-border">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Total Users
             </span>
@@ -842,7 +842,7 @@ export default function UserManagement() {
             )}
           </div>
           {/* Active Now Box */}
-          <div className="flex items-center gap-2.5 bg-muted dark:bg-[#1e293b]/50 px-4 py-2.5 rounded-lg border border-border dark:border-[#334155]">
+          <div className="flex items-center gap-2.5 bg-muted dark:bg-card/50 px-4 py-2.5 rounded-lg border border-border">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Active Now
             </span>
@@ -860,8 +860,8 @@ export default function UserManagement() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 border border-border dark:border-[#334155] px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${showFilters
-              ? "bg-[#0a5cf5]/10 border-[#0a5cf5] text-[#0a5cf5]"
+            className={`flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${showFilters
+              ? "bg-primary/10 border-[#0a5cf5] text-[#0a5cf5]"
               : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
               }`}
           >
@@ -891,7 +891,7 @@ export default function UserManagement() {
             onClick={() => {
               console.log("Exporting users data...");
             }}
-            className="flex items-center gap-2 border border-[#e2e8f0] dark:border-[#334155] bg-white dark:bg-[#0b1c30] px-4 py-2.5 rounded-lg text-sm font-semibold text-[#0b1c30] dark:text-white hover:bg-[#f8fafc] dark:hover:bg-[#0f2942] transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 border border-border bg-card px-4 py-2.5 rounded-lg text-sm font-semibold text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary transition-all active:scale-95 shadow-sm"
           >
             <svg
               width="16"
@@ -917,7 +917,7 @@ export default function UserManagement() {
         {/* Collapsible Toolbar */}
         {showFilters && (
           <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-background dark:bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center w-full max-w-md bg-white dark:bg-secondary rounded-lg border border-border focus-within:border-[#cbd5e1] dark:focus-within:border-[#334155] focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
+            <div className="flex items-center w-full max-w-md bg-card rounded-lg border border-border focus-within:border-border dark:focus-within:border-border focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
               <svg
                 width="16"
                 height="16"
@@ -1089,7 +1089,7 @@ export default function UserManagement() {
                                 );
                               });
                           }}
-                          className="bg-[#0a5cf5] hover:bg-[#094fc2] text-white text-xs font-bold rounded-lg px-4.5 py-2 inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                          className="bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-lg px-4.5 py-2 inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                         >
                           <svg
                             width="14"
@@ -1161,7 +1161,7 @@ export default function UserManagement() {
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors cursor-pointer ${currentPage === pageNum
-                      ? "bg-[#0a5cf5] text-white"
+                      ? "bg-primary text-white"
                       : "text-muted-foreground hover:bg-muted"
                       }`}
                   >
@@ -1198,7 +1198,7 @@ export default function UserManagement() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
         {/* Permission Audit Card */}
         {isLoading ? (
-          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-muted"></div>
@@ -1212,7 +1212,7 @@ export default function UserManagement() {
             <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded mt-4"></div>
           </div>
         ) : (
-          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
@@ -1261,7 +1261,7 @@ export default function UserManagement() {
 
         {/* Pending Invites Card */}
         {isLoading ? (
-          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-muted"></div>
@@ -1279,7 +1279,7 @@ export default function UserManagement() {
             <div className="h-3 w-48 bg-slate-100 dark:bg-secondary rounded mt-2"></div>
           </div>
         ) : (
-          <div className="bg-card rounded-2xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px]">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
@@ -1322,7 +1322,7 @@ export default function UserManagement() {
         )}
 
         {/* Need Bulk Import Card */}
-        <div className="bg-gradient-to-br from-[#0a5cf5] to-[#4f46e5] text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[180px]">
+        <div className="bg-gradient-to-br from-[#0a5cf5] to-[#4f46e5] text-white rounded-xl p-6 shadow-md flex flex-col justify-between min-h-[180px]">
           <div className="flex flex-col gap-2">
             <h3 className="font-bold text-base">Need bulk import?</h3>
             <p className="text-xs text-blue-50/95 leading-relaxed">

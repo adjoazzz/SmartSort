@@ -45,14 +45,14 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 12 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-card text-card-foreground border border-border rounded-2xl shadow-2xl w-full max-w-lg pointer-events-auto flex flex-col"
+              className="bg-card text-card-foreground border border-border rounded-xl shadow-md w-full max-w-lg pointer-events-auto flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
                 <div>
-                  <h3 className="text-xl font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.title")}</h3>
-                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">{t("registerModal.subtitle")}</p>
+                  <h3 className="text-xl font-semibold text-foreground dark:text-white">{t("registerModal.title")}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t("registerModal.subtitle")}</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -158,8 +158,8 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.scanTitle")}</p>
-                    <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5 leading-relaxed">
+                    <p className="text-sm font-semibold text-foreground dark:text-white">{t("registerModal.scanTitle")}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                       {t("registerModal.scanDesc")}
                     </p>
                   </div>
@@ -207,8 +207,8 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                       </svg>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.defaultFacility")}</span>
-                      <span className="text-sm text-[#515f74] dark:text-[#cbd5e1]">{t("registerModal.hubName")}</span>
+                      <span className="text-xs font-semibold text-foreground dark:text-white">{t("registerModal.defaultFacility")}</span>
+                      <span className="text-sm text-muted-foreground">{t("registerModal.hubName")}</span>
                     </div>
                   </div>
                   <button className="text-sm font-semibold text-[#006c49] hover:underline cursor-pointer">{t("registerModal.changeBtn")}</button>
@@ -230,8 +230,8 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     />
                   </svg>
                   <div>
-                    <p className="text-xs font-semibold text-[#0b1c30] dark:text-white">{t("registerModal.helpTitle")}</p>
-                    <p className="text-[11px] text-[#515f74] dark:text-[#cbd5e1] mt-0.5">{t("registerModal.helpDesc")}</p>
+                    <p className="text-xs font-semibold text-foreground dark:text-white">{t("registerModal.helpTitle")}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{t("registerModal.helpDesc")}</p>
                   </div>
                 </div>
               </div>
@@ -246,7 +246,7 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                 </button>
                 <button
                   onClick={handleSave}
-                  className="flex-1 h-11 bg-[#006c49] hover:bg-[#005a3c] active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 h-11 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <svg
                     width="16"

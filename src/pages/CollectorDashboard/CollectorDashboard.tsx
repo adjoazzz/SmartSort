@@ -153,7 +153,7 @@ export default function CollectorDashboard() {
       hideAlertsIcon={true}
     >
       {/* Quota & Offline Sync Top Bar */}
-      <div className="flex flex-col md:flex-row items-slate-200 md:items-center justify-between gap-4 bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl p-5 mb-6 shadow-sm">
+      <div className="flex flex-col md:flex-row items-slate-200 md:items-center justify-between gap-4 bg-card border border-border rounded-xl p-5 mb-6 shadow-sm">
         <div className="flex items-center gap-4">
           {/* Circular Quota Progress Ring */}
           <div className="relative h-14 w-14 flex items-center justify-center">
@@ -180,13 +180,13 @@ export default function CollectorDashboard() {
                 fill="transparent"
               />
             </svg>
-            <span className="absolute text-[11px] font-black text-[#0b1c30] dark:text-white">
+            <span className="absolute text-[11px] font-black text-foreground dark:text-white">
               {quotaPercentage}%
             </span>
           </div>
           <div>
-            <h2 className="text-sm font-bold text-[#0b1c30] dark:text-white">Daily Quota Progress</h2>
-            <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">
+            <h2 className="text-sm font-bold text-foreground dark:text-white">Daily Quota Progress</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Completed {completedToday} of {totalMyAssignments} assigned bins today.
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function CollectorDashboard() {
         {/* Offline Sync Mode Control */}
         <div className="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-3 md:pt-0 border-[#f1f5f9] dark:border-[#0f2942]">
           <div className="flex flex-col text-right">
-            <span className="text-xs font-bold text-[#0b1c30] dark:text-white flex items-center gap-1.5 justify-end">
+            <span className="text-xs font-bold text-foreground dark:text-white flex items-center gap-1.5 justify-end">
               <span className={`h-2 w-2 rounded-full ${isOffline ? "bg-amber-500 animate-pulse" : "bg-emerald-500 animate-ping"}`} />
               {isOffline ? "Local Cache Mode" : "Real-time Telemetry"}
             </span>
@@ -205,7 +205,7 @@ export default function CollectorDashboard() {
           </div>
           <button
             onClick={() => setIsOffline(!isOffline)}
-            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isOffline ? "bg-amber-500" : "bg-[#006c49]"
+            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isOffline ? "bg-amber-500" : "bg-primary"
               }`}
           >
             <span
@@ -258,10 +258,10 @@ export default function CollectorDashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[#0b1c30] dark:text-white">
+                  <h3 className="text-sm font-bold text-foreground dark:text-white">
                     🗺️ Logistics Map & Live Routing Ready
                   </h3>
-                  <p className="text-xs text-[#515f74] dark:text-[#cbd5e1] mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     Navigate your optimized sequences on the dedicated Live Logistics Map.
                   </p>
                 </div>
@@ -270,7 +270,7 @@ export default function CollectorDashboard() {
               <div className="flex items-center gap-4 self-start md:self-center">
                 {/* Auto Optimize Toggle */}
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-[#515f74] dark:text-[#cbd5e1]">Auto-Optimize</span>
+                  <span className="text-xs font-semibold text-muted-foreground">Auto-Optimize</span>
                   <button
                     onClick={() => setIsOptimized(!isOptimized)}
                     className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isOptimized ? "bg-[#0284c7]" : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
@@ -307,22 +307,22 @@ export default function CollectorDashboard() {
                     <React.Fragment key={job.id}>
                       <div
                         onClick={() => navigate("/collector-map")}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#e2e8f0] dark:border-[#1e3a5f] bg-white/50 dark:bg-[#0b1c30]/50 hover:bg-white dark:hover:bg-[#0f2942] transition-all cursor-pointer"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-white/50 dark:bg-card/50 hover:bg-white dark:hover:bg-secondary transition-all cursor-pointer"
                       >
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0284c7] text-white text-[10px] font-black">
                           {idx + 1}
                         </span>
                         <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-[#0b1c30] dark:text-white truncate max-w-[100px]">
+                          <span className="text-[11px] font-bold text-foreground dark:text-white truncate max-w-[100px]">
                             {job.location}
                           </span>
-                          <span className="text-[9px] font-mono text-[#64748b] dark:text-[#94a3b8]">
+                          <span className="text-[9px] font-mono text-muted-foreground">
                             {job.urgency} ({job.fill}%)
                           </span>
                         </div>
                       </div>
                       {idx < optimizedRoute.length - 1 && (
-                        <div className="hidden sm:block text-[#94a3b8] dark:text-[#64748b]">
+                        <div className="hidden sm:block text-muted-foreground">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
                           </svg>
@@ -337,18 +337,18 @@ export default function CollectorDashboard() {
         )}
 
         {/* Job List Tabs */}
-        <div className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-xl shadow-sm flex flex-col overflow-hidden">
+        <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
           <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full gap-0">
-            <TabsList className="flex w-full justify-start rounded-none bg-[#f8fafc] dark:bg-[#0f2942] border-b border-[#e2e8f0] dark:border-[#1e3a5f] p-0 h-auto gap-0">
+            <TabsList className="flex w-full justify-start rounded-none bg-background dark:bg-secondary border-b border-border p-0 h-auto gap-0">
               <TabsTrigger
                 value="available_jobs"
-                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-[#0b1c30] text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
+                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
               >
                 Available Jobs ({jobs.filter((j) => !j.isAssignedToMe && j.status === "Pending").length})
               </TabsTrigger>
               <TabsTrigger
                 value="my_jobs"
-                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-[#0b1c30] text-[#64748b] dark:text-[#94a3b8] hover:text-[#0b1c30] dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
+                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
               >
                 My Assignments ({jobs.filter((j) => j.isAssignedToMe && j.status !== "Completed").length})
               </TabsTrigger>
@@ -357,18 +357,18 @@ export default function CollectorDashboard() {
             <TabsContent value={activeTab} className="p-0 m-0">
               <div className="p-4 flex flex-col gap-4">
                 {displayedJobs.length === 0 ? (
-                  <div className="text-center py-12 text-[#94a3b8] dark:text-[#64748b] text-sm">
+                  <div className="text-center py-12 text-muted-foreground text-sm">
                     No jobs to show here.
                   </div>
                 ) : (
                   displayedJobs.map((job) => (
                     <div
                       key={job.id}
-                      className="border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#0b1c30]"
+                      className="border border-border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card"
                     >
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-base font-bold text-[#0b1c30] dark:text-white">
+                          <span className="text-base font-bold text-foreground dark:text-white">
                             {job.location}
                           </span>
                           <StatusBadge
@@ -382,13 +382,13 @@ export default function CollectorDashboard() {
                             }
                           />
                         </div>
-                        <span className="text-sm font-mono text-[#515f74] dark:text-[#cbd5e1]">
+                        <span className="text-sm font-mono text-muted-foreground">
                           {job.device} • {job.zone}
                         </span>
                         <div className="flex items-center gap-2 mt-2">
                           <Progress
                             value={job.fill}
-                            className="w-24 h-1.5 bg-[#f1f5f9] dark:bg-[#1a365d] [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                            className="w-24 h-1.5 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                           />
                           <span className="text-xs font-bold text-[#ba1a1a]">
                             {job.fill}% Full
@@ -400,7 +400,7 @@ export default function CollectorDashboard() {
                         {activeTab === "available_jobs" ? (
                           <button
                             onClick={() => handleClaimJob(job.id)}
-                            className="px-4 py-2 bg-[#006c49] text-white text-sm font-bold rounded-lg hover:bg-[#005a3c] transition-colors cursor-pointer animate-[fade-in_0.2s_ease-out]"
+                            className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer animate-[fade-in_0.2s_ease-out]"
                           >
                             Claim Job
                           </button>
@@ -418,7 +418,7 @@ export default function CollectorDashboard() {
                             </button>
                             <button
                               onClick={() => setRemindJobId(job.id)}
-                              className="px-3 py-2 bg-[#0b1c30] text-white text-xs font-bold rounded-lg hover:bg-[#1e293b] transition-colors cursor-pointer"
+                              className="px-3 py-2 bg-card text-white text-xs font-bold rounded-lg hover:bg-card transition-colors cursor-pointer"
                             >
                               Complete
                             </button>
@@ -452,26 +452,26 @@ export default function CollectorDashboard() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-[#0b1c30]/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4"
+              className="fixed inset-0 bg-card/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4"
             >
               <motion.div
                 initial={{ y: 60, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 60, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                className="bg-white dark:bg-[#0b1c30] border border-[#e2e8f0] dark:border-[#1e3a5f] rounded-2xl w-full max-w-sm p-6 shadow-2xl flex flex-col gap-5"
+                className="bg-card border border-border rounded-xl w-full max-w-sm p-6 shadow-md flex flex-col gap-5"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-[#006c49]/10 text-[#006c49] flex items-center justify-center shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] flex items-center justify-center shrink-0">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 11l3 3L22 4"></path>
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-[#0b1c30] dark:text-white">Task Completion Checklist</h3>
+                      <h3 className="text-sm font-black text-foreground dark:text-white">Task Completion Checklist</h3>
                       <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{job.location}</p>
                     </div>
                   </div>
@@ -481,9 +481,9 @@ export default function CollectorDashboard() {
                 </div>
 
                 {/* Job details strip */}
-                <div className="bg-slate-50 dark:bg-[#0f2942] rounded-xl px-4 py-3 flex justify-between items-center border border-slate-100 dark:border-[#1e3a5f]">
+                <div className="bg-slate-50 dark:bg-secondary rounded-xl px-4 py-3 flex justify-between items-center border border-slate-100 dark:border-border">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400">Device</span>
-                  <span className="text-[11px] font-mono font-bold text-[#0b1c30] dark:text-white">{job.device}</span>
+                  <span className="text-[11px] font-mono font-bold text-foreground dark:text-white">{job.device}</span>
                   <span className="text-[11px] text-slate-500 dark:text-slate-400">Fill</span>
                   <span className="text-[11px] font-bold text-[#ba1a1a]">{job.fill}%</span>
                 </div>
@@ -493,12 +493,12 @@ export default function CollectorDashboard() {
                   <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Before marking complete, confirm:</p>
                   {checklist.map((item, i) => (
                     <div key={i} className="flex items-start gap-2.5">
-                      <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-[#006c49]/10 flex items-center justify-center shrink-0">
+                      <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-primary/10 flex items-center justify-center shrink-0">
                         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#006c49" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                       </div>
-                      <span className="text-xs text-[#0b1c30] dark:text-[#cbd5e1]">{item}</span>
+                      <span className="text-xs text-foreground dark:text-muted-foreground">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -507,7 +507,7 @@ export default function CollectorDashboard() {
                 <div className="flex gap-3 pt-1 border-t border-slate-100 dark:border-[#0f2942]">
                   <button
                     onClick={() => setRemindJobId(null)}
-                    className="flex-1 py-2.5 border border-slate-200 dark:border-[#1e3a5f] text-slate-500 dark:text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-[#0f2942] transition-colors cursor-pointer"
+                    className="flex-1 py-2.5 border border-slate-200 dark:border-border text-slate-500 dark:text-slate-400 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-secondary transition-colors cursor-pointer"
                   >
                     Not Yet
                   </button>
@@ -516,7 +516,7 @@ export default function CollectorDashboard() {
                       handleCompleteJob(job.id);
                       setRemindJobId(null);
                     }}
-                    className="flex-1 py-2.5 bg-[#006c49] text-white text-xs font-bold rounded-xl hover:bg-[#005a3c] transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="flex-1 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>
