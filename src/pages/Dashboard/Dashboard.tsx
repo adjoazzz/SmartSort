@@ -261,7 +261,7 @@ export default function Dashboard() {
       ...KPIS[1],
       value: metricsData?.totalItemsSorted ?? "42,891",
     },
-    ...KPIS.slice(1),
+    ...KPIS.slice(2),
   ];
 
   const handleExportPDF = () => {
