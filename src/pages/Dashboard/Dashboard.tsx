@@ -688,22 +688,8 @@ export default function Dashboard() {
                     className={`h-2 bg-muted dark:bg-muted ${bin.color === "bg-[#ba1a1a]"
                       ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
                       : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
-                      < div key={idx} className="flex flex-col gap-2 w-full">
-                    <div className="flex justify-between items-center text-sm font-medium">
-                      <span className="text-[#0b1c30] dark:text-white">
-                        {bin.label}
-                      </span>
-                      <span className="text-[#515f74] dark:text-[#cbd5e1]">
-                        {bin.value}%
-                      </span>
-                    </div>
-                    <Progress
-                      value={bin.value}
-                      className={`h-2 bg-[#f1f5f9] dark:bg-[#1a365d] ${bin.color === "bg-[#ba1a1a]"
-                        ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                        : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
-                        }`}
-                    />
+                      }`}
+                  />
                 </div>
               ))}
           </div>
