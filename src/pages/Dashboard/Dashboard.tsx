@@ -522,24 +522,27 @@ export default function Dashboard() {
           </h2>
 
           {isLoading ? (
-            <div className="flex-1 flex flex-col items-center justify-center relative animate-pulse w-full">
-              <div className="w-40 h-40 rounded-full border-[16px] border-slate-100 dark:border-[#0f2942] flex items-center justify-center">
-                <div className="h-4 w-12 bg-slate-200 dark:bg-muted rounded"></div>
+            <div className="flex-1 flex flex-row items-center justify-center relative animate-pulse w-full gap-8 lg:gap-12">
+              <div className="w-56 h-56 rounded-full border-[20px] border-slate-100 dark:border-[#0f2942] flex items-center justify-center flex-shrink-0">
+                <div className="h-6 w-16 bg-slate-200 dark:bg-muted rounded"></div>
               </div>
-              <div className="w-full grid grid-cols-2 gap-3 mt-6">
+              <div className="flex flex-col gap-6 justify-center">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-muted" />
-                    <div className="h-3.5 w-20 bg-slate-100 dark:bg-secondary rounded" />
+                  <div key={i} className="flex items-start gap-3.5">
+                    <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-muted mt-1.5" />
+                    <div className="flex flex-col gap-2">
+                      <div className="h-3 w-20 bg-slate-200 dark:bg-muted rounded" />
+                      <div className="h-5 w-12 bg-slate-100 dark:bg-secondary rounded" />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center relative">
-              <div className="relative w-40 h-40 flex items-center justify-center mb-6">
+            <div className="flex-1 flex flex-row items-center justify-center relative w-full h-full gap-8 lg:gap-12">
+              <div className="relative w-56 h-56 flex items-center justify-center flex-shrink-0">
                 {/* Dynamic SVG Donut Chart */}
-                <svg width="160" height="160" viewBox="0 0 100 100" className="relative transform -rotate-90">
+                <svg width="224" height="224" viewBox="0 0 100 100" className="relative transform -rotate-90">
                   {/* Background track */}
                   <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="10" className="dark:stroke-[#0f2942]" />
                   {/* Slices */}
@@ -588,16 +591,16 @@ export default function Dashboard() {
 
                 {/* Centered Total */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-xl font-bold text-foreground dark:text-white">
+                  <span className="text-3xl font-black text-foreground dark:text-white tracking-tight">
                     {(wasteCategoriesData?.total ?? 42891).toLocaleString()}
                   </span>
-                  <span className="text-[9px] font-bold text-muted-foreground uppercase">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
                     {t("dashboard.charts.totalProcessed")}
                   </span>
                 </div>
               </div>
 
-              <div className="w-full grid grid-cols-2 gap-3 mt-auto">
+              <div className="flex flex-col justify-center gap-6">
                 {(wasteCategoriesData?.categories ?? [
                   { category: "Plastic", percentage: 35 },
                   { category: "Paper", percentage: 22 },
@@ -611,38 +614,19 @@ export default function Dashboard() {
                     Other: "bg-[#cbd5e1] dark:bg-slate-500",
                   };
                   return (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className={`w-3 h-3 rounded-full ${colors[cat.category] ?? "bg-[#cbd5e1]"}`} />
-                      <span className="text-sm font-medium text-muted-foreground">
-                        {cat.category} ({cat.percentage}%)
-                      </span>
+                    <div key={i} className="flex items-start gap-3.5 group">
+                      <div className={`w-3 h-3 rounded-full mt-1.5 ${colors[cat.category] ?? "bg-[#cbd5e1]"}`} />
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-foreground transition-colors">
+                          {t(`dashboard.charts.${cat.category.toLowerCase()}`, cat.category)}
+                        </span>
+                        <span className="text-base font-black text-foreground">
+                          {cat.percentage}%
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    {t("dashboard.charts.plastic")} (35%)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#60a5fa]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    {t("dashboard.charts.paper")} (22%)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    {t("dashboard.charts.metal")} (18%)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#cbd5e1]" />
-                  <span className="text-sm font-medium text-[#515f74] dark:text-[#cbd5e1]">
-                    {t("dashboard.charts.other")} (25%)
-                  </span>
-                </div>
               </div>
             </div>
           )}
