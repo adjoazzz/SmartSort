@@ -41,7 +41,22 @@ while True:
                 
                 if response.status_code == 200:
                     data = response.json()
-                    print(f"✅ Prediction: {data.get('bin')} | Confidence: {data.get('confidence')}%")
+                    predicted_bin = data.get('bin')
+                    print(f"✅ Prediction: {predicted_bin} | Confidence: {data.get('confidence')}%")
+                    
+                    # Send telemetry to update the dashboard
+                    try:
+                        telemetry_url = "http://localhost:5000/api/bins/telemetry"
+                        payload = {
+                            "customBinId": "BIN_001",
+                            "location": "Central Hub",
+                            "fillLevel": 65,  # Simulated fill percentage
+                            "lastSortedItem": predicted_bin
+                        }
+                        requests.post(telemetry_url, json=payload, timeout=3)
+                        print("📡 Telemetry successfully logged to backend!")
+                    except Exception as telemetry_err:
+                        print(f"⚠️ Failed to send telemetry to dashboard: {telemetry_err}")
                 else:
                     print(f"❌ Error from API: {response.text}")
             except requests.exceptions.ConnectionError:

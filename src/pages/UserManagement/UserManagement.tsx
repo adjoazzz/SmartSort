@@ -4,7 +4,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { InviteUserModal } from "./InviteUserModal";
 import { BulkImportDocsModal } from "./BulkImportDocsModal";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -671,8 +671,8 @@ export default function UserManagement() {
     data: usersData,
     isLoading,
     refresh,
-  } = usePollingFetch<User[]>(fetchUsers, {
-    intervalMs: 5000,
+  } = useRealtimeData<User[]>(fetchUsers, {
+    tables: ["User"],
   });
 
   const users = usersData ?? [];

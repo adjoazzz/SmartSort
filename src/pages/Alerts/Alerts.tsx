@@ -1,6 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";
@@ -135,11 +135,11 @@ export default function Alerts() {
     data: alertsData,
     isLoading,
     refresh,
-  } = usePollingFetch<any>(fetchAlerts, {
-    intervalMs: 30000,
+  } = useRealtimeData<any>(fetchAlerts, {
+    tables: ["Alert", "Device"],
   });
   const { data: summaryData, isLoading: isSummaryLoading } =
-    usePollingFetch<any>(fetchSummary, { intervalMs: 30000 });
+    useRealtimeData<any>(fetchSummary, { tables: ["Alert"] });
 
   useEffect(() => {
     refresh();

@@ -13,8 +13,17 @@ export async function authFetch(
     headers.set("Authorization", `Bearer ${session.access_token}`);
   }
 
-  return fetch(input, {
-    ...init,
-    headers,
-  });
+  // Abort after 10 seconds to prevent indefinite hangs
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    return await fetch(input, {
+      ...init,
+      headers,
+      signal: init?.signal ?? controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }

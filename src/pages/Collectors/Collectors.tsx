@@ -4,7 +4,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { CollectorProfileModal } from "./CollectorProfileModal";
 import { InviteCollectorModal } from "./InviteCollectorModal";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 
 function formatDisplayId(id: string): string {
   if (!id) return "";
@@ -56,8 +56,8 @@ export default function Collectors() {
     data: collectorsResponse,
     isLoading,
     refresh,
-  } = usePollingFetch<any>(fetchCollectors, {
-    intervalMs: 5000,
+  } = useRealtimeData<any>(fetchCollectors, {
+    tables: ["User"],
   });
 
   const collectors = collectorsResponse?.data || [];

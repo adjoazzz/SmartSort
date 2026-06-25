@@ -21,7 +21,7 @@ import {
   TableCell,
 } from "../../components/ui/table";
 import { JobCard } from "./JobCard";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 
 /* ── Static Mock Data (Enriched to match screenshot) ──────────────── */
 
@@ -266,8 +266,8 @@ export default function CollectionJobs() {
     data: jobsResponse,
     isLoading,
     refresh,
-  } = usePollingFetch<any>(fetchJobs, {
-    intervalMs: 5000,
+  } = useRealtimeData<any>(fetchJobs, {
+    tables: ["CollectionJob"],
   });
 
   const jobsData = jobsResponse?.data || [];

@@ -2,7 +2,7 @@ import { authFetch } from "../../lib/authFetch";
 import React from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { useTranslation } from "react-i18next";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import {
@@ -275,9 +275,9 @@ export default function Analytics() {
     }
     return response.json();
   };
-  const { data: summary, isLoading: isLoadingSummary } = usePollingFetch<any>(
+  const { data: summary, isLoading: isLoadingSummary } = useRealtimeData<any>(
     fetchSummary,
-    { intervalMs: 5000 },
+    { tables: ["Device", "CollectionJob", "Feedback"] },
   );
 
   const fetchHistorical = async () => {
@@ -286,16 +286,16 @@ export default function Analytics() {
     return response.json();
   };
   const { data: historicalData, isLoading: isLoadingHistorical } =
-    usePollingFetch<any[]>(fetchHistorical, { intervalMs: 5000 });
+    useRealtimeData<any[]>(fetchHistorical, { tables: ["ProcessedItem"] });
 
   const fetchTonnage = async () => {
     const response = await authFetch(`${baseUrl}/api/analytics/tonnage`);
     if (!response.ok) throw new Error("Failed to fetch tonnage data");
     return response.json();
   };
-  const { data: tonnageData, isLoading: isLoadingTonnage } = usePollingFetch<
+  const { data: tonnageData, isLoading: isLoadingTonnage } = useRealtimeData<
     any[]
-  >(fetchTonnage, { intervalMs: 5000 });
+  >(fetchTonnage, { tables: ["ProcessedItem"] });
 
   const fetchCategories = async () => {
     const response = await authFetch(`${baseUrl}/api/analytics/categories`);
@@ -303,7 +303,7 @@ export default function Analytics() {
     return response.json();
   };
   const { data: categoriesData, isLoading: isLoadingCategories } =
-    usePollingFetch<any[]>(fetchCategories, { intervalMs: 5000 });
+    useRealtimeData<any[]>(fetchCategories, { tables: ["ProcessedItem"] });
 
   const totalDevices = summary?.devices?.total ?? 0;
   const activeDevices = summary?.devices?.active ?? 0;

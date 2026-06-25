@@ -12,7 +12,7 @@ import {
   TableCell,
 } from "../../components/ui/table";
 import { Progress } from "../../components/ui/progress";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 
 // Mock EVENT_LOGS removed in favor of live data.
 
@@ -131,10 +131,10 @@ export default function Devices() {
     return response.json();
   };
 
-  const { data: devicesResponse, isLoading } = usePollingFetch<any>(
+  const { data: devicesResponse, isLoading } = useRealtimeData<any>(
     fetchDevices,
     {
-      intervalMs: 5000,
+      tables: ["Device"],
     },
   );
 
@@ -149,10 +149,10 @@ export default function Devices() {
     return response.json();
   };
 
-  const { data: eventsData, isLoading: eventsLoading } = usePollingFetch<any[]>(
+  const { data: eventsData, isLoading: eventsLoading } = useRealtimeData<any[]>(
     fetchDeviceEvents,
     {
-      intervalMs: 5000,
+      tables: ["DeviceEvent"],
     },
   );
 

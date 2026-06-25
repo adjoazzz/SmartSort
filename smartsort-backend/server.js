@@ -11,6 +11,10 @@ const isSupabaseDatabase = /supabase\.com/i.test(databaseUrl || '');
 const pool = new Pool({
   connectionString: databaseUrl,
   ssl: isSupabaseDatabase ? { rejectUnauthorized: false } : undefined,
+  connectionTimeoutMillis: 20000,  // increased to 20s
+  idleTimeoutMillis: 30000,        
+  max: 20,                         // increased from 5 to handle concurrent realtime hooks
+  keepAlive: true,                 // prevent LB from dropping idle connections
 });
 
 // Initialize Prisma Client
@@ -21,7 +25,7 @@ const prisma = new PrismaClient({
 // Initialize the Express app
 const app = express();
 
-const withTimeout = (promise, ms = 5000) => {
+const withTimeout = (promise, ms = 15000) => {
   return Promise.race([
     promise,
     new Promise((_, reject) => setTimeout(() => reject(new Error('Database query timed out')), ms))
@@ -597,10 +601,10 @@ app.patch('/api/jobs/:id', async (req, res) => {
 // GET dashboard summary for pages that need DB-driven KPI snapshots
 app.get('/api/dashboard/summary', async (req, res) => {
   try {
-    const [devices, jobs, feedback] = await Promise.all([
+    const [devices, jobs, feedbackCount] = await Promise.all([
       prisma.device.findMany({ select: { status: true, fillLevel: true } }),
       prisma.collectionJob.findMany({ select: { status: true } }),
-      prisma.feedback.findMany({ select: { status: true } }),
+      prisma.feedback.count(),
     ]);
 
     const activeDevices = devices.filter((device) => device.status === 'Active' || device.status === 'Online' || !device.status).length;
@@ -608,9 +612,6 @@ app.get('/api/dashboard/summary', async (req, res) => {
     const pendingJobs = jobs.filter((job) => job.status === 'Pending').length;
     const inTransitJobs = jobs.filter((job) => job.status === 'In Progress').length;
     const completedJobs = jobs.filter((job) => job.status === 'Completed').length;
-    const pendingFeedback = feedback.filter((item) => item.status === 'Pending').length;
-    const inProgressFeedback = feedback.filter((item) => item.status === 'In Progress').length;
-    const resolvedFeedback = feedback.filter((item) => item.status === 'Resolved').length;
 
     const averageFill = totalDevices
       ? Math.round(devices.reduce((sum, device) => sum + (device.fillLevel ?? 0), 0) / totalDevices)
@@ -628,9 +629,7 @@ app.get('/api/dashboard/summary', async (req, res) => {
         completed: completedJobs,
       },
       feedback: {
-        pending: pendingFeedback,
-        inProgress: inProgressFeedback,
-        resolved: resolvedFeedback,
+        total: feedbackCount,
       },
     });
   } catch (error) {

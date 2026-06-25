@@ -21,7 +21,7 @@ import {
   TableHead,
   TableCell,
 } from "../../components/ui/table";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -123,8 +123,8 @@ export default function CommunityFeedback() {
     data: feedbackData,
     isLoading,
     refresh,
-  } = usePollingFetch<FeedbackItem[]>(fetchFeedbacks, {
-    intervalMs: 5000,
+  } = useRealtimeData<FeedbackItem[]>(fetchFeedbacks, {
+    tables: ["Feedback"],
   });
 
   useEffect(() => {

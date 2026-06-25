@@ -13,7 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "../../components/ui/table";
-import { usePollingFetch } from "../../hooks/usePollingFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 import { useTranslation } from "react-i18next";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -234,24 +234,24 @@ export default function Dashboard() {
     return response.json();
   };
 
-  // Polling hooks
-  const { data: devicesData, isLoading: devicesLoading } = usePollingFetch<
+  // Realtime subscriptions — instant updates when DB changes
+  const { data: devicesData, isLoading: devicesLoading } = useRealtimeData<
     any[]
-  >(fetchDevices, { intervalMs: 5000 });
+  >(fetchDevices, { tables: ["Device"] });
 
-  const { data: metricsData, isLoading: metricsLoading } = usePollingFetch<any>(
+  const { data: metricsData, isLoading: metricsLoading } = useRealtimeData<any>(
     fetchMetrics,
-    { intervalMs: 5000 },
+    { tables: ["Device", "ProcessedItem"] },
   );
 
   const { data: throughputData, isLoading: throughputLoading } =
-    usePollingFetch<any[]>(fetchThroughput, { intervalMs: 5000 });
+    useRealtimeData<any[]>(fetchThroughput, { tables: ["ProcessedItem"] });
 
   const { data: wasteCategoriesData, isLoading: wasteLoading } =
-    usePollingFetch<any>(fetchWasteCategories, { intervalMs: 5000 });
+    useRealtimeData<any>(fetchWasteCategories, { tables: ["ProcessedItem"] });
 
   const { data: contaminationEventsData, isLoading: contaminationLoading } =
-    usePollingFetch<any[]>(fetchContaminationEvents, { intervalMs: 5000 });
+    useRealtimeData<any[]>(fetchContaminationEvents, { tables: ["ProcessedItem"] });
 
   const isLoading =
     devicesLoading ||
