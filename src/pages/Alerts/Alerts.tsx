@@ -104,7 +104,7 @@ function DeviceIcon({ type }: { type: string }) {
 export default function Alerts() {
   const [severity, setSeverity] = useState("all");
   const [deviceType, setDeviceType] = useState("all");
-  const [timeRange, setTimeRange] = useState("24h");
+  const [timeRange, setTimeRange] = useState("all");
   const [page, setPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
   const limit = 10;
@@ -131,11 +131,19 @@ export default function Alerts() {
     return response.json();
   };
 
-  const { data: alertsData, isLoading } = usePollingFetch<any>(fetchAlerts, {
+  const {
+    data: alertsData,
+    isLoading,
+    refresh,
+  } = usePollingFetch<any>(fetchAlerts, {
     intervalMs: 30000,
   });
   const { data: summaryData, isLoading: isSummaryLoading } =
     usePollingFetch<any>(fetchSummary, { intervalMs: 30000 });
+
+  useEffect(() => {
+    refresh();
+  }, [severity, deviceType, timeRange, page, refresh]);
 
   const alerts = alertsData?.data || [];
   const totalCount = alertsData?.totalCount || 0;
@@ -155,7 +163,7 @@ export default function Alerts() {
   const handleClearFilters = () => {
     setSeverity("all");
     setDeviceType("all");
-    setTimeRange("24h");
+    setTimeRange("all");
   };
 
   const filteredAlerts = alerts;
@@ -313,6 +321,7 @@ export default function Alerts() {
                   onChange={(e) => setTimeRange(e.target.value)}
                   className="appearance-none bg-card border border-border text-foreground dark:text-white text-sm font-semibold rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-border hover:bg-background cursor-pointer min-w-[160px]"
                 >
+                  <option value="all">All Time</option>
                   <option value="24h">Last 24 Hours</option>
                   <option value="7d">Last 7 Days</option>
                   <option value="30d">Last 30 Days</option>

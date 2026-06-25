@@ -3,6 +3,13 @@ import React, { useEffect, useState } from "react";
 import { StatusBadge } from "../../components/StatusBadge";
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
+function formatDisplayId(id: string): string {
+  if (!id) return "";
+  if (id.startsWith("COL-")) return id;
+  if (id.startsWith("USR-")) return `COL-${id.substring(4)}`;
+  return `COL-${id.substring(0, 5)}`;
+}
+
 interface CollectorProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -106,7 +113,7 @@ export function CollectorProfileModal({
                 {collector.name}
               </h2>
               <p className="text-sm font-medium text-muted-foreground mb-4">
-                ID: {collector.id}
+                ID: {formatDisplayId(collector.id)}
               </p>
               <StatusBadge
                 label={status}

@@ -6,6 +6,13 @@ import { CollectorProfileModal } from "./CollectorProfileModal";
 import { InviteCollectorModal } from "./InviteCollectorModal";
 import { usePollingFetch } from "../../hooks/usePollingFetch";
 
+function formatDisplayId(id: string): string {
+  if (!id) return "";
+  if (id.startsWith("COL-")) return id;
+  if (id.startsWith("USR-")) return `COL-${id.substring(4)}`;
+  return `COL-${id.substring(0, 5)}`;
+}
+
 interface Collector {
   id: string;
   name: string;
@@ -167,7 +174,7 @@ export default function Collectors() {
                     className="hover:bg-background dark:hover:bg-secondary transition-colors"
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-muted-foreground">
-                      {collector.id}
+                      {formatDisplayId(collector.id)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
                       {collector.name}
