@@ -433,10 +433,10 @@ const getStatusBadge = (status: string) => {
       ? "bg-[#fef3c7] dark:bg-[#92400e]/10"
       : "bg-[#dcfce7] dark:bg-[#15803d]/10";
   const text = isSuspended
-    ? "text-[#b91c1c]"
+    ? "text-[#b91c1c] dark:text-[#f87171]"
     : isPending
-      ? "text-[#92400e]"
-      : "text-[#15803d]";
+      ? "text-[#92400e] dark:text-[#fbbf24]"
+      : "text-[#15803d] dark:text-[#22c55e]";
   const dot = isSuspended
     ? "bg-[#b91c1c]"
     : isPending
@@ -559,6 +559,7 @@ function ActionMenu({
         onClick={onToggle}
         className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-primary/10 rounded-lg transition-colors"
         title="More actions"
+        aria-label="Edit entry"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
           <circle cx="12" cy="5" r="2" />
@@ -1262,9 +1263,9 @@ export default function UserManagement() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-foreground dark:text-white text-base">
+                <h2 className="font-bold text-foreground dark:text-white text-base">
                   Permission Audit
-                </h3>
+                </h2>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Regularly review high-privilege roles. 14 users currently have
@@ -1274,7 +1275,7 @@ export default function UserManagement() {
             <a
               href="#security-logs"
               onClick={(e) => e.preventDefault()}
-              className="text-xs font-bold text-[#0a5cf5] hover:underline flex items-center gap-1 mt-4"
+              className="text-xs font-bold text-[#0a5cf5] dark:text-[#60a5fa] hover:underline flex items-center gap-1 mt-4"
             >
               View Security Logs
               <svg

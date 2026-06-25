@@ -232,6 +232,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
           </span>
           <button
             onClick={onClose}
+            aria-label="Close sidebar menu"
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
           >
             <svg
