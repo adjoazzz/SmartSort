@@ -129,10 +129,32 @@
     @apply bg-background text-foreground font-sans;
   }
 
-  body, header, aside, .profile-popup, button, select, input, table, tr, td, th,
-  .bg-white, .bg-slate-50, .dark\:bg-\[\#0b1c30\], .dark\:bg-\[\#0f2942\],
-  .border, .border-t, .border-b, .border-l, .border-r, .border-border {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  body,
+  header,
+  aside,
+  .profile-popup,
+  button,
+  select,
+  input,
+  table,
+  tr,
+  td,
+  th,
+  .bg-white,
+  .bg-slate-50,
+  .dark\:bg-\[\#0b1c30\],
+  .dark\:bg-\[\#0f2942\],
+  .border,
+  .border-t,
+  .border-b,
+  .border-l,
+  .border-r,
+  .border-border {
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
   /**

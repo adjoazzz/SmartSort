@@ -117,12 +117,14 @@ export default function Devices() {
   const [page, setPage] = useState(1);
   const [showSortingEvents, setShowSortingEvents] = useState(false);
   const limit = 10;
-  
+
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchDevices = async () => {
-    const response = await authFetch(`${baseUrl}/api/devices?page=${page}&limit=${limit}`);
+    const response = await authFetch(
+      `${baseUrl}/api/devices?page=${page}&limit=${limit}`,
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch device data");
     }
@@ -138,7 +140,9 @@ export default function Devices() {
 
   const fetchDeviceEvents = async () => {
     if (!selectedDevice) return [];
-    const response = await authFetch(`${baseUrl}/api/devices/${selectedDevice}/events`);
+    const response = await authFetch(
+      `${baseUrl}/api/devices/${selectedDevice}/events`,
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch device events");
     }
@@ -200,7 +204,9 @@ export default function Devices() {
     : 14;
   const currentUptime = `${currentUptimeDays}d 6h 12m`;
 
-  const displayedEvents = (eventsData || []).filter((event: any) => showSortingEvents || !event.isSortingEvent);
+  const displayedEvents = (eventsData || []).filter(
+    (event: any) => showSortingEvents || !event.isSortingEvent,
+  );
 
   return (
     <PageLayout
@@ -385,23 +391,40 @@ export default function Devices() {
           {/* Pagination Footer */}
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-card flex items-center justify-between mt-auto">
             <span className="text-sm text-muted-foreground">
-              Showing {devices.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} devices
+              Showing {devices.length > 0 ? (page - 1) * limit + 1 : 0}-
+              {Math.min(page * limit, totalCount)} of {totalCount} devices
             </span>
             <div className="flex gap-1">
-              <button 
+              <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages || totalPages === 0}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
@@ -523,10 +546,16 @@ export default function Devices() {
                           type="checkbox"
                           className="sr-only"
                           checked={showSortingEvents}
-                          onChange={(e) => setShowSortingEvents(e.target.checked)}
+                          onChange={(e) =>
+                            setShowSortingEvents(e.target.checked)
+                          }
                         />
-                        <div className={`block w-8 h-5 rounded-full transition-colors ${showSortingEvents ? 'bg-[#10b981]' : 'bg-[#e2e8f0] dark:bg-[#334155]'}`}></div>
-                        <div className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${showSortingEvents ? 'transform translate-x-3' : ''}`}></div>
+                        <div
+                          className={`block w-8 h-5 rounded-full transition-colors ${showSortingEvents ? "bg-[#10b981]" : "bg-[#e2e8f0] dark:bg-[#334155]"}`}
+                        ></div>
+                        <div
+                          className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${showSortingEvents ? "transform translate-x-3" : ""}`}
+                        ></div>
                       </div>
                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                         Show Sorting
@@ -552,9 +581,13 @@ export default function Devices() {
 
                 <div className="overflow-y-auto flex-1 p-2">
                   {eventsLoading ? (
-                    <div className="p-4 text-center text-sm text-muted-foreground">Loading events...</div>
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      Loading events...
+                    </div>
                   ) : displayedEvents.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-muted-foreground">No events recorded.</div>
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No events recorded.
+                    </div>
                   ) : (
                     <ul className="divide-y divide-[#f1f5f9]">
                       {displayedEvents.map((log: any) => (

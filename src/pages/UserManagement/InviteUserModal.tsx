@@ -20,7 +20,8 @@ const EMAILJS_TEMPLATE_ID: string =
 const EMAILJS_PUBLIC_KEY: string =
   (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY ?? "";
 const PORTAL_URL: string =
-  (import.meta as any).env?.VITE_COLLECTOR_PORTAL_URL ?? "http://localhost:5173";
+  (import.meta as any).env?.VITE_COLLECTOR_PORTAL_URL ??
+  "http://localhost:5173";
 
 /** Generates a secure-looking temporary password */
 function generateTempPassword(length = 12): string {
@@ -379,7 +380,9 @@ export function InviteUserModal({
                       disabled={status === "sending"}
                       className="px-5 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
                     >
-                      {status === "sending" ? t("userModal.saving") : t("userModal.createUser")}
+                      {status === "sending"
+                        ? t("userModal.saving")
+                        : t("userModal.createUser")}
                     </button>
                   </div>
                 </form>

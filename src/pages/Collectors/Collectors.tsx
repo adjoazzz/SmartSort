@@ -32,9 +32,11 @@ export default function Collectors() {
     const searchParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
-      ...(searchTerm ? { search: searchTerm } : {})
+      ...(searchTerm ? { search: searchTerm } : {}),
     });
-    const response = await authFetch(`${API_BASE_URL}/api/collectors?${searchParams}`);
+    const response = await authFetch(
+      `${API_BASE_URL}/api/collectors?${searchParams}`,
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch collectors");
@@ -204,14 +206,23 @@ export default function Collectors() {
 
           <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-card">
             <span className="text-sm text-muted-foreground">
-              Showing {collectors.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} collectors
+              Showing {collectors.length > 0 ? (page - 1) * limit + 1 : 0}-
+              {Math.min(page * limit, totalCount)} of {totalCount} collectors
             </span>
             <div className="flex gap-1">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
@@ -219,8 +230,16 @@ export default function Collectors() {
               <button
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages || totalPages === 0}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>

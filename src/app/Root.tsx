@@ -9,13 +9,21 @@ export function Root() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const publicPaths = ["/", "/login", "/onboarding-1", "/onboarding-2", "/onboarding-3"];
+      const publicPaths = [
+        "/",
+        "/login",
+        "/onboarding-1",
+        "/onboarding-2",
+        "/onboarding-3",
+      ];
       if (publicPaths.includes(location.pathname)) {
         setLoading(false);
         return;
       }
 
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/login");
         setLoading(false);
@@ -40,7 +48,11 @@ export function Root() {
   }, [location.pathname, navigate]);
 
   if (loading) {
-    return <div className="h-screen w-full bg-slate-50 flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="h-screen w-full bg-slate-50 flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   return (

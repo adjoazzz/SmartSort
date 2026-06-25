@@ -118,27 +118,19 @@ async function upsertDeviceFromJobInput({ device, location, fill, type }) {
   });
 }
 
-function formatUser(collector) {
-  return {
-    id: collector.collectorId,
-    name: collector.name,
-    region: collector.region,
-    status: collector.status,
-    rating: collector.rating,
-    email: collector.email ?? null,
-    joinedAt: collector.joinedAt,
-  };
-}
-
 function formatUser(user) {
   return {
-    id: user.userId,
+    id: user.id,
+    authId: user.authId || null,
     name: user.name,
     email: user.email,
     role: user.role,
     status: user.status,
-    avatar: user.avatar ?? null,
-    assignedFacility: user.assignedFacility,
+    avatar: user.avatar || null,
+    assignedFacility: user.assignedFacility || null,
+    region: user.region || null,
+    rating: user.rating !== null ? Number(user.rating) : 0,
+    createdAt: user.createdAt,
   };
 }
 
@@ -312,7 +304,7 @@ app.get('/api/collectors', async (req, res) => {
       ...(search ? {
         OR: [
           { name: { contains: search, mode: 'insensitive' } },
-          { collectorId: { contains: search, mode: 'insensitive' } },
+          { id: { contains: search, mode: 'insensitive' } },
           { region: { contains: search, mode: 'insensitive' } },
           { status: { contains: search, mode: 'insensitive' } },
         ]
@@ -386,9 +378,10 @@ app.post('/api/collectors', async (req, res) => {
 
     const createdCollector = await prisma.user.create({
       data: {
-        collectorId,
+        id: collectorId,
         name,
         email: email || null,
+        role: 'COLLECTOR',
         region,
         status: status || 'Pending',
         rating: Number(rating) || 0,
@@ -409,7 +402,7 @@ app.patch('/api/collectors/:id', async (req, res) => {
     const { name, email, region, status, rating } = req.body;
 
     const updatedCollector = await prisma.user.update({
-      where: { collectorId: id },
+      where: { id: id },
       data: {
         ...(name !== undefined ? { name } : {}),
         ...(email !== undefined ? { email: email || null } : {}),
@@ -439,7 +432,7 @@ app.post('/api/users', async (req, res) => {
 
     const createdUser = await prisma.user.create({
       data: {
-        userId,
+        id: userId,
         name,
         email,
         role,
@@ -473,11 +466,11 @@ app.post('/api/users/bulk', async (req, res) => {
         continue;
       }
 
-      const userId = await buildNextSequentialId(prisma.platformUser, 'userId', 'USR-');
+      const userId = await buildNextSequentialId(prisma.user, 'id', 'USR-');
 
-      const createdUser = await prisma.platformUser.create({
+      const createdUser = await prisma.user.create({
         data: {
-          userId,
+          id: userId,
           name,
           email,
           role,
@@ -487,7 +480,7 @@ app.post('/api/users/bulk', async (req, res) => {
         },
       });
 
-      createdUsers.push(formatPlatformUser(createdUser));
+      createdUsers.push(formatUser(createdUser));
     }
 
     res.status(201).json(createdUsers);
@@ -504,7 +497,7 @@ app.patch('/api/users/:id', async (req, res) => {
     const { name, email, role, status, assignedFacility, avatar } = req.body;
 
     const updatedUser = await prisma.user.update({
-      where: { userId: id },
+      where: { id: id },
       data: {
         ...(name !== undefined ? { name } : {}),
         ...(email !== undefined ? { email } : {}),

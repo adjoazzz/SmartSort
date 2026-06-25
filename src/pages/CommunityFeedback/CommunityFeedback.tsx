@@ -135,7 +135,12 @@ export default function CommunityFeedback() {
   }, [feedbackData]);
 
   const handleSubmitFeedback = async () => {
-    console.log("Submit clicked", { userName, location, category, description });
+    console.log("Submit clicked", {
+      userName,
+      location,
+      category,
+      description,
+    });
     if (
       !userName ||
       !location ||
@@ -183,13 +188,16 @@ export default function CommunityFeedback() {
     else if (currentStatus === "Resolved") nextStatus = "Pending";
 
     try {
-      const response = await authFetch(`http://localhost:5000/api/feedback/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await authFetch(
+        `http://localhost:5000/api/feedback/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: nextStatus }),
         },
-        body: JSON.stringify({ status: nextStatus }),
-      });
+      );
 
       if (response.ok) {
         await refresh();
@@ -340,20 +348,20 @@ export default function CommunityFeedback() {
     doc.setTextColor(100);
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
 
-    const tableData = filteredFeedbacks.map(item => [
+    const tableData = filteredFeedbacks.map((item) => [
       item.userName,
       item.location,
       item.category,
       item.status,
-      formatDate(item.createdAt)
+      formatDate(item.createdAt),
     ]);
 
     autoTable(doc, {
       startY: 40,
-      head: [['User', 'Location', 'Category', 'Status', 'Date']],
+      head: [["User", "Location", "Category", "Status", "Date"]],
       body: tableData,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 108, 73] }
+      theme: "grid",
+      headStyles: { fillColor: [0, 108, 73] },
     });
 
     doc.save("smartsort-feedback-report.pdf");

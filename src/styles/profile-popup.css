@@ -70,7 +70,9 @@
   border: none;
   color: #94a3b8;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 .profile-popup__close:hover {
   background: #f1f5f9;
@@ -93,7 +95,7 @@
 }
 
 .profile-popup__avatar-ring::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -4px;
   border-radius: 50%;
@@ -143,7 +145,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 .profile-popup__camera:hover {
   background: #f8fafc;
@@ -168,7 +172,9 @@
   border: 1.5px solid #e2e8f0;
   border-radius: 100px;
   text-decoration: none;
-  transition: background-color 0.15s, border-color 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
   letter-spacing: 0.01em;
 }
 .profile-popup__manage-btn:hover {

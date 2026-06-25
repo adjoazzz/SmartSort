@@ -17,7 +17,8 @@ const EMAILJS_TEMPLATE_ID: string =
 const EMAILJS_PUBLIC_KEY: string =
   (import.meta as any).env?.VITE_EMAILJS_PUBLIC_KEY ?? "";
 const COLLECTOR_PORTAL_URL: string =
-  (import.meta as any).env?.VITE_COLLECTOR_PORTAL_URL ?? "http://localhost:5173";
+  (import.meta as any).env?.VITE_COLLECTOR_PORTAL_URL ??
+  "http://localhost:5173";
 
 /** Generates a secure-looking temporary password */
 function generateTempPassword(length = 12): string {
@@ -53,12 +54,19 @@ export function InviteCollectorModal({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [facility, setFacility] = useState("Facility 1");
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   // Initialise EmailJS once with the public key (v4 recommended pattern)
   useEffect(() => {
-    console.log("[EmailJS] PUBLIC_KEY loaded:", EMAILJS_PUBLIC_KEY ? "YES (" + EMAILJS_PUBLIC_KEY.slice(0, 4) + "...)" : "MISSING");
+    console.log(
+      "[EmailJS] PUBLIC_KEY loaded:",
+      EMAILJS_PUBLIC_KEY
+        ? "YES (" + EMAILJS_PUBLIC_KEY.slice(0, 4) + "...)"
+        : "MISSING",
+    );
     console.log("[EmailJS] SERVICE_ID:", EMAILJS_SERVICE_ID || "MISSING");
     console.log("[EmailJS] TEMPLATE_ID:", EMAILJS_TEMPLATE_ID || "MISSING");
     if (EMAILJS_PUBLIC_KEY) {
@@ -104,7 +112,7 @@ export function InviteCollectorModal({
           collector_email: email,
           temp_password: tempPassword,
           invite_link: COLLECTOR_PORTAL_URL,
-        }
+        },
       );
       console.log("[EmailJS] send result:", emailResult);
 
@@ -138,7 +146,7 @@ export function InviteCollectorModal({
           ? "Could not save collector. Please try again."
           : emailjsStatus
             ? `Email failed — ${emailjsStatus}. Check your EmailJS template's "To Email" field.`
-            : "Collector saved but the invite email failed to send. Check your EmailJS config."
+            : "Collector saved but the invite email failed to send. Check your EmailJS config.",
       );
     }
   };
@@ -156,7 +164,14 @@ export function InviteCollectorModal({
             disabled={status === "sending" || status === "success"}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground transition-colors disabled:opacity-50"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -167,7 +182,16 @@ export function InviteCollectorModal({
         {status === "success" ? (
           <div className="p-8 flex flex-col items-center justify-center text-center gap-4">
             <div className="w-16 h-16 rounded-full bg-[#10b981]/10 flex items-center justify-center text-[#10b981]">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
@@ -177,8 +201,8 @@ export function InviteCollectorModal({
                 Invite Sent!
               </h3>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                A welcome email with a portal link and temporary password has been
-                sent to{" "}
+                A welcome email with a portal link and temporary password has
+                been sent to{" "}
                 <span className="font-semibold text-foreground dark:text-white">
                   {email}
                 </span>
@@ -250,7 +274,15 @@ export function InviteCollectorModal({
 
             {/* Info banner */}
             <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 flex gap-3 items-start">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2" className="shrink-0 mt-0.5">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#0284c7"
+                strokeWidth="2"
+                className="shrink-0 mt-0.5"
+              >
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -264,7 +296,15 @@ export function InviteCollectorModal({
             {/* Error message */}
             {status === "error" && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 flex gap-3 items-start">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" className="shrink-0 mt-0.5">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  strokeWidth="2"
+                  className="shrink-0 mt-0.5"
+                >
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="8" x2="12" y2="12"></line>
                   <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -296,7 +336,15 @@ export function InviteCollectorModal({
               >
                 {status === "sending" ? (
                   <>
-                    <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg
+                      className="animate-spin"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
                       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                     </svg>
                     Sending Invite…

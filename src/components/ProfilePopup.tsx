@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Link, useNavigate } from 'react-router';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '../lib/supabaseClient';
-import imgUserProfileAvatar from '../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png';
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Link, useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+import { supabase } from "../lib/supabaseClient";
+import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
 interface ProfilePopupProps {
   isOpen: boolean;
@@ -11,9 +11,11 @@ interface ProfilePopupProps {
   anchorRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-
-
-export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) {
+export function ProfilePopup({
+  isOpen,
+  onClose,
+  anchorRef,
+}: ProfilePopupProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const popupRef = useRef<HTMLDivElement>(null);
@@ -29,7 +31,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
       if (user && user.email) {
         currentEmail = user.email;
         setUserEmail(user.email);
-        setUserName(user.email.split('@')[0]);
+        setUserName(user.email.split("@")[0]);
       } else {
         setUserEmail("Not logged in");
         setUserName("Guest");
@@ -39,7 +41,9 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
       if (savedAccountsStr) {
         try {
           const savedAccounts = JSON.parse(savedAccountsStr);
-          const others = savedAccounts.filter((a: any) => a.email !== currentEmail);
+          const others = savedAccounts.filter(
+            (a: any) => a.email !== currentEmail,
+          );
           setOtherAccounts(others);
         } catch (e) {}
       }
@@ -60,12 +64,12 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
     }
 
     updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
 
     return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
     };
   }, [isOpen, anchorRef]);
 
@@ -76,8 +80,10 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
     function handleClickOutside(e: MouseEvent) {
       const target = e.target as Node;
       if (
-        popupRef.current && !popupRef.current.contains(target) &&
-        anchorRef.current && !anchorRef.current.contains(target)
+        popupRef.current &&
+        !popupRef.current.contains(target) &&
+        anchorRef.current &&
+        !anchorRef.current.contains(target)
       ) {
         onClose();
       }
@@ -85,24 +91,24 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
 
     // Wait a frame so the opening click doesn't immediately close the popup
     const rafId = requestAnimationFrame(() => {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     });
 
     return () => {
       cancelAnimationFrame(rafId);
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, onClose, anchorRef]);
 
   // Close on Escape key
   useEffect(() => {
     function handleEscape(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     }
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
     }
-    return () => document.removeEventListener('keydown', handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -114,7 +120,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
       role="dialog"
       aria-label="Account menu"
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: `${position.top}px`,
         right: `${position.right}px`,
       }}
@@ -127,7 +133,16 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
           className="profile-popup__close"
           aria-label="Close"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
@@ -140,7 +155,10 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
           <div className="profile-popup__avatar">
             <img src={imgUserProfileAvatar} alt="User Profile" />
           </div>
-          <button className="profile-popup__camera" aria-label="Change profile picture">
+          <button
+            className="profile-popup__camera"
+            aria-label="Change profile picture"
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z" />
               <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
@@ -148,7 +166,11 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
           </button>
         </div>
         <h2 className="profile-popup__greeting">Hi, {userName}!</h2>
-        <Link to="/profile" onClick={onClose} className="profile-popup__manage-btn">
+        <Link
+          to="/profile"
+          onClick={onClose}
+          className="profile-popup__manage-btn"
+        >
           {t("profilePopup.manageAccount")}
         </Link>
       </div>
@@ -159,7 +181,11 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
           className="profile-popup__toggle"
           onClick={() => setShowAccounts((prev) => !prev)}
         >
-          <span>{showAccounts ? t("profilePopup.hideAccounts") : t("profilePopup.showAccounts")}</span>
+          <span>
+            {showAccounts
+              ? t("profilePopup.hideAccounts")
+              : t("profilePopup.showAccounts")}
+          </span>
           <svg
             width="18"
             height="18"
@@ -169,7 +195,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`profile-popup__chevron ${showAccounts ? 'profile-popup__chevron--up' : ''}`}
+            className={`profile-popup__chevron ${showAccounts ? "profile-popup__chevron--up" : ""}`}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -189,7 +215,7 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
                 <div
                   className="profile-popup__account-avatar"
                   style={{
-                    backgroundColor: account.color || '#78909C',
+                    backgroundColor: account.color || "#78909C",
                     boxShadow: account.ringColor
                       ? `0 0 0 2px ${account.ringColor}`
                       : undefined,
@@ -198,8 +224,12 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
                   {account.initials}
                 </div>
                 <div className="profile-popup__account-info">
-                  <span className="profile-popup__account-name">{account.name}</span>
-                  <span className="profile-popup__account-email">{account.email}</span>
+                  <span className="profile-popup__account-name">
+                    {account.name}
+                  </span>
+                  <span className="profile-popup__account-email">
+                    {account.email}
+                  </span>
                 </div>
               </button>
             ))}
@@ -207,9 +237,22 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
         )}
 
         {/* Add another account */}
-        <Link to="/login" onClick={onClose} className="profile-popup__action-row">
+        <Link
+          to="/login"
+          onClick={onClose}
+          className="profile-popup__action-row"
+        >
           <div className="profile-popup__action-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -230,7 +273,16 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
           className="profile-popup__action-row w-full text-left cursor-pointer"
         >
           <div className="profile-popup__action-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
@@ -242,11 +294,15 @@ export function ProfilePopup({ isOpen, onClose, anchorRef }: ProfilePopupProps) 
 
       {/* Footer */}
       <div className="profile-popup__footer">
-        <a href="#" className="profile-popup__footer-link">{t("profilePopup.privacyPolicy")}</a>
+        <a href="#" className="profile-popup__footer-link">
+          {t("profilePopup.privacyPolicy")}
+        </a>
         <span className="profile-popup__footer-dot">·</span>
-        <a href="#" className="profile-popup__footer-link">{t("profilePopup.termsOfService")}</a>
+        <a href="#" className="profile-popup__footer-link">
+          {t("profilePopup.termsOfService")}
+        </a>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

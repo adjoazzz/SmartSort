@@ -248,12 +248,14 @@ export default function CollectionJobs() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
   const limit = 10;
-  
+
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchJobs = async () => {
-    const response = await authFetch(`${baseUrl}/api/jobs?page=${page}&limit=${limit}`);
+    const response = await authFetch(
+      `${baseUrl}/api/jobs?page=${page}&limit=${limit}`,
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch collection jobs");
     }
@@ -844,26 +846,43 @@ export default function CollectionJobs() {
                 No collection tasks found matching current filters.
               </div>
             )}
-            
+
             <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-card">
               <span className="text-sm text-muted-foreground">
-                Showing {jobs.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} jobs
+                Showing {jobs.length > 0 ? (page - 1) * limit + 1 : 0}-
+                {Math.min(page * limit, totalCount)} of {totalCount} jobs
               </span>
               <div className="flex gap-1">
-                <button 
+                <button
                   onClick={() => setPage(Math.max(1, page - 1))}
                   disabled={page === 1}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => setPage(Math.min(totalPages, page + 1))}
                   disabled={page === totalPages || totalPages === 0}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </button>

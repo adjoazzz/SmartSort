@@ -2,7 +2,7 @@ import React from "react";
 
 /**
  * Renders the pagination dots to indicate progress through the onboarding flow.
- * 
+ *
  * @param {Object} props - Component props.
  * @param {number} props.current - The index of the current active step (0-indexed).
  * @param {number} props.total - The total number of steps in the onboarding process.

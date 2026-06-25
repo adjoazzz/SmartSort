@@ -6,7 +6,10 @@ interface BulkImportDocsModalProps {
   onClose: () => void;
 }
 
-export function BulkImportDocsModal({ isOpen, onClose }: BulkImportDocsModalProps) {
+export function BulkImportDocsModal({
+  isOpen,
+  onClose,
+}: BulkImportDocsModalProps) {
   const sampleCSV = `name,email,role,assignedFacility,status
 John Doe,john.doe@smartsort.com,Manager,HQ Corporate Center,ACTIVE
 Jane Smith,jane.smith@smartsort.com,Collector,East Side Recycling,PENDING
@@ -84,11 +87,13 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
 
               {/* Scrollable Body */}
               <div className="p-6 overflow-y-auto flex flex-col gap-6">
-                
                 {/* Intro Section */}
                 <div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Automate your team provisioning process. You can provision users in bulk by uploading a structured comma-separated values (CSV) file, or by establishing an Active Directory sync.
+                    Automate your team provisioning process. You can provision
+                    users in bulk by uploading a structured comma-separated
+                    values (CSV) file, or by establishing an Active Directory
+                    sync.
                   </p>
                 </div>
 
@@ -98,43 +103,68 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                     1. CSV File Specifications
                   </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Ensure your CSV file contains the following exact column headers (case-sensitive) and format rules:
+                    Ensure your CSV file contains the following exact column
+                    headers (case-sensitive) and format rules:
                   </p>
 
                   <div className="border border-border rounded-xl overflow-hidden text-xs">
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-background dark:bg-secondary border-b border-border">
-                          <th className="px-4 py-2 font-bold text-muted-foreground">Column</th>
-                          <th className="px-4 py-2 font-bold text-muted-foreground">Type</th>
-                          <th className="px-4 py-2 font-bold text-muted-foreground">Allowed Values</th>
+                          <th className="px-4 py-2 font-bold text-muted-foreground">
+                            Column
+                          </th>
+                          <th className="px-4 py-2 font-bold text-muted-foreground">
+                            Type
+                          </th>
+                          <th className="px-4 py-2 font-bold text-muted-foreground">
+                            Allowed Values
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#f1f5f9] dark:divide-[#0f2942] text-muted-foreground">
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">name</td>
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                            name
+                          </td>
                           <td className="px-4 py-2">String</td>
-                          <td className="px-4 py-2">Full name (e.g. John Doe)</td>
+                          <td className="px-4 py-2">
+                            Full name (e.g. John Doe)
+                          </td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">email</td>
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                            email
+                          </td>
                           <td className="px-4 py-2">String (Email)</td>
                           <td className="px-4 py-2">Unique email address</td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">role</td>
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                            role
+                          </td>
                           <td className="px-4 py-2">String</td>
-                          <td className="px-4 py-2">Admin, Manager, Collector, Viewer</td>
+                          <td className="px-4 py-2">
+                            Admin, Manager, Collector, Viewer
+                          </td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">assignedFacility</td>
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                            assignedFacility
+                          </td>
                           <td className="px-4 py-2">String</td>
-                          <td className="px-4 py-2">HQ Corporate Center, East Side Recycling, etc.</td>
+                          <td className="px-4 py-2">
+                            HQ Corporate Center, East Side Recycling, etc.
+                          </td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">status</td>
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                            status
+                          </td>
                           <td className="px-4 py-2">String</td>
-                          <td className="px-4 py-2">ACTIVE, PENDING, SUSPENDED</td>
+                          <td className="px-4 py-2">
+                            ACTIVE, PENDING, SUSPENDED
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -151,8 +181,22 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                       onClick={handleCopy}
                       className="text-xs font-semibold text-[#006c49] dark:text-emerald-400 hover:underline cursor-pointer flex items-center gap-1"
                     >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <rect
+                          x="9"
+                          y="9"
+                          width="13"
+                          height="13"
+                          rx="2"
+                          ry="2"
+                        />
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                       </svg>
                       Copy Sample
@@ -169,10 +213,13 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                     2. Active Directory Federation
                   </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    To set up dynamic synchronization via SAML 2.0 or SCIM protocols, please navigate to the <strong>Settings &gt; Authentication</strong> panel. This allows automated onboarding/offboarding based on your enterprise directory groups.
+                    To set up dynamic synchronization via SAML 2.0 or SCIM
+                    protocols, please navigate to the{" "}
+                    <strong>Settings &gt; Authentication</strong> panel. This
+                    allows automated onboarding/offboarding based on your
+                    enterprise directory groups.
                   </p>
                 </div>
-
               </div>
 
               {/* Footer */}
@@ -185,7 +232,6 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                   Got it
                 </button>
               </div>
-
             </motion.div>
           </div>
         </>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { InputField } from './InputField';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { InputField } from "./InputField";
+import { useTranslation } from "react-i18next";
 
 interface RegisterDeviceModalProps {
   isOpen: boolean;
@@ -14,9 +14,12 @@ interface RegisterDeviceModalProps {
  * Renders the device registration form as a centered overlay modal.
  * Extracted from OnboardingStep3 for reuse on the Devices page.
  */
-export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProps) {
+export function RegisterDeviceModal({
+  isOpen,
+  onClose,
+}: RegisterDeviceModalProps) {
   const { t } = useTranslation();
-  const [serial, setSerial] = useState('');
+  const [serial, setSerial] = useState("");
 
   const handleSave = () => {
     console.log("Device registered:", { serial });
@@ -51,8 +54,12 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
               {/* Header */}
               <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
                 <div>
-                  <h3 className="text-xl font-semibold text-foreground dark:text-white">{t("registerModal.title")}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">{t("registerModal.subtitle")}</p>
+                  <h3 className="text-xl font-semibold text-foreground dark:text-white">
+                    {t("registerModal.title")}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {t("registerModal.subtitle")}
+                  </p>
                 </div>
                 <button
                   onClick={onClose}
@@ -158,7 +165,9 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground dark:text-white">{t("registerModal.scanTitle")}</p>
+                    <p className="text-sm font-semibold text-foreground dark:text-white">
+                      {t("registerModal.scanTitle")}
+                    </p>
                     <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                       {t("registerModal.scanDesc")}
                     </p>
@@ -207,11 +216,17 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                       </svg>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-foreground dark:text-white">{t("registerModal.defaultFacility")}</span>
-                      <span className="text-sm text-muted-foreground">{t("registerModal.hubName")}</span>
+                      <span className="text-xs font-semibold text-foreground dark:text-white">
+                        {t("registerModal.defaultFacility")}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {t("registerModal.hubName")}
+                      </span>
                     </div>
                   </div>
-                  <button className="text-sm font-semibold text-[#006c49] hover:underline cursor-pointer">{t("registerModal.changeBtn")}</button>
+                  <button className="text-sm font-semibold text-[#006c49] hover:underline cursor-pointer">
+                    {t("registerModal.changeBtn")}
+                  </button>
                 </div>
 
                 {/* Support Note */}
@@ -230,8 +245,12 @@ export function RegisterDeviceModal({ isOpen, onClose }: RegisterDeviceModalProp
                     />
                   </svg>
                   <div>
-                    <p className="text-xs font-semibold text-foreground dark:text-white">{t("registerModal.helpTitle")}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{t("registerModal.helpDesc")}</p>
+                    <p className="text-xs font-semibold text-foreground dark:text-white">
+                      {t("registerModal.helpTitle")}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {t("registerModal.helpDesc")}
+                    </p>
                   </div>
                 </div>
               </div>

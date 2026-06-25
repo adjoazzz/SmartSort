@@ -4,7 +4,14 @@ import { usePollingFetch } from "../../hooks/usePollingFetch";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Cell } from "recharts";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../../components/ui/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "../../components/ui/table";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -102,7 +109,8 @@ export default function Alerts() {
   const [isExporting, setIsExporting] = useState(false);
   const limit = 10;
 
-  const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+  const baseUrl =
+    (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchAlerts = async () => {
     const searchParams = new URLSearchParams({
@@ -110,7 +118,7 @@ export default function Alerts() {
       limit: limit.toString(),
       severity,
       deviceType,
-      timeRange
+      timeRange,
     });
     const response = await authFetch(`${baseUrl}/api/alerts?${searchParams}`);
     if (!response.ok) throw new Error("Failed to fetch alerts");
@@ -123,8 +131,11 @@ export default function Alerts() {
     return response.json();
   };
 
-  const { data: alertsData, isLoading } = usePollingFetch<any>(fetchAlerts, { intervalMs: 30000 });
-  const { data: summaryData, isLoading: isSummaryLoading } = usePollingFetch<any>(fetchSummary, { intervalMs: 30000 });
+  const { data: alertsData, isLoading } = usePollingFetch<any>(fetchAlerts, {
+    intervalMs: 30000,
+  });
+  const { data: summaryData, isLoading: isSummaryLoading } =
+    usePollingFetch<any>(fetchSummary, { intervalMs: 30000 });
 
   const alerts = alertsData?.data || [];
   const totalCount = alertsData?.totalCount || 0;
@@ -166,15 +177,23 @@ export default function Alerts() {
           alert.deviceLocation,
           alert.severity,
           alert.messageTitle,
-          alert.timestampMain
+          alert.timestampMain,
         ]);
 
         autoTable(doc, {
           startY: 40,
-          head: [['Device Name', 'Location', 'Severity', 'Message Title', 'Timestamp']],
+          head: [
+            [
+              "Device Name",
+              "Location",
+              "Severity",
+              "Message Title",
+              "Timestamp",
+            ],
+          ],
           body: tableData,
-          theme: 'grid',
-          headStyles: { fillColor: [0, 108, 73] }
+          theme: "grid",
+          headStyles: { fillColor: [0, 108, 73] },
         });
 
         doc.save("smartsort-alerts-report.pdf");
@@ -241,7 +260,14 @@ export default function Alerts() {
                   <option value="warning">Warning</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#94a3b8"
+                    strokeWidth="2"
+                  >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
@@ -263,7 +289,14 @@ export default function Alerts() {
                   <option value="smartbins">SmartBins</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#94a3b8"
+                    strokeWidth="2"
+                  >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
@@ -285,7 +318,14 @@ export default function Alerts() {
                   <option value="30d">Last 30 Days</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#94a3b8"
+                    strokeWidth="2"
+                  >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </div>
@@ -298,7 +338,14 @@ export default function Alerts() {
               onClick={handleClearFilters}
               className="h-full bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 hover:bg-background transition-colors flex items-center gap-2 cursor-pointer"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
                 <line x1="13" y1="18" x2="21" y2="18"></line>
@@ -314,9 +361,25 @@ export default function Alerts() {
             >
               {isExporting ? (
                 <>
-                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Exporting...
                 </>
@@ -398,7 +461,10 @@ export default function Alerts() {
                 ))
               ) : filteredAlerts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="h-32 text-center text-muted-foreground"
+                  >
                     No alerts match the selected filters.
                   </TableCell>
                 </TableRow>
@@ -453,10 +519,11 @@ export default function Alerts() {
                         {alert.actions.map((action: any, i: number) => (
                           <button
                             key={i}
-                            className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors cursor-pointer ${action.type === "primary"
+                            className={`text-[13px] font-semibold rounded-lg px-3 py-1.5 transition-colors cursor-pointer ${
+                              action.type === "primary"
                                 ? "bg-primary text-white hover:bg-primary/90"
                                 : "bg-card border border-border text-muted-foreground hover:bg-muted"
-                              }`}
+                            }`}
                           >
                             {action.label}
                           </button>
@@ -471,14 +538,23 @@ export default function Alerts() {
 
           <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-card">
             <span className="text-sm text-muted-foreground">
-              Showing {alerts.length > 0 ? (page - 1) * limit + 1 : 0}-{Math.min(page * limit, totalCount)} of {totalCount} active alerts
+              Showing {alerts.length > 0 ? (page - 1) * limit + 1 : 0}-
+              {Math.min(page * limit, totalCount)} of {totalCount} active alerts
             </span>
             <div className="flex gap-1">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
@@ -486,8 +562,16 @@ export default function Alerts() {
               <button
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages || totalPages === 0}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
@@ -576,8 +660,8 @@ export default function Alerts() {
                 <p className="text-[15px] leading-relaxed text-slate-300 font-medium mb-8">
                   Based on recent contamination patterns,{" "}
                   <strong className="text-white font-bold">Conveyor-B42</strong>{" "}
-                  is predicted to require sensor calibration in the next 48 hours
-                  to prevent further critical alerts.
+                  is predicted to require sensor calibration in the next 48
+                  hours to prevent further critical alerts.
                 </p>
                 <div className="mt-auto">
                   <button className="w-full bg-[#10b981] hover:bg-[#059669] text-foreground dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm cursor-pointer">
@@ -594,4 +678,3 @@ export default function Alerts() {
     </PageLayout>
   );
 }
-

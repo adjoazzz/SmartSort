@@ -1,19 +1,20 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 const resources = {
   en: {
     translation: {
       dashboard: {
         title: "Operations Overview",
-        description: "Real-time waste processing and recovery metrics for North Sector Hub.",
+        description:
+          "Real-time waste processing and recovery metrics for North Sector Hub.",
         exportBtn: "Export PDF",
         kpi: {
           activeDevices: "ACTIVE DEVICES",
           totalItemsSorted: "TOTAL ITEMS SORTED",
           recyclingRate: "RECYCLING RATE %",
-          contaminationRate: "CONTAMINATION RATE %"
+          contaminationRate: "CONTAMINATION RATE %",
         },
         charts: {
           hourlyThroughput: "Hourly Throughput",
@@ -24,13 +25,13 @@ const resources = {
           plastic: "Plastic",
           paper: "Paper",
           metal: "Metal",
-          other: "Other"
+          other: "Other",
         },
         bottom: {
           deviceStatus: "Device Status",
           liveContaminationEvents: "Live Contamination Events",
           actionRequired: "Action Required",
-          manageAllDevices: "Manage All Devices"
+          manageAllDevices: "Manage All Devices",
         },
         table: {
           timestamp: "Timestamp",
@@ -38,8 +39,8 @@ const resources = {
           detection: "Detection",
           confidence: "Confidence",
           visual: "Visual",
-          action: "Action"
-        }
+          action: "Action",
+        },
       },
       headerNav: {
         searchPlaceholder: "Search facilities or events...",
@@ -52,7 +53,7 @@ const resources = {
         enterpriseSync: "Enterprise Sync",
         activeDirectorySso: "Active Directory SSO",
         notifications: "Notifications",
-        emailAlerts: "Email Alerts"
+        emailAlerts: "Email Alerts",
       },
       sideNav: {
         dashboard: "Dashboard",
@@ -66,7 +67,7 @@ const resources = {
         userManagement: "User Management",
         collectorDashboard: "Collector Dashboard",
         liveMap: "Live Route Map",
-        signOut: "Sign Out"
+        signOut: "Sign Out",
       },
       profilePopup: {
         manageAccount: "Manage your Account",
@@ -75,17 +76,18 @@ const resources = {
         addAccount: "Add another account",
         signOut: "Sign out",
         privacyPolicy: "Privacy Policy",
-        termsOfService: "Terms of Service"
+        termsOfService: "Terms of Service",
       },
       alertsSidebar: {
         notifications: "Notifications",
         activeAlerts: "active alerts",
         activeAlert: "active alert",
-        viewAll: "View All Alerts"
+        viewAll: "View All Alerts",
       },
       analytics: {
         title: "Waste Intelligence Analytics",
-        description: "Real-time performance metrics across your facility network.",
+        description:
+          "Real-time performance metrics across your facility network.",
         rateComparison: "Rate Comparison Over Time",
         rateDesc: "Recycling performance vs. contamination threshold",
         recycling: "Recycling",
@@ -99,11 +101,12 @@ const resources = {
         tableVol: "VOLUME (METRIC TONS)",
         tableMom: "MOM GROWTH",
         tableTarget: "TARGET GOAL",
-        tableAction: "ACTION"
+        tableAction: "ACTION",
       },
       devices: {
         title: "Device Fleet",
-        managingDesc: "Managing {{active}} active hardware units across 14 facilities.",
+        managingDesc:
+          "Managing {{active}} active hardware units across 14 facilities.",
         filters: "Filters",
         registerDevice: "Register Device",
         searchPlaceholder: "Search devices, locations, or serials...",
@@ -125,11 +128,12 @@ const resources = {
         general: "General",
         internalTemp: "Internal Temp",
         uptime: "Uptime",
-        deviceEventLog: "Device Event Log"
+        deviceEventLog: "Device Event Log",
       },
       userManagement: {
         title: "User Management",
-        description: "Configure user roles, permissions and monitor system access.",
+        description:
+          "Configure user roles, permissions and monitor system access.",
         inviteUser: "Invite User",
         totalUsers: "Total Users",
         activeNow: "Active Now",
@@ -151,58 +155,65 @@ const resources = {
         of: "of",
         teamMembers: "team members",
         permissionAudit: "Permission Audit",
-        permissionDesc: "Regularly review high-privilege roles. 14 users currently have Administrative access. We recommend keeping this under 10.",
+        permissionDesc:
+          "Regularly review high-privilege roles. 14 users currently have Administrative access. We recommend keeping this under 10.",
         viewSecurityLogs: "View Security Logs",
         pendingInvites: "Pending Invites",
         pending: "Pending",
         inviteExpire: "Invitations expire after 72 hours of inactivity.",
         bulkImportTitle: "Need bulk import?",
-        bulkImportDesc: "Upload a CSV or sync with Active Directory for automated provisioning.",
-        documentation: "Documentation"
+        bulkImportDesc:
+          "Upload a CSV or sync with Active Directory for automated provisioning.",
+        documentation: "Documentation",
       },
       userModal: {
         title: "Invite New User",
         inviteSent: "Invite Sent!",
-        inviteMsg: "An email has been sent to {{email}} with instructions to join the platform as a {{role}}.",
+        inviteMsg:
+          "An email has been sent to {{email}} with instructions to join the platform as a {{role}}.",
         fullName: "Full Name",
         namePlaceholder: "e.g., Alexander Vance",
         emailAddress: "Email Address",
         emailPlaceholder: "e.g., user@smartsort.com",
         assignedRole: "Assigned Role",
         assignedFacility: "Assigned Facility",
-        infoText: "The user will receive an email to set up their account and password. Their status will show as Pending until they complete registration.",
+        infoText:
+          "The user will receive an email to set up their account and password. Their status will show as Pending until they complete registration.",
         cancel: "Cancel",
         createUser: "Create User",
-        saving: "Saving..."
+        saving: "Saving...",
       },
       registerModal: {
         title: "Register New Device",
         subtitle: "Connect a SmartSort unit to this facility",
         scanTitle: "Scan QR Code on Device",
-        scanDesc: "Point your camera at the QR code on the bin to auto-fill the serial number.",
+        scanDesc:
+          "Point your camera at the QR code on the bin to auto-fill the serial number.",
         serialLabel: "DEVICE SERIAL NUMBER",
         serialHint: "Serial numbers start with 'SS' followed by 12 characters.",
         defaultFacility: "Default Facility",
         hubName: "North Logistics Hub",
         changeBtn: "Change",
         helpTitle: "Need help with installation?",
-        helpDesc: "Our technical team is available 24/7 for remote setup assistance.",
+        helpDesc:
+          "Our technical team is available 24/7 for remote setup assistance.",
         cancel: "Cancel",
-        save: "Save Device"
-      }
-    }
+        save: "Save Device",
+      },
+    },
   },
   es: {
     translation: {
       dashboard: {
         title: "Resumen de Operaciones",
-        description: "Métricas de procesamiento y recuperación de residuos en tiempo real para el Hub del Sector Norte.",
+        description:
+          "Métricas de procesamiento y recuperación de residuos en tiempo real para el Hub del Sector Norte.",
         exportBtn: "Exportar PDF",
         kpi: {
           activeDevices: "DISPOSITIVOS ACTIVOS",
           totalItemsSorted: "ARTÍCULOS TOTALES CLASIFICADOS",
           recyclingRate: "TASA DE RECICLAJE %",
-          contaminationRate: "TASA DE CONTAMINACIÓN %"
+          contaminationRate: "TASA DE CONTAMINACIÓN %",
         },
         charts: {
           hourlyThroughput: "Rendimiento por Hora",
@@ -213,13 +224,13 @@ const resources = {
           plastic: "Plástico",
           paper: "Papel",
           metal: "Metal",
-          other: "Otro"
+          other: "Otro",
         },
         bottom: {
           deviceStatus: "Estado del Dispositivo",
           liveContaminationEvents: "Eventos de Contaminación en Vivo",
           actionRequired: "Acción Requerida",
-          manageAllDevices: "Gestionar Todos los Dispositivos"
+          manageAllDevices: "Gestionar Todos los Dispositivos",
         },
         table: {
           timestamp: "Marca de Tiempo",
@@ -227,8 +238,8 @@ const resources = {
           detection: "Detección",
           confidence: "Confianza",
           visual: "Visual",
-          action: "Acción"
-        }
+          action: "Acción",
+        },
       },
       headerNav: {
         searchPlaceholder: "Buscar instalaciones o eventos...",
@@ -241,7 +252,7 @@ const resources = {
         enterpriseSync: "Sincronización Empresarial",
         activeDirectorySso: "Active Directory SSO",
         notifications: "Notificaciones",
-        emailAlerts: "Alertas de Correo"
+        emailAlerts: "Alertas de Correo",
       },
       sideNav: {
         dashboard: "Panel",
@@ -255,7 +266,7 @@ const resources = {
         userManagement: "Gestión de Usuarios",
         collectorDashboard: "Panel de Recolector",
         liveMap: "Mapa de Rutas en Vivo",
-        signOut: "Cerrar Sesión"
+        signOut: "Cerrar Sesión",
       },
       profilePopup: {
         manageAccount: "Administrar cuenta",
@@ -264,17 +275,18 @@ const resources = {
         addAccount: "Añadir otra cuenta",
         signOut: "Cerrar sesión",
         privacyPolicy: "Política de Privacidad",
-        termsOfService: "Términos de Servicio"
+        termsOfService: "Términos de Servicio",
       },
       alertsSidebar: {
         notifications: "Notificaciones",
         activeAlerts: "alertas activas",
         activeAlert: "alerta activa",
-        viewAll: "Ver Todas las Alertas"
+        viewAll: "Ver Todas las Alertas",
       },
       analytics: {
         title: "Analítica de Inteligencia de Residuos",
-        description: "Métricas de rendimiento en tiempo real en la red de sus instalaciones.",
+        description:
+          "Métricas de rendimiento en tiempo real en la red de sus instalaciones.",
         rateComparison: "Comparación de Tasas en el Tiempo",
         rateDesc: "Rendimiento de reciclaje vs. umbral de contaminación",
         recycling: "Reciclaje",
@@ -288,11 +300,12 @@ const resources = {
         tableVol: "VOLUMEN (TONELADAS MÉTRICAS)",
         tableMom: "CRECIMIENTO MOM",
         tableTarget: "META OBJETIVO",
-        tableAction: "ACCIÓN"
+        tableAction: "ACCIÓN",
       },
       devices: {
         title: "Flota de Dispositivos",
-        managingDesc: "Gestionando {{active}} unidades de hardware activas en 14 instalaciones.",
+        managingDesc:
+          "Gestionando {{active}} unidades de hardware activas en 14 instalaciones.",
         filters: "Filtros",
         registerDevice: "Registrar Dispositivo",
         searchPlaceholder: "Buscar dispositivos, ubicaciones o series...",
@@ -314,11 +327,12 @@ const resources = {
         general: "General",
         internalTemp: "Temp. Interna",
         uptime: "Tiempo Activo",
-        deviceEventLog: "Registro de Eventos"
+        deviceEventLog: "Registro de Eventos",
       },
       userManagement: {
         title: "Gestión de Usuarios",
-        description: "Configure roles de usuario, permisos y monitoree el acceso.",
+        description:
+          "Configure roles de usuario, permisos y monitoree el acceso.",
         inviteUser: "Invitar Usuario",
         totalUsers: "Usuarios Totales",
         activeNow: "Activos Ahora",
@@ -340,58 +354,65 @@ const resources = {
         of: "de",
         teamMembers: "miembros del equipo",
         permissionAudit: "Auditoría de Permisos",
-        permissionDesc: "Revise regularmente los roles de alto privilegio. Recomendamos mantener los Administradores bajo 10.",
+        permissionDesc:
+          "Revise regularmente los roles de alto privilegio. Recomendamos mantener los Administradores bajo 10.",
         viewSecurityLogs: "Ver Registros de Seguridad",
         pendingInvites: "Invitaciones Pendientes",
         pending: "Pendiente",
         inviteExpire: "Las invitaciones expiran en 72 horas.",
         bulkImportTitle: "¿Importación masiva?",
         bulkImportDesc: "Suba un CSV o sincronice con Active Directory.",
-        documentation: "Documentación"
+        documentation: "Documentación",
       },
       userModal: {
         title: "Invitar Nuevo Usuario",
         inviteSent: "¡Invitación Enviada!",
-        inviteMsg: "Se ha enviado un correo a {{email}} con instrucciones para unirse como {{role}}.",
+        inviteMsg:
+          "Se ha enviado un correo a {{email}} con instrucciones para unirse como {{role}}.",
         fullName: "Nombre Completo",
         namePlaceholder: "ej., Alexander Vance",
         emailAddress: "Correo Electrónico",
         emailPlaceholder: "ej., user@smartsort.com",
         assignedRole: "Rol Asignado",
         assignedFacility: "Instalación Asignada",
-        infoText: "El usuario recibirá un correo para configurar su cuenta. Su estado será Pendiente hasta que complete el registro.",
+        infoText:
+          "El usuario recibirá un correo para configurar su cuenta. Su estado será Pendiente hasta que complete el registro.",
         cancel: "Cancelar",
         createUser: "Crear Usuario",
-        saving: "Guardando..."
+        saving: "Guardando...",
       },
       registerModal: {
         title: "Registrar Nuevo Dispositivo",
         subtitle: "Conecte una unidad SmartSort a esta instalación",
         scanTitle: "Escanear Código QR",
-        scanDesc: "Apunte su cámara al código QR en el contenedor para autocompletar el número de serie.",
+        scanDesc:
+          "Apunte su cámara al código QR en el contenedor para autocompletar el número de serie.",
         serialLabel: "NÚMERO DE SERIE DEL DISPOSITIVO",
-        serialHint: "Los números de serie comienzan con 'SS' seguidos de 12 caracteres.",
+        serialHint:
+          "Los números de serie comienzan con 'SS' seguidos de 12 caracteres.",
         defaultFacility: "Instalación Predeterminada",
         hubName: "Centro Logístico Norte",
         changeBtn: "Cambiar",
         helpTitle: "¿Necesita ayuda con la instalación?",
-        helpDesc: "Nuestro equipo técnico está disponible 24/7 para asistencia remota.",
+        helpDesc:
+          "Nuestro equipo técnico está disponible 24/7 para asistencia remota.",
         cancel: "Cancelar",
-        save: "Guardar Dispositivo"
-      }
-    }
+        save: "Guardar Dispositivo",
+      },
+    },
   },
   fr: {
     translation: {
       dashboard: {
         title: "Aperçu des Opérations",
-        description: "Métriques de traitement et de récupération des déchets en temps réel pour le Centre du Secteur Nord.",
+        description:
+          "Métriques de traitement et de récupération des déchets en temps réel pour le Centre du Secteur Nord.",
         exportBtn: "Exporter PDF",
         kpi: {
           activeDevices: "APPAREILS ACTIFS",
           totalItemsSorted: "ARTICLES TOTAUX TRIÉS",
           recyclingRate: "TAUX DE RECYCLAGE %",
-          contaminationRate: "TAUX DE CONTAMINATION %"
+          contaminationRate: "TAUX DE CONTAMINATION %",
         },
         charts: {
           hourlyThroughput: "Rendement Horaire",
@@ -402,13 +423,13 @@ const resources = {
           plastic: "Plastique",
           paper: "Papier",
           metal: "Métal",
-          other: "Autre"
+          other: "Autre",
         },
         bottom: {
           deviceStatus: "État de l'Appareil",
           liveContaminationEvents: "Événements de Contamination en Direct",
           actionRequired: "Action Requise",
-          manageAllDevices: "Gérer Tous les Appareils"
+          manageAllDevices: "Gérer Tous les Appareils",
         },
         table: {
           timestamp: "Horodatage",
@@ -416,8 +437,8 @@ const resources = {
           detection: "Détection",
           confidence: "Confiance",
           visual: "Visuel",
-          action: "Action"
-        }
+          action: "Action",
+        },
       },
       headerNav: {
         searchPlaceholder: "Rechercher des installations ou événements...",
@@ -430,7 +451,7 @@ const resources = {
         enterpriseSync: "Synchro Entreprise",
         activeDirectorySso: "Active Directory SSO",
         notifications: "Notifications",
-        emailAlerts: "Alertes par e-mail"
+        emailAlerts: "Alertes par e-mail",
       },
       sideNav: {
         dashboard: "Tableau de bord",
@@ -444,7 +465,7 @@ const resources = {
         userManagement: "Gestion des Utilisateurs",
         collectorDashboard: "Tableau de bord du collecteur",
         liveMap: "Carte des Itinéraires en Direct",
-        signOut: "Déconnexion"
+        signOut: "Déconnexion",
       },
       profilePopup: {
         manageAccount: "Gérer votre compte",
@@ -453,17 +474,18 @@ const resources = {
         addAccount: "Ajouter un autre compte",
         signOut: "Déconnexion",
         privacyPolicy: "Politique de confidentialité",
-        termsOfService: "Conditions d'utilisation"
+        termsOfService: "Conditions d'utilisation",
       },
       alertsSidebar: {
         notifications: "Notifications",
         activeAlerts: "alertes actives",
         activeAlert: "alerte active",
-        viewAll: "Voir Toutes les Alertes"
+        viewAll: "Voir Toutes les Alertes",
       },
       analytics: {
         title: "Analytique de l'Intelligence des Déchets",
-        description: "Métriques de performance en temps réel à travers votre réseau d'installations.",
+        description:
+          "Métriques de performance en temps réel à travers votre réseau d'installations.",
         rateComparison: "Comparaison des Taux dans le Temps",
         rateDesc: "Performance de recyclage vs seuil de contamination",
         recycling: "Recyclage",
@@ -477,11 +499,12 @@ const resources = {
         tableVol: "VOLUME (TONNES MÉTRIQUES)",
         tableMom: "CROISSANCE MOM",
         tableTarget: "OBJECTIF CIBLE",
-        tableAction: "ACTION"
+        tableAction: "ACTION",
       },
       devices: {
         title: "Flotte d'Appareils",
-        managingDesc: "Gestion de {{active}} unités matérielles actives dans 14 installations.",
+        managingDesc:
+          "Gestion de {{active}} unités matérielles actives dans 14 installations.",
         filters: "Filtres",
         registerDevice: "Enregistrer l'Appareil",
         searchPlaceholder: "Rechercher appareils, emplacements...",
@@ -503,11 +526,12 @@ const resources = {
         general: "Général",
         internalTemp: "Temp. Interne",
         uptime: "Disponibilité",
-        deviceEventLog: "Journal des Événements"
+        deviceEventLog: "Journal des Événements",
       },
       userManagement: {
         title: "Gestion des Utilisateurs",
-        description: "Configurez les rôles, les autorisations et surveillez l'accès.",
+        description:
+          "Configurez les rôles, les autorisations et surveillez l'accès.",
         inviteUser: "Inviter Utilisateur",
         totalUsers: "Total Utilisateurs",
         activeNow: "Actifs",
@@ -529,47 +553,54 @@ const resources = {
         of: "sur",
         teamMembers: "membres de l'équipe",
         permissionAudit: "Audit des Permissions",
-        permissionDesc: "Révisez régulièrement les rôles. Nous recommandons de garder les Administrateurs sous 10.",
+        permissionDesc:
+          "Révisez régulièrement les rôles. Nous recommandons de garder les Administrateurs sous 10.",
         viewSecurityLogs: "Voir les Journaux",
         pendingInvites: "Invitations en Attente",
         pending: "En attente",
         inviteExpire: "Les invitations expirent après 72 heures.",
         bulkImportTitle: "Importation en masse ?",
-        bulkImportDesc: "Téléchargez un CSV ou synchronisez avec Active Directory.",
-        documentation: "Documentation"
+        bulkImportDesc:
+          "Téléchargez un CSV ou synchronisez avec Active Directory.",
+        documentation: "Documentation",
       },
       userModal: {
         title: "Inviter un Nouvel Utilisateur",
         inviteSent: "Invitation Envoyée !",
-        inviteMsg: "Un e-mail a été envoyé à {{email}} avec des instructions pour rejoindre en tant que {{role}}.",
+        inviteMsg:
+          "Un e-mail a été envoyé à {{email}} avec des instructions pour rejoindre en tant que {{role}}.",
         fullName: "Nom Complet",
         namePlaceholder: "ex., Alexander Vance",
         emailAddress: "Adresse E-mail",
         emailPlaceholder: "ex., user@smartsort.com",
         assignedRole: "Rôle Assigné",
         assignedFacility: "Installation Assignée",
-        infoText: "L'utilisateur recevra un e-mail pour configurer son compte. Son statut sera En attente jusqu'à l'inscription.",
+        infoText:
+          "L'utilisateur recevra un e-mail pour configurer son compte. Son statut sera En attente jusqu'à l'inscription.",
         cancel: "Annuler",
         createUser: "Créer l'Utilisateur",
-        saving: "Enregistrement..."
+        saving: "Enregistrement...",
       },
       registerModal: {
         title: "Enregistrer un Nouvel Appareil",
         subtitle: "Connectez une unité SmartSort à cette installation",
         scanTitle: "Scanner le Code QR",
-        scanDesc: "Pointez votre caméra sur le code QR de la poubelle pour remplir automatiquement le numéro de série.",
+        scanDesc:
+          "Pointez votre caméra sur le code QR de la poubelle pour remplir automatiquement le numéro de série.",
         serialLabel: "NUMÉRO DE SÉRIE DE L'APPAREIL",
-        serialHint: "Les numéros de série commencent par 'SS' suivis de 12 caractères.",
+        serialHint:
+          "Les numéros de série commencent par 'SS' suivis de 12 caractères.",
         defaultFacility: "Installation par Défaut",
         hubName: "Hub Logistique Nord",
         changeBtn: "Changer",
         helpTitle: "Besoin d'aide pour l'installation ?",
-        helpDesc: "Notre équipe technique est disponible 24/7 pour une assistance à distance.",
+        helpDesc:
+          "Notre équipe technique est disponible 24/7 pour une assistance à distance.",
         cancel: "Annuler",
-        save: "Enregistrer l'Appareil"
-      }
-    }
-  }
+        save: "Enregistrer l'Appareil",
+      },
+    },
+  },
 };
 
 i18n
@@ -579,12 +610,12 @@ i18n
     resources,
     fallbackLng: "en",
     detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
+      order: ["localStorage", "navigator"],
+      caches: ["localStorage"],
     },
     interpolation: {
-      escapeValue: false // react already safes from xss
-    }
+      escapeValue: false, // react already safes from xss
+    },
   });
 
 export default i18n;

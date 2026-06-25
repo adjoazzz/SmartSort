@@ -163,7 +163,7 @@ export default function Onboarding() {
                 sustainability footprint in real time.
               </p>
             </div>
- 
+
             <div className="grid grid-cols-2 gap-3">
               <FeatureCard
                 iconBg="#e1f5ee"
@@ -178,7 +178,7 @@ export default function Onboarding() {
                 icon={<EfficiencyIcon />}
               />
             </div>
- 
+
             <p className="text-xs text-muted-foreground dark:text-slate-400 flex items-center gap-1.5">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
@@ -262,7 +262,7 @@ export default function Onboarding() {
 
               <div className="flex items-center justify-between">
                 <StepDots current={0} total={2} />
-                 <p className="text-xs text-muted-foreground dark:text-slate-400">
+                <p className="text-xs text-muted-foreground dark:text-slate-400">
                   Already have an account?{" "}
                   <Link
                     to="/login"

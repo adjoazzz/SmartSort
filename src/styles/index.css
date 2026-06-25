@@ -1,16 +1,15 @@
-
-@import './tailwind.css';
-@import './theme.css';
+@import "./tailwind.css";
+@import "./theme.css";
 html {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 @media print {
-    body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-    .no-print {
-        display: none !important;
-    }
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .no-print {
+    display: none !important;
+  }
 }

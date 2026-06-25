@@ -17,7 +17,11 @@ import { usePollingFetch } from "../../hooks/usePollingFetch";
 import { useTranslation } from "react-i18next";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../components/ui/popover";
 import { Calendar } from "../../components/ui/calendar";
 import { format } from "date-fns";
 
@@ -215,44 +219,46 @@ export default function Dashboard() {
   };
 
   const fetchWasteCategories = async () => {
-    const response = await authFetch(`${baseUrl}/api/dashboard/waste-categories`);
+    const response = await authFetch(
+      `${baseUrl}/api/dashboard/waste-categories`,
+    );
     if (!response.ok) throw new Error("Failed to fetch waste categories");
     return response.json();
   };
 
   const fetchContaminationEvents = async () => {
-    const response = await authFetch(`${baseUrl}/api/dashboard/contamination-events`);
+    const response = await authFetch(
+      `${baseUrl}/api/dashboard/contamination-events`,
+    );
     if (!response.ok) throw new Error("Failed to fetch contamination events");
     return response.json();
   };
 
   // Polling hooks
-  const { data: devicesData, isLoading: devicesLoading } = usePollingFetch<any[]>(
-    fetchDevices,
-    { intervalMs: 5000 }
-  );
+  const { data: devicesData, isLoading: devicesLoading } = usePollingFetch<
+    any[]
+  >(fetchDevices, { intervalMs: 5000 });
 
   const { data: metricsData, isLoading: metricsLoading } = usePollingFetch<any>(
     fetchMetrics,
-    { intervalMs: 5000 }
+    { intervalMs: 5000 },
   );
 
-  const { data: throughputData, isLoading: throughputLoading } = usePollingFetch<any[]>(
-    fetchThroughput,
-    { intervalMs: 5000 }
-  );
+  const { data: throughputData, isLoading: throughputLoading } =
+    usePollingFetch<any[]>(fetchThroughput, { intervalMs: 5000 });
 
-  const { data: wasteCategoriesData, isLoading: wasteLoading } = usePollingFetch<any>(
-    fetchWasteCategories,
-    { intervalMs: 5000 }
-  );
+  const { data: wasteCategoriesData, isLoading: wasteLoading } =
+    usePollingFetch<any>(fetchWasteCategories, { intervalMs: 5000 });
 
-  const { data: contaminationEventsData, isLoading: contaminationLoading } = usePollingFetch<any[]>(
-    fetchContaminationEvents,
-    { intervalMs: 5000 }
-  );
+  const { data: contaminationEventsData, isLoading: contaminationLoading } =
+    usePollingFetch<any[]>(fetchContaminationEvents, { intervalMs: 5000 });
 
-  const isLoading = devicesLoading || metricsLoading || throughputLoading || wasteLoading || contaminationLoading;
+  const isLoading =
+    devicesLoading ||
+    metricsLoading ||
+    throughputLoading ||
+    wasteLoading ||
+    contaminationLoading;
 
   const devices = devicesData?.data ?? [];
 
@@ -286,35 +292,52 @@ export default function Dashboard() {
         doc.setTextColor(0);
         doc.text("Key Performance Indicators", 14, 45);
 
-        const kpiData = dynamicKpis.map(kpi => [kpi.title, kpi.value, kpi.trend]);
+        const kpiData = dynamicKpis.map((kpi) => [
+          kpi.title,
+          kpi.value,
+          kpi.trend,
+        ]);
         autoTable(doc, {
           startY: 50,
-          head: [['Metric', 'Value', 'Trend']],
+          head: [["Metric", "Value", "Trend"]],
           body: kpiData,
-          theme: 'grid',
-          headStyles: { fillColor: [0, 108, 73] }
+          theme: "grid",
+          headStyles: { fillColor: [0, 108, 73] },
         });
 
         // Section 2: Device Bins
         doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
-        const deviceData = displayBins.map(bin => [bin.label, `${bin.value}%`]);
+        const deviceData = displayBins.map((bin) => [
+          bin.label,
+          `${bin.value}%`,
+        ]);
         autoTable(doc, {
           startY: (doc as any).lastAutoTable.finalY + 20,
-          head: [['Device', 'Fill Level']],
+          head: [["Device", "Fill Level"]],
           body: deviceData,
-          theme: 'grid',
-          headStyles: { fillColor: [0, 108, 73] }
+          theme: "grid",
+          headStyles: { fillColor: [0, 108, 73] },
         });
 
         // Section 3: Recent Events
-        doc.text("Recent Contamination Events", 14, (doc as any).lastAutoTable.finalY + 15);
-        const eventData = RECENT_EVENTS.map(evt => [evt.time, evt.source, evt.detection, evt.confidence, evt.action]);
+        doc.text(
+          "Recent Contamination Events",
+          14,
+          (doc as any).lastAutoTable.finalY + 15,
+        );
+        const eventData = RECENT_EVENTS.map((evt) => [
+          evt.time,
+          evt.source,
+          evt.detection,
+          evt.confidence,
+          evt.action,
+        ]);
         autoTable(doc, {
           startY: (doc as any).lastAutoTable.finalY + 20,
-          head: [['Time', 'Source', 'Detection', 'Confidence', 'Action']],
+          head: [["Time", "Source", "Detection", "Confidence", "Action"]],
           body: eventData,
-          theme: 'grid',
-          headStyles: { fillColor: [0, 108, 73] }
+          theme: "grid",
+          headStyles: { fillColor: [0, 108, 73] },
         });
 
         doc.save("operations-report.pdf");
@@ -328,15 +351,20 @@ export default function Dashboard() {
   const displayBins =
     binsOnly.length > 0
       ? binsOnly.map((d: any) => ({
-        label: d.location || d.customBinId,
-        value: d.fillLevel ?? 0,
-        color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
-      }))
+          label: d.location || d.customBinId,
+          value: d.fillLevel ?? 0,
+          color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
+        }))
       : DEVICE_BINS;
 
-  const hasValidThroughput = throughputData?.some((d: any) => d.sorted > 0 || d.rejected > 0);
+  const hasValidThroughput = throughputData?.some(
+    (d: any) => d.sorted > 0 || d.rejected > 0,
+  );
   const chartData = hasValidThroughput ? throughputData : THROUGHPUT_DATA;
-  const maxTotal = Math.max(...chartData.map((d: any) => (d.sorted ?? 0) + (d.rejected ?? 0)), 1);
+  const maxTotal = Math.max(
+    ...chartData.map((d: any) => (d.sorted ?? 0) + (d.rejected ?? 0)),
+    1,
+  );
 
   // Map database string to visual asset image
   const eventImages: Record<string, string> = {
@@ -394,9 +422,25 @@ export default function Dashboard() {
           >
             {isExporting ? (
               <>
-                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Exporting...
               </>
@@ -423,36 +467,41 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {isLoading
           ? Array.from({ length: 4 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="bg-card border border-border rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
-            >
-              <div className="flex justify-between items-center">
-                <div className="h-3 w-24 bg-slate-200 dark:bg-muted rounded"></div>
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-secondary"></div>
-              </div>
-              <div className="h-8 w-16 bg-slate-200 dark:bg-muted rounded"></div>
-              <div className="h-3 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
-            </div>
-          ))
-          : dynamicKpis.map((kpi, idx) => {
-            // Map KPI index to keys for translation
-            const keyMap = ['activeDevices', 'totalItemsSorted', 'recyclingRate', 'contaminationRate'] as const;
-            const kpiKey = keyMap[idx];
-            return (
-              <MetricCard
+              <div
                 key={idx}
-                title={t(`dashboard.kpi.${kpiKey}`)}
-                value={kpi.value}
-                trend={kpi.trend}
-                trendDirection={kpi.trendDirection}
-                iconColorClass={kpi.iconColorClass}
-                iconBgClass={kpi.iconBgClass}
-                iconSvg={kpi.icon}
-                linkTo={"linkTo" in kpi ? (kpi as any).linkTo : undefined}
-              />
-            )
-          })}
+                className="bg-card border border-border rounded-xl p-6 shadow-sm animate-pulse flex flex-col gap-4"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="h-3 w-24 bg-slate-200 dark:bg-muted rounded"></div>
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-secondary"></div>
+                </div>
+                <div className="h-8 w-16 bg-slate-200 dark:bg-muted rounded"></div>
+                <div className="h-3 w-32 bg-slate-100 dark:bg-secondary rounded"></div>
+              </div>
+            ))
+          : dynamicKpis.map((kpi, idx) => {
+              // Map KPI index to keys for translation
+              const keyMap = [
+                "activeDevices",
+                "totalItemsSorted",
+                "recyclingRate",
+                "contaminationRate",
+              ] as const;
+              const kpiKey = keyMap[idx];
+              return (
+                <MetricCard
+                  key={idx}
+                  title={t(`dashboard.kpi.${kpiKey}`)}
+                  value={kpi.value}
+                  trend={kpi.trend}
+                  trendDirection={kpi.trendDirection}
+                  iconColorClass={kpi.iconColorClass}
+                  iconBgClass={kpi.iconBgClass}
+                  iconSvg={kpi.icon}
+                  linkTo={"linkTo" in kpi ? (kpi as any).linkTo : undefined}
+                />
+              );
+            })}
       </div>
 
       {/* Middle Charts Row */}
@@ -496,8 +545,10 @@ export default function Dashboard() {
               {chartData.map((data: any, idx: number) => {
                 const total = data.sorted + data.rejected;
                 const totalHeightPercent = (total / maxTotal) * 100;
-                const sortedHeightPercent = total > 0 ? (data.sorted / total) * 100 : 0;
-                const rejectedHeightPercent = total > 0 ? (data.rejected / total) * 100 : 0;
+                const sortedHeightPercent =
+                  total > 0 ? (data.sorted / total) * 100 : 0;
+                const rejectedHeightPercent =
+                  total > 0 ? (data.rejected / total) * 100 : 0;
 
                 return (
                   <div
@@ -508,7 +559,9 @@ export default function Dashboard() {
                       {/* Tooltip */}
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center pointer-events-none z-10">
                         <div className="bg-slate-900 dark:bg-slate-800 text-white text-[11px] rounded-lg py-1.5 px-2.5 shadow-lg border border-slate-700/50 flex flex-col gap-1 min-w-[110px]">
-                          <div className="font-semibold text-center border-b border-slate-700 pb-1">{data.time}</div>
+                          <div className="font-semibold text-center border-b border-slate-700 pb-1">
+                            {data.time}
+                          </div>
                           <div className="flex items-center justify-between gap-4 text-emerald-400">
                             <div className="flex items-center gap-1">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -525,7 +578,9 @@ export default function Dashboard() {
                           </div>
                           <div className="flex items-center justify-between gap-4 text-slate-400 border-t border-slate-750 pt-1 mt-0.5">
                             <span>Total:</span>
-                            <span className="font-bold text-white">{total}</span>
+                            <span className="font-bold text-white">
+                              {total}
+                            </span>
                           </div>
                         </div>
                         <div className="w-2 h-2 bg-slate-900 dark:bg-slate-800 rotate-45 -mt-1 border-r border-b border-slate-700/50" />
@@ -585,9 +640,22 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-row items-center justify-center relative w-full h-full gap-8 lg:gap-12">
               <div className="relative w-56 h-56 flex items-center justify-center flex-shrink-0">
                 {/* Dynamic SVG Donut Chart */}
-                <svg width="224" height="224" viewBox="0 0 100 100" className="relative transform -rotate-90">
+                <svg
+                  width="224"
+                  height="224"
+                  viewBox="0 0 100 100"
+                  className="relative transform -rotate-90"
+                >
                   {/* Background track */}
-                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="10" className="dark:stroke-[#0f2942]" />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    stroke="#f1f5f9"
+                    strokeWidth="10"
+                    className="dark:stroke-[#0f2942]"
+                  />
                   {/* Slices */}
                   {(() => {
                     let accumulatedPercent = 0;
@@ -610,7 +678,10 @@ export default function Dashboard() {
                       if (percent <= 0) return null;
 
                       const strokeLength = (percent / 100) * 251.2;
-                      const strokeOffset = 251.2 - strokeLength - (accumulatedPercent / 100) * 251.2;
+                      const strokeOffset =
+                        251.2 -
+                        strokeLength -
+                        (accumulatedPercent / 100) * 251.2;
                       accumulatedPercent += percent;
 
                       return (
@@ -644,12 +715,14 @@ export default function Dashboard() {
               </div>
 
               <div className="flex flex-col justify-center gap-6">
-                {(wasteCategoriesData?.categories ?? [
-                  { category: "Plastic", percentage: 35 },
-                  { category: "Paper", percentage: 22 },
-                  { category: "Metal", percentage: 18 },
-                  { category: "Other", percentage: 25 },
-                ]).map((cat: any, i: number) => {
+                {(
+                  wasteCategoriesData?.categories ?? [
+                    { category: "Plastic", percentage: 35 },
+                    { category: "Paper", percentage: 22 },
+                    { category: "Metal", percentage: 18 },
+                    { category: "Other", percentage: 25 },
+                  ]
+                ).map((cat: any, i: number) => {
                   const colors: Record<string, string> = {
                     Plastic: "bg-[#10b981]",
                     Paper: "bg-[#60a5fa]",
@@ -658,10 +731,15 @@ export default function Dashboard() {
                   };
                   return (
                     <div key={i} className="flex items-start gap-3.5 group">
-                      <div className={`w-3 h-3 rounded-full mt-1.5 ${colors[cat.category] ?? "bg-[#cbd5e1]"}`} />
+                      <div
+                        className={`w-3 h-3 rounded-full mt-1.5 ${colors[cat.category] ?? "bg-[#cbd5e1]"}`}
+                      />
                       <div className="flex flex-col">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-foreground transition-colors">
-                          {t(`dashboard.charts.${cat.category.toLowerCase()}`, cat.category)}
+                          {t(
+                            `dashboard.charts.${cat.category.toLowerCase()}`,
+                            cat.category,
+                          )}
                         </span>
                         <span className="text-base font-black text-foreground">
                           {cat.percentage}%
@@ -689,36 +767,37 @@ export default function Dashboard() {
           <div className="p-6 flex flex-col gap-6 flex-1 overflow-y-auto max-h-[260px]">
             {isLoading
               ? Array.from({ length: 4 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col gap-2 w-full animate-pulse"
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
-                    <div className="h-4 w-8 bg-slate-100 dark:bg-secondary rounded"></div>
+                  <div
+                    key={idx}
+                    className="flex flex-col gap-2 w-full animate-pulse"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="h-4 w-28 bg-slate-200 dark:bg-muted rounded"></div>
+                      <div className="h-4 w-8 bg-slate-100 dark:bg-secondary rounded"></div>
+                    </div>
+                    <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full animate-pulse"></div>
                   </div>
-                  <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full animate-pulse"></div>
-                </div>
-              ))
+                ))
               : displayBins.map((bin, idx) => (
-                <div key={idx} className="flex flex-col gap-2 w-full">
-                  <div className="flex justify-between items-center text-sm font-medium">
-                    <span className="text-foreground dark:text-white">
-                      {bin.label}
-                    </span>
-                    <span className="text-muted-foreground">
-                      {bin.value}%
-                    </span>
-                  </div>
-                  <Progress
-                    value={bin.value}
-                    className={`h-2 bg-muted ${bin.color === "bg-[#ba1a1a]"
-                      ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                      : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                  <div key={idx} className="flex flex-col gap-2 w-full">
+                    <div className="flex justify-between items-center text-sm font-medium">
+                      <span className="text-foreground dark:text-white">
+                        {bin.label}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {bin.value}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={bin.value}
+                      className={`h-2 bg-muted ${
+                        bin.color === "bg-[#ba1a1a]"
+                          ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                          : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
                       }`}
-                  />
-                </div>
-              ))}
+                    />
+                  </div>
+                ))}
           </div>
           <div className="p-4 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-background dark:bg-secondary rounded-b-xl">
             <button
@@ -736,7 +815,11 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold text-foreground dark:text-white">
               {t("dashboard.bottom.liveContaminationEvents")}
             </h2>
-            <StatusBadge label={t("dashboard.bottom.actionRequired")} variant="danger" hasDot />
+            <StatusBadge
+              label={t("dashboard.bottom.actionRequired")}
+              variant="danger"
+              hasDot
+            />
           </div>
 
           <Table className="min-w-[700px]">
@@ -765,61 +848,61 @@ export default function Dashboard() {
             <TableBody className="divide-y divide-[#f1f5f9]">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, idx) => (
-                  <TableRow key={idx} className="animate-pulse">
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-20 bg-slate-200 dark:bg-muted rounded"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-5 w-24 bg-slate-100 dark:bg-secondary rounded-full"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-10 bg-slate-200 dark:bg-muted rounded"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-secondary"></div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-4 w-28 bg-slate-100 dark:bg-secondary rounded"></div>
-                    </TableCell>
-                  </TableRow>
-                ))
+                    <TableRow key={idx} className="animate-pulse">
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-12 bg-slate-100 dark:bg-secondary rounded"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-20 bg-slate-200 dark:bg-muted rounded"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-5 w-24 bg-slate-100 dark:bg-secondary rounded-full"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-10 bg-slate-200 dark:bg-muted rounded"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="w-10 h-10 rounded-md bg-slate-100 dark:bg-secondary"></div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-28 bg-slate-100 dark:bg-secondary rounded"></div>
+                      </TableCell>
+                    </TableRow>
+                  ))
                 : RECENT_EVENTS.map((evt) => (
-                  <TableRow
-                    key={evt.id}
-                    className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
-                  >
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-muted-foreground">
-                      {evt.time}
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
-                      {evt.source}
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <StatusBadge
-                        label={evt.detection}
-                        variant={evt.detectionType as any}
-                      />
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
-                      {evt.confidence}
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
-                        <img
-                          src={evt.img}
-                          alt="Snapshot"
-                          className="w-full h-full object-cover"
+                    <TableRow
+                      key={evt.id}
+                      className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
+                    >
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-muted-foreground">
+                        {evt.time}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
+                        {evt.source}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <StatusBadge
+                          label={evt.detection}
+                          variant={evt.detectionType as any}
                         />
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-muted-foreground font-mono bg-background dark:bg-secondary">
-                      {evt.action}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
+                        {evt.confidence}
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
+                        <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
+                          <img
+                            src={evt.img}
+                            alt="Snapshot"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-muted-foreground font-mono bg-background dark:bg-secondary">
+                        {evt.action}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </div>

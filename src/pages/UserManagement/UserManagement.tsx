@@ -591,10 +591,11 @@ function ActionMenu({
                       alert("Failed to update user. Please try again.");
                     }
                   }}
-                  className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${item.danger
-                    ? "text-[#ba1a1a] hover:bg-[#ffdad6]/30"
-                    : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
-                    }`}
+                  className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
+                    item.danger
+                      ? "text-[#ba1a1a] hover:bg-[#ffdad6]/30"
+                      : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
+                  }`}
                 >
                   <svg
                     width="15"
@@ -686,7 +687,10 @@ export default function UserManagement() {
 
   const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedData = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   const totalUsers = users.length;
   const activeUsers = users.filter(
@@ -704,20 +708,20 @@ export default function UserManagement() {
     doc.setTextColor(100);
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
 
-    const tableData = filteredData.map(user => [
+    const tableData = filteredData.map((user) => [
       user.name,
       user.email,
       user.role,
       user.assignedFacility,
-      user.status
+      user.status,
     ]);
 
     autoTable(doc, {
       startY: 40,
-      head: [['Name', 'Email', 'Role', 'Assigned Facility', 'Status']],
+      head: [["Name", "Email", "Role", "Assigned Facility", "Status"]],
       body: tableData,
-      theme: 'grid',
-      headStyles: { fillColor: [0, 108, 73] }
+      theme: "grid",
+      headStyles: { fillColor: [0, 108, 73] },
     });
 
     doc.save("smartsort-users-report.pdf");
@@ -755,14 +759,17 @@ export default function UserManagement() {
         const line = lines[i].trim();
         if (!line) continue;
 
-        const cols = line.split(",").map((c) => c.trim().replace(/^["']|["']$/g, ""));
+        const cols = line
+          .split(",")
+          .map((c) => c.trim().replace(/^["']|["']$/g, ""));
         if (cols.length < 3) continue;
 
         usersToImport.push({
           name: cols[nameIdx] || "",
           email: cols[emailIdx] || "",
           role: cols[roleIdx] || "Viewer",
-          assignedFacility: facilityIdx !== -1 ? cols[facilityIdx] : "HQ Corporate Center",
+          assignedFacility:
+            facilityIdx !== -1 ? cols[facilityIdx] : "HQ Corporate Center",
           status: statusIdx !== -1 ? cols[statusIdx].toUpperCase() : "PENDING",
         });
       }
@@ -860,10 +867,11 @@ export default function UserManagement() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${showFilters
-              ? "bg-primary/10 border-[#0a5cf5] text-[#0a5cf5]"
-              : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
-              }`}
+            className={`flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
+              showFilters
+                ? "bg-primary/10 border-[#0a5cf5] text-[#0a5cf5]"
+                : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
+            }`}
           >
             <svg
               width="16"
@@ -1030,7 +1038,7 @@ export default function UserManagement() {
                           avatar={
                             user.avatar ??
                             [imgAvatar1, imgAvatar2, imgAvatar3, imgAvatar4][
-                            index % 4
+                              index % 4
                             ]
                           }
                         />
@@ -1134,59 +1142,84 @@ export default function UserManagement() {
           <p className="text-sm text-muted-foreground">
             Showing{" "}
             <span className="font-semibold text-muted-foreground">
-              {isLoading ? 0 : Math.min(startIndex + 1, filteredData.length)} - {Math.min(startIndex + itemsPerPage, filteredData.length)}
+              {isLoading ? 0 : Math.min(startIndex + 1, filteredData.length)} -{" "}
+              {Math.min(startIndex + itemsPerPage, filteredData.length)}
             </span>{" "}
             of {filteredData.length} users
           </p>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => {
-              // Simple logic: show first, last, current, and adjacent
-              if (
-                pageNum === 1 ||
-                pageNum === totalPages ||
-                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-              ) {
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors cursor-pointer ${currentPage === pageNum
-                      ? "bg-primary text-white"
-                      : "text-muted-foreground hover:bg-muted"
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNum) => {
+                // Simple logic: show first, last, current, and adjacent
+                if (
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-md transition-colors cursor-pointer ${
+                        currentPage === pageNum
+                          ? "bg-primary text-white"
+                          : "text-muted-foreground hover:bg-muted"
                       }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              } else if (
-                pageNum === currentPage - 2 ||
-                pageNum === currentPage + 2
-              ) {
-                return (
-                  <span key={pageNum} className="text-muted-foreground px-1 text-sm font-semibold">
-                    ...
-                  </span>
-                );
-              }
-              return null;
-            })}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                } else if (
+                  pageNum === currentPage - 2 ||
+                  pageNum === currentPage + 2
+                ) {
+                  return (
+                    <span
+                      key={pageNum}
+                      className="text-muted-foreground px-1 text-sm font-semibold"
+                    >
+                      ...
+                    </span>
+                  );
+                }
+                return null;
+              },
+            )}
 
             <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
