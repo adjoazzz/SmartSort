@@ -156,11 +156,16 @@ app.get('/api/status', (req, res) => {
   res.json({ message: "SmartSort Backend is running perfectly!" });
 });
 
+const { createClient } = require('@supabase/supabase-js');
+const SUPABASE_URL = "https://xcewrpvxfjsxmwdocxqh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjZXdycHZ4ZmpzeG13ZG9jeHFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTc2MTksImV4cCI6MjA5NDY3MzYxOX0.6h_q5VokTNKlteK62qkkgmqY219j-khDx7JhsofE1VY";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // The route where your Raspberry Pi will eventually send bin data
 app.post('/api/bins/telemetry', async (req, res) => {
   try {
     // 1. Extract the data the Pi sent in the request body
-    const { customBinId, location, fillLevel, lastSortedItem } = req.body;
+    const { customBinId, location, fillLevel, lastSortedItem, confidence, status: itemStatus, imageBase64 } = req.body;
 
     // 2. Save it to the PostgreSQL database using Prisma
     const updatedBin = await prisma.device.upsert({
@@ -179,9 +184,63 @@ app.post('/api/bins/telemetry', async (req, res) => {
       }
     });
 
+    let imageUrl = null;
+    
+    // Upload image if provided
+    if (imageBase64) {
+      try {
+        const buffer = Buffer.from(imageBase64, 'base64');
+        const fileName = `${customBinId}_${Date.now()}.jpg`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('bin_captures')
+          .upload(fileName, buffer, {
+            contentType: 'image/jpeg',
+            cacheControl: '3600',
+            upsert: false
+          });
+          
+        if (uploadError) {
+          console.error("Supabase upload error:", uploadError);
+        } else {
+          const { data: publicUrlData } = supabase.storage.from('bin_captures').getPublicUrl(fileName);
+          imageUrl = publicUrlData.publicUrl;
+          console.log("Image uploaded to:", imageUrl);
+        }
+      } catch (err) {
+        console.error("Error processing image upload:", err);
+      }
+    }
+
+    // 3. Create a ProcessedItem record for analytics!
+    if (lastSortedItem) {
+      const isRejected = lastSortedItem.toLowerCase().includes("reject") || itemStatus === "Rejected";
+      await prisma.processedItem.create({
+        data: {
+          deviceId: updatedBin.id,
+          category: lastSortedItem,
+          status: isRejected ? "Rejected" : "Sorted",
+          rejectionReason: isRejected ? "Unrecognized item" : null,
+          confidence: confidence || 95.0,
+          actionTaken: isRejected ? "Sent to manual review" : "Sorted into correct bin",
+          imageUrl: imageUrl
+        }
+      });
+      
+      // Also log an event
+      await prisma.deviceEvent.create({
+        data: {
+          deviceId: updatedBin.id,
+          eventType: "ITEM_SORTED",
+          description: `Sorted item: ${lastSortedItem} (${(confidence || 95.0).toFixed(1)}% confidence)`,
+          severity: "INFO"
+        }
+      });
+    }
+
     console.log(`Successfully updated bin: ${customBinId} | Fill Level: ${fillLevel}%`);
 
-    // 3. Send a success message back to the Pi
+    // 4. Send a success message back to the Pi
     res.status(200).json({ status: "success", data: updatedBin });
 
   } catch (error) {
@@ -662,7 +721,7 @@ app.get('/api/dashboard/metrics', async (req, res) => {
 
     res.status(200).json({
       deviceStatus: `${activeDevicesCount}/${devicesCount}`,
-      totalItemsSorted: totalSorted.toLocaleString(),
+      totalItemsSorted: totalProcessed.toLocaleString(),
       recyclingRate,
       contaminationRate,
     });
@@ -723,13 +782,12 @@ app.get('/api/dashboard/waste-categories', async (req, res) => {
   try {
     const itemsGrouped = await prisma.processedItem.groupBy({
       by: ['category'],
-      where: { status: 'Sorted' },
       _count: {
         id: true,
       },
     });
 
-    const totalSorted = itemsGrouped.reduce((sum, group) => sum + group._count.id, 0);
+    const totalProcessed = itemsGrouped.reduce((sum, group) => sum + group._count.id, 0);
 
     const categoryCounts = {
       Plastic: 0,
@@ -739,9 +797,10 @@ app.get('/api/dashboard/waste-categories', async (req, res) => {
     };
 
     itemsGrouped.forEach((group) => {
-      if (group.category === 'Plastic') categoryCounts.Plastic = group._count.id;
-      else if (group.category === 'Paper') categoryCounts.Paper = group._count.id;
-      else if (group.category === 'Metal') categoryCounts.Metal = group._count.id;
+      const catLower = group.category.toLowerCase();
+      if (catLower.includes('plastic')) categoryCounts.Plastic += group._count.id;
+      else if (catLower.includes('paper')) categoryCounts.Paper += group._count.id;
+      else if (catLower.includes('metal') || catLower.includes('can')) categoryCounts.Metal += group._count.id;
       else {
         categoryCounts.Other += group._count.id;
       }
@@ -749,7 +808,7 @@ app.get('/api/dashboard/waste-categories', async (req, res) => {
 
     const data = Object.keys(categoryCounts).map((cat) => {
       const count = categoryCounts[cat];
-      const percentage = totalSorted > 0 ? Math.round((count / totalSorted) * 100) : 25;
+      const percentage = totalProcessed > 0 ? Math.round((count / totalProcessed) * 100) : 25;
       return {
         category: cat,
         percentage,

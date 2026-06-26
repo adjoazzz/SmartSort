@@ -1,6 +1,7 @@
 import cv2
 import requests
 import time
+import base64
 
 API_URL = "http://localhost:5001/predict"
 
@@ -51,7 +52,9 @@ while True:
                             "customBinId": "BIN_001",
                             "location": "Central Hub",
                             "fillLevel": 65,  # Simulated fill percentage
-                            "lastSortedItem": predicted_bin
+                            "lastSortedItem": predicted_bin,
+                            "confidence": data.get('confidence'),
+                            "imageBase64": base64.b64encode(buffer.tobytes()).decode('utf-8')
                         }
                         requests.post(telemetry_url, json=payload, timeout=3)
                         print("📡 Telemetry successfully logged to backend!")

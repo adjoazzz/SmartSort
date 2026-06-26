@@ -108,6 +108,8 @@ export default function CommunityFeedback() {
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const fetchFeedbacks = async () => {
     const baseUrl =
@@ -340,6 +342,12 @@ export default function CommunityFeedback() {
     return matchesStatus && matchesCategory;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filteredFeedbacks.length / itemsPerPage));
+  const paginatedFeedbacks = filteredFeedbacks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(20);
@@ -513,23 +521,24 @@ export default function CommunityFeedback() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredFeedbacks.map((item) => (
+                {paginatedFeedbacks.map((item) => (
                   <TableRow
                     key={item.id}
                     className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
                   >
                     <TableCell className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-bold text-xs">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shadow-sm border border-primary/20">
                           {getInitials(item.userName)}
                         </div>
-                        <div>
-                          <div className="font-semibold text-foreground dark:text-white text-sm">
-                            {item.userName}
-                          </div>
-                          <div className="text-muted-foreground text-xs mt-0.5">
-                            {item.location}
-                          </div>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-foreground dark:text-white text-[15px] tracking-tight">
+                            {item.userName || "Unknown User"}
+                          </span>
+                          <span className="text-slate-500 dark:text-slate-400 text-xs font-medium flex items-center gap-1 mt-0.5">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            {item.location || "Unknown Location"}
+                          </span>
                         </div>
                       </div>
                     </TableCell>
@@ -541,7 +550,7 @@ export default function CommunityFeedback() {
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       <p
-                        className="text-muted-foreground text-xs line-clamp-1 max-w-[200px]"
+                        className="text-slate-700 dark:text-slate-300 text-[13px] leading-relaxed font-medium line-clamp-2 max-w-[250px]"
                         title={item.message}
                       >
                         {item.message}
@@ -624,13 +633,14 @@ export default function CommunityFeedback() {
         <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between mt-auto bg-card">
           <div className="text-xs text-muted-foreground">
             Page{" "}
-            <span className="font-bold text-foreground dark:text-white">1</span>{" "}
-            of 12
+            <span className="font-bold text-foreground dark:text-white">{currentPage}</span>{" "}
+            of {totalPages}
           </div>
           <div className="flex items-center gap-1">
             <button
-              className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-not-allowed"
-              disabled
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
             >
               <svg
                 width="16"
@@ -645,22 +655,28 @@ export default function CommunityFeedback() {
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
-            <button className="px-3 py-1 bg-primary/10 text-[#006c49] text-xs font-bold rounded-md">
-              1
-            </button>
-            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
-              2
-            </button>
-            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
-              3
-            </button>
-            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
-              ...
-            </button>
-            <button className="px-3 py-1 text-muted-foreground text-xs font-medium hover:bg-muted dark:hover:bg-muted rounded-md transition-colors">
-              12
-            </button>
-            <button className="p-1 text-muted-foreground hover:text-foreground dark:text-white transition-colors">
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const page = idx + 1;
+              const isActive = page === currentPage;
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
+                    isActive
+                      ? "bg-primary/10 text-[#006c49]"
+                      : "text-muted-foreground font-medium hover:bg-muted dark:hover:bg-muted"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
+            >
               <svg
                 width="16"
                 height="16"
