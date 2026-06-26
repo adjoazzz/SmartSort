@@ -12,6 +12,11 @@ import {
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 
+// Lazy-load the map to avoid importing Leaflet CSS globally
+const BinLocatorMap = React.lazy(() =>
+  import("../../components/BinLocatorMap").then((m) => ({ default: m.BinLocatorMap }))
+);
+
 const COLLECTOR_JOBS = [
   {
     id: "JOB-1041",
@@ -67,7 +72,7 @@ const COLLECTOR_JOBS = [
 
 export default function CollectorDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"my_jobs" | "available_jobs">(
+  const [activeTab, setActiveTab] = useState<"my_jobs" | "available_jobs" | "map_view">(
     "available_jobs",
   );
 
@@ -420,9 +425,29 @@ export default function CollectorDashboard() {
                 }
                 )
               </TabsTrigger>
+              <TabsTrigger
+                value="map_view"
+                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer flex items-center gap-2`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Map View
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value={activeTab} className="p-0 m-0">
+            <TabsContent value="available_jobs" className="p-0 m-0">
               <div className="p-4 flex flex-col gap-4">
                 {displayedJobs.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground text-sm">
@@ -511,6 +536,129 @@ export default function CollectorDashboard() {
                     </div>
                   ))
                 )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="my_jobs" className="p-0 m-0">
+              <div className="p-4 flex flex-col gap-4">
+                {displayedJobs.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground text-sm">
+                    No jobs to show here.
+                  </div>
+                ) : (
+                  displayedJobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="border border-border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base font-bold text-foreground dark:text-white">
+                            {job.location}
+                          </span>
+                          <StatusBadge
+                            label={job.urgency}
+                            variant={
+                              job.urgency === "Critical"
+                                ? "danger"
+                                : job.urgency === "High"
+                                  ? "warning"
+                                  : "success"
+                            }
+                          />
+                        </div>
+                        <span className="text-sm font-mono text-muted-foreground">
+                          {job.device} • {job.zone}
+                        </span>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Progress
+                            value={job.fill}
+                            className="w-24 h-1.5 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                          />
+                          <span className="text-xs font-bold text-[#ba1a1a]">
+                            {job.fill}% Full
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center sm:justify-end gap-2">
+                        {activeTab === "available_jobs" ? (
+                          <button
+                            onClick={() => handleClaimJob(job.id)}
+                            className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer animate-[fade-in_0.2s_ease-out]"
+                          >
+                            Claim Job
+                          </button>
+                        ) : job.status !== "Completed" ? (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setActiveTab("map_view")}
+                              className="px-3 py-2 bg-[#0284c7] text-white text-xs font-bold rounded-lg hover:bg-[#0369a1] transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
+                            >
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                              </svg>
+                              Open Map Route
+                            </button>
+                            <button
+                              onClick={() => setRemindJobId(job.id)}
+                              className="px-3 py-2 bg-card text-white text-xs font-bold rounded-lg hover:bg-card transition-colors cursor-pointer"
+                            >
+                              Complete
+                            </button>
+                          </div>
+                        ) : (
+                          <StatusBadge
+                            label="Completed"
+                            variant="success"
+                            hasDot
+                          />
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="map_view" className="p-0 m-0 border-none outline-none">
+              <div className="w-full h-[520px] relative">
+                <React.Suspense
+                  fallback={
+                    <div className="flex items-center justify-center h-full text-muted-foreground text-sm gap-2">
+                      <svg
+                        className="animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                      </svg>
+                      Loading map…
+                    </div>
+                  }
+                >
+                  <BinLocatorMap
+                    jobs={activeTab === "map_view" ? jobs : displayedJobs}
+                    activeTab={activeTab}
+                    onClaimJob={handleClaimJob}
+                    onCompleteJob={(id) => setRemindJobId(id)}
+                  />
+                </React.Suspense>
               </div>
             </TabsContent>
           </Tabs>
