@@ -631,33 +631,35 @@ export default function CollectorDashboard() {
               </div>
             </TabsContent>
 
-            <TabsContent value="map_view" className="p-0 m-0" style={{ height: 520 }}>
-              <React.Suspense
-                fallback={
-                  <div className="flex items-center justify-center h-full text-muted-foreground text-sm gap-2">
-                    <svg
-                      className="animate-spin"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-                    </svg>
-                    Loading map…
-                  </div>
-                }
-              >
-                <BinLocatorMap
-                  jobs={activeTab === "map_view" ? jobs : displayedJobs}
-                  activeTab={activeTab}
-                  onClaimJob={handleClaimJob}
-                  onCompleteJob={(id) => setRemindJobId(id)}
-                />
-              </React.Suspense>
+            <TabsContent value="map_view" className="p-0 m-0 border-none outline-none">
+              <div className="w-full h-[520px] relative">
+                <React.Suspense
+                  fallback={
+                    <div className="flex items-center justify-center h-full text-muted-foreground text-sm gap-2">
+                      <svg
+                        className="animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                      </svg>
+                      Loading map…
+                    </div>
+                  }
+                >
+                  <BinLocatorMap
+                    jobs={activeTab === "map_view" ? jobs : displayedJobs}
+                    activeTab={activeTab}
+                    onClaimJob={handleClaimJob}
+                    onCompleteJob={(id) => setRemindJobId(id)}
+                  />
+                </React.Suspense>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
