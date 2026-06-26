@@ -11,10 +11,6 @@ const isSupabaseDatabase = /supabase\.com/i.test(databaseUrl || '');
 const pool = new Pool({
   connectionString: databaseUrl,
   ssl: isSupabaseDatabase ? { rejectUnauthorized: false } : undefined,
-  connectionTimeoutMillis: 20000,  // increased to 20s
-  idleTimeoutMillis: 30000,        
-  max: 20,                         // increased from 5 to handle concurrent realtime hooks
-  keepAlive: true,                 // prevent LB from dropping idle connections
 });
 
 // Initialize Prisma Client
@@ -24,13 +20,6 @@ const prisma = new PrismaClient({
 
 // Initialize the Express app
 const app = express();
-
-const withTimeout = (promise, ms = 15000) => {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error('Database query timed out')), ms))
-  ]);
-};
 
 
 // Middleware
@@ -125,16 +114,17 @@ async function upsertDeviceFromJobInput({ device, location, fill, type }) {
 function formatUser(user) {
   return {
     id: user.id,
-    authId: user.authId || null,
     name: user.name,
-    email: user.email,
-    role: user.role,
+    email: user.email ?? null,
+    role: user.role ?? null,
     status: user.status,
-    avatar: user.avatar || null,
-    assignedFacility: user.assignedFacility || null,
-    region: user.region || null,
-    rating: user.rating !== null ? Number(user.rating) : 0,
+    rating: user.rating ?? 0,
+    avatar: user.avatar ?? null,
+    assignedFacility: user.assignedFacility ?? null,
+    region: user.region ?? null,
+    authId: user.authId ?? null,
     createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }
 
@@ -301,28 +291,14 @@ app.get('/api/collectors', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    const search = req.query.search || '';
-
-    const whereClause = {
-      role: 'COLLECTOR',
-      ...(search ? {
-        OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { id: { contains: search, mode: 'insensitive' } },
-          { region: { contains: search, mode: 'insensitive' } },
-          { status: { contains: search, mode: 'insensitive' } },
-        ]
-      } : {})
-    };
 
     const [collectors, totalCount] = await Promise.all([
       prisma.user.findMany({
-        where: whereClause,
         orderBy: { updatedAt: 'desc' },
         skip,
         take: limit,
       }),
-      prisma.user.count({ where: whereClause }),
+      prisma.user.count({ where: { role: 'COLLECTOR' } }),
     ]);
 
     res.status(200).json({
@@ -378,15 +354,12 @@ app.post('/api/collectors', async (req, res) => {
       return res.status(400).json({ error: 'Name and region are required' });
     }
 
-    const collectorId = await buildNextSequentialId(prisma.user, 'id', 'COL-');
-
     const createdCollector = await prisma.user.create({
       data: {
-        id: collectorId,
         name,
         email: email || null,
-        role: 'COLLECTOR',
         region,
+        role: 'COLLECTOR',
         status: status || 'Pending',
         rating: Number(rating) || 0,
       },
@@ -406,7 +379,7 @@ app.patch('/api/collectors/:id', async (req, res) => {
     const { name, email, region, status, rating } = req.body;
 
     const updatedCollector = await prisma.user.update({
-      where: { id: id },
+      where: { id },
       data: {
         ...(name !== undefined ? { name } : {}),
         ...(email !== undefined ? { email: email || null } : {}),
@@ -432,11 +405,8 @@ app.post('/api/users', async (req, res) => {
       return res.status(400).json({ error: 'Name, email, and role are required' });
     }
 
-    const userId = await buildNextSequentialId(prisma.user, 'id', 'USR-');
-
     const createdUser = await prisma.user.create({
       data: {
-        id: userId,
         name,
         email,
         role,
@@ -453,47 +423,6 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-// Create platform users in bulk
-app.post('/api/users/bulk', async (req, res) => {
-  try {
-    const { users } = req.body;
-
-    if (!users || !Array.isArray(users)) {
-      return res.status(400).json({ error: 'An array of users is required' });
-    }
-
-    const createdUsers = [];
-    for (const u of users) {
-      const { name, email, role, status, assignedFacility } = u;
-
-      if (!name || !email || !role) {
-        continue;
-      }
-
-      const userId = await buildNextSequentialId(prisma.user, 'id', 'USR-');
-
-      const createdUser = await prisma.user.create({
-        data: {
-          id: userId,
-          name,
-          email,
-          role,
-          status: status || 'PENDING',
-          assignedFacility: assignedFacility || 'Unassigned',
-          avatar: null,
-        },
-      });
-
-      createdUsers.push(formatUser(createdUser));
-    }
-
-    res.status(201).json(createdUsers);
-  } catch (error) {
-    console.error('Error in bulk import:', error);
-    res.status(500).json({ error: 'Failed to bulk import users' });
-  }
-});
-
 // Update a platform user record
 app.patch('/api/users/:id', async (req, res) => {
   try {
@@ -501,7 +430,7 @@ app.patch('/api/users/:id', async (req, res) => {
     const { name, email, role, status, assignedFacility, avatar } = req.body;
 
     const updatedUser = await prisma.user.update({
-      where: { id: id },
+      where: { id },
       data: {
         ...(name !== undefined ? { name } : {}),
         ...(email !== undefined ? { email } : {}),
@@ -601,10 +530,10 @@ app.patch('/api/jobs/:id', async (req, res) => {
 // GET dashboard summary for pages that need DB-driven KPI snapshots
 app.get('/api/dashboard/summary', async (req, res) => {
   try {
-    const [devices, jobs, feedbackCount] = await Promise.all([
+    const [devices, jobs, feedback] = await Promise.all([
       prisma.device.findMany({ select: { status: true, fillLevel: true } }),
       prisma.collectionJob.findMany({ select: { status: true } }),
-      prisma.feedback.count(),
+      prisma.feedback.findMany({ select: { status: true } }),
     ]);
 
     const activeDevices = devices.filter((device) => device.status === 'Active' || device.status === 'Online' || !device.status).length;
@@ -612,6 +541,9 @@ app.get('/api/dashboard/summary', async (req, res) => {
     const pendingJobs = jobs.filter((job) => job.status === 'Pending').length;
     const inTransitJobs = jobs.filter((job) => job.status === 'In Progress').length;
     const completedJobs = jobs.filter((job) => job.status === 'Completed').length;
+    const pendingFeedback = feedback.filter((item) => item.status === 'Pending').length;
+    const inProgressFeedback = feedback.filter((item) => item.status === 'In Progress').length;
+    const resolvedFeedback = feedback.filter((item) => item.status === 'Resolved').length;
 
     const averageFill = totalDevices
       ? Math.round(devices.reduce((sum, device) => sum + (device.fillLevel ?? 0), 0) / totalDevices)
@@ -629,7 +561,9 @@ app.get('/api/dashboard/summary', async (req, res) => {
         completed: completedJobs,
       },
       feedback: {
-        total: feedbackCount,
+        pending: pendingFeedback,
+        inProgress: inProgressFeedback,
+        resolved: resolvedFeedback,
       },
     });
   } catch (error) {
@@ -812,53 +746,15 @@ app.get('/api/alerts', async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const severity = req.query.severity;
-    const deviceType = req.query.deviceType;
-    const timeRange = req.query.timeRange;
-
-    const whereClause = {};
-
-    if (severity && severity !== 'all') {
-      whereClause.severity = severity.toUpperCase();
-    }
-
-    if (deviceType && deviceType !== 'all') {
-      const typeMap = {
-        'conveyors': 'conveyor',
-        'smartbins': 'bin'
-      };
-      if (typeMap[deviceType]) {
-        whereClause.device = {
-          deviceType: typeMap[deviceType]
-        };
-      }
-    }
-
-    if (timeRange && timeRange !== 'all') {
-      const now = new Date();
-      let fromDate;
-      if (timeRange === '24h') {
-        fromDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      } else if (timeRange === '7d') {
-        fromDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      } else if (timeRange === '30d') {
-        fromDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      }
-      if (fromDate) {
-        whereClause.createdAt = { gte: fromDate };
-      }
-    }
-
-    const [alerts, totalCount] = await withTimeout(Promise.all([
+    const [alerts, totalCount] = await Promise.all([
       prisma.alert.findMany({
-        where: whereClause,
         orderBy: { createdAt: 'desc' },
         include: { device: true },
         skip,
         take: limit,
       }),
-      prisma.alert.count({ where: whereClause }),
-    ]), 5000);
+      prisma.alert.count(),
+    ]);
 
     const formattedAlerts = alerts.map((alert) => {
       const diffMs = new Date() - new Date(alert.createdAt);
@@ -895,24 +791,13 @@ app.get('/api/alerts', async (req, res) => {
   }
 });
 
-let cachedSummary = null;
-let lastSummaryFetch = 0;
-
 // GET Alerts Summary
 app.get('/api/alerts/summary', async (req, res) => {
   try {
-    const now = Date.now();
-    if (cachedSummary && (now - lastSummaryFetch < 10000)) {
-      return res.status(200).json(cachedSummary);
-    }
-    const [critical, warning] = await withTimeout(Promise.all([
-      prisma.alert.count({ where: { severity: 'CRITICAL' } }),
-      prisma.alert.count({ where: { severity: 'WARNING' } })
-    ]), 5000);
-    
-    cachedSummary = { critical, warning };
-    lastSummaryFetch = now;
-    res.status(200).json(cachedSummary);
+    const alerts = await prisma.alert.findMany();
+    const critical = alerts.filter(a => a.severity === 'CRITICAL').length;
+    const warning = alerts.filter(a => a.severity === 'WARNING').length;
+    res.status(200).json({ critical, warning });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch alerts summary' });
   }
