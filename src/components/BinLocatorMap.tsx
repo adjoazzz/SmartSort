@@ -181,7 +181,14 @@ export function BinLocatorMap({
 
     mapRef.current = map;
 
+    // Handle container resize (e.g. tab switching)
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    observer.observe(mapContainerRef.current);
+
     return () => {
+      observer.disconnect();
       map.remove();
       mapRef.current = null;
     };
