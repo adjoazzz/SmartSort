@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { authFetch } from "../../lib/authFetch";
@@ -424,6 +425,12 @@ export default function AdminDashboard() {
                         >
                           Status: {fac.status}
                         </span>
+                        <Link
+                          to={`/dashboard?facilityId=${fac.id}`}
+                          className="text-[11px] text-[#006c49] dark:text-emerald-400 hover:underline font-bold mt-1 block text-center"
+                        >
+                          Inspect Facility ➔
+                        </Link>
                       </div>
                     </Popup>
                   </Marker>
@@ -581,6 +588,7 @@ export default function AdminDashboard() {
                   <TableHead>Avg Fill Level</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Active Alerts</TableHead>
+                  <TableHead className="text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -622,6 +630,14 @@ export default function AdminDashboard() {
                       ) : (
                         <span className="text-xs text-muted-foreground">None</span>
                       )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Link
+                        to={`/dashboard?facilityId=${fac.id}`}
+                        className="text-xs bg-[#006c49] text-white px-2.5 py-1 rounded hover:bg-[#006c49]/90 font-medium transition-colors cursor-pointer"
+                      >
+                        Inspect
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
