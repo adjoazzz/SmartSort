@@ -110,7 +110,7 @@ export default function CollectorMap() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isNavigating) {
       setNavStep(0);
       setNavDistance(120);
