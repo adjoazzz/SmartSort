@@ -150,6 +150,26 @@ function createPinIcon(color: string, fill: number): L.DivIcon {
   });
 }
 
+const createUserMarkerIcon = (): L.DivIcon => {
+  return L.divIcon({
+    className: "",
+    html: `
+      <div style="position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+        <div style="position: absolute; width: 24px; height: 24px; background: rgba(37, 99, 235, 0.4); border-radius: 50%; animation: pulse-ring 2s infinite ease-in-out;"></div>
+        <div style="position: absolute; width: 14px; height: 14px; background: #2563eb; border: 2.5px solid white; border-radius: 50%; box-shadow: 0 0 6px rgba(0,0,0,0.3);"></div>
+      </div>
+      <style>
+        @keyframes pulse-ring {
+          0% { transform: scale(0.6); opacity: 1; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+      </style>
+    `,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  });
+};
+
 // ─── Main Component ──────────────────────────────────────────────────────────
 export function BinLocatorMap({
   jobs,
@@ -162,6 +182,43 @@ export function BinLocatorMap({
   const markersRef = useRef<L.Marker[]>([]);
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodedCount, setGeocodedCount] = useState(0);
+  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const userMarkerRef = useRef<L.Marker | null>(null);
+
+  // Watch device coordinates for real-time user location tracking
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserCoords([latitude, longitude]);
+      },
+      (error) => {
+        console.warn("Geolocation watch error:", error);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, []);
+
+  // Update or create user location marker on coordinates shift
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !userCoords) return;
+
+    if (userMarkerRef.current) {
+      userMarkerRef.current.setLatLng(userCoords);
+    } else {
+      const marker = L.marker(userCoords, { icon: createUserMarkerIcon() }).addTo(map);
+      marker.bindPopup("<strong>Your Current Location</strong>");
+      userMarkerRef.current = marker;
+      map.setView(userCoords, 14);
+    }
+  }, [userCoords]);
 
   // ── Initialise map once ────────────────────────────────────────────────
   useEffect(() => {
