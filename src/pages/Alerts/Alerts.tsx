@@ -478,7 +478,7 @@ export default function Alerts() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredAlerts.map((alert) => (
+                filteredAlerts.map((alert: any) => (
                   <TableRow
                     key={alert.id}
                     className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"

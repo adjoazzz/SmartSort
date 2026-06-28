@@ -356,17 +356,16 @@ export default function Analytics() {
     doc.setTextColor(100);
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
 
-    const tableData = MATERIAL_CATEGORIES.map((cat) => [
+    const tableData = (categoriesData ?? []).map((cat) => [
       cat.name,
-      cat.volume,
+      `${cat.volume} t`,
       cat.growth,
-      cat.target,
-      cat.action,
+      `${cat.goal}%`,
     ]);
 
     autoTable(doc, {
       startY: 40,
-      head: [["Category", "Volume", "Growth", "Target", "Action"]],
+      head: [["Category", "Volume (Metric Tons)", "MoM Growth", "Target Goal"]],
       body: tableData,
       theme: "grid",
       headStyles: { fillColor: [0, 108, 73] },

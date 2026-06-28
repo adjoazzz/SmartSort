@@ -110,6 +110,16 @@ function EventLogSkeleton() {
   );
 }
 
+interface NormalizedDevice {
+  id: string;
+  name: string;
+  location: string;
+  status: string;
+  fill: number;
+  lastActive: string;
+  firmware: string;
+}
+
 export default function Devices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
@@ -167,10 +177,10 @@ export default function Devices() {
     }
   }, [devices]);
 
-  const normalizedDevices = devices.map((d: any) => ({
-    id: d.customBinId,
-    name: d.customBinId,
-    location: d.location,
+  const normalizedDevices: NormalizedDevice[] = devices.map((d: any) => ({
+    id: d.customBinId || "",
+    name: d.customBinId || "",
+    location: d.location || "",
     status: d.status ?? "Online",
     fill: d.fillLevel ?? 0,
     lastActive: d.updatedAt ? new Date(d.updatedAt).toLocaleString() : "—",

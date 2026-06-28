@@ -1391,7 +1391,9 @@ export default function UserManagement() {
       <InviteUserModal
         isOpen={isInviteModalOpen}
         onClose={() => setIsInviteModalOpen(false)}
-        onCreated={refresh}
+        onCreated={() => {
+          refresh();
+        }}
       />
 
       <BulkImportDocsModal

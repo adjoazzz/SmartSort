@@ -17,7 +17,18 @@ const BinLocatorMap = React.lazy(() =>
   import("../../components/BinLocatorMap").then((m) => ({ default: m.BinLocatorMap }))
 );
 
-const COLLECTOR_JOBS = [
+interface CollectorJob {
+  id: string;
+  device: string;
+  location: string;
+  zone: string;
+  fill: number;
+  urgency: string;
+  status: string;
+  isAssignedToMe: boolean;
+}
+
+const COLLECTOR_JOBS: CollectorJob[] = [
   {
     id: "JOB-1041",
     device: "#SN-4431-L",
@@ -77,11 +88,11 @@ export default function CollectorDashboard() {
   );
 
   // Sync state with localStorage
-  const [jobs, setJobs] = useState(() => {
+  const [jobs, setJobs] = useState<CollectorJob[]>(() => {
     const saved = localStorage.getItem("collector_jobs");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        return JSON.parse(saved) as CollectorJob[];
       } catch (e) {
         console.error(e);
       }

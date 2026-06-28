@@ -240,7 +240,7 @@ export default function Dashboard() {
 
   // Realtime subscriptions — instant updates when DB changes
   const { data: devicesData, isLoading: devicesLoading, refresh: refreshDevices } = useRealtimeData<
-    any[]
+    any
   >(fetchDevices, { tables: ["Device"] });
 
   const { data: metricsData, isLoading: metricsLoading, refresh: refreshMetrics } = useRealtimeData<any>(
@@ -320,7 +320,7 @@ export default function Dashboard() {
 
         // Section 2: Device Bins
         doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
-        const deviceData = displayBins.map((bin) => [
+        const deviceData = displayBins.map((bin: any) => [
           bin.label,
           `${bin.value}%`,
         ]);
@@ -373,7 +373,7 @@ export default function Dashboard() {
   const hasValidThroughput = throughputData?.some(
     (d: any) => d.sorted > 0 || d.rejected > 0,
   );
-  const chartData = hasValidThroughput ? throughputData : THROUGHPUT_DATA;
+  const chartData = (throughputData && hasValidThroughput) ? throughputData : THROUGHPUT_DATA;
   const maxTotal = Math.max(
     ...chartData.map((d: any) => (d.sorted ?? 0) + (d.rejected ?? 0)),
     1,
@@ -769,7 +769,7 @@ export default function Dashboard() {
                           {t(
                             `dashboard.charts.${cat.category.toLowerCase()}`,
                             cat.category,
-                          )}
+                          ) as string}
                         </span>
                         <span className="text-base font-black text-foreground">
                           {cat.percentage}%
@@ -808,7 +808,7 @@ export default function Dashboard() {
                     <div className="h-2 bg-slate-100 dark:bg-secondary rounded-full w-full animate-pulse"></div>
                   </div>
                 ))
-              : displayBins.map((bin, idx) => (
+              : displayBins.map((bin: any, idx: number) => (
                   <div key={idx} className="flex flex-col gap-2 w-full">
                     <div className="flex justify-between items-center text-sm font-medium">
                       <span className="text-foreground dark:text-white">

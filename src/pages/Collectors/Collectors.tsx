@@ -186,7 +186,7 @@ export default function Collectors() {
                   </td>
                 </tr>
               ) : (
-                filteredCollectors.map((collector) => (
+                filteredCollectors.map((collector: Collector) => (
                   <tr
                     key={collector.id}
                     className="hover:bg-background dark:hover:bg-secondary transition-colors"
