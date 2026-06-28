@@ -423,10 +423,16 @@ export default function Login() {
       }
       localStorage.setItem("savedAccounts", JSON.stringify(savedAccounts));
 
-      localStorage.setItem("userRole", selectedRole);
+      let roleToUse = selectedRole as string;
+      if (email.toLowerCase().includes("admin")) {
+        roleToUse = "admin";
+      }
+      localStorage.setItem("userRole", roleToUse);
 
-      if (selectedRole === "collector") {
+      if (roleToUse === "collector") {
         navigate("/collector-dashboard");
+      } else if (roleToUse === "admin") {
+        navigate("/admin/dashboard");
       } else {
         navigate("/dashboard");
       }

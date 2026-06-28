@@ -13,13 +13,46 @@ const prisma = new PrismaClient({
 
 async function main() {
     // Delete existing records
+    await prisma.bulkCollectionJob.deleteMany();
     await prisma.collectionJob.deleteMany();
     await prisma.processedItem.deleteMany();
     await prisma.deviceEvent.deleteMany();
     await prisma.alert.deleteMany();
     await prisma.device.deleteMany();
     await prisma.user.deleteMany();
+    await prisma.facility.deleteMany();
     await prisma.feedback.deleteMany();
+
+    // Create Facilities
+    const facilities = await prisma.facility.createManyAndReturn({
+        data: [
+            {
+                name: 'Accra Central Hub',
+                region: 'Greater Accra',
+                status: 'Active',
+                latitude: 5.6037,
+                longitude: -0.1870,
+            },
+            {
+                name: 'West Tema Plant',
+                region: 'Eastern Coast',
+                status: 'Active',
+                latitude: 5.6698,
+                longitude: -0.0169,
+            },
+            {
+                name: 'Kumasi Hub',
+                region: 'Ashanti Region',
+                status: 'Active',
+                latitude: 6.6961,
+                longitude: -1.6151,
+            },
+        ],
+    });
+
+    const accraId = facilities.find(f => f.name === 'Accra Central Hub').id;
+    const temaId = facilities.find(f => f.name === 'West Tema Plant').id;
+    const kumasiId = facilities.find(f => f.name === 'Kumasi Hub').id;
 
     // Create Devices
     const devices = await prisma.device.createManyAndReturn({
@@ -31,6 +64,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'bin',
                 lastSortedItem: 'Organic Waste',
+                facilityId: accraId,
             },
             {
                 customBinId: 'BIN_002',
@@ -39,6 +73,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'bin',
                 lastSortedItem: 'Plastic Bottles',
+                facilityId: accraId,
             },
             {
                 customBinId: 'BIN_003',
@@ -47,6 +82,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'bin',
                 lastSortedItem: 'Glass Bottles',
+                facilityId: temaId,
             },
             {
                 customBinId: 'BIN_004',
@@ -55,6 +91,7 @@ async function main() {
                 status: 'Maintenance',
                 deviceType: 'bin',
                 lastSortedItem: 'Mixed Waste',
+                facilityId: accraId,
             },
             {
                 customBinId: 'BIN_005',
@@ -63,6 +100,7 @@ async function main() {
                 status: 'Full',
                 deviceType: 'bin',
                 lastSortedItem: 'Paper Waste',
+                facilityId: kumasiId,
             },
             {
                 customBinId: 'BIN_006',
@@ -71,6 +109,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'bin',
                 lastSortedItem: 'Plastic Bottles',
+                facilityId: temaId,
             },
             {
                 customBinId: 'CON_001',
@@ -79,6 +118,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'conveyor',
                 lastSortedItem: 'Plastic Bottles',
+                facilityId: accraId,
             },
             {
                 customBinId: 'SEN_001',
@@ -87,6 +127,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'sensor',
                 lastSortedItem: 'Mixed Waste',
+                facilityId: temaId,
             },
             {
                 customBinId: 'COM_001',
@@ -95,6 +136,7 @@ async function main() {
                 status: 'Active',
                 deviceType: 'compactor',
                 lastSortedItem: 'Organic Waste',
+                facilityId: kumasiId,
             },
         ],
     });
@@ -111,7 +153,8 @@ async function main() {
                 status: 'Active',
                 rating: 4.8,
                 email: 'kwame.mensah@smartsort.com',
-                role: 'COLLECTOR'
+                role: 'COLLECTOR',
+                facilityId: accraId,
             },
             {
                 id: 'COL-002',
@@ -120,7 +163,8 @@ async function main() {
                 status: 'Active',
                 rating: 4.9,
                 email: 'abena.osei@smartsort.com',
-                role: 'COLLECTOR'
+                role: 'COLLECTOR',
+                facilityId: temaId,
             },
             {
                 id: 'COL-003',
@@ -129,7 +173,8 @@ async function main() {
                 status: 'Inactive',
                 rating: 4.5,
                 email: 'kofi.annan@smartsort.com',
-                role: 'COLLECTOR'
+                role: 'COLLECTOR',
+                facilityId: kumasiId,
             },
             {
                 id: 'COL-004',
@@ -138,7 +183,8 @@ async function main() {
                 status: 'Active',
                 rating: 4.7,
                 email: 'ama.asare@smartsort.com',
-                role: 'COLLECTOR'
+                role: 'COLLECTOR',
+                facilityId: accraId,
             },
             {
                 id: 'COL-005',
@@ -147,7 +193,8 @@ async function main() {
                 status: 'On Leave',
                 rating: 4.6,
                 email: 'yaw.appiah@smartsort.com',
-                role: 'COLLECTOR'
+                role: 'COLLECTOR',
+                facilityId: temaId,
             },
             {
                 id: 'COL-006',
@@ -156,7 +203,8 @@ async function main() {
                 status: 'Pending',
                 rating: 4.4,
                 email: 'esi.adjei@smartsort.com',
-                role: 'COLLECTOR'
+                role: 'COLLECTOR',
+                facilityId: accraId,
             },
         ],
     });
@@ -224,8 +272,9 @@ async function main() {
                 email: 'a.vance@smartsort.com',
                 role: 'MANAGER',
                 status: 'ACTIVE',
-                assignedFacility: 'HQ Corporate Center',
+                assignedFacility: 'Accra Central Hub',
                 avatar: null,
+                facilityId: accraId,
             },
             {
                 id: 'USR-002',
@@ -233,8 +282,9 @@ async function main() {
                 email: 's.jenkins@smartsort.com',
                 role: 'MANAGER',
                 status: 'ACTIVE',
-                assignedFacility: 'East Side Recycling',
+                assignedFacility: 'West Tema Plant',
                 avatar: null,
+                facilityId: temaId,
             },
             {
                 id: 'USR-003',
@@ -242,8 +292,9 @@ async function main() {
                 email: 'm.rossi@logistics.net',
                 role: 'COLLECTOR',
                 status: 'ACTIVE',
-                assignedFacility: 'South Hub Logistics',
+                assignedFacility: 'Kumasi Hub Logistics',
                 avatar: null,
+                facilityId: kumasiId,
             },
             {
                 id: 'USR-004',
@@ -260,8 +311,9 @@ async function main() {
                 email: 'daniel.owusu@smartsort.com',
                 role: 'MANAGER',
                 status: 'PENDING',
-                assignedFacility: 'North Sector Hub',
+                assignedFacility: 'Accra Central Hub',
                 avatar: null,
+                facilityId: accraId,
             },
             {
                 id: 'USR-006',
@@ -272,7 +324,41 @@ async function main() {
                 assignedFacility: 'Central Operations',
                 avatar: null,
             },
+            {
+                id: 'USR-007',
+                name: 'Ghana Admin',
+                email: 'admin@smartsort.com',
+                role: 'ADMIN',
+                status: 'ACTIVE',
+                assignedFacility: 'All Facilities',
+                avatar: null,
+            },
         ],
+    });
+
+    // Create Bulk Collection Jobs (Third-Party Ghana Recyclers)
+    await prisma.bulkCollectionJob.createMany({
+        data: [
+            {
+                facilityId: accraId,
+                status: 'Pending',
+                tonnage: 4.5,
+                collectorName: 'Zoomlion Ghana Limited',
+            },
+            {
+                facilityId: temaId,
+                status: 'Dispatched',
+                tonnage: 3.2,
+                collectorName: 'Coliba Ghana',
+            },
+            {
+                facilityId: kumasiId,
+                status: 'Completed',
+                tonnage: 5.8,
+                collectorName: 'Jekora Ventures',
+                completedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+            },
+        ]
     });
 
     // Create Community Feedback

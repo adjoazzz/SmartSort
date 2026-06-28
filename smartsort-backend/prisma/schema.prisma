@@ -21,6 +21,10 @@ model Device {
   deviceEvents   DeviceEvent[]
   alerts         Alert[]
 
+  // Facility link
+  facilityId     String?
+  facility       Facility?       @relation(fields: [facilityId], references: [id])
+
   @@index([status])
 }
 
@@ -46,7 +50,7 @@ model User {
   authId           String?  @unique // Supabase auth.users.id
   email            String   @unique
   name             String
-  role             String   // e.g. "MANAGER", "COLLECTOR"
+  role             String   // e.g. "MANAGER", "COLLECTOR", "ADMIN", "THIRD_PARTY_COLLECTOR"
   status           String   @default("ACTIVE")
   avatar           String?
   assignedFacility String?
@@ -55,7 +59,40 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  collectionJobs CollectionJob[] // For collectors
+  collectionJobs      CollectionJob[] // For collectors
+  bulkCollectionJobs  BulkCollectionJob[] // For third-party collectors
+
+  facilityId          String?
+  facility            Facility?           @relation(fields: [facilityId], references: [id])
+}
+
+model Facility {
+  id                String              @id @default(uuid())
+  name              String              @unique // e.g. "Austin Hub"
+  region            String?             // e.g. "North Sector"
+  status            String              @default("Active") // Active, Offline, Maintenance
+  latitude          Float               // Map Latitude coord
+  longitude         Float               // Map Longitude coord
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  devices           Device[]
+  users             User[]
+  bulkJobs          BulkCollectionJob[]
+}
+
+model BulkCollectionJob {
+  id            String    @id @default(uuid())
+  facilityId    String
+  facility      Facility  @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  status        String    @default("Pending") // Pending, Dispatched, Completed
+  tonnage       Float     // Total accumulated tonnage to collect (e.g. 4.2 Tons)
+  collectorName String    // Name of the third-party company (e.g., "Zoomlion", "Jekora Ventures")
+  collectorId   String?   // References the Third-Party Collector user
+  collector     User?     @relation(fields: [collectorId], references: [id])
+  scheduledFor  DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
 }
 
 model Feedback {

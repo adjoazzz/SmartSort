@@ -72,8 +72,12 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "admin",
+        path: "manager/users",
         lazy: lazyRoute(() => import("../pages/UserManagement/UserManagement")),
+      },
+      {
+        path: "admin/dashboard",
+        lazy: lazyRoute(() => import("../pages/AdminDashboard/AdminDashboard")),
       },
       {
         path: "profile",

@@ -208,7 +208,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                   Community Feedback
                 </CommandItem>
                 <CommandItem
-                  onSelect={() => runCommand(() => navigate("/admin"))}
+                  onSelect={() => runCommand(() => navigate("/manager/users"))}
                 >
                   User Management
                 </CommandItem>
