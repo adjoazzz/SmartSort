@@ -392,7 +392,7 @@ export default function Landing() {
               className="w-full h-[320px] sm:h-[420px] object-cover opacity-95" 
             />
             {/* Live analysis overlay card */}
-            <div className="absolute bottom-6 left-6 right-6 bg-card/80 dark:bg-card/90 backdrop-blur-md border border-white/10 dark:border-white/5 p-5 sm:p-6 rounded-xl text-white shadow-xl flex flex-col gap-4">
+            <div className="absolute bottom-6 left-6 right-6 bg-card/80 dark:bg-card/90 backdrop-blur-md border border-border/60 dark:border-white/5 p-5 sm:p-6 rounded-xl text-foreground dark:text-white shadow-xl flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Real-Time Analysis</span>
                 <span className="inline-flex items-center gap-1.5 bg-[#10b981]/20 text-[#10b981] text-[9px] font-extrabold tracking-widest px-2.5 py-1 rounded-full uppercase">
@@ -400,17 +400,17 @@ export default function Landing() {
                   Live
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-3">
+              <div className="grid grid-cols-3 gap-4 border-t border-border/60 dark:border-white/10 pt-3">
                 <div className="flex flex-col">
-                  <span className="text-2xl font-extrabold text-white">98.4%</span>
+                  <span className="text-2xl font-extrabold text-foreground dark:text-white">98.4%</span>
                   <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Accuracy</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-extrabold text-white">1.2s</span>
+                  <span className="text-2xl font-extrabold text-foreground dark:text-white">1.2s</span>
                   <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Latency</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-extrabold text-white">40T</span>
+                  <span className="text-2xl font-extrabold text-foreground dark:text-white">40T</span>
                   <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Managed</span>
                 </div>
               </div>
@@ -514,9 +514,9 @@ export default function Landing() {
             viewport={{ once: true, margin: "-100px" }}
             whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)" }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-4 bg-card text-white border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
+            className="md:col-span-4 bg-card text-foreground dark:text-white border border-[#cbd5e1]/60 dark:border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
           >
-            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-[#3b82f6]">
+            <div className="w-10 h-10 bg-[#3b82f6]/10 dark:bg-white/10 rounded-xl flex items-center justify-center text-[#3b82f6]">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
                 <path d="M7 2v20M17 2v20M2 7h20M2 17h20"></path>
@@ -697,7 +697,7 @@ export default function Landing() {
           </div>
 
           {/* Right Column (Inquiry Form Card) */}
-          <div className="bg-white text-foreground rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] shadow-xl relative z-10">
+          <div className="bg-white dark:bg-card text-foreground dark:text-white rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] dark:border-border shadow-xl relative z-10">
             {submitted ? (
               <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#10b981]/15 flex items-center justify-center text-[#10b981]">
@@ -733,10 +733,10 @@ export default function Landing() {
                     value={form.companyName}
                     onChange={e => handleCompanyNameChange(e.target.value)}
                     onBlur={handleCompanyNameBlur}
-                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
+                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 transition-all ${
                       errors.companyName
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
                     }`}
                   />
                   <FieldError message={errors.companyName} />
@@ -747,7 +747,7 @@ export default function Landing() {
                   <select 
                     value={form.tonsRange}
                     onChange={e => setForm({...form, tonsRange: e.target.value})}
-                    className="h-11 px-4 border border-[#cbd5e1] rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
+                    className="h-11 px-4 border border-[#cbd5e1] dark:border-border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
                   >
                     <option value="Less than 50">Less than 50 Tons</option>
                     <option value="50 - 200">50 - 200 Tons</option>
@@ -770,10 +770,10 @@ export default function Landing() {
                     value={form.email}
                     onChange={e => handleEmailChange(e.target.value)}
                     onBlur={handleEmailBlur}
-                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 focus:outline-none focus:ring-2 transition-all ${
+                    className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 transition-all ${
                       errors.email
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
                     }`}
                   />
                   <FieldError message={errors.email} />
