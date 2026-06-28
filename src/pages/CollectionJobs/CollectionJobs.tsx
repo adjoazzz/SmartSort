@@ -4,6 +4,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { MetricCard } from "../../components/MetricCard";
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
+import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -279,6 +280,43 @@ export default function CollectionJobs() {
       setJobs(jobsResponse.data);
     }
   }, [jobsResponse]);
+
+  const [facilities, setFacilities] = useState<any[]>([]);
+
+  useEffect(() => {
+    authFetch(`${baseUrl}/api/admin/facilities`)
+      .then((res) => res.json())
+      .then((data) => setFacilities(data))
+      .catch(console.error);
+  }, []);
+
+  const handleDeployBatchRoute = async () => {
+    const targetFacility = facilities.find((f) => f.name.includes("Accra")) || facilities[0];
+    if (!targetFacility) {
+      toast.error("No onboarded facility found to request dispatch.");
+      return;
+    }
+
+    try {
+      const response = await authFetch(`${baseUrl}/api/admin/bulk-jobs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          facilityId: targetFacility.id,
+          tonnage: 2.4, // Request collection for 2.4 tons based on the capacity threshold insight
+        }),
+      });
+      if (response.ok) {
+        toast.success("Dispatch request successfully sent to Admin dashboard overview!");
+        refresh();
+      } else {
+        toast.error("Failed to submit dispatch request.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit dispatch request.");
+    }
+  };
 
   // Assigning collectors state
   const [localAssignments, setLocalAssignments] = useState<
@@ -903,7 +941,10 @@ export default function CollectionJobs() {
                   are reaching capacity. Suggesting a batch collection route to
                   save 12 minutes of transit time.
                 </p>
-                <button className="w-fit mt-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-[11px] font-bold rounded-lg transition-colors">
+                <button
+                  onClick={handleDeployBatchRoute}
+                  className="w-fit mt-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-[11px] font-bold rounded-lg transition-colors cursor-pointer"
+                >
                   Deploy Batch Route
                 </button>
               </div>

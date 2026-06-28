@@ -238,430 +238,132 @@ export default function CollectorDashboard() {
         </div>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-        <MetricCard
-          title="Active Jobs"
-          value={activeAssignments.length.toString()}
-          trend="Action required"
-          trendDirection="neutral"
-          iconColorClass="text-[#0284c7]"
-          iconBgClass="bg-[#0284c7]/10"
-        />
-        <MetricCard
-          title="Completed Today"
-          value={completedToday.toString()}
-          trend="Keep it up!"
-          trendDirection="up"
-          iconColorClass="text-[#006c49]"
-          iconBgClass="bg-[#10b981]/10"
-        />
-        <MetricCard
-          title="Available Jobs"
-          value={jobs
-            .filter((j) => !j.isAssignedToMe && j.status === "Pending")
-            .length.toString()}
-          trend="In your area"
-          trendDirection="neutral"
-          iconColorClass="text-[#f59e0b]"
-          iconBgClass="bg-[#f59e0b]/10"
-        />
-      </div>
+      {/* Map-First Split Layout */}
+      <div className="relative w-full h-[650px] border border-border rounded-2xl overflow-hidden shadow-md flex flex-col md:flex-row bg-card">
+        {/* Left Side: Floating Panel HUD */}
+        <div className="w-full md:w-[380px] bg-card border-b md:border-b-0 md:border-r border-border flex flex-col z-20 shrink-0 h-[280px] md:h-full overflow-hidden">
+          {/* Tabs Selector Header */}
+          <div className="bg-slate-50 dark:bg-secondary border-b border-border flex p-1 gap-1">
+            <button
+              onClick={() => setActiveTab("available_jobs")}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activeTab === "available_jobs"
+                  ? "bg-white dark:bg-card text-[#006c49] shadow-sm border border-border/50"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Available Bins ({jobs.filter((j: any) => !j.isAssignedToMe && j.status === "Pending").length})
+            </button>
+            <button
+              onClick={() => setActiveTab("my_jobs")}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activeTab === "my_jobs"
+                  ? "bg-white dark:bg-card text-[#006c49] shadow-sm border border-border/50"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              My Tasks ({jobs.filter((j: any) => j.isAssignedToMe && j.status !== "Completed").length})
+            </button>
+          </div>
 
-      {/* Main Full-Width Section */}
-      <div className="flex flex-col gap-6">
-        {/* Optimized Route Panel / Map Navigation Banner */}
-        {activeTab === "my_jobs" && activeAssignments.length > 0 && (
-          <div className="bg-gradient-to-r from-[#0284c7]/10 to-[#0369a1]/5 dark:from-[#0c4a6e]/30 dark:to-[#082f49]/20 border border-[#0284c7]/20 dark:border-[#0284c7]/40 rounded-xl p-5 shadow-sm">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-[#0284c7] text-white rounded-lg mt-0.5 shadow-sm animate-pulse">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-foreground dark:text-white">
-                    🗺️ Logistics Map & Live Routing Ready
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Navigate your optimized sequences on the dedicated Live
-                    Logistics Map.
-                  </p>
-                </div>
+          {/* Job List Scrollable */}
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+            {displayedJobs.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground text-xs">
+                No active jobs to display.
               </div>
-
-              <div className="flex items-center gap-4 self-start md:self-center">
-                {/* Auto Optimize Toggle */}
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-muted-foreground">
-                    Auto-Optimize
-                  </span>
-                  <button
-                    onClick={() => setIsOptimized(!isOptimized)}
-                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                      isOptimized
-                        ? "bg-[#0284c7]"
-                        : "bg-[#e2e8f0] dark:bg-[#1e3a5f]"
-                    }`}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        isOptimized ? "translate-x-4" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {/* Primary navigation button to map */}
-                <button
-                  onClick={() => navigate("/collector-map")}
-                  className="px-4 py-2 bg-[#0284c7] text-white text-xs font-bold rounded-lg hover:bg-[#0369a1] transition-colors shadow-md flex items-center gap-1.5 cursor-pointer"
+            ) : (
+              displayedJobs.map((job: any) => (
+                <div
+                  key={job.id}
+                  className="border border-border/80 dark:border-border rounded-xl p-3 bg-card flex flex-col gap-2 hover:border-[#0284c7] transition-all"
                 >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  Open Live Map
-                </button>
-              </div>
-            </div>
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <span className="text-xs font-extrabold text-foreground dark:text-white block">
+                        {job.location}
+                      </span>
+                      <span className="text-[9px] font-mono text-slate-400 dark:text-slate-500">
+                        {job.device} • {job.zone}
+                      </span>
+                    </div>
+                    <StatusBadge
+                      label={job.urgency}
+                      variant={
+                        job.urgency === "Critical"
+                          ? "danger"
+                          : job.urgency === "High"
+                            ? "warning"
+                            : "success"
+                      }
+                    />
+                  </div>
 
-            {isOptimized && (
-              <div className="mt-4 pt-4 border-t border-[#0284c7]/10 dark:border-[#0284c7]/20">
-                <h4 className="text-[11px] font-bold text-[#0284c7] dark:text-[#38bdf8] uppercase tracking-wider mb-3">
-                  Routing Sequence
-                </h4>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 overflow-x-auto pb-1">
-                  {optimizedRoute.map((job, idx) => (
-                    <React.Fragment key={job.id}>
-                      <div
-                        onClick={() => navigate("/collector-map")}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-white/50 dark:bg-card/50 hover:bg-white dark:hover:bg-secondary transition-all cursor-pointer"
-                      >
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0284c7] text-white text-[10px] font-black">
-                          {idx + 1}
-                        </span>
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-foreground dark:text-white truncate max-w-[100px]">
-                            {job.location}
-                          </span>
-                          <span className="text-[9px] font-mono text-muted-foreground">
-                            {job.urgency} ({job.fill}%)
-                          </span>
-                        </div>
-                      </div>
-                      {idx < optimizedRoute.length - 1 && (
-                        <div className="hidden sm:block text-muted-foreground">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                          </svg>
-                        </div>
+                  <div className="flex items-center justify-between gap-3 mt-1">
+                    <div className="flex items-center gap-1.5">
+                      <Progress
+                        value={job.fill}
+                        className="w-12 h-1 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                      />
+                      <span className="text-[9px] font-bold text-[#ba1a1a]">
+                        {job.fill}%
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      {activeTab === "available_jobs" ? (
+                        <button
+                          onClick={() => handleClaimJob(job.id)}
+                          className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-all cursor-pointer"
+                        >
+                          Claim
+                        </button>
+                      ) : job.status !== "Completed" ? (
+                        <button
+                          onClick={() => setRemindJobId(job.id)}
+                          className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-all cursor-pointer"
+                        >
+                          Mark Done
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-emerald-500 font-bold">✓ Done</span>
                       )}
-                    </React.Fragment>
-                  ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))
             )}
           </div>
-        )}
+        </div>
 
-        {/* Job List Tabs */}
-        <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col overflow-hidden">
-          <Tabs
-            value={activeTab}
-            onValueChange={(val) => setActiveTab(val as any)}
-            className="w-full gap-0"
-          >
-            <TabsList className="flex w-full justify-start rounded-none bg-background dark:bg-secondary border-b border-border p-0 h-auto gap-0">
-              <TabsTrigger
-                value="available_jobs"
-                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
-              >
-                Available Jobs (
-                {
-                  jobs.filter(
-                    (j) => !j.isAssignedToMe && j.status === "Pending",
-                  ).length
-                }
-                )
-              </TabsTrigger>
-              <TabsTrigger
-                value="my_jobs"
-                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer`}
-              >
-                My Assignments (
-                {
-                  jobs.filter(
-                    (j) => j.isAssignedToMe && j.status !== "Completed",
-                  ).length
-                }
-                )
-              </TabsTrigger>
-              <TabsTrigger
-                value="map_view"
-                className={`px-6 py-4 text-sm font-bold rounded-none border-b-2 data-[state=active]:border-[#006c49] data-[state=active]:text-[#006c49] data-[state=active]:bg-white dark:data-[state=active]:bg-card text-muted-foreground hover:text-foreground dark:text-white transition-all shadow-none border-t-0 border-x-0 cursor-pointer flex items-center gap-2`}
-              >
+        {/* Right Side: Map Canvas backdrop */}
+        <div className="flex-1 h-full relative z-10">
+          <React.Suspense
+            fallback={
+              <div className="flex items-center justify-center h-full text-muted-foreground text-sm gap-2">
                 <svg
+                  className="animate-spin"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeWidth="2"
                 >
-                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
-                  <circle cx="12" cy="10" r="3"/>
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                 </svg>
-                Map View
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="available_jobs" className="p-0 m-0">
-              <div className="p-4 flex flex-col gap-4">
-                {displayedJobs.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground text-sm">
-                    No jobs to show here.
-                  </div>
-                ) : (
-                  displayedJobs.map((job) => (
-                    <div
-                      key={job.id}
-                      className="border border-border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card"
-                    >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base font-bold text-foreground dark:text-white">
-                            {job.location}
-                          </span>
-                          <StatusBadge
-                            label={job.urgency}
-                            variant={
-                              job.urgency === "Critical"
-                                ? "danger"
-                                : job.urgency === "High"
-                                  ? "warning"
-                                  : "success"
-                            }
-                          />
-                        </div>
-                        <span className="text-sm font-mono text-muted-foreground">
-                          {job.device} • {job.zone}
-                        </span>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Progress
-                            value={job.fill}
-                            className="w-24 h-1.5 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                          />
-                          <span className="text-xs font-bold text-[#ba1a1a]">
-                            {job.fill}% Full
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center sm:justify-end gap-2">
-                        {activeTab === "available_jobs" ? (
-                          <button
-                            onClick={() => handleClaimJob(job.id)}
-                            className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer animate-[fade-in_0.2s_ease-out]"
-                          >
-                            Claim Job
-                          </button>
-                        ) : job.status !== "Completed" ? (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => navigate("/collector-map")}
-                              className="px-3 py-2 bg-[#0284c7] text-white text-xs font-bold rounded-lg hover:bg-[#0369a1] transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
-                            >
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                              </svg>
-                              Open Map Route
-                            </button>
-                            <button
-                              onClick={() => setRemindJobId(job.id)}
-                              className="px-3 py-2 bg-card text-white text-xs font-bold rounded-lg hover:bg-card transition-colors cursor-pointer"
-                            >
-                              Complete
-                            </button>
-                          </div>
-                        ) : (
-                          <StatusBadge
-                            label="Completed"
-                            variant="success"
-                            hasDot
-                          />
-                        )}
-                      </div>
-                    </div>
-                  ))
-                )}
+                Loading map…
               </div>
-            </TabsContent>
-
-            <TabsContent value="my_jobs" className="p-0 m-0">
-              <div className="p-4 flex flex-col gap-4">
-                {displayedJobs.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground text-sm">
-                    No jobs to show here.
-                  </div>
-                ) : (
-                  displayedJobs.map((job) => (
-                    <div
-                      key={job.id}
-                      className="border border-border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card"
-                    >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base font-bold text-foreground dark:text-white">
-                            {job.location}
-                          </span>
-                          <StatusBadge
-                            label={job.urgency}
-                            variant={
-                              job.urgency === "Critical"
-                                ? "danger"
-                                : job.urgency === "High"
-                                  ? "warning"
-                                  : "success"
-                            }
-                          />
-                        </div>
-                        <span className="text-sm font-mono text-muted-foreground">
-                          {job.device} • {job.zone}
-                        </span>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Progress
-                            value={job.fill}
-                            className="w-24 h-1.5 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                          />
-                          <span className="text-xs font-bold text-[#ba1a1a]">
-                            {job.fill}% Full
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center sm:justify-end gap-2">
-                        {activeTab === "available_jobs" ? (
-                          <button
-                            onClick={() => handleClaimJob(job.id)}
-                            className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer animate-[fade-in_0.2s_ease-out]"
-                          >
-                            Claim Job
-                          </button>
-                        ) : job.status !== "Completed" ? (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => setActiveTab("map_view")}
-                              className="px-3 py-2 bg-[#0284c7] text-white text-xs font-bold rounded-lg hover:bg-[#0369a1] transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
-                            >
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                              </svg>
-                              Open Map Route
-                            </button>
-                            <button
-                              onClick={() => setRemindJobId(job.id)}
-                              className="px-3 py-2 bg-card text-white text-xs font-bold rounded-lg hover:bg-card transition-colors cursor-pointer"
-                            >
-                              Complete
-                            </button>
-                          </div>
-                        ) : (
-                          <StatusBadge
-                            label="Completed"
-                            variant="success"
-                            hasDot
-                          />
-                        )}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="map_view" className="p-0 m-0 border-none outline-none">
-              <div className="w-full h-[520px] relative">
-                <React.Suspense
-                  fallback={
-                    <div className="flex items-center justify-center h-full text-muted-foreground text-sm gap-2">
-                      <svg
-                        className="animate-spin"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-                      </svg>
-                      Loading map…
-                    </div>
-                  }
-                >
-                  <BinLocatorMap
-                    jobs={activeTab === "map_view" ? jobs : displayedJobs}
-                    activeTab={activeTab}
-                    onClaimJob={handleClaimJob}
-                    onCompleteJob={(id) => setRemindJobId(id)}
-                  />
-                </React.Suspense>
-              </div>
-            </TabsContent>
-          </Tabs>
+            }
+          >
+            <BinLocatorMap
+              jobs={jobs}
+              activeTab={activeTab}
+              onClaimJob={handleClaimJob}
+              onCompleteJob={(id) => setRemindJobId(id)}
+            />
+          </React.Suspense>
         </div>
       </div>
 

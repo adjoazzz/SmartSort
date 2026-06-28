@@ -354,15 +354,29 @@ app.get('/api/collectors', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
     const skip = (page - 1) * limit;
+
+    const whereClause = {
+      role: 'COLLECTOR',
+      ...(search
+        ? {
+            OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+              { region: { contains: search, mode: 'insensitive' } },
+            ],
+          }
+        : {}),
+    };
 
     const [collectors, totalCount] = await Promise.all([
       prisma.user.findMany({
+        where: whereClause,
         orderBy: { updatedAt: 'desc' },
         skip,
         take: limit,
       }),
-      prisma.user.count({ where: { role: 'COLLECTOR' } }),
+      prisma.user.count({ where: whereClause }),
     ]);
 
     res.status(200).json({
@@ -521,15 +535,15 @@ app.post('/api/admin/bulk-jobs', async (req, res) => {
   try {
     const { facilityId, tonnage, collectorName, collectorId, scheduledFor } = req.body;
 
-    if (!facilityId || !tonnage || !collectorName) {
-      return res.status(400).json({ error: 'facilityId, tonnage, and collectorName are required' });
+    if (!facilityId || !tonnage) {
+      return res.status(400).json({ error: 'facilityId and tonnage are required' });
     }
 
     const job = await prisma.bulkCollectionJob.create({
       data: {
         facilityId,
         tonnage: Number(tonnage),
-        collectorName,
+        collectorName: collectorName || 'Awaiting Assignment',
         collectorId: collectorId || null,
         scheduledFor: scheduledFor ? new Date(scheduledFor) : null,
         status: 'Pending'
@@ -811,18 +825,19 @@ app.get('/api/dashboard/summary', async (req, res) => {
 // GET dynamic overview metrics for Dashboard KPIs
 app.get('/api/dashboard/metrics', async (req, res) => {
   try {
+    const facilityId = req.query.facilityId;
+    const deviceWhere = facilityId ? { facilityId } : {};
+    const activeDeviceWhere = facilityId ? { facilityId, status: { in: ['Active', 'Online'] } } : { status: { in: ['Active', 'Online'] } };
+    const itemWhere = facilityId ? { device: { facilityId } } : {};
+
     const [devicesCount, activeDevicesCount, totalSorted, totalRejected] = await Promise.all([
-      prisma.device.count(),
-      prisma.device.count({
-        where: {
-          status: { in: ['Active', 'Online'] },
-        },
+      prisma.device.count({ where: deviceWhere }),
+      prisma.device.count({ where: activeDeviceWhere }),
+      prisma.processedItem.count({
+        where: { ...itemWhere, status: 'Sorted' },
       }),
       prisma.processedItem.count({
-        where: { status: 'Sorted' },
-      }),
-      prisma.processedItem.count({
-        where: { status: 'Rejected' },
+        where: { ...itemWhere, status: 'Rejected' },
       }),
     ]);
 
@@ -847,9 +862,12 @@ app.get('/api/dashboard/throughput', async (req, res) => {
   try {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
+    const facilityId = req.query.facilityId;
+    const itemWhere = facilityId ? { device: { facilityId } } : {};
 
     const items = await prisma.processedItem.findMany({
       where: {
+        ...itemWhere,
         createdAt: {
           gte: startOfToday,
         },
@@ -891,8 +909,12 @@ app.get('/api/dashboard/throughput', async (req, res) => {
 // GET sorted items share by category
 app.get('/api/dashboard/waste-categories', async (req, res) => {
   try {
+    const facilityId = req.query.facilityId;
+    const itemWhere = facilityId ? { device: { facilityId } } : {};
+
     const itemsGrouped = await prisma.processedItem.groupBy({
       by: ['category'],
+      where: itemWhere,
       _count: {
         id: true,
       },
@@ -939,8 +961,11 @@ app.get('/api/dashboard/waste-categories', async (req, res) => {
 // GET live contamination/rejection events joined with Device
 app.get('/api/dashboard/contamination-events', async (req, res) => {
   try {
+    const facilityId = req.query.facilityId;
+    const itemWhere = facilityId ? { device: { facilityId }, status: 'Rejected' } : { status: 'Rejected' };
+
     const recentRejections = await prisma.processedItem.findMany({
-      where: { status: 'Rejected' },
+      where: itemWhere,
       orderBy: { createdAt: 'desc' },
       take: 6,
       include: {

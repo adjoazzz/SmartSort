@@ -1,6 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams, Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -196,31 +196,35 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const facilityId = searchParams.get("facilityId") || "";
+  const queryParam = facilityId ? `?facilityId=${facilityId}` : "";
+
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   // Fetch functions
   const fetchDevices = async () => {
-    const response = await authFetch(`${baseUrl}/api/devices`);
+    const response = await authFetch(`${baseUrl}/api/devices${queryParam}`);
     if (!response.ok) throw new Error("Failed to fetch device data");
     return response.json();
   };
 
   const fetchMetrics = async () => {
-    const response = await authFetch(`${baseUrl}/api/dashboard/metrics`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/metrics${queryParam}`);
     if (!response.ok) throw new Error("Failed to fetch dashboard metrics");
     return response.json();
   };
 
   const fetchThroughput = async () => {
-    const response = await authFetch(`${baseUrl}/api/dashboard/throughput`);
+    const response = await authFetch(`${baseUrl}/api/dashboard/throughput${queryParam}`);
     if (!response.ok) throw new Error("Failed to fetch throughput data");
     return response.json();
   };
 
   const fetchWasteCategories = async () => {
     const response = await authFetch(
-      `${baseUrl}/api/dashboard/waste-categories`,
+      `${baseUrl}/api/dashboard/waste-categories${queryParam}`,
     );
     if (!response.ok) throw new Error("Failed to fetch waste categories");
     return response.json();
@@ -228,30 +232,39 @@ export default function Dashboard() {
 
   const fetchContaminationEvents = async () => {
     const response = await authFetch(
-      `${baseUrl}/api/dashboard/contamination-events`,
+      `${baseUrl}/api/dashboard/contamination-events${queryParam}`,
     );
     if (!response.ok) throw new Error("Failed to fetch contamination events");
     return response.json();
   };
 
   // Realtime subscriptions — instant updates when DB changes
-  const { data: devicesData, isLoading: devicesLoading } = useRealtimeData<
+  const { data: devicesData, isLoading: devicesLoading, refresh: refreshDevices } = useRealtimeData<
     any[]
   >(fetchDevices, { tables: ["Device"] });
 
-  const { data: metricsData, isLoading: metricsLoading } = useRealtimeData<any>(
+  const { data: metricsData, isLoading: metricsLoading, refresh: refreshMetrics } = useRealtimeData<any>(
     fetchMetrics,
     { tables: ["Device", "ProcessedItem"] },
   );
 
-  const { data: throughputData, isLoading: throughputLoading } =
+  const { data: throughputData, isLoading: throughputLoading, refresh: refreshThroughput } =
     useRealtimeData<any[]>(fetchThroughput, { tables: ["ProcessedItem"] });
 
-  const { data: wasteCategoriesData, isLoading: wasteLoading } =
+  const { data: wasteCategoriesData, isLoading: wasteLoading, refresh: refreshWasteCategories } =
     useRealtimeData<any>(fetchWasteCategories, { tables: ["ProcessedItem"] });
 
-  const { data: contaminationEventsData, isLoading: contaminationLoading } =
+  const { data: contaminationEventsData, isLoading: contaminationLoading, refresh: refreshContamination } =
     useRealtimeData<any[]>(fetchContaminationEvents, { tables: ["ProcessedItem"] });
+
+  // Manually re-trigger fetches when facilityId query parameter shifts (Drill-down update)
+  useEffect(() => {
+    refreshDevices().catch(console.error);
+    refreshMetrics().catch(console.error);
+    refreshThroughput().catch(console.error);
+    refreshWasteCategories().catch(console.error);
+    refreshContamination().catch(console.error);
+  }, [facilityId]);
 
   const isLoading =
     devicesLoading ||
@@ -463,6 +476,23 @@ export default function Dashboard() {
         </>
       }
     >
+      {facilityId && (
+        <div className="no-print bg-[#ffdad6] text-[#ba1a1a] dark:bg-red-500/10 dark:text-red-400 border border-red-200 dark:border-red-500/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm mb-5">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">⚠️</span>
+            <span className="text-sm font-semibold">
+              Viewing Facility Telemetry as Administrator. Some manager features are restricted.
+            </span>
+          </div>
+          <Link
+            to="/admin/dashboard"
+            className="text-xs bg-[#ba1a1a] text-white hover:bg-[#ba1a1a]/90 dark:bg-red-500 dark:hover:bg-red-600 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm cursor-pointer"
+          >
+            Return to Enterprise Overview
+          </Link>
+        </div>
+      )}
+
       {/* KPIs Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {isLoading

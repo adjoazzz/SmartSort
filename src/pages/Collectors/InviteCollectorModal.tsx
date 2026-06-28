@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
+import { authFetch } from "../../lib/authFetch";
 
 interface InviteCollectorModalProps {
   isOpen: boolean;
@@ -53,13 +54,14 @@ export function InviteCollectorModal({
 }: InviteCollectorModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [facility, setFacility] = useState("Facility 1");
+  const [facility, setFacility] = useState("");
+  const [facilities, setFacilities] = useState<any[]>([]);
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Initialise EmailJS once with the public key (v4 recommended pattern)
+  // Initialise EmailJS once and load dynamic facility names from API
   useEffect(() => {
     console.log(
       "[EmailJS] PUBLIC_KEY loaded:",
@@ -73,6 +75,17 @@ export function InviteCollectorModal({
       emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
       console.log("[EmailJS] init() called ✓");
     }
+
+    // Load dynamic facilities list
+    authFetch(`${API_BASE_URL}/api/admin/facilities`)
+      .then((res) => res.json())
+      .then((data) => {
+        setFacilities(data);
+        if (data && data.length > 0) {
+          setFacility(data[0].name);
+        }
+      })
+      .catch(console.error);
   }, []);
 
   if (!isOpen) return null;
@@ -85,8 +98,8 @@ export function InviteCollectorModal({
     setErrorMessage("");
 
     try {
-      // 1. Create the collector in the database
-      const response = await fetch(`${API_BASE_URL}/api/collectors`, {
+      // 1. Create the collector in the database using authenticated fetch
+      const response = await authFetch(`${API_BASE_URL}/api/collectors`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -262,13 +275,13 @@ export function InviteCollectorModal({
                 id="collector-facility"
                 value={facility}
                 onChange={(e) => setFacility(e.target.value)}
-                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer w-full"
               >
-                <option value="Facility 1">Facility 1</option>
-                <option value="Facility 2">Facility 2</option>
-                <option value="Facility 3">Facility 3</option>
-                <option value="Facility 4">Facility 4</option>
-                <option value="Facility 5">Facility 5</option>
+                {facilities.map((fac) => (
+                  <option key={fac.id} value={fac.name}>
+                    {fac.name} ({fac.region || "No Region"})
+                  </option>
+                ))}
               </select>
             </div>
 

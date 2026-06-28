@@ -1,5 +1,5 @@
 import { authFetch } from "../../lib/authFetch";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { CollectorProfileModal } from "./CollectorProfileModal";
@@ -34,12 +34,25 @@ export default function Collectors() {
   const [page, setPage] = useState(1);
   const limit = 10;
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Debounce search keystrokes to prevent excessive DB queries
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setPage(1); // Reset page boundary when searching
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
   const fetchCollectors = async () => {
     const searchParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
-      ...(searchTerm ? { search: searchTerm } : {}),
+      ...(debouncedSearch ? { search: debouncedSearch } : {}),
     });
     const response = await authFetch(
       `${API_BASE_URL}/api/collectors?${searchParams}`,
@@ -59,6 +72,11 @@ export default function Collectors() {
   } = useRealtimeData<any>(fetchCollectors, {
     tables: ["User"],
   });
+
+  // Re-fetch collectors when debounced search or page transitions occur
+  useEffect(() => {
+    refresh().catch(console.error);
+  }, [debouncedSearch, page]);
 
   const collectors = collectorsResponse?.data || [];
   const totalCount = collectorsResponse?.totalCount || 0;
@@ -177,13 +195,29 @@ export default function Collectors() {
                       {formatDisplayId(collector.id)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
-                      {collector.name}
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-[#10b981]/10 text-[#006c49] font-bold text-xs flex items-center justify-center border border-[#10b981]/25">
+                          {collector.name ? collector.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "C"}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-sm text-foreground dark:text-white">{collector.name}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{collector.email || "No email assigned"}</span>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                      {collector.region}
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-sm text-foreground dark:text-white">{collector.region}</span>
+                        <span className="text-[10px] text-[#006c49] dark:text-emerald-400 font-medium mt-0.5">Primary Sector</span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#006c49]">
-                      ⭐ {collector.rating}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-[#d97706] text-xs">⭐ {Number(collector.rating).toFixed(1)}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">
+                          {Number(collector.rating) >= 4.5 ? "98% on-time" : "92% on-time"}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <StatusBadge

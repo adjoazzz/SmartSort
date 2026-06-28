@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
       {
         path: "collector-map",
         lazy: lazyRoute(
-          () => import("../pages/CollectorDashboard/CollectorMap"),
+          () => import("../pages/CollectorDashboard/CollectorDashboard"),
         ),
       },
       {

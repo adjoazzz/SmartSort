@@ -172,6 +172,7 @@ export default function Onboarding() {
 
   const handleSubmit = () => {
     console.log("Form step 3 submitted:", { serial });
+    localStorage.setItem("userRole", "manager");
     navigate("/dashboard");
   };
 
