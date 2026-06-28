@@ -56,7 +56,7 @@ while True:
                             "confidence": data.get('confidence'),
                             "imageBase64": base64.b64encode(buffer.tobytes()).decode('utf-8')
                         }
-                        requests.post(telemetry_url, json=payload, timeout=3)
+                        requests.post(telemetry_url, json=payload, timeout=15)
                         print("📡 Telemetry successfully logged to backend!")
                     except Exception as telemetry_err:
                         print(f"⚠️ Failed to send telemetry to dashboard: {telemetry_err}")

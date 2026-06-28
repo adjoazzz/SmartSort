@@ -24,7 +24,8 @@ const app = express();
 
 // Middleware
 app.use(cors()); // Allows your React app to make requests here
-app.use(express.json()); // Allows the server to understand JSON data from the Raspberry Pi
+app.use(express.json({ limit: '50mb' })); // Allows the server to understand JSON data from the Raspberry Pi
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const requireManager = (req, res, next) => {
   next();
@@ -750,7 +751,7 @@ app.get('/api/dashboard/waste-categories', async (req, res) => {
     });
 
     res.status(200).json({
-      total: totalSorted,
+      total: totalProcessed,
       categories: data,
     });
   } catch (error) {
