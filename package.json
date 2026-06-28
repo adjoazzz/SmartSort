@@ -93,7 +93,12 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": [],
+    "words": [
+      "Nominatim",
+      "qrbox",
+      "Qrcode",
+      "Zoomlion"
+    ],
     "ignoreWords": [],
     "import": []
   }
