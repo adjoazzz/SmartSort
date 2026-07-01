@@ -155,7 +155,7 @@ const getNavItems = (t: any) => [
 const getAdminNavItems = (t: any) => [
   {
     path: "/admin/dashboard",
-    label: t("sideNav.enterpriseOverview") || "Enterprise Overview",
+    label: t("Enterprise Overview") || "Enterprise Overview",
     icon: (
       <svg
         width="20"
