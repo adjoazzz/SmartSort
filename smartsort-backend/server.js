@@ -980,25 +980,61 @@ app.post('/api/audit-logs', async (req, res) => {
 });
 
 // GET dashboard summary for pages that need DB-driven KPI snapshots
-app.get('/api/dashboard/summary', async (req, res) => {
+app.get('/api/dashboard/summary', restrictToFacility, async (req, res) => {
   try {
-    const [devices, jobs, feedback] = await Promise.all([
-      prisma.device.findMany({ select: { status: true, fillLevel: true } }),
-      prisma.collectionJob.findMany({ select: { status: true } }),
-      prisma.feedback.findMany({ select: { status: true } }),
+    const facilityId = req.query.facilityId;
+    const deviceWhere = facilityId ? { facilityId } : {};
+    const jobWhere = facilityId ? { device: { facilityId } } : {};
+
+    const [
+      activeDevices,
+      totalDevices,
+      pendingJobs,
+      inTransitJobs,
+      completedJobs,
+      pendingFeedback,
+      inProgressFeedback,
+      resolvedFeedback,
+      avgFillAggregate
+    ] = await Promise.all([
+      prisma.device.count({
+        where: {
+          ...deviceWhere,
+          status: { in: ['Active', 'Online'] }
+        }
+      }),
+      prisma.device.count({ where: deviceWhere }),
+      prisma.collectionJob.count({
+        where: {
+          ...jobWhere,
+          status: 'Pending'
+        }
+      }),
+      prisma.collectionJob.count({
+        where: {
+          ...jobWhere,
+          status: 'In Progress'
+        }
+      }),
+      prisma.collectionJob.count({
+        where: {
+          ...jobWhere,
+          status: 'Completed'
+        }
+      }),
+      prisma.feedback.count({ where: { status: 'Pending' } }),
+      prisma.feedback.count({ where: { status: 'In Progress' } }),
+      prisma.feedback.count({ where: { status: 'Resolved' } }),
+      prisma.device.aggregate({
+        where: deviceWhere,
+        _avg: {
+          fillLevel: true
+        }
+      })
     ]);
 
-    const activeDevices = devices.filter((device) => device.status === 'Active' || device.status === 'Online' || !device.status).length;
-    const totalDevices = devices.length;
-    const pendingJobs = jobs.filter((job) => job.status === 'Pending').length;
-    const inTransitJobs = jobs.filter((job) => job.status === 'In Progress').length;
-    const completedJobs = jobs.filter((job) => job.status === 'Completed').length;
-    const pendingFeedback = feedback.filter((item) => item.status === 'Pending').length;
-    const inProgressFeedback = feedback.filter((item) => item.status === 'In Progress').length;
-    const resolvedFeedback = feedback.filter((item) => item.status === 'Resolved').length;
-
-    const averageFill = totalDevices
-      ? Math.round(devices.reduce((sum, device) => sum + (device.fillLevel ?? 0), 0) / totalDevices)
+    const averageFill = avgFillAggregate._avg.fillLevel
+      ? Math.round(avgFillAggregate._avg.fillLevel)
       : 0;
 
     res.status(200).json({
@@ -1267,35 +1303,54 @@ app.get('/api/alerts/summary', requireAdmin, async (req, res) => {
 });
 
 // GET Analytics Historical
-app.get('/api/analytics/historical', async (req, res) => {
+app.get('/api/analytics/historical', restrictToFacility, async (req, res) => {
   try {
-    // Generate simple aggregation for the last 5 weeks
+    const facilityId = req.query.facilityId;
+    const itemWhere = facilityId ? { device: { facilityId } } : {};
+    
+    // Fetch all processed items for the past 5 weeks in a single query
+    const startRange = new Date();
+    startRange.setDate(startRange.getDate() - 35);
+
+    const items = await prisma.processedItem.findMany({
+      where: {
+        ...itemWhere,
+        createdAt: { gte: startRange },
+      },
+      select: {
+        status: true,
+        createdAt: true,
+      },
+    });
+
     const data = [];
     const baseDate = new Date();
-    
+
     for (let w = 4; w >= 0; w--) {
       const start = new Date(baseDate);
       start.setDate(start.getDate() - (w * 7) - 7);
       const end = new Date(baseDate);
       end.setDate(end.getDate() - (w * 7));
-      
-      const items = await prisma.processedItem.findMany({
-        where: { createdAt: { gte: start, lte: end } }
+
+      const weeklyItems = items.filter((item) => {
+        const itemDate = new Date(item.createdAt);
+        return itemDate >= start && itemDate <= end;
       });
-      
-      const total = items.length;
-      const sorted = items.filter(i => i.status === 'Sorted').length;
-      const rejected = items.filter(i => i.status === 'Rejected').length;
-      
+
+      const total = weeklyItems.length;
+      const sorted = weeklyItems.filter((i) => i.status === 'Sorted').length;
+      const rejected = weeklyItems.filter((i) => i.status === 'Rejected').length;
+
       const name = end.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
       const recycling = total > 0 ? Math.round((sorted / total) * 100) : 0;
       const contamination = total > 0 ? Math.round((rejected / total) * 100) : 0;
-      
+
       data.push({ name, recycling, contamination });
     }
-    
+
     res.status(200).json(data);
   } catch (error) {
+    console.error('Error fetching historical analytics:', error);
     res.status(500).json({ error: 'Failed to fetch analytics historical' });
   }
 });
