@@ -153,7 +153,7 @@ const itemVariants = {
     x: 0,
     transition: { type: "spring", stiffness: 300, damping: 25 },
   },
-};
+} as const;
 
 export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
   const { t } = useTranslation();

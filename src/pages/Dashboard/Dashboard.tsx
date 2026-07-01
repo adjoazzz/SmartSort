@@ -929,7 +929,7 @@ export default function Dashboard() {
                       <TableCell className="px-6 py-4 whitespace-nowrap">
                         <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
                           <img
-                            src={evt.img || "https://placehold.co/100x100?text=No+Img"}
+                            src={eventImages[evt.img] || evt.img || "https://placehold.co/100x100?text=No+Img"}
                             alt="Snapshot"
                             className="w-full h-full object-cover"
                           />

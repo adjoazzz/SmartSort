@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "get-test-token": "node generateTestToken.js"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,11 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.11.5"
+    "express-rate-limit": "^8.5.2",
+    "pg": "^8.11.5",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^25.8.0",

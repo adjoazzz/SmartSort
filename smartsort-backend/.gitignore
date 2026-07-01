@@ -162,3 +162,11 @@ thumb
 sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react
+
+# SmartSort Custom Ignores
+logs/
+.env.local
+.venv/
+venv/
+env/
+__pycache__/

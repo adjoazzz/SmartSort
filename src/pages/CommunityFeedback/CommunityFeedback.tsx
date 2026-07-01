@@ -1,4 +1,4 @@
-import { authFetch } from "../../lib/authFetch";
+import { apiService } from "../../lib/apiService";
 import React, { useState, useEffect } from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
@@ -112,13 +112,8 @@ export default function CommunityFeedback() {
   const itemsPerPage = 5;
 
   const fetchFeedbacks = async () => {
-    const baseUrl =
-      (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
-    const response = await authFetch(`${baseUrl}/api/feedback`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch feedback");
-    }
-    return response.json();
+    const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+    return apiService.get<FeedbackItem[]>(`${baseUrl}/api/feedback`);
   };
 
   const {
@@ -155,29 +150,20 @@ export default function CommunityFeedback() {
     }
 
     try {
-      const response = await authFetch("http://localhost:5000/api/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName,
-          location,
-          category,
-          message: description,
-        }),
+      const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+      await apiService.post(`${baseUrl}/api/feedback`, {
+        userName,
+        location,
+        category,
+        message: description,
       });
 
-      if (response.ok) {
-        setUserName("");
-        setLocation("");
-        setCategory("");
-        setDescription("");
-        setIsModalOpen(false);
-        await refresh();
-      } else {
-        console.error("Failed to submit feedback");
-      }
+      setUserName("");
+      setLocation("");
+      setCategory("");
+      setDescription("");
+      setIsModalOpen(false);
+      await refresh();
     } catch (error) {
       console.error("Error submitting feedback:", error);
     }
@@ -190,22 +176,9 @@ export default function CommunityFeedback() {
     else if (currentStatus === "Resolved") nextStatus = "Pending";
 
     try {
-      const response = await authFetch(
-        `http://localhost:5000/api/feedback/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: nextStatus }),
-        },
-      );
-
-      if (response.ok) {
-        await refresh();
-      } else {
-        console.error("Failed to update status");
-      }
+      const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+      await apiService.patch(`${baseUrl}/api/feedback/${id}`, { status: nextStatus });
+      await refresh();
     } catch (error) {
       console.error("Error updating status:", error);
     }

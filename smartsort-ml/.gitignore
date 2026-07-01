@@ -1,0 +1,20 @@
+# Python Virtual Environments
+venv/
+env/
+.venv/
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local environment variables
+.env
+.env.local
+
+# IDE/Editor settings
+.vscode/
+.idea/
+.DS_Store

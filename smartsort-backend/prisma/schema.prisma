@@ -26,6 +26,7 @@ model Device {
   facility       Facility?       @relation(fields: [facilityId], references: [id])
 
   @@index([status])
+  @@index([facilityId])
 }
 
 model CollectionJob {
@@ -42,6 +43,9 @@ model CollectionJob {
   // Connecting this to a User (Collector)
   collectorId String?  
   collector   User?    @relation(fields: [collectorId], references: [id])
+
+  @@index([status, createdAt])
+  @@index([deviceId])
 }
 
 // Unified User model for both Managers and Collectors
@@ -122,6 +126,7 @@ model ProcessedItem {
   @@index([status])
   @@index([createdAt])
   @@index([category, status])
+  @@index([deviceId, status, createdAt])
 }
 
 // System notifications and alerts
@@ -140,6 +145,7 @@ model Alert {
   @@index([severity, createdAt])
   @@index([deviceId, createdAt])
   @@index([createdAt])
+  @@index([deviceId, severity, status])
 }
 
 // System, maintenance, and operational events
@@ -152,6 +158,8 @@ model DeviceEvent {
   createdAt   DateTime @default(now())
 
   device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, eventType, createdAt])
 }
 
 model AuditLog {
