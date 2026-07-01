@@ -501,9 +501,13 @@ app.post('/api/auth/sync', async (req, res) => {
 });
 
 // GET users for the user management page
-app.get('/api/users', requireAdmin, async (req, res) => {
+app.get('/api/users', requireManagerOrAdmin, restrictToFacility, async (req, res) => {
   try {
+    const facilityId = req.query.facilityId;
+    const where = facilityId ? { facilityId } : {};
+
     const users = await prisma.user.findMany({
+      where,
       orderBy: { updatedAt: 'desc' },
     });
 
@@ -738,12 +742,18 @@ app.patch('/api/collectors/:id', async (req, res) => {
 });
 
 // Create a platform user
-app.post('/api/users', requireAdmin, async (req, res) => {
+app.post('/api/users', requireManagerOrAdmin, async (req, res) => {
   try {
-    const { name, email, role, status, assignedFacility, avatar } = req.body;
+    let { name, email, role, status, assignedFacility, avatar, facilityId } = req.body;
 
     if (!name || !email || !role) {
       return res.status(400).json({ error: 'Name, email, and role are required' });
+    }
+
+    // Force facility scopes for Managers
+    if (req.user.role === 'MANAGER') {
+      facilityId = req.user.facilityId;
+      assignedFacility = req.user.assignedFacility;
     }
 
     const createdUser = await prisma.user.create({
@@ -753,6 +763,7 @@ app.post('/api/users', requireAdmin, async (req, res) => {
         role,
         status: status || 'PENDING',
         assignedFacility: assignedFacility || 'Unassigned',
+        facilityId: facilityId || null,
         avatar: avatar || null,
       },
     });
@@ -775,7 +786,7 @@ app.post('/api/users', requireAdmin, async (req, res) => {
 });
 
 // Update a platform user record
-app.patch('/api/users/:id', requireAdmin, async (req, res) => {
+app.patch('/api/users/:id', requireManagerOrAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, role, status, assignedFacility, avatar } = req.body;
@@ -783,6 +794,16 @@ app.patch('/api/users/:id', requireAdmin, async (req, res) => {
     const originalUser = await prisma.user.findUnique({ where: { id } });
     if (!originalUser) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Security check: Manager can only update users within their facility
+    if (req.user.role === 'MANAGER') {
+      if (originalUser.facilityId !== req.user.facilityId) {
+        return res.status(403).json({ error: 'Forbidden: You can only manage users in your facility' });
+      }
+      if (assignedFacility !== undefined && assignedFacility !== req.user.assignedFacility) {
+        return res.status(403).json({ error: 'Forbidden: Managers cannot change user facility assignments' });
+      }
     }
 
     const updatedUser = await prisma.user.update({

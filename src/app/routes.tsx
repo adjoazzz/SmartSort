@@ -89,7 +89,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "manager/users",
-        lazy: protectedLazyRoute(() => import("../pages/UserManagement/UserManagement"), ["admin"]),
+        lazy: protectedLazyRoute(() => import("../pages/UserManagement/UserManagement"), ["admin", "manager"]),
       },
       {
         path: "admin/dashboard",

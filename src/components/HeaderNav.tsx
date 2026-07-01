@@ -469,20 +469,25 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             )}
           </div>
 
-          {/* Profile icon */}
-          <button
-            ref={profileBtnRef}
-            onClick={() => setIsProfileOpen((prev) => !prev)}
-            className="w-9 h-9 rounded-full bg-[#e2e8f0] overflow-hidden border-2 border-white shadow-sm ring-1 ring-[#cbd5e1] cursor-pointer hover:ring-[#94a3b8] transition-all"
-            aria-label="Open profile menu"
-            aria-expanded={isProfileOpen}
-          >
-            <img
-              src={imgUserProfileAvatar}
-              alt="User Profile"
-              className="w-full h-full object-cover"
-            />
-          </button>
+          {/* Profile icon & Role badge */}
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg bg-[#006c49]/10 text-[#006c49] dark:bg-emerald-500/10 dark:text-emerald-400 border border-[#006c49]/15 dark:border-emerald-500/15">
+              {localStorage.getItem("userRole") || "viewer"}
+            </span>
+            <button
+              ref={profileBtnRef}
+              onClick={() => setIsProfileOpen((prev) => !prev)}
+              className="w-9 h-9 rounded-full bg-[#e2e8f0] overflow-hidden border-2 border-white shadow-sm ring-1 ring-[#cbd5e1] cursor-pointer hover:ring-[#94a3b8] transition-all"
+              aria-label="Open profile menu"
+              aria-expanded={isProfileOpen}
+            >
+              <img
+                src={imgUserProfileAvatar}
+                alt="User Profile"
+                className="w-full h-full object-cover"
+              />
+            </button>
+          </div>
         </div>
       </header>
 

@@ -55,6 +55,7 @@ export function InviteUserModal({
   onCreated,
 }: InviteUserModalProps) {
   const { t } = useTranslation();
+  const currentUserRole = localStorage.getItem("userRole") || "viewer";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Viewer");
@@ -333,7 +334,8 @@ export function InviteUserModal({
                       id="facility"
                       value={assignedFacility}
                       onChange={(e) => setAssignedFacility(e.target.value)}
-                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                      disabled={currentUserRole === "manager"}
+                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <option value="HQ Corporate Center">
                         HQ Corporate Center
@@ -346,6 +348,11 @@ export function InviteUserModal({
                       </option>
                       <option value="Global Read-Only">Global Read-Only</option>
                     </select>
+                    {currentUserRole === "manager" && (
+                      <span className="text-[10px] text-muted-foreground italic mt-0.5">
+                        * Automatically assigned to your facility.
+                      </span>
+                    )}
                   </div>
 
                   <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 mt-2 flex gap-3 items-start">

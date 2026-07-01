@@ -325,10 +325,10 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
     }
 
     if (roleLower === "manager") {
-      // Managers can access: Dashboard, Analytics, Devices, Collection, Community Feedback
-      // They cannot access: Alerts, User Management
+      // Managers can access: Dashboard, Analytics, Devices, Collection, Community Feedback, User Management
+      // They cannot access: Alerts
       return navItems.filter(
-        (item) => item.path !== "/alerts" && item.path !== "/manager/users"
+        (item) => item.path !== "/alerts"
       );
     }
 
