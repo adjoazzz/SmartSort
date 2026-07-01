@@ -671,10 +671,29 @@ export default function UserManagement() {
   const {
     data: usersData,
     isLoading,
-    refresh,
+    refresh: refreshUsers,
   } = useRealtimeData<User[]>(fetchUsers, {
     tables: ["User"],
   });
+
+  const fetchAuditLogs = async () => {
+    const response = await authFetch(`${API_BASE_URL}/api/audit-logs`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch audit logs");
+    }
+    return response.json();
+  };
+
+  const {
+    data: dbAuditLogs,
+    refresh: refreshAuditLogs,
+  } = useRealtimeData<any[]>(fetchAuditLogs, {
+    tables: ["AuditLog"],
+  });
+
+  const refresh = async () => {
+    await Promise.all([refreshUsers(), refreshAuditLogs()]);
+  };
 
   const users = usersData ?? [];
 
@@ -699,6 +718,9 @@ export default function UserManagement() {
   ).length;
   const pendingInvites = users.filter(
     (user) => user.status === "PENDING" || user.status === "Pending",
+  ).length;
+  const activeAdmins = users.filter(
+    (user) => user.role?.toUpperCase() === "ADMIN" && (user.status === "ACTIVE" || user.status === "Active")
   ).length;
 
   const handleExportPDF = () => {
@@ -859,6 +881,32 @@ export default function UserManagement() {
             ) : (
               <span className="text-lg font-bold text-[#15803d]">
                 {activeUsers}
+              </span>
+            )}
+          </div>
+          {/* Active Admins Box */}
+          <div className="flex items-center gap-2.5 bg-muted dark:bg-card/50 px-4 py-2.5 rounded-lg border border-border">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Active Admins
+            </span>
+            {isLoading ? (
+              <div className="h-5 w-10 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
+            ) : (
+              <span className="text-lg font-bold text-[#7c3aed]">
+                {activeAdmins}
+              </span>
+            )}
+          </div>
+          {/* Pending Invites Box */}
+          <div className="flex items-center gap-2.5 bg-muted dark:bg-card/50 px-4 py-2.5 rounded-lg border border-border">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Pending Invites
+            </span>
+            {isLoading ? (
+              <div className="h-5 w-10 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
+            ) : (
+              <span className="text-lg font-bold text-[#d97706]">
+                {pendingInvites}
               </span>
             )}
           </div>
@@ -1228,8 +1276,56 @@ export default function UserManagement() {
         </div>
       </div>
 
+      {/* ── System Audit Log & Permission Matrix ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* System Audit Log */}
+        <PanelCard title="System Audit Log">
+          <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+            {(dbAuditLogs && dbAuditLogs.length > 0
+              ? dbAuditLogs.map((log: any) => ({
+                  time: new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                  title: log.action,
+                  desc: log.details,
+                  color: log.color
+                }))
+              : AUDIT_LOG
+            ).map((log: any, idx: number) => (
+              <div key={idx} className="flex gap-4 items-start text-xs border-b border-border pb-3 last:border-0 last:pb-0">
+                <span className="font-mono text-muted-foreground shrink-0 w-12">{log.time}</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className={`font-bold ${log.color}`}>{log.title}</span>
+                  <p className="text-muted-foreground">{log.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </PanelCard>
+
+        {/* Permission Matrix */}
+        <PanelCard title="Role Permission Matrix">
+          <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
+            {PERMISSIONS.map((group, idx) => (
+              <div key={idx} className="flex flex-col gap-2.5 pb-4 border-b border-border last:border-0 last:pb-0">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-sm text-foreground dark:text-white">{group.role}</span>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border ${group.badgeBg} ${group.badgeText} ${group.badgeBorder}`}>{group.badgeLabel}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {group.perms.map((p, pIdx) => (
+                    <div key={pIdx} className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+                      <PermIcon granted={p.granted} />
+                      <span>{p.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </PanelCard>
+      </div>
+
       {/* ── Bottom Cards ─────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
         {/* Permission Audit Card */}
         {isLoading ? (
           <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[180px] animate-pulse">

@@ -439,6 +439,21 @@ export default function Login() {
     } catch (err: any) {
       setErrors({ email: err.message });
       triggerShake();
+      
+      // Log failed login attempt to system audit logs
+      fetch(
+        ((import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000") + "/api/audit-logs",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "Security Alert",
+            actorName: "System",
+            details: `Failed login attempt for user: ${email}`,
+            color: "text-[#ba1a1a]",
+          }),
+        }
+      ).catch(console.error);
     } finally {
       setIsLoading(false);
     }

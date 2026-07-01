@@ -284,7 +284,14 @@ export default function Dashboard() {
       ...KPIS[1],
       value: metricsData?.totalItemsSorted ?? "42,891",
     },
-    ...KPIS.slice(2),
+    {
+      ...KPIS[2],
+      value: metricsData?.recyclingRate ?? "84.2%",
+    },
+    {
+      ...KPIS[3],
+      value: metricsData?.contaminationRate ?? "4.1%",
+    },
   ];
 
   const handleExportPDF = () => {

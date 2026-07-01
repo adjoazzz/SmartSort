@@ -153,3 +153,13 @@ model DeviceEvent {
 
   device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  actorName String
+  details   String
+  color     String   @default("text-foreground")
+  createdAt DateTime @default(now())
+}
+

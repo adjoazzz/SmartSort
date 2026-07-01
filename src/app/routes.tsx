@@ -1,10 +1,23 @@
 import { createBrowserRouter } from "react-router";
 import { Root } from "./Root";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 // Helper for dynamic imports since components are default exports
 const lazyRoute = (importFn: () => Promise<any>) => async () => {
   const m = await importFn();
   return { Component: m.default };
+};
+
+const protectedLazyRoute = (importFn: () => Promise<any>, allowedRoles: string[]) => async () => {
+  const m = await importFn();
+  const LazyComponent = m.default;
+  return {
+    element: (
+      <ProtectedRoute allowedRoles={allowedRoles}>
+        <LazyComponent />
+      </ProtectedRoute>
+    )
+  };
 };
 
 export const router = createBrowserRouter([
@@ -31,58 +44,62 @@ export const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        lazy: lazyRoute(() => import("../pages/Dashboard/Dashboard")),
+        lazy: protectedLazyRoute(() => import("../pages/Dashboard/Dashboard"), ["admin", "manager", "viewer"]),
       },
       {
         path: "collector-dashboard",
-        lazy: lazyRoute(
+        lazy: protectedLazyRoute(
           () => import("../pages/CollectorDashboard/CollectorDashboard"),
+          ["collector", "admin"]
         ),
       },
       {
         path: "collector-map",
-        lazy: lazyRoute(
+        lazy: protectedLazyRoute(
           () => import("../pages/CollectorDashboard/CollectorDashboard"),
+          ["collector", "admin"]
         ),
       },
       {
         path: "analytics",
-        lazy: lazyRoute(() => import("../pages/Analytics/Analytics")),
+        lazy: protectedLazyRoute(() => import("../pages/Analytics/Analytics"), ["admin", "manager", "viewer"]),
       },
       {
         path: "devices",
-        lazy: lazyRoute(() => import("../pages/Devices/Devices")),
+        lazy: protectedLazyRoute(() => import("../pages/Devices/Devices"), ["admin", "manager", "viewer"]),
       },
       {
         path: "alerts",
-        lazy: lazyRoute(() => import("../pages/Alerts/Alerts")),
+        lazy: protectedLazyRoute(() => import("../pages/Alerts/Alerts"), ["admin"]),
       },
       {
         path: "jobs",
-        lazy: lazyRoute(() => import("../pages/CollectionJobs/CollectionJobs")),
+        lazy: protectedLazyRoute(() => import("../pages/CollectionJobs/CollectionJobs"), ["admin", "manager"]),
       },
       {
         path: "collectors",
-        lazy: lazyRoute(() => import("../pages/Collectors/Collectors")),
+        lazy: protectedLazyRoute(() => import("../pages/Collectors/Collectors"), ["admin", "manager"]),
       },
       {
         path: "community-feedback",
-        lazy: lazyRoute(
+        lazy: protectedLazyRoute(
           () => import("../pages/CommunityFeedback/CommunityFeedback"),
+          ["admin", "manager"]
         ),
       },
       {
         path: "manager/users",
-        lazy: lazyRoute(() => import("../pages/UserManagement/UserManagement")),
+        lazy: protectedLazyRoute(() => import("../pages/UserManagement/UserManagement"), ["admin"]),
       },
       {
         path: "admin/dashboard",
-        lazy: lazyRoute(() => import("../pages/AdminDashboard/AdminDashboard")),
+        lazy: protectedLazyRoute(() => import("../pages/AdminDashboard/AdminDashboard"), ["admin"]),
       },
       {
         path: "profile",
-        lazy: lazyRoute(() => import("../pages/Profile/Profile")),
+        lazy: protectedLazyRoute(() => import("../pages/Profile/Profile"), ["admin", "manager", "viewer", "collector"]),
       },
     ],
   },
 ]);
+

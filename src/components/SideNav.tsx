@@ -291,34 +291,55 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
   const navItems = useMemo(() => getNavItems(t), [t]);
   const adminNavItems = useMemo(() => getAdminNavItems(t), [t]);
 
-  const menuItems =
-    role === "collector"
-      ? [
-          {
-            path: "/collector-dashboard",
-            label: t("sideNav.collectorDashboard"),
-            icon: (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="3" width="7" height="9"></rect>
-                <rect x="14" y="3" width="7" height="5"></rect>
-                <rect x="14" y="12" width="7" height="9"></rect>
-                <rect x="3" y="16" width="7" height="5"></rect>
-              </svg>
-            ),
-          },
-        ]
-      : role === "admin"
-        ? adminNavItems
-        : navItems;
+  const menuItems = useMemo(() => {
+    const roleLower = role?.toLowerCase();
+
+    if (roleLower === "collector") {
+      return [
+        {
+          path: "/collector-dashboard",
+          label: t("sideNav.collectorDashboard") || "Collector Dashboard",
+          icon: (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="3" width="7" height="9"></rect>
+              <rect x="14" y="3" width="7" height="5"></rect>
+              <rect x="14" y="12" width="7" height="9"></rect>
+              <rect x="3" y="16" width="7" height="5"></rect>
+            </svg>
+          ),
+        },
+      ];
+    }
+
+    if (roleLower === "admin") {
+      return adminNavItems;
+    }
+
+    if (roleLower === "manager") {
+      // Managers can access: Dashboard, Analytics, Devices, Collection, Community Feedback
+      // They cannot access: Alerts, User Management
+      return navItems.filter(
+        (item) => item.path !== "/alerts" && item.path !== "/manager/users"
+      );
+    }
+
+    // Viewers/others can only access: Dashboard, Analytics, Devices
+    return navItems.filter(
+      (item) =>
+        item.path === "/dashboard" ||
+        item.path === "/analytics" ||
+        item.path === "/devices"
+    );
+  }, [role, navItems, adminNavItems, t]);
 
   return (
     <>

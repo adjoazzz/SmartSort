@@ -266,10 +266,29 @@ export default function CollectionJobs() {
   const {
     data: jobsResponse,
     isLoading,
-    refresh,
+    refresh: refreshJobs,
   } = useRealtimeData<any>(fetchJobs, {
     tables: ["CollectionJob"],
   });
+
+  const fetchJobsSummary = async () => {
+    const response = await authFetch(`${baseUrl}/api/jobs/summary`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch jobs summary");
+    }
+    return response.json();
+  };
+
+  const {
+    data: summaryData,
+    refresh: refreshSummary,
+  } = useRealtimeData<any>(fetchJobsSummary, {
+    tables: ["CollectionJob", "User"],
+  });
+
+  const refresh = async () => {
+    await Promise.all([refreshJobs(), refreshSummary()]);
+  };
 
   const jobsData = jobsResponse?.data || [];
   const totalCount = jobsResponse?.totalCount || 0;
@@ -457,6 +476,26 @@ export default function CollectionJobs() {
   const pendingJobs = filteredData.filter((j) => j.status === "Pending");
   const inProgressJobs = filteredData.filter((j) => j.status === "In Transit");
   const completedJobs = filteredData.filter((j) => j.status === "Completed");
+
+  const dynamicKpis = [
+    {
+      ...KPIS[0],
+      value: summaryData?.pendingJobs !== undefined ? String(summaryData.pendingJobs) : KPIS[0].value,
+    },
+    {
+      ...KPIS[1],
+      value: summaryData?.avgResponseTime ?? KPIS[1].value,
+    },
+    {
+      ...KPIS[2],
+      value: summaryData?.activeCollectors !== undefined ? summaryData.activeCollectors : KPIS[2].value,
+      trend: summaryData?.totalCollectors !== undefined ? `/ ${summaryData.totalCollectors} Total` : KPIS[2].trend,
+    },
+    {
+      ...KPIS[3],
+      value: summaryData?.tonnageGoal ?? KPIS[3].value,
+    },
+  ];
 
   return (
     <PageLayout
@@ -697,7 +736,7 @@ export default function CollectionJobs() {
         <div className="flex flex-col gap-6 animate-fade-in">
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {KPIS.map((kpi, idx) => (
+            {dynamicKpis.map((kpi, idx) => (
               <MetricCard
                 key={idx}
                 title={kpi.title}
