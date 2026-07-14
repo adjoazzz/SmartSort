@@ -195,6 +195,8 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 
 interface ValidationErrors {
+  firstName?: string;
+  lastName?: string;
   email?: string;
   password?: string;
 }
@@ -260,6 +262,8 @@ export default function Login() {
   const [searchParams] = useSearchParams();
 
   // Local Form States
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -344,16 +348,22 @@ export default function Login() {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const emailErr = validateEmail(email);
-    const passwordErr = validatePassword(password);
     const newErrors: ValidationErrors = {
-      email: emailErr,
-      password: passwordErr,
+      email: validateEmail(email),
+      password: validatePassword(password),
     };
+
+    // Validate name fields only during signup
+    if (isSignup) {
+      if (!firstName.trim()) newErrors.firstName = "First name is required";
+      if (!lastName.trim()) newErrors.lastName = "Last name is required";
+    }
+
     setErrors(newErrors);
     setTouched({ email: true, password: true });
 
-    if (emailErr || passwordErr) {
+    const hasErrors = Object.values(newErrors).some(Boolean);
+    if (hasErrors) {
       triggerShake();
       return;
     }
@@ -369,8 +379,9 @@ export default function Login() {
 
         if (error) throw error;
 
-        // Sync user role with backend
+        // Sync user role and name with backend
         if (data.user) {
+          const fullName = `${firstName.trim()} ${lastName.trim()}`;
           await authFetch(
             (import.meta as any).env?.VITE_API_BASE_URL + "/api/auth/sync" ||
               "http://localhost:5000/api/auth/sync",
@@ -380,6 +391,7 @@ export default function Login() {
               body: JSON.stringify({
                 id: data.user.id,
                 email: data.user.email,
+                name: fullName,
                 role: selectedRole === "manager" ? "MANAGER" : "COLLECTOR",
               }),
             },
@@ -407,10 +419,17 @@ export default function Login() {
       const existingIdx = savedAccounts.findIndex(
         (a: any) => a.email === email,
       );
+      const displayName = (isSignup && firstName.trim())
+        ? `${firstName.trim()} ${lastName.trim()}`
+        : email.split("@")[0];
+      const initials = (isSignup && firstName.trim() && lastName.trim())
+        ? `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+        : email.charAt(0).toUpperCase();
+
       const newAccount = {
         email,
-        name: email.split("@")[0],
-        initials: email.charAt(0).toUpperCase(),
+        name: displayName,
+        initials,
         color: "#78909C",
         rememberMe,
         password: rememberMe ? password : null,
@@ -459,13 +478,16 @@ export default function Login() {
     }
   };
 
+  const hasFirstNameError = !!errors.firstName;
+  const hasLastNameError = !!errors.lastName;
   const hasEmailError = !!errors.email;
   const hasPasswordError = !!errors.password;
   const isFormValid =
     email.trim() !== "" &&
     password !== "" &&
     !hasEmailError &&
-    !hasPasswordError;
+    !hasPasswordError &&
+    (!isSignup || (firstName.trim() !== "" && lastName.trim() !== "" && !hasFirstNameError && !hasLastNameError));
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-card text-foreground transition-colors duration-300 font-sans">
@@ -491,10 +513,12 @@ export default function Login() {
         <div className="max-w-md w-full mx-auto my-auto py-10 flex flex-col gap-8">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Welcome
+              {isSignup ? "Create Account" : "Welcome"}
             </h2>
             <p className="text-sm text-muted-foreground mt-1.5">
-              Please log in with your login details to start working!
+              {isSignup
+                ? "Fill in your details to get started with SmartSort."
+                : "Please log in with your login details to start working!"}
             </p>
           </div>
 
@@ -535,6 +559,95 @@ export default function Login() {
                 Collector
               </button>
             </div>
+
+            {/* First Name & Last Name fields — visible only during signup */}
+            {isSignup && (
+              <div className="grid grid-cols-2 gap-4">
+                {/* First Name */}
+                <div>
+                  <div
+                    className={`relative py-3 transition-colors flex items-center gap-3 border-b ${
+                      hasFirstNameError
+                        ? "border-red-500 dark:border-red-500"
+                        : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-5 h-5 flex-shrink-0 ${
+                        hasFirstNameError
+                          ? "text-red-500"
+                          : "text-slate-400 dark:text-muted-foreground"
+                      }`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <input
+                      id="signup-firstname"
+                      type="text"
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                        if (errors.firstName && e.target.value.trim()) {
+                          setErrors((prev) => ({ ...prev, firstName: undefined }));
+                        }
+                      }}
+                      className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder-slate-400 dark:placeholder-slate-500"
+                    />
+                  </div>
+                  <FieldError message={errors.firstName} />
+                </div>
+
+                {/* Last Name */}
+                <div>
+                  <div
+                    className={`relative py-3 transition-colors flex items-center gap-3 border-b ${
+                      hasLastNameError
+                        ? "border-red-500 dark:border-red-500"
+                        : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-5 h-5 flex-shrink-0 ${
+                        hasLastNameError
+                          ? "text-red-500"
+                          : "text-slate-400 dark:text-muted-foreground"
+                      }`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <input
+                      id="signup-lastname"
+                      type="text"
+                      placeholder="Last Name"
+                      value={lastName}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                        if (errors.lastName && e.target.value.trim()) {
+                          setErrors((prev) => ({ ...prev, lastName: undefined }));
+                        }
+                      }}
+                      className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder-slate-400 dark:placeholder-slate-500"
+                    />
+                  </div>
+                  <FieldError message={errors.lastName} />
+                </div>
+              </div>
+            )}
 
             {/* Email field */}
             <div>
