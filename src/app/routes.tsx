@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import { Root } from "./Root";
 import { ProtectedRoute } from "../components/ProtectedRoute";
+import { RouteErrorBoundary } from "../components/RouteErrorBoundary";
 
 // Helper for dynamic imports since components are default exports
 const lazyRoute = (importFn: () => Promise<any>) => async () => {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,
