@@ -866,10 +866,10 @@ export default function Landing() {
 
           <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">&copy; 2026 SmartSort Intelligence Systems. All rights reserved.</p>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-[#22c55e] rounded-full animate-pulse" />
               <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-wide">All Systems Operational</span>
-            </div>
+            </div> */}
           </div>
 
         </div>

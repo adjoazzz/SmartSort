@@ -774,14 +774,14 @@ export default function Login() {
         </div>
 
         {/* Bottom Status Panel */}
-        <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
+        {/* <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
           <span className="inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-border rounded-full px-3 py-1 bg-slate-50 dark:bg-secondary">
             <span className="w-1.5 h-1.5 bg-[#22c55e] rounded-full animate-pulse" />
             Systems Operational
           </span>
           <span className="text-slate-200 dark:text-[#1e3a5f]">|</span>
           <span>V4.2.0-STABLE</span>
-        </div>
+        </div> */}
       </div>
 
       {/* RIGHT PANEL: High-Tech Branding */}
