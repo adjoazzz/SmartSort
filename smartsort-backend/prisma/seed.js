@@ -27,32 +27,32 @@ async function main() {
     const facilities = await prisma.facility.createManyAndReturn({
         data: [
             {
-                name: 'Accra Central Hub',
-                region: 'Greater Accra',
+                name: 'College of Science',
+                region: 'KNUST',
                 status: 'Active',
-                latitude: 5.6037,
-                longitude: -0.1870,
+                latitude: 6.6730,
+                longitude: -1.5667,
             },
             {
-                name: 'West Tema Plant',
-                region: 'Eastern Coast',
+                name: 'College of Pharmacy',
+                region: 'KNUST',
                 status: 'Active',
-                latitude: 5.6698,
-                longitude: -0.0169,
+                latitude: 6.6786,
+                longitude: -1.5711,
             },
             {
-                name: 'Kumasi Hub',
-                region: 'Ashanti Region',
+                name: 'College of Engineering',
+                region: 'KNUST',
                 status: 'Active',
-                latitude: 6.6961,
-                longitude: -1.6151,
+                latitude: 6.6732,
+                longitude: -1.5674,
             },
         ],
     });
 
-    const accraId = facilities.find(f => f.name === 'Accra Central Hub').id;
-    const temaId = facilities.find(f => f.name === 'West Tema Plant').id;
-    const kumasiId = facilities.find(f => f.name === 'Kumasi Hub').id;
+    const accraId = facilities.find(f => f.name === 'College of Science').id;
+    const temaId = facilities.find(f => f.name === 'College of Pharmacy').id;
+    const kumasiId = facilities.find(f => f.name === 'College of Engineering').id;
 
     // Create Devices
     const devices = await prisma.device.createManyAndReturn({
@@ -207,6 +207,7 @@ async function main() {
                 facilityId: accraId,
             },
         ],
+        skipDuplicates: true,
     });
 
     // Create Collection Jobs linked to Devices and Collectors
@@ -272,7 +273,7 @@ async function main() {
                 email: 'a.vance@smartsort.com',
                 role: 'MANAGER',
                 status: 'ACTIVE',
-                assignedFacility: 'Accra Central Hub',
+                assignedFacility: 'College of Science',
                 avatar: null,
                 facilityId: accraId,
             },
@@ -282,7 +283,7 @@ async function main() {
                 email: 's.jenkins@smartsort.com',
                 role: 'MANAGER',
                 status: 'ACTIVE',
-                assignedFacility: 'West Tema Plant',
+                assignedFacility: 'College of Pharmacy',
                 avatar: null,
                 facilityId: temaId,
             },
@@ -292,7 +293,7 @@ async function main() {
                 email: 'm.rossi@logistics.net',
                 role: 'COLLECTOR',
                 status: 'ACTIVE',
-                assignedFacility: 'Kumasi Hub Logistics',
+                assignedFacility: 'College of Engineering Logistics',
                 avatar: null,
                 facilityId: kumasiId,
             },
@@ -311,7 +312,7 @@ async function main() {
                 email: 'daniel.owusu@smartsort.com',
                 role: 'MANAGER',
                 status: 'PENDING',
-                assignedFacility: 'Accra Central Hub',
+                assignedFacility: 'College of Science',
                 avatar: null,
                 facilityId: accraId,
             },
@@ -334,6 +335,7 @@ async function main() {
                 avatar: null,
             },
         ],
+        skipDuplicates: true,
     });
 
     // Create Bulk Collection Jobs (Third-Party Ghana Recyclers)

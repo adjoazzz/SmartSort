@@ -4,7 +4,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { authFetch } from "../../lib/authFetch";
 import { toast } from "sonner";
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, LayersControl, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -46,10 +46,10 @@ const createGlowingMarker = (color: string) =>
     iconAnchor: [8, 8],
   });
 
-const createTruckMarker = () =>
+const createTruckMarker = (rotation: number) =>
   L.divIcon({
     className: "custom-truck-marker",
-    html: `<div style="background-color: #3b82f6; color: white; width: 34px; height: 34px; border-radius: 8px; border: 2px solid white; display: flex; align-items: center; justify-center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 14px; font-weight: bold; transform: rotate(-5deg); transition: all 0.5s ease-out;"><span style="margin: auto;">🚚</span></div>`,
+    html: `<div style="background-color: #3b82f6; color: white; width: 34px; height: 34px; border-radius: 8px; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 14px; font-weight: bold; transform: rotate(${rotation}deg); transition: transform 0.05s linear;"><span style="display: block; transform: rotate(-90deg); margin: auto;">🚚</span></div>`,
     iconSize: [34, 34],
     iconAnchor: [17, 17],
   });
@@ -92,7 +92,121 @@ interface BulkJob {
 }
 
 // Depots for routing
-const ACCRA_DEPOT: [number, number] = [5.5501, -0.2012];
+const KNUST_DEPOT: [number, number] = [6.673, -1.565];
+
+const STREET_ROUTES: Record<string, [number, number][]> = {
+  "College of Science": [
+    KNUST_DEPOT,
+    [6.6730, -1.5658],
+    [6.6735, -1.5658],
+    [6.6735, -1.5667],
+    [6.6730, -1.5667],
+  ],
+  "College of Pharmacy": [
+    KNUST_DEPOT,
+    [6.673, -1.568],
+    [6.676, -1.568],
+    [6.676, -1.571],
+    [6.6786, -1.5711],
+  ],
+  "College of Engineering": [
+    KNUST_DEPOT,
+    [6.671, -1.565],
+    [6.671, -1.5674],
+    [6.6732, -1.5674],
+  ],
+};
+
+function LiveTruckLayer({ activeDispatches, facilities, trackingTruckId }: { activeDispatches: BulkJob[], facilities: Facility[], trackingTruckId: string | null }) {
+  const [truckPositions, setTruckPositions] = useState<
+    Array<{ id: string; name: string; pos: [number, number]; route: [number, number][]; targetIndex: number; rotation: number }>
+  >([]);
+  const map = useMap();
+
+  useEffect(() => {
+    setTruckPositions((prev) => {
+      return activeDispatches.map((j) => {
+        const existing = prev.find((t) => t.id === j.id);
+        if (existing) return existing;
+
+        const facility = facilities.find((f) => f.id === j.facilityId);
+        const defaultRoute: [number, number][] = [
+          KNUST_DEPOT,
+          [facility ? facility.latitude : 6.673, facility ? facility.longitude : -1.566],
+        ];
+        const route = facility ? (STREET_ROUTES[facility.name] || defaultRoute) : defaultRoute;
+
+        return {
+          id: j.id,
+          name: j.collectorName,
+          pos: [...KNUST_DEPOT] as [number, number],
+          route,
+          targetIndex: 1,
+          rotation: 0,
+        };
+      });
+    });
+  }, [activeDispatches, facilities]);
+
+  useEffect(() => {
+    if (truckPositions.length === 0) return;
+
+    const timer = setInterval(() => {
+      setTruckPositions((prevTrucks) =>
+        prevTrucks.map((truck) => {
+          if (truck.targetIndex >= truck.route.length) return truck;
+
+          const targetWaypoint = truck.route[truck.targetIndex];
+          const targetLat = targetWaypoint[0];
+          const targetLng = targetWaypoint[1];
+
+          const stepSize = 0.000015;
+          const deltaLat = targetLat - truck.pos[0];
+          const deltaLng = targetLng - truck.pos[1];
+          const distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng);
+          const angle = Math.atan2(deltaLng, deltaLat) * (180 / Math.PI);
+
+          if (distance < stepSize) {
+            return { ...truck, pos: [targetLat, targetLng], targetIndex: truck.targetIndex + 1, rotation: angle };
+          }
+
+          const ratio = stepSize / distance;
+          return {
+            ...truck,
+            pos: [truck.pos[0] + deltaLat * ratio, truck.pos[1] + deltaLng * ratio] as [number, number],
+            rotation: angle,
+          };
+        }),
+      );
+    }, 30);
+
+    return () => clearInterval(timer);
+  }, [truckPositions.length]);
+
+  useEffect(() => {
+    if (trackingTruckId) {
+      const truck = truckPositions.find((t) => t.id === trackingTruckId);
+      if (truck) {
+        map.setView(truck.pos, 18, { animate: false }); // Lock camera tightly
+      }
+    }
+  }, [trackingTruckId, truckPositions, map]);
+
+  return (
+    <>
+      {truckPositions.map((truck) => (
+        <Marker key={truck.id} position={truck.pos} icon={createTruckMarker(truck.rotation)}>
+          <Popup>
+            <div className="text-xs text-foreground p-1">
+              <strong className="block font-bold">{truck.name}</strong>
+              <span className="text-muted-foreground block text-[10px]">Tonnage Garbage Transit Route</span>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+}
 
 export default function AdminDashboard() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -117,10 +231,8 @@ export default function AdminDashboard() {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Simulation coordinate tracking for moving trucks on the map
-  const [truckPositions, setTruckPositions] = useState<
-    Array<{ id: string; name: string; pos: [number, number] }>
-  >([]);
+
+  const [trackingTruckId, setTrackingTruckId] = useState<string | null>(null);
 
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -145,25 +257,7 @@ export default function AdminDashboard() {
       setMetrics(metData);
       setBulkJobs(jobData);
 
-      // Setup simulated truck positions on the map based on Dispatched jobs
-      const activeDispatches = jobData.filter(
-        (j: BulkJob) => j.status === "Dispatched",
-      );
-      const newTrucks = activeDispatches.map((j: BulkJob) => {
-        const facility = facData.find((f: Facility) => f.id === j.facilityId);
-        // Interpolate half-way between Accra Depot and target facility
-        const targetLat = facility ? facility.latitude : 5.6037;
-        const targetLng = facility ? facility.longitude : -0.187;
-        const currentLat = ACCRA_DEPOT[0] + (targetLat - ACCRA_DEPOT[0]) * 0.4;
-        const currentLng = ACCRA_DEPOT[1] + (targetLng - ACCRA_DEPOT[1]) * 0.4;
 
-        return {
-          id: j.id,
-          name: j.collectorName,
-          pos: [currentLat, currentLng] as [number, number],
-        };
-      });
-      setTruckPositions(newTrucks);
     } catch (e: any) {
       toast.error(e.message || "Connection error to telemetry server");
     } finally {
@@ -177,46 +271,7 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Animate trucks along routes (subtle simulation coordinates jitter/movement)
-  useEffect(() => {
-    if (truckPositions.length === 0) return;
 
-    const timer = setInterval(() => {
-      setTruckPositions((prevTrucks) =>
-        prevTrucks.map((truck) => {
-          const job = bulkJobs.find((j) => j.id === truck.id);
-          if (!job) return truck;
-          const facility = facilities.find((f) => f.id === job.facilityId);
-          if (!facility) return truck;
-
-          const targetLat = facility.latitude;
-          const targetLng = facility.longitude;
-
-          // Compute small step towards target
-          const stepSize = 0.002;
-          const deltaLat = targetLat - truck.pos[0];
-          const deltaLng = targetLng - truck.pos[1];
-          const distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng);
-
-          if (distance < stepSize) {
-            // Arrived at destination
-            return { ...truck, pos: [targetLat, targetLng] };
-          }
-
-          const ratio = stepSize / distance;
-          const nextLat = truck.pos[0] + deltaLat * ratio;
-          const nextLng = truck.pos[1] + deltaLng * ratio;
-
-          return {
-            ...truck,
-            pos: [nextLat, nextLng] as [number, number],
-          };
-        }),
-      );
-    }, 1500);
-
-    return () => clearInterval(timer);
-  }, [bulkJobs, facilities, truckPositions.length]);
 
   const handleDispatchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -373,29 +428,66 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex-1 relative" style={{ height: "400px" }}>
+            {trackingTruckId && (
+              <button
+                onClick={() => {
+                  setTrackingTruckId(null);
+                }}
+                className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-white dark:bg-card px-4 py-2 rounded-full shadow-lg border border-border text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-2 cursor-pointer"
+              >
+                <span className="animate-pulse h-2 w-2 bg-red-500 rounded-full inline-block" />
+                Stop Tracking
+              </button>
+            )}
             <MapContainer
-              center={[6.0, -0.8]}
-              zoom={7.5}
+              center={[6.675, -1.57]}
+              zoom={15}
               style={{ width: "100%", height: "100%" }}
               scrollWheelZoom={false}
               className="z-10"
             >
-              {/* Dark mode Mapbox/CartoDB tiles */}
-              <TileLayer
-                attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-                url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+              <LiveTruckLayer
+                activeDispatches={bulkJobs.filter((j) => j.status === "Dispatched")}
+                facilities={facilities}
+                trackingTruckId={trackingTruckId}
               />
+              <LayersControl position="topright">
+                <LayersControl.BaseLayer checked name="CartoDB Voyager">
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                  />
+                </LayersControl.BaseLayer>
+                <LayersControl.BaseLayer name="Dark Mode">
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                  />
+                </LayersControl.BaseLayer>
+                <LayersControl.BaseLayer name="Satellite">
+                  <TileLayer
+                    attribution='Tiles &copy; Esri'
+                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                  />
+                </LayersControl.BaseLayer>
+                <LayersControl.BaseLayer name="Standard Street">
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                </LayersControl.BaseLayer>
+              </LayersControl>
 
-              {/* Accra Central Depot */}
+              {/* KNUST Central Depot */}
               <Marker
-                position={ACCRA_DEPOT}
+                position={KNUST_DEPOT}
                 icon={L.divIcon({
                   className: "depot-marker",
                   html: `<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 3px; border: 2.5px solid white;"></div>`,
                 })}
               >
                 <Popup>
-                  <div className="text-xs font-bold text-foreground">Accra Central Operations Depot</div>
+                  <div className="text-xs font-bold text-foreground">KNUST Operations Depot</div>
                 </Popup>
               </Marker>
 
@@ -437,33 +529,22 @@ export default function AdminDashboard() {
                 );
               })}
 
-              {/* Plotted Moving Trucks */}
-              {truckPositions.map((truck) => (
-                <Marker
-                  key={truck.id}
-                  position={truck.pos}
-                  icon={createTruckMarker()}
-                >
-                  <Popup>
-                    <div className="text-xs text-foreground p-1">
-                      <strong className="block font-bold">{truck.name}</strong>
-                      <span className="text-muted-foreground block text-[10px]">Tonnage Garbage Transit Route</span>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
+
 
               {/* Transit Route Polylines */}
-              {facilities.map((fac) => (
-                <Polyline
-                  key={`route-${fac.id}`}
-                  positions={[ACCRA_DEPOT, [fac.latitude, fac.longitude]]}
-                  color="#ffffff"
-                  weight={1.5}
-                  dashArray="4 8"
-                  opacity={0.3}
-                />
-              ))}
+              {facilities.map((fac) => {
+                const routePositions = STREET_ROUTES[fac.name] || [KNUST_DEPOT, [fac.latitude, fac.longitude]];
+                return (
+                  <Polyline
+                    key={`route-${fac.id}`}
+                    positions={routePositions}
+                    color="#ffffff"
+                    weight={2}
+                    dashArray="5 10"
+                    opacity={0.5}
+                  />
+                );
+              })}
             </MapContainer>
           </div>
         </div>
@@ -711,12 +792,20 @@ export default function AdminDashboard() {
                       )}
 
                       {job.status === "Dispatched" && (
-                        <button
-                          onClick={() => handleCompletePickup(job.id)}
-                          className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded cursor-pointer transition-colors"
-                        >
-                          Mark Collected
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setTrackingTruckId(trackingTruckId === job.id ? null : job.id)}
+                            className={`px-2.5 py-1 ${trackingTruckId === job.id ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'} text-[10px] font-bold rounded cursor-pointer transition-colors flex items-center gap-1`}
+                          >
+                            {trackingTruckId === job.id ? "🎯 Tracking..." : "🎯 Track"}
+                          </button>
+                          <button
+                            onClick={() => handleCompletePickup(job.id)}
+                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded cursor-pointer transition-colors"
+                          >
+                            Mark Collected
+                          </button>
+                        </div>
                       )}
 
                       {job.status === "Completed" && (

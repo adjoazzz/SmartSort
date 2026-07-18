@@ -9,8 +9,8 @@ const COLLECTOR_JOBS = [
   {
     id: "JOB-1041",
     device: "#SN-4431-L",
-    location: "Main Lobby Entrance",
-    zone: "Level 1, Main",
+    location: "College of Science",
+    zone: "Science Complex",
     fill: 82,
     urgency: "High",
     status: "In Transit",
@@ -19,8 +19,8 @@ const COLLECTOR_JOBS = [
   {
     id: "JOB-1042",
     device: "#SN-9902-X",
-    location: "North Wing Cafe - B3",
-    zone: "Level 2, Zone A",
+    location: "College of Pharmacy",
+    zone: "Pharmacy Block",
     fill: 94,
     urgency: "Critical",
     status: "Pending",
@@ -29,8 +29,8 @@ const COLLECTOR_JOBS = [
   {
     id: "JOB-1040",
     device: "#SN-1108-P",
-    location: "West Parking B1",
-    zone: "Basement 1, Zone C",
+    location: "College of Engineering",
+    zone: "Engineering Block",
     fill: 78,
     urgency: "Normal",
     status: "Pending",
@@ -39,8 +39,8 @@ const COLLECTOR_JOBS = [
   {
     id: "JOB-1039",
     device: "#SN-8871-S",
-    location: "Employee Breakroom",
-    zone: "Level 4, South",
+    location: "College of Science B",
+    zone: "Science Block B",
     fill: 71,
     urgency: "Normal",
     status: "Pending",
@@ -49,8 +49,8 @@ const COLLECTOR_JOBS = [
   {
     id: "JOB-1038",
     device: "#SN-5520-R",
-    location: "South Lobby",
-    zone: "Level 1, Zone B",
+    location: "College of Eng Annex",
+    zone: "Engineering Annex",
     fill: 65,
     urgency: "Normal",
     status: "Completed",
@@ -59,20 +59,20 @@ const COLLECTOR_JOBS = [
 ];
 
 const JOB_COORDINATES: Record<string, { x: number; y: number }> = {
-  "JOB-1041": { x: 208, y: 330 }, // Main Lobby Entrance
-  "JOB-1042": { x: 213, y: 190 }, // North Wing Cafe - B3
-  "JOB-1040": { x: 55, y: 310 }, // West Parking B1
-  "JOB-1039": { x: 378, y: 190 }, // Employee Breakroom
-  "JOB-1038": { x: 353, y: 330 }, // South Lobby
+  "JOB-1041": { x: 208, y: 330 }, // College of Science
+  "JOB-1042": { x: 213, y: 190 }, // College of Pharmacy
+  "JOB-1040": { x: 55, y: 310 }, // College of Engineering
+  "JOB-1039": { x: 378, y: 190 }, // College of Science B
+  "JOB-1038": { x: 353, y: 330 }, // College of Eng Annex
 };
 
 // Depot position (matches DEPOT rect center in new viewBox)
 const depotCoords = { x: 555, y: 374 };
 
 const NAV_INSTRUCTIONS = [
-  "Head north toward the Elevator Hallway",
-  "Take the elevators down to Level B3",
-  "Proceed 30ft down Corridor C; the smart bin is on your right",
+  "Head north toward the main corridor",
+  "Take the turn to the right",
+  "Proceed down the path; the smart bin is on your right",
 ];
 
 export default function CollectorMap() {
@@ -80,7 +80,7 @@ export default function CollectorMap() {
 
   // Sync state with localStorage
   const [jobs, setJobs] = useState(() => {
-    const saved = localStorage.getItem("collector_jobs");
+    const saved = localStorage.getItem("collector_jobs_knust");
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -92,7 +92,7 @@ export default function CollectorMap() {
   });
 
   useEffect(() => {
-    localStorage.setItem("collector_jobs", JSON.stringify(jobs));
+    localStorage.setItem("collector_jobs_knust", JSON.stringify(jobs));
   }, [jobs]);
 
   // Selected marker highlighting
