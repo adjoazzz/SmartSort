@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { StatusBadge } from "../../components/StatusBadge";
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
@@ -84,17 +85,7 @@ export function CollectorProfileModal({
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground transition-colors"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
 

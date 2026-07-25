@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BarChart2, Clock, CheckCircle2 } from "lucide-react";
 import { useNavigate, Link } from "react-router";
 import { StepDots } from "../../components/StepDots";
 import { SelectField } from "../../components/SelectField";
@@ -39,15 +40,7 @@ function FeatureCard({ iconBg, iconColor, title, description, icon }: any) {
  */
 function AnalyticsIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M8 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zm2.5 4.5L7 9.5 5.5 8"
-        stroke="#006c49"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <BarChart2 className="w-4 h-4 text-[#006c49]" strokeWidth={2} />
   );
 }
 
@@ -56,15 +49,7 @@ function AnalyticsIcon() {
  */
 function EfficiencyIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="5.5" stroke="#23acf1" strokeWidth="1.2" />
-      <path
-        d="M8 2v4l2.5 1.5"
-        stroke="#23acf1"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-    </svg>
+    <Clock className="w-4 h-4 text-[#23acf1]" strokeWidth={2} />
   );
 }
 
@@ -180,15 +165,7 @@ export default function Onboarding() {
             </div>
 
             <p className="text-xs text-muted-foreground dark:text-slate-400 flex items-center gap-1.5">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zm2.5 3.5L5.5 8.5 4 7"
-                  stroke="#10b981"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#10b981]" strokeWidth={2} />
               ISO 14001 compliant — trusted by 500+ enterprises
             </p>
           </div>

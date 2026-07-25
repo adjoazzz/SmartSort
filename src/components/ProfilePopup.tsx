@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabaseClient";
+import { X, Camera, ChevronDown, Plus, LogOut } from "lucide-react";
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
 interface ProfilePopupProps {
@@ -133,19 +134,7 @@ export function ProfilePopup({
           className="profile-popup__close"
           aria-label="Close"
         >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <X className="w-[18px] h-[18px]" strokeWidth={2.5} />
         </button>
       </div>
 
@@ -159,10 +148,7 @@ export function ProfilePopup({
             className="profile-popup__camera"
             aria-label="Change profile picture"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z" />
-              <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
-            </svg>
+            <Camera className="w-3.5 h-3.5" />
           </button>
         </div>
         <h2 className="profile-popup__greeting">Hi, {userName}!</h2>
@@ -186,19 +172,10 @@ export function ProfilePopup({
               ? t("profilePopup.hideAccounts")
               : t("profilePopup.showAccounts")}
           </span>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`profile-popup__chevron ${showAccounts ? "profile-popup__chevron--up" : ""}`}
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
+          <ChevronDown
+            className={`w-[18px] h-[18px] profile-popup__chevron ${showAccounts ? "profile-popup__chevron--up" : ""}`}
+            strokeWidth={2.5}
+          />
         </button>
 
         {showAccounts && (
@@ -243,19 +220,7 @@ export function ProfilePopup({
           className="profile-popup__action-row"
         >
           <div className="profile-popup__action-icon">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
+            <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
           </div>
           <span>{t("profilePopup.addAccount")}</span>
         </Link>
@@ -273,20 +238,7 @@ export function ProfilePopup({
           className="profile-popup__action-row w-full text-left cursor-pointer"
         >
           <div className="profile-popup__action-icon">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
+            <LogOut className="w-[18px] h-[18px]" strokeWidth={2} />
           </div>
           <span>{t("profilePopup.signOut")}</span>
         </button>

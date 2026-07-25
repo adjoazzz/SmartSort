@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { InputField } from "./InputField";
 import { useTranslation } from "react-i18next";
+import { X, QrCode, Info, Building2, LifeBuoy, Save } from "lucide-react";
 
 interface RegisterDeviceModalProps {
   isOpen: boolean;
@@ -65,19 +66,7 @@ export function RegisterDeviceModal({
                   onClick={onClose}
                   className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors cursor-pointer"
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
+                  <X className="w-5 h-5" strokeWidth={2} />
                 </button>
               </div>
 
@@ -92,76 +81,7 @@ export function RegisterDeviceModal({
                     <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#006c49] rounded-bl-sm" />
                     <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#006c49] rounded-br-sm" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <svg
-                        width="28"
-                        height="28"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        className="text-[#006c49] opacity-80"
-                      >
-                        <rect
-                          x="3"
-                          y="3"
-                          width="7"
-                          height="7"
-                          rx="1"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <rect
-                          x="5"
-                          y="5"
-                          width="3"
-                          height="3"
-                          fill="currentColor"
-                        />
-                        <rect
-                          x="14"
-                          y="3"
-                          width="7"
-                          height="7"
-                          rx="1"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <rect
-                          x="16"
-                          y="5"
-                          width="3"
-                          height="3"
-                          fill="currentColor"
-                        />
-                        <rect
-                          x="3"
-                          y="14"
-                          width="7"
-                          height="7"
-                          rx="1"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <rect
-                          x="5"
-                          y="16"
-                          width="3"
-                          height="3"
-                          fill="currentColor"
-                        />
-                        <rect
-                          x="14"
-                          y="14"
-                          width="3"
-                          height="3"
-                          fill="currentColor"
-                        />
-                        <rect
-                          x="19"
-                          y="19"
-                          width="2"
-                          height="2"
-                          fill="currentColor"
-                        />
-                      </svg>
+                      <QrCode className="text-[#006c49] opacity-80" size={28} strokeWidth={1.5} />
                     </div>
                   </div>
                   <div>
@@ -183,15 +103,7 @@ export function RegisterDeviceModal({
                     onChange={setSerial}
                   />
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <path
-                        d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zM7 4v4M7 10.5v-.5"
-                        stroke="currentColor"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <Info className="w-3.5 h-3.5" strokeWidth={1.5} />
                     {t("registerModal.serialHint")}
                   </p>
                 </div>
@@ -200,20 +112,7 @@ export function RegisterDeviceModal({
                 <div className="bg-muted dark:bg-slate-900/80 border border-border rounded-lg p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-background dark:bg-slate-950 border border-border rounded-md flex items-center justify-center">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6"
-                          stroke="#006c49"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Building2 className="w-5 h-5 text-[#006c49]" strokeWidth={2} />
                     </div>
                     <div className="flex flex-col">
                       <span className="text-xs font-semibold text-foreground dark:text-white">
@@ -231,19 +130,7 @@ export function RegisterDeviceModal({
 
                 {/* Support Note */}
                 <div className="border border-border bg-muted dark:bg-slate-900/80 rounded-lg p-3 flex items-start gap-3">
-                  <svg
-                    className="w-4 h-4 text-[#23acf1] flex-shrink-0 mt-0.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
-                    />
-                  </svg>
+                  <LifeBuoy className="w-4 h-4 text-[#23acf1] flex-shrink-0 mt-0.5" strokeWidth={2} />
                   <div>
                     <p className="text-xs font-semibold text-foreground dark:text-white">
                       {t("registerModal.helpTitle")}
@@ -267,18 +154,7 @@ export function RegisterDeviceModal({
                   onClick={handleSave}
                   className="flex-1 h-11 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                    <polyline points="17 21 17 13 7 13 7 21" />
-                    <polyline points="7 3 7 8 15 8" />
-                  </svg>
+                  <Save className="w-4 h-4" strokeWidth={2} />
                   {t("registerModal.save")}
                 </button>
               </div>

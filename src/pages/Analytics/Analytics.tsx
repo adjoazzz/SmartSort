@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React from "react";
+import { Recycle, AlertTriangle, ShoppingBag, TrendingUp, TrendingDown, Minus, Box, Magnet, Droplet, Filter, ChevronDown, ArrowUpDown, MoreVertical, Download } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { useTranslation } from "react-i18next";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
@@ -23,41 +24,7 @@ const KPI_DATA = [
     value: "74.2%",
     trend: "12.4%",
     trendDirection: "up",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#10b981"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
-          stroke="none"
-        />
-        <path
-          d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10 10-4.48 10-10z"
-          stroke="none"
-        />
-        <path
-          d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z"
-          stroke="none"
-        />
-        <path
-          d="M11 20a10 10 0 0 1-9-9 9.6 9.6 0 0 1 1-4c1.5 0 3-1 3-3a10.4 10.4 0 0 1 5 16z"
-          fill="none"
-          stroke="#10b981"
-        />
-        <path
-          d="M16.5 14.5c1.2-1.2 2.5-3.5 2.5-5.5a10 10 0 0 0-4-6c-1 1-1.5 2.5-1.5 4s1.5 3.5 3 7z"
-          fill="none"
-          stroke="#10b981"
-        />
-      </svg>
-    ),
+    icon: <Recycle className="w-5 h-5 text-[#10b981]" strokeWidth={2} />,
     iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#10b981]",
     progressWidth: "74%",
@@ -68,22 +35,7 @@ const KPI_DATA = [
     value: "8.1%",
     trend: "4.2%",
     trendDirection: "down",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#ba1a1a"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-    ),
+    icon: <AlertTriangle className="w-5 h-5 text-[#ba1a1a]" strokeWidth={2} />,
     iconBg: "bg-[#fca5a5]/20",
     progressColor: "bg-[#ba1a1a]",
     progressWidth: "8%",
@@ -94,22 +46,7 @@ const KPI_DATA = [
     value: "1,248.5 t",
     trend: "8.1%",
     trendDirection: "up",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#3b82f6"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <path d="M16 10a4 4 0 0 1-8 0"></path>
-      </svg>
-    ),
+    icon: <ShoppingBag className="w-5 h-5 text-[#3b82f6]" strokeWidth={2} />,
     iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#3b82f6]",
     progressWidth: "75%",
@@ -163,26 +100,11 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
         <div
           className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-bold ${data.trendColors}`}
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-          >
-            {data.trendDirection === "up" ? (
-              <>
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                <polyline points="17 6 23 6 23 12"></polyline>
-              </>
-            ) : (
-              <>
-                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                <polyline points="17 18 23 18 23 12"></polyline>
-              </>
-            )}
-          </svg>
+          {data.trendDirection === "up" ? (
+            <TrendingUp className="w-3 h-3" strokeWidth={3} />
+          ) : (
+            <TrendingDown className="w-3 h-3" strokeWidth={3} />
+          )}
           {data.trend}
         </div>
       </div>
@@ -206,54 +128,10 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
 
 function CategoryIcon({ type }: { type: string }) {
   if (type === "boxes")
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-      </svg>
-    );
+    return <Box className="w-4 h-4" strokeWidth={2} />;
   if (type === "magnet")
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M4 11V7a8 8 0 0 1 16 0v4"></path>
-        <path d="M4 11h4v4H4z"></path>
-        <path d="M16 11h4v4h-4z"></path>
-      </svg>
-    );
-  if (type === "drop")
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-      </svg>
-    );
+    return <Magnet className="w-4 h-4" strokeWidth={2} />;
+    return <Droplet className="w-4 h-4" strokeWidth={2} />;
   return null;
 }
 
@@ -384,20 +262,7 @@ export default function Analytics() {
             onClick={handleExportPDF}
             className="bg-primary text-white text-sm font-semibold rounded-lg px-4 py-2 hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
+            <Download className="w-4 h-4" strokeWidth={2.5} />
             Export PDF
           </button>
           <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1 shadow-sm">
@@ -603,27 +468,9 @@ export default function Analytics() {
               {t("analytics.categoryBreakdown")}
             </h2>
             <button className="bg-card border border-border text-muted-foreground text-sm font-semibold rounded-lg px-4 py-2 hover:bg-background dark:hover:bg-secondary transition-colors flex items-center gap-2 cursor-pointer">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-              </svg>
+              <Filter className="w-3.5 h-3.5" strokeWidth={2} />
               {t("analytics.filterCategory")}
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <ChevronDown className="w-3.5 h-3.5" strokeWidth={2} />
             </button>
           </div>
 
@@ -633,58 +480,19 @@ export default function Analytics() {
                 <tr className="bg-card border-b border-[#f1f5f9] dark:border-[#0f2942]">
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider flex items-center gap-1">
                     {t("analytics.tableMatCat")}
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
-                    </svg>
+                    <ArrowUpDown className="w-3 h-3" strokeWidth={2} />
                   </th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     {t("analytics.tableVol")}
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      className="inline"
-                    >
-                      <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
-                    </svg>
+                    <ArrowUpDown className="w-3 h-3 inline" strokeWidth={2} />
                   </th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     {t("analytics.tableMom")}
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      className="inline"
-                    >
-                      <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
-                    </svg>
+                    <ArrowUpDown className="w-3 h-3 inline" strokeWidth={2} />
                   </th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider">
                     {t("analytics.tableTarget")}
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      className="inline"
-                    >
-                      <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
-                    </svg>
+                    <ArrowUpDown className="w-3 h-3 inline" strokeWidth={2} />
                   </th>
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground tracking-wider text-right">
                     {t("analytics.tableAction")}
@@ -751,42 +559,13 @@ export default function Analytics() {
                         `}
                           >
                             {row.growthTrend === "up" && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                              >
-                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                <polyline points="17 6 23 6 23 12"></polyline>
-                              </svg>
+                              <TrendingUp className="w-2.5 h-2.5" strokeWidth={3} />
                             )}
                             {row.growthTrend === "down" && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                              >
-                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                                <polyline points="17 18 23 18 23 12"></polyline>
-                              </svg>
+                              <TrendingDown className="w-2.5 h-2.5" strokeWidth={3} />
                             )}
                             {row.growthTrend === "neutral" && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                              >
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                              </svg>
+                              <Minus className="w-2.5 h-2.5" strokeWidth={3} />
                             )}
                             {row.growth}
                           </div>
@@ -806,20 +585,7 @@ export default function Analytics() {
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-right">
                           <button className="text-muted-foreground hover:text-foreground dark:text-white transition-colors p-1 cursor-pointer">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <circle cx="12" cy="12" r="1"></circle>
-                              <circle cx="12" cy="5" r="1"></circle>
-                              <circle cx="12" cy="19" r="1"></circle>
-                            </svg>
+                            <MoreVertical className="w-4.5 h-4.5" strokeWidth={2} />
                           </button>
                         </td>
                       </tr>

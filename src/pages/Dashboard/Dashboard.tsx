@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
+import { Cpu, Box, DollarSign, AlertTriangle, Loader2, Download } from "lucide-react";
 import { useNavigate, useSearchParams, Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
@@ -41,27 +42,7 @@ const KPIS = [
     iconColorClass: "text-muted-foreground",
     iconBgClass: "bg-[#515f74]/10",
     linkTo: "/devices",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-        <rect x="9" y="9" width="6" height="6"></rect>
-        <line x1="9" y1="1" x2="9" y2="4"></line>
-        <line x1="15" y1="1" x2="15" y2="4"></line>
-        <line x1="9" y1="20" x2="9" y2="23"></line>
-        <line x1="15" y1="20" x2="15" y2="23"></line>
-        <line x1="20" y1="9" x2="23" y2="9"></line>
-        <line x1="20" y1="14" x2="23" y2="14"></line>
-        <line x1="1" y1="9" x2="4" y2="9"></line>
-        <line x1="1" y1="14" x2="4" y2="14"></line>
-      </svg>
-    ),
+    icon: <Cpu className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "TOTAL ITEMS SORTED",
@@ -70,20 +51,7 @@ const KPIS = [
     trendDirection: "up" as const,
     iconColorClass: "text-[#006c49]",
     iconBgClass: "bg-[#10b981]/10",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-      </svg>
-    ),
+    icon: <Box className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "RECYCLING RATE %",
@@ -92,18 +60,7 @@ const KPIS = [
     trendDirection: "up" as const,
     iconColorClass: "text-[#0284c7]",
     iconBgClass: "bg-[#23acf1]/10",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
-    ),
+    icon: <DollarSign className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "CONTAMINATION RATE %",
@@ -112,20 +69,7 @@ const KPIS = [
     trendDirection: "up" as const,
     iconColorClass: "text-[#d97706]",
     iconBgClass: "bg-[#fef3c7]",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-    ),
+    icon: <AlertTriangle className="w-4 h-4" strokeWidth={2} />,
   },
 ];
 
@@ -454,40 +398,12 @@ export default function Dashboard() {
           >
             {isExporting ? (
               <>
-                <svg
-                  className="animate-spin h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <Loader2 className="animate-spin w-4 h-4" strokeWidth={2} />
                 Exporting...
               </>
             ) : (
               <>
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                </svg>
+                <Download className="w-3.5 h-3.5" strokeWidth={2} />
                 {t("dashboard.exportBtn")}
               </>
             )}

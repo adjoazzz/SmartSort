@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { CollectorProfileModal } from "./CollectorProfileModal";
@@ -104,20 +105,7 @@ export default function Collectors() {
             Registered Personnel
           </h2>
           <div className="flex items-center w-full sm:w-auto min-w-[250px] bg-card rounded-lg border border-black dark:border-border focus-within:border-black dark:focus-within:border-border focus-within:shadow-sm transition-all overflow-hidden px-3.5 py-2">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="mr-2.5 dark:stroke-white"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+            <Search className="w-4 h-4 mr-2.5 text-black dark:text-white" strokeWidth={2.5} />
             <input
               type="text"
               placeholder="Search collectors..."
@@ -256,16 +244,7 @@ export default function Collectors() {
                 disabled={page === 1}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
+                <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2} />
               </button>
 
               <button
@@ -273,16 +252,7 @@ export default function Collectors() {
                 disabled={page === totalPages || totalPages === 0}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-background cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <ChevronRight className="w-3.5 h-3.5" strokeWidth={2} />
               </button>
             </div>
           </div>

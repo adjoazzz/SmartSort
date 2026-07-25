@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Check, CameraOff, ScanLine, Info, Building, ArrowRight, LifeBuoy } from "lucide-react";
 import { useNavigate } from "react-router";
 import { InputField } from "../../components/InputField";
 import { Html5Qrcode } from "html5-qrcode";
@@ -280,21 +281,7 @@ export default function Onboarding() {
                 {cameraState === "success" && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-emerald-500/10 z-20 animate-fade-in">
                     <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-scale-up">
-                      <svg
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        className="text-white"
-                      >
-                        <path
-                          d="M20 6L9 17L4 12"
-                          stroke="currentColor"
-                          strokeWidth="3.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Check className="w-8 h-8 text-white" strokeWidth={3.5} />
                     </div>
                     <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-3 tracking-widest uppercase animate-pulse">
                       CONNECTED
@@ -305,27 +292,7 @@ export default function Onboarding() {
                 {/* Permission Denied / Error Fallback State */}
                 {cameraState === "permission_denied" && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-900/50 text-center z-20">
-                    <svg
-                      width="40"
-                      height="40"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="text-red-500 mb-2"
-                    >
-                      <path
-                        d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                      <line
-                        x1="1"
-                        y1="1"
-                        x2="23"
-                        y2="23"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
+                    <CameraOff className="w-10 h-10 text-red-500 mb-2" strokeWidth={1.5} />
                     <span className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                       Camera Blocked
                     </span>
@@ -368,16 +335,7 @@ export default function Onboarding() {
                       onClick={handleSimulateScan}
                       className="px-3 py-1 bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded shadow-sm transition-all flex items-center gap-1 cursor-pointer"
                     >
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      >
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                      </svg>
+                      <ScanLine className="w-3 h-3" strokeWidth={2.5} />
                       Simulate QR Scan
                     </button>
                   )}
@@ -447,21 +405,7 @@ export default function Onboarding() {
                 onChange={setSerial}
               />
               <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  className="text-muted-foreground"
-                >
-                  <path
-                    d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1zM7 4v4M7 10.5v-.5"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Info className="w-3.5 h-3.5 text-muted-foreground" strokeWidth={1.2} />
                 Serial numbers start with 'SS' followed by 12 characters.
               </p>
             </div>
@@ -470,15 +414,7 @@ export default function Onboarding() {
             <div className="bg-[#eff4ff] dark:bg-background border border-[#bbcabf] dark:border-border rounded-lg p-4 flex items-center justify-between mt-2">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-card border border-[#bbcabf] dark:border-border rounded-md flex items-center justify-center text-[#006c49] dark:text-emerald-400">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <Building className="w-5 h-5" strokeWidth={2} />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xs font-semibold text-foreground dark:text-white">
@@ -500,15 +436,7 @@ export default function Onboarding() {
                 className="h-12 w-full bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
               >
                 Register & Finish
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 12h14M12 5l7 7-7 7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <ArrowRight className="w-[18px] h-[18px]" strokeWidth={2} />
               </button>
 
               <button
@@ -520,19 +448,7 @@ export default function Onboarding() {
             </div>
 
             <div className="mt-4 border border-[#bbcabf]/50 dark:border-border bg-background dark:bg-secondary rounded-lg p-4 flex items-start gap-3">
-              <svg
-                className="w-5 h-5 text-[#23acf1] flex-shrink-0 mt-0.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
+              <LifeBuoy className="w-5 h-5 text-[#23acf1] flex-shrink-0 mt-0.5" strokeWidth={2} />
               <div>
                 <p className="text-sm font-semibold text-foreground dark:text-white">
                   Need help with installation?

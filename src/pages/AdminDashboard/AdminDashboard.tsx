@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Warehouse, Smartphone, Activity, DollarSign } from "lucide-react";
 import { Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
@@ -359,12 +360,7 @@ export default function AdminDashboard() {
           trendDirection="neutral"
           iconColorClass="text-[#10b981]"
           iconBgClass="bg-[#10b981]/10"
-          iconSvg={
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          }
+          iconSvg={<Warehouse className="w-4 h-4" strokeWidth={2.5} />}
         />
         <MetricCard
           title="Online Sensors / Bins"
@@ -373,12 +369,7 @@ export default function AdminDashboard() {
           trendDirection="up"
           iconColorClass="text-[#3b82f6]"
           iconBgClass="bg-[#3b82f6]/10"
-          iconSvg={
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-              <line x1="12" y1="18" x2="12.01" y2="18" />
-            </svg>
-          }
+          iconSvg={<Smartphone className="w-4 h-4" strokeWidth={2.5} />}
         />
         <MetricCard
           title="Daily Items Sorted"
@@ -387,11 +378,7 @@ export default function AdminDashboard() {
           trendDirection="up"
           iconColorClass="text-[#10b981]"
           iconBgClass="bg-[#10b981]/10"
-          iconSvg={
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-            </svg>
-          }
+          iconSvg={<Activity className="w-4 h-4" strokeWidth={2.5} />}
         />
         <MetricCard
           title="Pending Tonnage"
@@ -400,11 +387,7 @@ export default function AdminDashboard() {
           trendDirection={metrics.criticalAlertsCount > 0 ? "down" : "neutral"}
           iconColorClass="text-[#f59e0b]"
           iconBgClass="bg-[#f59e0b]/10"
-          iconSvg={
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-          }
+          iconSvg={<DollarSign className="w-4 h-4" strokeWidth={2.5} />}
         />
       </div>
 
@@ -433,7 +416,8 @@ export default function AdminDashboard() {
                 onClick={() => {
                   setTrackingTruckId(null);
                 }}
-                className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-white dark:bg-card px-4 py-2 rounded-full shadow-lg border border-border text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-2 cursor-pointer"
+                data-testid="admin-stop-tracking-btn"
+                className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-white dark:bg-card px-4 py-2 rounded-full shadow-lg border border-border text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-2 cursor-pointer active:scale-[0.98]"
               >
                 <span className="animate-pulse h-2 w-2 bg-red-500 rounded-full inline-block" />
                 Stop Tracking
@@ -567,6 +551,7 @@ export default function AdminDashboard() {
               </label>
               <select
                 value={selectedFacilityId}
+                data-testid="admin-dispatch-facility"
                 onChange={(e) => setSelectedFacilityId(e.target.value)}
                 className="h-10 px-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
               >
@@ -587,6 +572,7 @@ export default function AdminDashboard() {
                 <input
                   type="number"
                   step="0.1"
+                  data-testid="admin-dispatch-tonnage"
                   value={tonnageInput}
                   onChange={(e) => setTonnageInput(e.target.value)}
                   className="h-10 px-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
@@ -599,6 +585,7 @@ export default function AdminDashboard() {
                 </label>
                 <select
                   value={selectedCollectorName}
+                  data-testid="admin-dispatch-collector"
                   onChange={(e) => setSelectedCollectorName(e.target.value)}
                   className="h-10 px-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                 >
@@ -612,8 +599,9 @@ export default function AdminDashboard() {
 
             <button
               type="submit"
+              data-testid="admin-dispatch-submit"
               disabled={isSubmitting || !selectedFacilityId}
-              className="h-10 bg-primary hover:bg-primary/90 text-white font-bold text-sm rounded-lg transition-all shadow-md mt-2 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 bg-primary hover:bg-primary/90 text-white font-bold text-sm rounded-lg transition-all shadow-md mt-2 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {isSubmitting ? "Processing Dispatch..." : "Assign Dispatch Route"}
             </button>
@@ -715,7 +703,8 @@ export default function AdminDashboard() {
                     <TableCell className="text-right">
                       <Link
                         to={`/dashboard?facilityId=${fac.id}`}
-                        className="text-xs bg-[#006c49] text-white px-2.5 py-1 rounded hover:bg-[#006c49]/90 font-medium transition-colors cursor-pointer"
+                        data-testid={`admin-inspect-${fac.id}`}
+                        className="text-xs bg-[#006c49] text-white px-2.5 py-1 rounded hover:bg-[#006c49]/90 font-medium transition-colors cursor-pointer active:scale-[0.98] inline-block"
                       >
                         Inspect
                       </Link>
@@ -785,7 +774,8 @@ export default function AdminDashboard() {
                       {job.status === "Pending" && (
                         <button
                           onClick={() => handleTransitPickup(job.id)}
-                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold rounded cursor-pointer transition-colors"
+                          data-testid={`admin-dispatch-truck-${job.id}`}
+                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold rounded cursor-pointer transition-colors active:scale-[0.98]"
                         >
                           Dispatch Truck
                         </button>
@@ -795,13 +785,15 @@ export default function AdminDashboard() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => setTrackingTruckId(trackingTruckId === job.id ? null : job.id)}
-                            className={`px-2.5 py-1 ${trackingTruckId === job.id ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'} text-[10px] font-bold rounded cursor-pointer transition-colors flex items-center gap-1`}
+                            data-testid={`admin-track-truck-${job.id}`}
+                            className={`px-2.5 py-1 ${trackingTruckId === job.id ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'} text-[10px] font-bold rounded cursor-pointer transition-colors flex items-center gap-1 active:scale-[0.98]`}
                           >
                             {trackingTruckId === job.id ? "🎯 Tracking..." : "🎯 Track"}
                           </button>
                           <button
                             onClick={() => handleCompletePickup(job.id)}
-                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded cursor-pointer transition-colors"
+                            data-testid={`admin-complete-truck-${job.id}`}
+                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded cursor-pointer transition-colors active:scale-[0.98]"
                           >
                             Mark Collected
                           </button>

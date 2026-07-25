@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router";
 import { useTheme } from "next-themes";
 import { motion } from "motion/react";
 import emailjs from "@emailjs/browser";
+import { AlertCircle, Sun, Moon, ArrowRight, Play, Sidebar, Target, Clock, LayoutGrid, Camera, Layers, Cpu, Check, Loader2 } from "lucide-react";
 import imgHero from "../../assets/smartsort_hero.png";
 import imgLaptopUi from "../../assets/smartsort_laptop_ui.png";
 
@@ -64,20 +65,7 @@ function FieldError({ message }: { message?: string }) {
       className="text-[11px] font-semibold mt-1 flex items-center gap-1"
       style={{ color: "#ef4444" }}
     >
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
-      </svg>
+      <AlertCircle className="w-3 h-3" strokeWidth={2.5} />
       {message}
     </p>
   );
@@ -254,9 +242,9 @@ export default function Landing() {
             Smart<span className="text-[#006c49]">Sort</span>
           </span>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
-            <a href="#features" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors">Features</a>
-            <a href="#process" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors">How It Operates</a>
-            <a onClick={scrollToInquiry} className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors cursor-pointer">Inquiry</a>
+            <a href="#features" data-testid="landing-nav-features" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors active:scale-[0.98] inline-block">Features</a>
+            <a href="#process" data-testid="landing-nav-process" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors active:scale-[0.98] inline-block">How It Operates</a>
+            <button onClick={scrollToInquiry} data-testid="landing-nav-inquiry" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors cursor-pointer active:scale-[0.98]">Inquiry</button>
           </nav>
         </div>
 
@@ -264,36 +252,27 @@ export default function Landing() {
           {/* Theme Toggle Button */}
           <button
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-slate-100 dark:hover:bg-secondary transition-colors cursor-pointer"
+            data-testid="landing-theme-toggle"
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-slate-100 dark:hover:bg-secondary transition-colors cursor-pointer active:scale-[0.98]"
             aria-label="Toggle Theme"
           >
             {resolvedTheme === "dark" ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-              </svg>
+              <Sun className="w-5 h-5" strokeWidth={2.5} />
             ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
+              <Moon className="w-5 h-5" strokeWidth={2.5} />
             )}
           </button>
 
           <button 
             onClick={() => navigate("/login")}
-            className="px-5 py-2 text-sm font-bold text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors cursor-pointer"
+            data-testid="landing-login-btn"
+            className="px-5 py-2 text-sm font-bold text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors cursor-pointer active:scale-[0.98]"
           >
             Log In
           </button>
           <button 
             onClick={scrollToInquiry}
+            data-testid="landing-request-demo-btn"
             className="px-5 py-2.5 bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-bold rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer"
           >
             Request a Demo
@@ -310,11 +289,11 @@ export default function Landing() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-5 flex flex-col gap-6"
         >
-          <div>
+          {/* <div>
             <span className="inline-flex items-center bg-[#2563eb]/10 dark:bg-[#2563eb]/20 text-[#2563eb] dark:text-[#60a5fa] text-[10px] font-bold tracking-widest px-4.5 py-1.5 rounded-full uppercase border border-[#2563eb]/20">
               ⚡ AI-Powered Waste Stewardship
             </span>
-          </div>
+          </div> */}
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground dark:text-white tracking-tight leading-[1.15]">
             The Future of <br />
@@ -330,29 +309,26 @@ export default function Landing() {
               whileHover="hover"
               whileTap={{ scale: 0.98 }}
               onClick={scrollToInquiry}
+              data-testid="hero-demo-btn"
               className="px-6 py-3.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-sm font-bold rounded-lg shadow-lg shadow-[#2563eb]/15 transition-all flex items-center gap-2 cursor-pointer"
             >
               Request a Demo
-              <motion.svg 
-                variants={{
-                  hover: { x: 4 }
-                }}
+              <motion.span 
+                variants={{ hover: { x: 4 } }}
                 transition={{ duration: 0.2 }}
-                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                className="inline-flex"
               >
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </motion.svg>
+                <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
+              </motion.span>
             </motion.button>
             <motion.button 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={scrollToInquiry}
+              data-testid="hero-video-btn"
               className="px-6 py-3.5 bg-card hover:bg-background dark:hover:bg-secondary text-foreground dark:text-white text-sm font-bold rounded-lg border border-border shadow-sm transition-all flex items-center gap-2 cursor-pointer"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#2563eb]">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
+              <Play className="w-4 h-4 text-[#2563eb]" strokeWidth={2.5} />
               Watch Video
             </motion.button>
           </div>
@@ -459,19 +435,16 @@ export default function Landing() {
             <div className="flex-1 flex flex-col justify-between gap-6">
               <div className="flex flex-col gap-4">
                 <div className="w-10 h-10 bg-[#2563eb]/10 rounded-xl flex items-center justify-center text-[#2563eb]">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                    <line x1="9" y1="3" x2="9" y2="21"></line>
-                  </svg>
+                  <Sidebar className="w-5 h-5" strokeWidth={2.5} />
                 </div>
                 <h3 className="text-xl font-bold">98% Sorting Accuracy</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   Our deep learning models are trained on over 50 million labeled waste instances, ensuring near-perfect material identification.
                 </p>
               </div>
-              <a onClick={scrollToInquiry} className="text-xs font-bold text-[#2563eb] hover:underline cursor-pointer flex items-center gap-1">
+              <button onClick={scrollToInquiry} data-testid="explore-models-btn" className="text-xs font-bold text-[#2563eb] hover:underline cursor-pointer flex items-center gap-1 active:scale-[0.98]">
                 Explore Data Models →
-              </a>
+              </button>
             </div>
             <div className="flex-1 -mb-10 -mr-6 sm:-mr-12 rounded-tl-xl overflow-hidden border-t border-l border-[#cbd5e1] dark:border-border">
               <img src={imgLaptopUi} alt="Dashboard Interface Preview" className="w-full h-full object-cover" />
@@ -489,10 +462,7 @@ export default function Landing() {
           >
             <div className="flex flex-col gap-4">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
+                <Target className="w-5 h-5" strokeWidth={2.5} />
               </div>
               <h3 className="text-xl font-bold">Real-Time Monitoring</h3>
               <p className="text-xs text-white/80 leading-relaxed">
@@ -501,9 +471,7 @@ export default function Landing() {
             </div>
             <div className="flex items-end justify-between border-t border-white/25 pt-4">
               <span className="text-4xl font-extrabold tracking-tight">24/7</span>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-60">
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-              </svg>
+              <Clock className="w-7 h-7 opacity-60" strokeWidth={2} />
             </div>
           </motion.div>
 
@@ -517,10 +485,7 @@ export default function Landing() {
             className="md:col-span-4 bg-card text-foreground dark:text-white border border-[#cbd5e1]/60 dark:border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
           >
             <div className="w-10 h-10 bg-[#3b82f6]/10 dark:bg-white/10 rounded-xl flex items-center justify-center text-[#3b82f6]">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
-                <path d="M7 2v20M17 2v20M2 7h20M2 17h20"></path>
-              </svg>
+              <LayoutGrid className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <div className="flex flex-col gap-2">
               <h3 className="text-lg font-bold">Seamless Integration</h3>
@@ -610,10 +575,7 @@ export default function Landing() {
               className="flex flex-col items-center text-center gap-5"
             >
               <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#2563eb]">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
+                <Camera className="w-6 h-6" strokeWidth={2} />
               </div>
               <div className="w-6 h-6 rounded-full bg-[#2563eb] text-white text-xs font-bold flex items-center justify-center">1</div>
               <h3 className="text-lg font-bold">Object Detection</h3>
@@ -631,11 +593,7 @@ export default function Landing() {
               className="flex flex-col items-center text-center gap-5"
             >
               <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#10b981]">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2 12 2"></polygon>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                  <polyline points="2 12 12 17 22 12"></polyline>
-                </svg>
+                <Layers className="w-6 h-6" strokeWidth={2} />
               </div>
               <div className="w-6 h-6 rounded-full bg-[#10b981] text-white text-xs font-bold flex items-center justify-center">2</div>
               <h3 className="text-lg font-bold">AI Classification</h3>
@@ -653,9 +611,7 @@ export default function Landing() {
               className="flex flex-col items-center text-center gap-5"
             >
               <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#8b5cf6]">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                </svg>
+                <Cpu className="w-6 h-6" strokeWidth={2} />
               </div>
               <div className="w-6 h-6 rounded-full bg-[#8b5cf6] text-white text-xs font-bold flex items-center justify-center">3</div>
               <h3 className="text-lg font-bold">Automated Sorting</h3>
@@ -701,9 +657,7 @@ export default function Landing() {
             {submitted ? (
               <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#10b981]/15 flex items-center justify-center text-[#10b981]">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
+                  <Check className="w-7 h-7" strokeWidth={2.5} />
                 </div>
                 <h3 className="text-xl font-bold">Welcome to SmartSort!</h3>
                 <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
@@ -729,6 +683,7 @@ export default function Landing() {
                   </label>
                   <input 
                     type="text" 
+                    data-testid="inquiry-company-name"
                     placeholder="Global Logistics Inc." 
                     value={form.companyName}
                     onChange={e => handleCompanyNameChange(e.target.value)}
@@ -746,6 +701,7 @@ export default function Landing() {
                   <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Facility Tons Output (Tons/M)</label>
                   <select 
                     value={form.tonsRange}
+                    data-testid="inquiry-tons"
                     onChange={e => setForm({...form, tonsRange: e.target.value})}
                     className="h-11 px-4 border border-[#cbd5e1] dark:border-border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
                   >
@@ -766,6 +722,7 @@ export default function Landing() {
                   </label>
                   <input 
                     type="email" 
+                    data-testid="inquiry-email"
                     placeholder="manager@company.com" 
                     value={form.email}
                     onChange={e => handleEmailChange(e.target.value)}
@@ -781,6 +738,7 @@ export default function Landing() {
 
                 <button 
                   type="submit"
+                  data-testid="inquiry-submit-btn"
                   disabled={
                     form.companyName.trim() === "" ||
                     form.email.trim() === "" ||
@@ -801,10 +759,7 @@ export default function Landing() {
                 >
                   {status === "sending" ? (
                     <>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 2a10 10 0 0 1 0 20"></path>
-                      </svg>
+                      <Loader2 className="w-4 h-4 animate-spin" strokeWidth={2} />
                       Sending...
                     </>
                   ) : (

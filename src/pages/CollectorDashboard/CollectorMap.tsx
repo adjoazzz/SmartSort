@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ArrowLeft, Navigation, Check, CheckCircle, CheckSquare, X } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Progress } from "../../components/ui/progress";
@@ -189,19 +190,7 @@ export default function CollectorMap() {
           onClick={() => navigate("/collector-dashboard")}
           className="px-4 py-2 border border-border bg-card text-foreground dark:text-white text-xs font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-secondary transition-colors flex items-center gap-2 cursor-pointer shadow-sm self-start"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
+          <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
           Back to Dashboard
         </button>
 
@@ -293,36 +282,14 @@ export default function CollectorMap() {
                             }}
                             className="flex-1 py-1.5 bg-[#0284c7] text-white text-[10px] font-bold rounded-md hover:bg-[#0369a1] transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
                           >
-                            <svg
-                              width="10"
-                              height="10"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                            </svg>
+                            <Navigation className="w-2.5 h-2.5" strokeWidth={3} />
                             Navigate
                           </button>
                           <button
                             onClick={() => setRemindJobId(job.id)}
                             className="flex-1 py-1.5 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
                           >
-                            <svg
-                              width="10"
-                              height="10"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
+                            <Check className="w-2.5 h-2.5" strokeWidth={3} />
                             Mark Done
                           </button>
                         </div>
@@ -894,18 +861,7 @@ export default function CollectorMap() {
           >
             <div className="bg-card border border-[#006c49] rounded-xl px-8 py-6 shadow-md flex flex-col items-center gap-3">
               <div className="h-14 w-14 rounded-full bg-[#10b981]/15 text-[#10b981] flex items-center justify-center animate-[bounce_1s_infinite]">
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <Check className="w-7 h-7 text-[#10b981]" strokeWidth={3.5} />
               </div>
               <h3 className="font-black text-lg text-foreground dark:text-white">
                 Bin Cleared Successfully!
@@ -971,18 +927,7 @@ export default function CollectorMap() {
                 >
                   <div className="flex justify-between items-center border-b border-[#f1f5f9] dark:border-[#0f2942] pb-3">
                     <div className="flex items-center gap-2 text-[#0284c7]">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                      </svg>
+                      <Navigation className="w-[18px] h-[18px]" strokeWidth={2.5} />
                       <span className="text-sm font-bold tracking-wider uppercase">
                         Active HUD Navigation
                       </span>
@@ -994,19 +939,7 @@ export default function CollectorMap() {
                       }}
                       className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
                     >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
+                      <X className="w-5 h-5" strokeWidth={2} />
                     </button>
                   </div>
 
@@ -1065,19 +998,7 @@ export default function CollectorMap() {
                     }}
                     className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
+                    <CheckCircle className="w-4 h-4" strokeWidth={3} />
                     Arrived at Destination
                   </button>
                 </motion.div>
@@ -1116,19 +1037,7 @@ export default function CollectorMap() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] flex items-center justify-center shrink-0">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M9 11l3 3L22 4"></path>
-                          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                        </svg>
+                        <CheckSquare className="w-5 h-5" strokeWidth={2.5} />
                       </div>
                       <div>
                         <h3 className="text-sm font-black text-foreground dark:text-white">
@@ -1143,17 +1052,7 @@ export default function CollectorMap() {
                       onClick={() => setRemindJobId(null)}
                       className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors mt-0.5"
                     >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      >
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
+                      <X className="w-[18px] h-[18px]" strokeWidth={2.5} />
                     </button>
                   </div>
 
@@ -1181,18 +1080,7 @@ export default function CollectorMap() {
                     {checklist.map((item, i) => (
                       <div key={i} className="flex items-start gap-2.5">
                         <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-primary/10 flex items-center justify-center shrink-0">
-                          <svg
-                            width="9"
-                            height="9"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#006c49"
-                            strokeWidth="3.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
+                          <Check className="w-[9px] h-[9px] text-[#006c49]" strokeWidth={3.5} />
                         </div>
                         <span className="text-xs text-foreground dark:text-muted-foreground">
                           {item}
@@ -1218,18 +1106,7 @@ export default function CollectorMap() {
                       }}
                       className="flex-1 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
+                      <Check className="w-[13px] h-[13px]" strokeWidth={3} />
                       Confirm Complete
                     </button>
                   </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { AlertTriangle, AlertCircle, Info, Bell, X, ChevronRight, ArrowRight } from "lucide-react";
 
 interface Alert {
   id: string;
@@ -72,66 +73,21 @@ const severityConfig = {
     bgColor: "bg-[#ffdad6]/20",
     textColor: "text-[#ba1a1a]",
     borderColor: "border-[#ba1a1a]/20",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-    ),
+    icon: <AlertTriangle className="w-3.5 h-3.5" strokeWidth={2.5} />,
   },
   WARNING: {
     dotColor: "bg-[#d97706]",
     bgColor: "bg-[#fef3c7]/40",
     textColor: "text-[#d97706]",
     borderColor: "border-[#d97706]/20",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-      </svg>
-    ),
+    icon: <AlertCircle className="w-3.5 h-3.5" strokeWidth={2.5} />,
   },
   INFO: {
     dotColor: "bg-[#0284c7]",
     bgColor: "bg-[#e0f2fe]/40",
     textColor: "text-[#0284c7]",
     borderColor: "border-[#0284c7]/20",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    ),
+    icon: <Info className="w-3.5 h-3.5" strokeWidth={2.5} />,
   },
 };
 
@@ -185,19 +141,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
             <div className="flex items-center justify-between px-6 py-5 border-b border-border/40 dark:border-border/40 bg-transparent flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-[#ffdad6]/30 flex items-center justify-center text-[#ba1a1a]">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                  </svg>
+                  <Bell className="w-[18px] h-[18px]" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-foreground dark:text-white">
@@ -213,19 +157,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground dark:text-white hover:bg-muted dark:hover:bg-muted transition-colors cursor-pointer"
                 aria-label="Close notifications"
               >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                <X className="w-[18px] h-[18px]" strokeWidth={2.5} />
               </button>
             </div>
 
@@ -285,20 +217,10 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                             </div>
                           </div>
 
-                          {/* Arrow on hover */}
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            className="text-muted-foreground group-hover:text-[#006c49] transition-colors flex-shrink-0 mt-1"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                          </svg>
+                          <ChevronRight
+                            className="w-3.5 h-3.5 text-muted-foreground group-hover:text-[#006c49] transition-colors flex-shrink-0 mt-1"
+                            strokeWidth={2.5}
+                          />
                         </div>
                       </Link>
                     </motion.div>
@@ -315,18 +237,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                 className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-xl px-4 py-3 transition-colors no-underline"
               >
                 {t("alertsSidebar.viewAll")}
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+                <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
               </Link>
             </div>
           </motion.div>

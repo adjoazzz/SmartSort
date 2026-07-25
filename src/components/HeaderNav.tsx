@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useTheme } from "next-themes";
+import { Menu, Search, Bell, Settings, ChevronDown } from "lucide-react";
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import { SideNav } from "./SideNav";
 import { AlertsSidebar } from "./AlertsSidebar";
@@ -116,44 +117,20 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
         <div className="flex items-center gap-4 w-full max-w-lg">
           <button
             onClick={() => setIsNavOpen(true)}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted dark:hover:bg-muted hover:text-foreground dark:text-white transition-colors"
+            data-testid="header-menu-btn"
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted dark:hover:bg-muted hover:text-foreground dark:text-white transition-colors active:scale-[0.98]"
             aria-label="Open Menu"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+            <Menu className="w-6 h-6" strokeWidth={2.5} />
           </button>
 
           {isDashboard && (
-            <div
+            <button
               onClick={() => setOpenCommand(true)}
-              className="flex items-center w-full bg-background dark:bg-secondary rounded-xl border border-transparent hover:border-border dark:hover:border-border hover:bg-white dark:hover:bg-card hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer"
+              data-testid="header-search-btn"
+              className="flex items-center w-full bg-background dark:bg-secondary rounded-xl border border-transparent hover:border-border dark:hover:border-border hover:bg-white dark:hover:bg-card hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer active:scale-[0.98]"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#94A3B8"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-3"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
+              <Search className="w-4 h-4 mr-3 text-[#94A3B8]" strokeWidth={2.5} />
               <div className="flex-1 text-sm font-medium text-muted-foreground flex justify-between items-center">
                 <span>
                   {t("headerNav.searchPlaceholder") || "Search or jump to..."}
@@ -162,7 +139,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                   <span className="text-xs">⌘</span>K
                 </kbd>
               </div>
-            </div>
+            </button>
           )}
 
           <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
@@ -301,22 +278,11 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           {!hideAlertsIcon && (
             <button
               onClick={() => setIsAlertsOpen(true)}
-              className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors relative"
+              data-testid="header-alerts-btn"
+              className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors relative active:scale-[0.98]"
               aria-label="Open alerts"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
+              <Bell className="w-5 h-5" strokeWidth={2.5} />
               <span className="absolute top-0 right-0 w-2 h-2 bg-[#ba1a1a] rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
             </button>
           )}
@@ -325,22 +291,11 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           <div className="relative" ref={settingsRef}>
             <button
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className={`text-muted-foreground transition-colors ${isSettingsOpen ? "text-foreground dark:text-white" : "hover:text-foreground dark:hover:text-white"}`}
+              data-testid="header-settings-btn"
+              className={`text-muted-foreground transition-colors active:scale-[0.98] ${isSettingsOpen ? "text-foreground dark:text-white" : "hover:text-foreground dark:hover:text-white"}`}
               aria-label="Settings"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
+              <Settings className="w-5 h-5" strokeWidth={2.5} />
             </button>
 
             {isSettingsOpen && (
@@ -367,18 +322,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                       <option value="fr">Français</option>
                     </select>
                     <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
+                      <ChevronDown className="w-3 h-3" strokeWidth={2} />
                     </div>
                   </div>
                 </div>
@@ -477,7 +421,8 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             <button
               ref={profileBtnRef}
               onClick={() => setIsProfileOpen((prev) => !prev)}
-              className="w-9 h-9 rounded-full bg-[#e2e8f0] overflow-hidden border-2 border-white shadow-sm ring-1 ring-[#cbd5e1] cursor-pointer hover:ring-[#94a3b8] transition-all"
+              data-testid="header-profile-btn"
+              className="w-9 h-9 rounded-full bg-[#e2e8f0] overflow-hidden border-2 border-white shadow-sm ring-1 ring-[#cbd5e1] cursor-pointer hover:ring-[#94a3b8] transition-all active:scale-[0.98]"
               aria-label="Open profile menu"
               aria-expanded={isProfileOpen}
             >

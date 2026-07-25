@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Check, Info, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { StepDots } from "../../components/StepDots";
 import { SelectField } from "../../components/SelectField";
@@ -99,15 +100,7 @@ export default function Onboarding() {
               <div className="flex flex-col gap-4 mt-4">
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                      <path
-                        d="M20 6L9 17l-5-5"
-                        stroke="#6ffbbe"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <Check className="w-5 h-5 text-[#6ffbbe]" strokeWidth={2.5} />
                   </div>
                   <span className="font-semibold text-[#6ffbbe] tracking-wide text-sm">
                     Step 1: Account Verified
@@ -210,19 +203,7 @@ export default function Onboarding() {
 
             {/* Helper Info Box */}
             <div className="bg-[#eff4ff] dark:bg-background border border-[#bbcabf] dark:border-border p-4 rounded-lg flex gap-3 mt-2">
-              <svg
-                className="w-5 h-5 text-[#006591] dark:text-[#38bdf8] flex-shrink-0 mt-0.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <Info className="w-5 h-5 text-[#006591] dark:text-[#38bdf8] flex-shrink-0 mt-0.5" strokeWidth={2} />
               <p className="text-sm text-[#3c4a42] dark:text-muted-foreground leading-relaxed">
                 These estimates help us customize your dashboard metrics. You
                 can refine these values later in your Facility Settings.
@@ -234,15 +215,7 @@ export default function Onboarding() {
                 onClick={() => navigate("/onboarding-1")}
                 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground dark:text-white transition-colors"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M15 18l-6-6 6-6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <ChevronLeft className="w-[18px] h-[18px]" strokeWidth={2} />
                 Back to Account
               </button>
 
@@ -251,15 +224,7 @@ export default function Onboarding() {
                 className="h-12 px-6 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center gap-2"
               >
                 Complete Sign Up
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M9 18l6-6-6-6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <ChevronRight className="w-[18px] h-[18px]" strokeWidth={2} />
               </button>
             </div>
           </div>
@@ -300,21 +265,7 @@ export default function Onboarding() {
           <div className="bg-card rounded-xl shadow-md max-w-sm w-full overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 flex flex-col gap-4 text-center items-center">
               <div className="w-16 h-16 bg-[#e1f5ee] rounded-full flex items-center justify-center mb-2">
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="text-[#006c49]"
-                >
-                  <path
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <CheckCircle2 className="w-8 h-8 text-[#006c49]" strokeWidth={2.5} />
               </div>
               <h3 className="text-xl font-bold text-foreground dark:text-white">
                 Verification Pending

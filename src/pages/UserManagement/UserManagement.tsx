@@ -7,6 +7,7 @@ import { BulkImportDocsModal } from "./BulkImportDocsModal";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Users, Shield, Clock, Lock, Building, Factory, Warehouse, Eye, ChevronDown, CheckCircle, XCircle, Search, Sliders, Download, UserPlus, MoreVertical, ArrowRight, Calendar, Trash2, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 
 import imgAvatar1 from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import imgAvatar2 from "../../assets/0800bfda658966e2c00bc7ac63132f861621facb.png";
@@ -54,21 +55,7 @@ const KPIS = [
     trendDirection: "up" as const,
     iconColorClass: "text-[#006c49]",
     iconBgClass: "bg-[#10b981]/10",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
+    icon: <Users className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "Active Admins",
@@ -77,18 +64,7 @@ const KPIS = [
     trendDirection: "neutral" as const,
     iconColorClass: "text-[#0284c7]",
     iconBgClass: "bg-[#0284c7]/10",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
+    icon: <Shield className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "Pending Invites",
@@ -97,19 +73,7 @@ const KPIS = [
     trendDirection: "down" as const,
     iconColorClass: "text-[#d97706]",
     iconBgClass: "bg-[#fef3c7]",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </svg>
-    ),
+    icon: <Clock className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "Security Score",
@@ -118,19 +82,7 @@ const KPIS = [
     trendDirection: "up" as const,
     iconColorClass: "text-muted-foreground",
     iconBgClass: "bg-muted",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-      </svg>
-    ),
+    icon: <Lock className="w-4 h-4" strokeWidth={2} />,
   },
 ];
 
@@ -252,101 +204,29 @@ const ACTION_MENU_ITEMS = [
     key: "role",
     label: "Change Role",
     danger: false,
-    icon: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />,
+    icon: Shield,
   },
   {
     key: "pending",
     label: "Set Pending",
     danger: false,
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </>
-    ),
+    icon: Clock,
   },
   {
     key: "remove",
     label: "Remove User",
     danger: true,
-    icon: (
-      <>
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      </>
-    ),
+    icon: Trash2,
   },
 ];
 
 /* ── Helpers ──────────────────────────────────────────────── */
 
 // Facility Icons
-const BuildingIcon = () => (
-  <svg
-    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-    <line x1="9" y1="22" x2="9" y2="16" />
-    <line x1="15" y1="22" x2="15" y2="16" />
-    <line x1="9" y1="16" x2="15" y2="16" />
-    <path d="M8 6h2v2H8V6z" />
-    <path d="M14 6h2v2h-2V6z" />
-    <path d="M8 10h2v2H8v-2z" />
-    <path d="M14 10h2v2h-2v-2z" />
-  </svg>
-);
-
-const FactoryIcon = () => (
-  <svg
-    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M2 20V10l5-2 5 2 5-2v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
-    <path d="M17 18h4v-7l-4-2z" />
-    <path d="M12 18h.01" />
-  </svg>
-);
-
-const WarehouseIcon = () => (
-  <svg
-    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-    <polyline points="9 22 9 12 15 12 15 22" />
-  </svg>
-);
-
-const EyeIcon = () => (
-  <svg
-    className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
+const BuildingIcon = () => <Building className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" strokeWidth={2.5} />;
+const FactoryIcon = () => <Factory className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" strokeWidth={2.5} />;
+const WarehouseIcon = () => <Warehouse className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" strokeWidth={2.5} />;
+const EyeIcon = () => <Eye className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" strokeWidth={2.5} />;
 
 const renderFacility = (facility: string) => {
   let icon = <BuildingIcon />;
@@ -405,19 +285,7 @@ const getRoleBadge = (role: string) => {
     >
       <span>{role}</span>
       {style.hasChevron && (
-        <svg
-          width="10"
-          height="10"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="opacity-70 ml-0.5"
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+        <ChevronDown className="w-2.5 h-2.5 opacity-70 ml-0.5" strokeWidth={3} />
       )}
     </div>
   );
@@ -466,35 +334,9 @@ const getInitials = (name: string) =>
 /** Reusable SVG icon wrapper for the permissions check/x marks */
 function PermIcon({ granted }: { granted: boolean }) {
   return granted ? (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      className="text-[#10b981] shrink-0"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
+    <CheckCircle className="w-[14px] h-[14px] text-[#10b981] shrink-0" strokeWidth={2} />
   ) : (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      className="text-muted-foreground shrink-0"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="15" y1="9" x2="9" y2="15" />
-      <line x1="9" y1="9" x2="15" y2="15" />
-    </svg>
+    <XCircle className="w-[14px] h-[14px] text-muted-foreground shrink-0" strokeWidth={2} />
   );
 }
 
@@ -561,11 +403,7 @@ function ActionMenu({
         title="More actions"
         aria-label="Edit entry"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="12" cy="5" r="2" />
-          <circle cx="12" cy="12" r="2" />
-          <circle cx="12" cy="19" r="2" />
-        </svg>
+        <MoreVertical className="w-[18px] h-[18px]" strokeWidth={2} />
       </button>
 
       {isOpen && (
@@ -598,16 +436,11 @@ function ActionMenu({
                       : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
                   }`}
                 >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
+                  <item.icon
+                    className="w-[15px] h-[15px]"
                     stroke={item.danger ? "currentColor" : "#515f74"}
-                    strokeWidth="2"
-                  >
-                    {item.icon}
-                  </svg>
+                    strokeWidth={2}
+                  />
                   {item.label}
                 </button>
               </React.Fragment>
@@ -838,19 +671,7 @@ export default function UserManagement() {
           onClick={() => setIsInviteModalOpen(true)}
           className="bg-primary text-white text-sm font-semibold rounded-lg px-5 py-2.5 hover:bg-primary/90 transition-all shadow-sm flex items-center gap-2 active:scale-95"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="8.5" cy="7" r="4" />
-            <line x1="20" y1="8" x2="20" y2="14" />
-            <line x1="23" y1="11" x2="17" y2="11" />
-          </svg>
+          <UserPlus className="w-4 h-4" strokeWidth={2} />
           Invite User
         </button>
       }
@@ -922,26 +743,7 @@ export default function UserManagement() {
                 : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
             }`}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="4" y1="21" x2="4" y2="14" />
-              <line x1="4" y1="10" x2="4" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12" y2="3" />
-              <line x1="20" y1="21" x2="20" y2="16" />
-              <line x1="20" y1="12" x2="20" y2="3" />
-              <line x1="1" y1="14" x2="7" y2="14" />
-              <line x1="9" y1="8" x2="15" y2="8" />
-              <line x1="17" y1="16" x2="23" y2="16" />
-            </svg>
+            <Sliders className="w-4 h-4" strokeWidth={2.5} />
             Filter
           </button>
           <button
@@ -950,20 +752,7 @@ export default function UserManagement() {
             }}
             className="flex items-center gap-2 border border-border bg-card px-4 py-2.5 rounded-lg text-sm font-semibold text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary transition-all active:scale-95 shadow-sm"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
+            <Download className="w-4 h-4" strokeWidth={2.5} />
             Export
           </button>
         </div>
@@ -975,20 +764,7 @@ export default function UserManagement() {
         {showFilters && (
           <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-background dark:bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center w-full max-w-md bg-card rounded-lg border border-border focus-within:border-border dark:focus-within:border-border focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#94A3B8"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-3 shrink-0"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+              <Search className="w-4 h-4 shrink-0 text-[#94A3B8] mr-3" strokeWidth={2.5} />
               <input
                 type="text"
                 placeholder="Search by name or email..."
@@ -1148,20 +924,7 @@ export default function UserManagement() {
                           }}
                           className="bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-lg px-4.5 py-2 inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                         >
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="animate-spin-once"
-                          >
-                            <path d="M21.5 2v6h-6" />
-                            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
-                          </svg>
+                          <RefreshCw className="w-[14px] h-[14px] animate-spin-once" strokeWidth={2.5} />
                           Reinstate
                         </button>
                       ) : (
@@ -1202,18 +965,7 @@ export default function UserManagement() {
               disabled={currentPage === 1}
               className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
+              <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
             </button>
 
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -1259,18 +1011,7 @@ export default function UserManagement() {
               disabled={currentPage === totalPages}
               className="p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors cursor-pointer"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+              <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
             </button>
           </div>
         </div>
@@ -1346,18 +1087,7 @@ export default function UserManagement() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
+                  <Shield className="w-5 h-5" strokeWidth={2.5} />
                 </div>
                 <h2 className="font-bold text-foreground dark:text-white text-base">
                   Permission Audit
@@ -1374,17 +1104,7 @@ export default function UserManagement() {
               className="text-xs font-bold text-[#0a5cf5] dark:text-[#60a5fa] hover:underline flex items-center gap-1 mt-4"
             >
               View Security Logs
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <ArrowRight className="w-3 h-3" strokeWidth={2.5} />
             </a>
           </div>
         )}
@@ -1413,21 +1133,7 @@ export default function UserManagement() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
+                  <Calendar className="w-5 h-5" strokeWidth={2.5} />
                 </div>
                 <h3 className="font-bold text-foreground dark:text-white text-base">
                   Pending Invites

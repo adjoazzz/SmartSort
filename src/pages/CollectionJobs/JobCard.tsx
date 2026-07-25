@@ -1,4 +1,5 @@
 import React from "react";
+import { MapPin, Check } from "lucide-react";
 import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 
 export interface Job {
@@ -187,33 +188,14 @@ export function JobCard({
         {/* Action buttons */}
         <div className="grid grid-cols-2 gap-3 pt-1">
           <button className="h-10 border border-slate-200 dark:border-border hover:bg-slate-50 dark:hover:bg-secondary text-slate-600 dark:text-muted-foreground text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
+            <MapPin className="w-3 h-3" strokeWidth={2.5} />
             View Map
           </button>
           <button
             onClick={() => onComplete(job.id)}
             className="h-10 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md shadow-green-600/10 active:scale-[0.98]"
           >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
+            <Check className="w-3 h-3" strokeWidth={2.5} />
             Complete
           </button>
         </div>

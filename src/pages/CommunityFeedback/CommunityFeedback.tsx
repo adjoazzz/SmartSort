@@ -1,5 +1,6 @@
 import { apiService } from "../../lib/apiService";
 import React, { useState, useEffect } from "react";
+import { FileText, Clock, CheckCircle, Smile, ChevronDown, FilterX, Download, MapPin, FilePlus, MessageCircle, Eye, ChevronLeft, ChevronRight, Leaf, Send, Filter } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -217,20 +218,7 @@ export default function CommunityFeedback() {
       iconColorClass: "text-[#ba1a1a]",
       iconBgClass: "bg-[#ffdad6]",
       icon: (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
+        <FileText className="w-4 h-4" strokeWidth={2} />
       ),
     },
     {
@@ -241,17 +229,7 @@ export default function CommunityFeedback() {
       iconColorClass: "text-[#0284c7]",
       iconBgClass: "bg-[#23acf1]/10",
       icon: (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
+        <Clock className="w-4 h-4" strokeWidth={2} />
       ),
     },
     {
@@ -262,17 +240,7 @@ export default function CommunityFeedback() {
       iconColorClass: "text-[#006c49]",
       iconBgClass: "bg-[#10b981]/10",
       icon: (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
+        <CheckCircle className="w-4 h-4" strokeWidth={2} />
       ),
     },
     {
@@ -283,19 +251,7 @@ export default function CommunityFeedback() {
       iconColorClass: "text-[#d97706]",
       iconBgClass: "bg-[#fef3c7]",
       icon: (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-          <line x1="9" y1="9" x2="9.01" y2="9"></line>
-          <line x1="15" y1="9" x2="15.01" y2="9"></line>
-        </svg>
+        <Smile className="w-4 h-4" strokeWidth={2} />
       ),
     },
   ];
@@ -358,35 +314,14 @@ export default function CommunityFeedback() {
             onClick={handleExportPDF}
             className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-muted-foreground font-medium text-xs rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
+            <Download className="w-3.5 h-3.5" strokeWidth={2} />
             Export PDF
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-medium text-xs rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
+            <Plus className="w-3.5 h-3.5" strokeWidth={2} />
             Manual Entry
           </button>
         </>
@@ -414,20 +349,7 @@ export default function CommunityFeedback() {
         <div className="px-6 py-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-background dark:bg-secondary">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                ></path>
-              </svg>
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" strokeWidth={2} />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -509,7 +431,7 @@ export default function CommunityFeedback() {
                             {item.userName || "Unknown User"}
                           </span>
                           <span className="text-slate-500 dark:text-slate-400 text-xs font-medium flex items-center gap-1 mt-0.5">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <MapPin className="w-3 h-3" strokeWidth={2} />
                             {item.location || "Unknown Location"}
                           </span>
                         </div>
@@ -545,19 +467,7 @@ export default function CommunityFeedback() {
                           className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
                           title="Convert to Job"
                         >
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                          </svg>
+                          <FilePlus className="w-[18px] h-[18px]" strokeWidth={2} />
                         </button>
                         <button
                           onClick={() =>
@@ -566,32 +476,13 @@ export default function CommunityFeedback() {
                           className="p-1.5 text-muted-foreground hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors cursor-pointer"
                           title={`Update status: ${item.status === "Pending" ? "In Progress" : item.status === "In Progress" ? "Resolved" : "Pending"}`}
                         >
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                          </svg>
+                          <MessageCircle className="w-[18px] h-[18px]" strokeWidth={2} />
                         </button>
                         <button
                           className="p-1.5 text-muted-foreground hover:text-foreground dark:text-white hover:bg-[#e2e8f0] rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                          </svg>
+                          <Eye className="w-[18px] h-[18px]" strokeWidth={2} />
                         </button>
                       </div>
                     </TableCell>
@@ -615,18 +506,7 @@ export default function CommunityFeedback() {
               disabled={currentPage === 1}
               className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
+              <ChevronLeft className="w-4 h-4" strokeWidth={2} />
             </button>
             {Array.from({ length: totalPages }).map((_, idx) => {
               const page = idx + 1;
@@ -650,18 +530,7 @@ export default function CommunityFeedback() {
               disabled={currentPage === totalPages}
               className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
+              <ChevronRight className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
         </div>
@@ -761,16 +630,7 @@ export default function CommunityFeedback() {
           {/* Decorative background pattern */}
           <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-primary/40 rounded-full blur-3xl"></div>
           <div className="absolute right-4 top-4 text-[#006c49]/30">
-            <svg
-              width="80"
-              height="80"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-            </svg>
+            <Leaf className="w-20 h-20 opacity-30" strokeWidth={1} />
           </div>
         </div>
       </div>
@@ -847,17 +707,7 @@ export default function CommunityFeedback() {
               onClick={handleSubmitFeedback}
               className="flex-1 h-11 bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-sm font-semibold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M22 2L11 13" />
-                <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-              </svg>
+              <Send className="w-4 h-4" strokeWidth={2} />
               Submit Feedback
             </button>
           </div>

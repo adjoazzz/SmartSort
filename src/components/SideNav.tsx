@@ -1,6 +1,19 @@
 import React, { useState, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import {
+  LayoutDashboard,
+  BarChart2,
+  Smartphone,
+  AlertTriangle,
+  Briefcase,
+  MessageCircle,
+  Users,
+  Shield,
+  X,
+  ChevronDown,
+  LogOut,
+} from "lucide-react";
 
 export interface SideNavProps {
   isOpen: boolean;
@@ -11,101 +24,27 @@ const getNavItems = (t: any) => [
   {
     path: "/dashboard",
     label: t("sideNav.dashboard"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="3" width="7" height="9"></rect>
-        <rect x="14" y="3" width="7" height="5"></rect>
-        <rect x="14" y="12" width="7" height="9"></rect>
-        <rect x="3" y="16" width="7" height="5"></rect>
-      </svg>
-    ),
+    icon: <LayoutDashboard className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/analytics",
     label: t("sideNav.analytics"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="18" y1="20" x2="18" y2="10"></line>
-        <line x1="12" y1="20" x2="12" y2="4"></line>
-        <line x1="6" y1="20" x2="6" y2="14"></line>
-      </svg>
-    ),
+    icon: <BarChart2 className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/devices",
     label: t("sideNav.devices"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-        <line x1="12" y1="18" x2="12.01" y2="18"></line>
-      </svg>
-    ),
+    icon: <Smartphone className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/alerts",
     label: t("sideNav.alerts"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-    ),
+    icon: <AlertTriangle className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/jobs",
     label: t("sideNav.collection"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-      </svg>
-    ),
+    icon: <Briefcase className="w-5 h-5" strokeWidth={2} />,
     children: [
       { path: "/jobs", label: t("sideNav.jobs") },
       { path: "/collectors", label: t("sideNav.collectors") },
@@ -114,41 +53,12 @@ const getNavItems = (t: any) => [
   {
     path: "/community-feedback",
     label: t("sideNav.communityFeedback"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-      </svg>
-    ),
+    icon: <MessageCircle className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/manager/users",
     label: t("sideNav.userManagement"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-    ),
+    icon: <Users className="w-5 h-5" strokeWidth={2} />,
   },
 ];
 
@@ -156,100 +66,27 @@ const getAdminNavItems = (t: any) => [
   {
     path: "/admin/dashboard",
     label: t("Enterprise Overview") || "Enterprise Overview",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        <circle cx="12" cy="11" r="3"></circle>
-      </svg>
-    ),
+    icon: <Shield className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/manager/users",
     label: t("sideNav.userManagement"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-    ),
+    icon: <Users className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/devices",
     label: t("sideNav.devices"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-        <line x1="12" y1="18" x2="12.01" y2="18"></line>
-      </svg>
-    ),
+    icon: <Smartphone className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/alerts",
     label: t("sideNav.alerts"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
-    ),
+    icon: <AlertTriangle className="w-5 h-5" strokeWidth={2} />,
   },
   {
     path: "/jobs",
     label: t("sideNav.collection") || "Collection",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-      </svg>
-    ),
+    icon: <Briefcase className="w-5 h-5" strokeWidth={2} />,
     children: [
       { path: "/jobs", label: t("sideNav.jobs") },
       { path: "/collectors", label: t("sideNav.collectors") },
@@ -258,20 +95,7 @@ const getAdminNavItems = (t: any) => [
   {
     path: "/community-feedback",
     label: t("sideNav.communityFeedback"),
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-      </svg>
-    ),
+    icon: <MessageCircle className="w-5 h-5" strokeWidth={2} />,
   },
 ];
 
@@ -299,23 +123,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
         {
           path: "/collector-dashboard",
           label: t("sideNav.collectorDashboard") || "Collector Dashboard",
-          icon: (
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="3" width="7" height="9"></rect>
-              <rect x="14" y="3" width="7" height="5"></rect>
-              <rect x="14" y="12" width="7" height="9"></rect>
-              <rect x="3" y="16" width="7" height="5"></rect>
-            </svg>
-          ),
+          icon: <LayoutDashboard className="w-5 h-5" strokeWidth={2} />,
         },
       ];
     }
@@ -363,19 +171,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
             aria-label="Close sidebar menu"
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted dark:hover:bg-muted text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
 
@@ -407,19 +203,10 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
                       </div>
                       {item.label}
                     </div>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-                    >
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                      strokeWidth={2}
+                    />
                   </button>
                 ) : (
                   <Link
@@ -476,20 +263,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
             }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] dark:text-red-400 hover:bg-[#ffdad6]/50 dark:hover:bg-red-500/10 font-semibold transition-colors text-left cursor-pointer"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
+            <LogOut className="w-5 h-5" strokeWidth={2} />
             {t("sideNav.signOut")}
           </button>
         </div>

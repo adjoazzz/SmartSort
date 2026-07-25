@@ -2,6 +2,7 @@ import { authFetch } from "../../lib/authFetch";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { supabase } from "../../lib/supabaseClient";
+import { Shield, Truck, User, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import imgAiCore from "../../assets/smartsort_ai_core.png";
 
 // --- Custom SVGs for UI Icons ---
@@ -58,137 +59,6 @@ function LogoSvg() {
   );
 }
 
-function ShieldLockIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-  );
-}
-
-function TruckIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="1" y="3" width="15" height="13"></rect>
-      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-      <circle cx="5.5" cy="18.5" r="2.5"></circle>
-      <circle cx="18.5" cy="18.5" r="2.5"></circle>
-    </svg>
-  );
-}
-
-function UserIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-  );
-}
-
-function PasswordLockIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-  );
-}
-
-function EyeOpenIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-      <circle cx="12" cy="12" r="3"></circle>
-    </svg>
-  );
-}
-
-function EyeClosedIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-      <line x1="1" y1="1" x2="23" y2="23"></line>
-    </svg>
-  );
-}
-
-function LoginArrowIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-      <polyline points="10 17 15 12 10 7"></polyline>
-      <line x1="15" y1="12" x2="3" y2="12"></line>
-    </svg>
-  );
-}
-
 // --- Validation Helpers ---
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -226,20 +96,7 @@ function FieldError({ message }: { message?: string }) {
       className="text-[11px] font-semibold mt-1.5 flex items-center gap-1"
       style={{ color: "#ef4444" }}
     >
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
-      </svg>
+      <AlertCircle className="w-3 h-3" strokeWidth={2.5} />
       {message}
     </p>
   );
@@ -543,7 +400,7 @@ export default function Login() {
                     : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
                 }`}
               >
-                <ShieldLockIcon />
+                <Shield className="w-[14px] h-[14px]" strokeWidth={2.5} />
                 Admin / Manager
               </button>
               <button
@@ -555,7 +412,7 @@ export default function Login() {
                     : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
                 }`}
               >
-                <TruckIcon />
+                <Truck className="w-[14px] h-[14px]" strokeWidth={2.5} />
                 Collector
               </button>
             </div>
@@ -572,22 +429,14 @@ export default function Login() {
                         : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
                     }`}
                   >
-                    <svg
+                    <User
                       className={`w-5 h-5 flex-shrink-0 ${
                         hasFirstNameError
                           ? "text-red-500"
                           : "text-slate-400 dark:text-muted-foreground"
                       }`}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
+                      strokeWidth={2.5}
+                    />
                     <input
                       id="signup-firstname"
                       type="text"
@@ -614,22 +463,14 @@ export default function Login() {
                         : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
                     }`}
                   >
-                    <svg
+                    <User
                       className={`w-5 h-5 flex-shrink-0 ${
                         hasLastNameError
                           ? "text-red-500"
                           : "text-slate-400 dark:text-muted-foreground"
                       }`}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
+                      strokeWidth={2.5}
+                    />
                     <input
                       id="signup-lastname"
                       type="text"
@@ -658,12 +499,13 @@ export default function Login() {
                     : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
                 }`}
               >
-                <UserIcon
+                <User
                   className={`w-5 h-5 flex-shrink-0 ${
                     hasEmailError
                       ? "text-red-500"
                       : "text-slate-400 dark:text-muted-foreground"
                   }`}
+                  strokeWidth={2.5}
                 />
                 <input
                   id="login-email"
@@ -693,12 +535,13 @@ export default function Login() {
                     : "border-slate-200 dark:border-border focus-within:border-blue-600 dark:focus-within:border-blue-400"
                 }`}
               >
-                <PasswordLockIcon
+                <Lock
                   className={`w-5 h-5 flex-shrink-0 ${
                     hasPasswordError
                       ? "text-red-500"
                       : "text-slate-400 dark:text-muted-foreground"
                   }`}
+                  strokeWidth={2.5}
                 />
                 <input
                   id="login-password"
@@ -718,7 +561,7 @@ export default function Login() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="text-slate-400 dark:text-muted-foreground hover:text-primary dark:hover:text-blue-400"
                 >
-                  {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                  {showPassword ? <EyeOff className="w-[18px] h-[18px]" strokeWidth={2.5} /> : <Eye className="w-[18px] h-[18px]" strokeWidth={2.5} />}
                 </button>
               </div>
               <div id="login-password-error">
