@@ -44,7 +44,9 @@ class DashboardController {
   async getContaminationEvents(req, res, next) {
     try {
       const facilityId = req.query.facilityId;
-      const events = await dashboardService.getContaminationEvents(facilityId);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 6;
+      const events = await dashboardService.getContaminationEvents(facilityId, page, limit);
       res.status(200).json(events);
     } catch (err) {
       next(err);

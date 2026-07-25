@@ -3,8 +3,17 @@ import numpy as np
 import io
 import os
 import logging
+import requests
+import base64
 from functools import wraps
 from PIL import Image
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN", ""),
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
 # ── Logging Configuration ──────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
@@ -111,6 +120,37 @@ def predict():
     try:
         predicted_class, confidence = predict_image(img_bytes)
         logger.info(f"Prediction: {predicted_class} ({confidence:.2f}%)")
+
+        # Save image locally so the user can see what the ESP32 is capturing
+        try:
+            os.makedirs("captures", exist_ok=True)
+            import time
+            img_path = f"captures/capture_{int(time.time())}_{predicted_class}.jpg"
+            with open(img_path, "wb") as f:
+                f.write(img_bytes)
+            logger.info(f"Saved captured image to {img_path}")
+        except Exception as save_err:
+            logger.error(f"Failed to save image locally: {save_err}")
+
+        # Forward telemetry to Node backend
+        try:
+            telemetry_data = {
+                "customBinId": "BIN-001",
+                "lastSortedItem": predicted_class,
+                "confidence": confidence,
+                "imageBase64": base64.b64encode(img_bytes).decode('utf-8')
+            }
+            resp = requests.post(
+                "http://127.0.0.1:5000/api/bins/telemetry", 
+                json=telemetry_data, 
+                timeout=5
+            )
+            if resp.status_code == 200:
+                logger.info("Successfully sent telemetry to dashboard")
+            else:
+                logger.warning(f"Dashboard returned {resp.status_code}: {resp.text}")
+        except Exception as forward_err:
+            logger.error(f"Failed to forward telemetry to dashboard: {forward_err}")
 
         return jsonify({
             'bin': predicted_class,

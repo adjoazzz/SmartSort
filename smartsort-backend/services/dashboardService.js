@@ -188,19 +188,24 @@ class DashboardService {
     };
   }
 
-  async getContaminationEvents(facilityId) {
-    const itemWhere = facilityId ? { device: { facilityId }, status: 'Rejected' } : { status: 'Rejected' };
+  async getContaminationEvents(facilityId, page = 1, limit = 6) {
+    const itemWhere = facilityId ? { device: { facilityId } } : {};
+    const skip = (page - 1) * limit;
 
-    const recentRejections = await prisma.processedItem.findMany({
-      where: itemWhere,
-      orderBy: { createdAt: 'desc' },
-      take: 6,
-      include: {
-        device: true,
-      },
-    });
+    const [items, totalCount] = await Promise.all([
+      prisma.processedItem.findMany({
+        where: itemWhere,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        include: {
+          device: true,
+        },
+      }),
+      prisma.processedItem.count({ where: itemWhere }),
+    ]);
 
-    return recentRejections.map((item) => {
+    const mappedData = items.map((item) => {
       const timeStr = new Date(item.createdAt).toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
@@ -208,17 +213,27 @@ class DashboardService {
         hour12: false,
       });
 
+      const isRejected = item.status === 'Rejected';
+      const actionText = isRejected ? "Sent to manual review" : `Routed to ${item.category} bin`;
+
       return {
         id: item.id,
         time: timeStr,
         source: item.device.location || item.device.customBinId,
-        detection: item.rejectionReason,
-        detectionType: 'danger',
-        confidence: `${item.confidence}%`,
+        detection: item.category,
+        detectionType: isRejected ? 'danger' : 'success',
+        confidence: `${item.confidence != null ? Number(item.confidence).toFixed(1) : '0.0'}%`,
         img: item.imageUrl,
-        action: item.actionTaken,
+        action: actionText,
       };
     });
+
+    return {
+      data: mappedData,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+      currentPage: page,
+    };
   }
 
   async getHistoricalAnalytics(facilityId) {

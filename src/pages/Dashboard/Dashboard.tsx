@@ -200,6 +200,9 @@ export default function Dashboard() {
   const facilityId = searchParams.get("facilityId") || "";
   const queryParam = facilityId ? `?facilityId=${facilityId}` : "";
 
+  const [detectionsPage, setDetectionsPage] = useState(1);
+  const detectionsLimit = 6;
+
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
@@ -231,8 +234,13 @@ export default function Dashboard() {
   };
 
   const fetchContaminationEvents = async () => {
+    const params = new URLSearchParams();
+    if (facilityId) params.append("facilityId", facilityId);
+    params.append("page", detectionsPage.toString());
+    params.append("limit", detectionsLimit.toString());
+
     const response = await authFetch(
-      `${baseUrl}/api/dashboard/contamination-events${queryParam}`,
+      `${baseUrl}/api/dashboard/contamination-events?${params.toString()}`,
     );
     if (!response.ok) throw new Error("Failed to fetch contamination events");
     return response.json();
@@ -265,6 +273,10 @@ export default function Dashboard() {
     refreshWasteCategories().catch(console.error);
     refreshContamination().catch(console.error);
   }, [facilityId]);
+
+  useEffect(() => {
+    refreshContamination().catch(console.error);
+  }, [detectionsPage]);
 
   const isLoading =
     devicesLoading ||
@@ -850,13 +862,8 @@ export default function Dashboard() {
         <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col col-span-1 lg:col-span-2 overflow-hidden">
           <div className="p-6 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-card">
             <h2 className="text-lg font-semibold text-foreground dark:text-white">
-              {t("dashboard.bottom.liveContaminationEvents")}
+              Recent Detections
             </h2>
-            <StatusBadge
-              label={t("dashboard.bottom.actionRequired")}
-              variant="danger"
-              hasDot
-            />
           </div>
 
           <Table className="min-w-[700px]">
@@ -906,7 +913,7 @@ export default function Dashboard() {
                       </TableCell>
                     </TableRow>
                   ))
-                : (contaminationEventsData || RECENT_EVENTS).map((evt: any) => (
+                : (contaminationEventsData?.data || RECENT_EVENTS).map((evt: any) => (
                     <TableRow
                       key={evt.id}
                       className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
@@ -942,6 +949,28 @@ export default function Dashboard() {
                   ))}
             </TableBody>
           </Table>
+
+          <div className="flex items-center justify-between p-4 border-t border-[#f1f5f9] dark:border-[#0f2942]">
+            <span className="text-sm font-medium text-muted-foreground">
+              Page {detectionsPage} of {contaminationEventsData?.totalPages || 1}
+            </span>
+            <div className="flex gap-2">
+              <button
+                className="px-3 py-1 bg-white dark:bg-secondary border border-[#e2e8f0] dark:border-[#1e293b] rounded-md text-sm font-medium text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                onClick={() => setDetectionsPage((p) => Math.max(1, p - 1))}
+                disabled={detectionsPage === 1}
+              >
+                Previous
+              </button>
+              <button
+                className="px-3 py-1 bg-white dark:bg-secondary border border-[#e2e8f0] dark:border-[#1e293b] rounded-md text-sm font-medium text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors"
+                onClick={() => setDetectionsPage((p) => p + 1)}
+                disabled={!contaminationEventsData || detectionsPage >= contaminationEventsData.totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </PageLayout>
