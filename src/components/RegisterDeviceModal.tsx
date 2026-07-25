@@ -76,12 +76,12 @@ export function RegisterDeviceModal({
                 <div className="bg-muted dark:bg-slate-900/80 border border-border rounded-xl p-4 flex items-center gap-4">
                   <div className="relative w-14 h-14 shrink-0">
                     {/* Corner brackets (mini) */}
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#006c49] rounded-tl-sm" />
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#006c49] rounded-tr-sm" />
-                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#006c49] rounded-bl-sm" />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#006c49] rounded-br-sm" />
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#006c49] dark:border-emerald-500 rounded-tl-sm" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#006c49] dark:border-emerald-500 rounded-tr-sm" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#006c49] dark:border-emerald-500 rounded-bl-sm" />
+                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#006c49] dark:border-emerald-500 rounded-br-sm" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <QrCode className="text-[#006c49] opacity-80" size={28} strokeWidth={1.5} />
+                      <QrCode className="text-[#006c49] dark:text-emerald-400 opacity-80" size={28} strokeWidth={1.5} />
                     </div>
                   </div>
                   <div>
@@ -112,7 +112,7 @@ export function RegisterDeviceModal({
                 <div className="bg-muted dark:bg-slate-900/80 border border-border rounded-lg p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-background dark:bg-slate-950 border border-border rounded-md flex items-center justify-center">
-                      <Building2 className="w-5 h-5 text-[#006c49]" strokeWidth={2} />
+                      <Building2 className="w-5 h-5 text-[#006c49] dark:text-emerald-400" strokeWidth={2} />
                     </div>
                     <div className="flex flex-col">
                       <span className="text-xs font-semibold text-foreground dark:text-white">
@@ -123,14 +123,14 @@ export function RegisterDeviceModal({
                       </span>
                     </div>
                   </div>
-                  <button className="text-sm font-semibold text-[#006c49] hover:underline cursor-pointer">
+                  <button className="text-sm font-semibold text-[#006c49] dark:text-emerald-400 hover:underline cursor-pointer">
                     {t("registerModal.changeBtn")}
                   </button>
                 </div>
 
                 {/* Support Note */}
                 <div className="border border-border bg-muted dark:bg-slate-900/80 rounded-lg p-3 flex items-start gap-3">
-                  <LifeBuoy className="w-4 h-4 text-[#23acf1] flex-shrink-0 mt-0.5" strokeWidth={2} />
+                  <LifeBuoy className="w-4 h-4 text-[#23acf1] dark:text-sky-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
                   <div>
                     <p className="text-xs font-semibold text-foreground dark:text-white">
                       {t("registerModal.helpTitle")}

@@ -93,7 +93,7 @@ export function CollectorProfileModal({
           {/* Left Column: Personal Info */}
           <div className="lg:col-span-1 flex flex-col gap-6">
             <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col items-center p-6">
-              <div className="w-24 h-24 rounded-full bg-[#e2e8f0] overflow-hidden border-4 border-white shadow-sm ring-1 ring-[#cbd5e1] mb-4">
+              <div className="w-24 h-24 rounded-full bg-[#e2e8f0] dark:bg-slate-700 overflow-hidden border-4 border-white dark:border-slate-800 shadow-sm ring-1 ring-[#cbd5e1] dark:ring-slate-600 mb-4">
                 <img
                   src={imgUserProfileAvatar}
                   alt="User Profile"
@@ -125,7 +125,7 @@ export function CollectorProfileModal({
                   <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="h-11 px-4 rounded-lg border border-border bg-card text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                    className="h-11 px-4 rounded-lg border border-border bg-card text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
                   />
                 </div>
 
@@ -136,7 +136,7 @@ export function CollectorProfileModal({
                   <input
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
-                    className="h-11 px-4 rounded-lg border border-border bg-card text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                    className="h-11 px-4 rounded-lg border border-border bg-card text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
                   />
                 </div>
 
@@ -147,7 +147,7 @@ export function CollectorProfileModal({
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="h-11 px-4 rounded-lg border border-border bg-card text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                    className="h-11 px-4 rounded-lg border border-border bg-card text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -187,7 +187,7 @@ export function CollectorProfileModal({
                   <span className="text-sm font-medium text-muted-foreground">
                     Contact
                   </span>
-                  <span className="text-sm font-semibold text-[#006c49]">
+                  <span className="text-sm font-semibold text-[#006c49] dark:text-emerald-400">
                     +233 24 123 4567
                   </span>
                 </div>
@@ -213,7 +213,7 @@ export function CollectorProfileModal({
                 </span>
                 <span className="text-2xl font-bold text-foreground dark:text-white">
                   {collector.rating}{" "}
-                  <span className="text-sm text-[#d97706]">⭐</span>
+                  <span className="text-sm text-[#d97706] dark:text-amber-500">⭐</span>
                 </span>
               </div>
               <div className="bg-card border border-border rounded-xl p-4 shadow-sm flex flex-col col-span-2 md:col-span-1">
@@ -298,7 +298,7 @@ export function CollectorProfileModal({
                 </table>
               </div>
               <div className="p-3 border-t border-[#f1f5f9] dark:border-[#0f2942] bg-card rounded-b-xl text-center">
-                <button className="text-[#006c49] text-sm font-semibold hover:underline">
+                <button className="text-[#006c49] dark:text-emerald-400 text-sm font-semibold hover:underline">
                   View All History
                 </button>
               </div>

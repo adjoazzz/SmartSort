@@ -326,7 +326,7 @@ export default function Login() {
             action: "Security Alert",
             actorName: "System",
             details: `Failed login attempt for user: ${email}`,
-            color: "text-[#ba1a1a]",
+            color: "text-[#ba1a1a] dark:text-red-500",
           }),
         }
       ).catch(console.error);
@@ -619,7 +619,7 @@ export default function Login() {
         {/* Bottom Status Panel */}
         {/* <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground tracking-wider uppercase">
           <span className="inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-border rounded-full px-3 py-1 bg-slate-50 dark:bg-secondary">
-            <span className="w-1.5 h-1.5 bg-[#22c55e] rounded-full animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-[#22c55e] dark:bg-green-500 rounded-full animate-pulse" />
             Systems Operational
           </span>
           <span className="text-slate-200 dark:text-[#1e3a5f]">|</span>
@@ -629,7 +629,7 @@ export default function Login() {
 
       {/* RIGHT PANEL: High-Tech Branding */}
       <div
-        className="w-full md:w-1/2 bg-[#020e24] text-white flex flex-col justify-center items-center p-8 sm:p-12 lg:p-16 relative overflow-hidden"
+        className="w-full md:w-1/2 bg-[#020e24] dark:bg-slate-900 text-white flex flex-col justify-center items-center p-8 sm:p-12 lg:p-16 relative overflow-hidden"
         style={{
           backgroundImage:
             "radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)",
@@ -641,7 +641,7 @@ export default function Login() {
 
         <div className="max-w-md w-full flex flex-col items-center gap-10 relative z-10">
           {/* Circular float card */}
-          <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-[#07132a]/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-md flex flex-col items-center justify-center gap-3 p-6 group hover:border-blue-500/30 transition-all duration-500">
+          <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-[#07132a]/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-md flex flex-col items-center justify-center gap-3 p-6 group hover:border-blue-500/30 transition-all duration-500">
             {/* AI badge */}
             <span className="absolute top-4 right-4 bg-primary text-[8px] font-extrabold tracking-widest px-2 py-0.5 rounded uppercase">
               AI Engine
@@ -663,7 +663,7 @@ export default function Login() {
             </span>
 
             {/* Binary check badge */}
-            <span className="absolute bottom-4 left-4 bg-white/5 border border-white/10 text-[8.5px] font-mono tracking-wider px-2 py-0.5 rounded text-[#10b981] flex items-center gap-1">
+            <span className="absolute bottom-4 left-4 bg-white/5 border border-white/10 text-[8.5px] font-mono tracking-wider px-2 py-0.5 rounded text-[#10b981] dark:text-emerald-400 flex items-center gap-1">
               ✓ 1001100111100
             </span>
           </div>

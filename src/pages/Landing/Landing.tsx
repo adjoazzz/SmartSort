@@ -239,7 +239,7 @@ export default function Landing() {
       <header className="h-20 bg-white/80 dark:bg-card/80 backdrop-blur-md border-b border-border/50 dark:border-border/50 flex items-center justify-between px-6 sm:px-12 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-10">
           <span className="text-2xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
-            Smart<span className="text-[#006c49]">Sort</span>
+            Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
           </span>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
             <a href="#features" data-testid="landing-nav-features" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors active:scale-[0.98] inline-block">Features</a>
@@ -273,7 +273,7 @@ export default function Landing() {
           <button 
             onClick={scrollToInquiry}
             data-testid="landing-request-demo-btn"
-            className="px-5 py-2.5 bg-[#006c49] hover:bg-[#005a3c] text-white text-sm font-bold rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer"
+            className="px-5 py-2.5 bg-[#006c49] dark:bg-emerald-600 hover:bg-[#005a3c] dark:hover:bg-emerald-700 text-white text-sm font-bold rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer"
           >
             Request a Demo
           </button>
@@ -297,7 +297,7 @@ export default function Landing() {
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground dark:text-white tracking-tight leading-[1.15]">
             The Future of <br />
-            <span className="text-[#2563eb] bg-gradient-to-r from-[#2563eb] to-[#006c49] bg-clip-text text-transparent">Waste Intelligence</span>
+            <span className="text-[#2563eb] dark:text-blue-400 bg-gradient-to-r from-[#2563eb] dark:from-blue-400 to-[#006c49] dark:to-emerald-400 bg-clip-text text-transparent">Waste Intelligence</span>
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-normal">
@@ -310,7 +310,7 @@ export default function Landing() {
               whileTap={{ scale: 0.98 }}
               onClick={scrollToInquiry}
               data-testid="hero-demo-btn"
-              className="px-6 py-3.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-sm font-bold rounded-lg shadow-lg shadow-[#2563eb]/15 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3.5 bg-[#2563eb] dark:bg-blue-600 hover:bg-[#1d4ed8] dark:hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-lg shadow-[#2563eb]/15 dark:shadow-blue-900/20 transition-all flex items-center gap-2 cursor-pointer"
             >
               Request a Demo
               <motion.span 
@@ -328,7 +328,7 @@ export default function Landing() {
               data-testid="hero-video-btn"
               className="px-6 py-3.5 bg-card hover:bg-background dark:hover:bg-secondary text-foreground dark:text-white text-sm font-bold rounded-lg border border-border shadow-sm transition-all flex items-center gap-2 cursor-pointer"
             >
-              <Play className="w-4 h-4 text-[#2563eb]" strokeWidth={2.5} />
+              <Play className="w-4 h-4 text-[#2563eb] dark:text-blue-400" strokeWidth={2.5} />
               Watch Video
             </motion.button>
           </div>
@@ -371,8 +371,8 @@ export default function Landing() {
             <div className="absolute bottom-6 left-6 right-6 bg-card/80 dark:bg-card/90 backdrop-blur-md border border-border/60 dark:border-white/5 p-5 sm:p-6 rounded-xl text-foreground dark:text-white shadow-xl flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Real-Time Analysis</span>
-                <span className="inline-flex items-center gap-1.5 bg-[#10b981]/20 text-[#10b981] text-[9px] font-extrabold tracking-widest px-2.5 py-1 rounded-full uppercase">
-                  <span className="w-1.5 h-1.5 bg-[#10b981] rounded-full animate-ping" />
+                <span className="inline-flex items-center gap-1.5 bg-[#10b981]/20 dark:bg-emerald-500/20 text-[#10b981] dark:text-emerald-400 text-[9px] font-extrabold tracking-widest px-2.5 py-1 rounded-full uppercase">
+                  <span className="w-1.5 h-1.5 bg-[#10b981] dark:bg-emerald-500 rounded-full animate-ping" />
                   Live
                 </span>
               </div>
@@ -434,7 +434,7 @@ export default function Landing() {
           >
             <div className="flex-1 flex flex-col justify-between gap-6">
               <div className="flex flex-col gap-4">
-                <div className="w-10 h-10 bg-[#2563eb]/10 rounded-xl flex items-center justify-center text-[#2563eb]">
+                <div className="w-10 h-10 bg-[#2563eb]/10 dark:bg-blue-500/10 rounded-xl flex items-center justify-center text-[#2563eb] dark:text-blue-400">
                   <Sidebar className="w-5 h-5" strokeWidth={2.5} />
                 </div>
                 <h3 className="text-xl font-bold">98% Sorting Accuracy</h3>
@@ -442,7 +442,7 @@ export default function Landing() {
                   Our deep learning models are trained on over 50 million labeled waste instances, ensuring near-perfect material identification.
                 </p>
               </div>
-              <button onClick={scrollToInquiry} data-testid="explore-models-btn" className="text-xs font-bold text-[#2563eb] hover:underline cursor-pointer flex items-center gap-1 active:scale-[0.98]">
+              <button onClick={scrollToInquiry} data-testid="explore-models-btn" className="text-xs font-bold text-[#2563eb] dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1 active:scale-[0.98]">
                 Explore Data Models →
               </button>
             </div>
@@ -484,7 +484,7 @@ export default function Landing() {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="md:col-span-4 bg-card text-foreground dark:text-white border border-[#cbd5e1]/60 dark:border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-10 hover:shadow-md cursor-pointer"
           >
-            <div className="w-10 h-10 bg-[#3b82f6]/10 dark:bg-white/10 rounded-xl flex items-center justify-center text-[#3b82f6]">
+            <div className="w-10 h-10 bg-[#3b82f6]/10 dark:bg-blue-500/10 rounded-xl flex items-center justify-center text-[#3b82f6] dark:text-blue-400">
               <LayoutGrid className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <div className="flex flex-col gap-2">
@@ -513,9 +513,9 @@ export default function Landing() {
             {/* Visual representation of ESG scores */}
             <div className="flex-1 w-full max-w-[280px] bg-card border border-[#cbd5e1]/50 dark:border-white/5 rounded-xl p-4.5 flex flex-col gap-3">
               {[
-                { label: "ENVIRONMENTAL SCORE", value: 92, color: "bg-[#10b981]" },
-                { label: "SOCIAL RESPONSIBILITY", value: 84, color: "bg-[#2563eb]" },
-                { label: "COMPLIANCE LEVEL", value: 95, color: "bg-[#8b5cf6]" }
+                { label: "ENVIRONMENTAL SCORE", value: 92, color: "bg-[#10b981] dark:bg-emerald-500" },
+                { label: "SOCIAL RESPONSIBILITY", value: 84, color: "bg-[#2563eb] dark:bg-blue-500" },
+                { label: "COMPLIANCE LEVEL", value: 95, color: "bg-[#8b5cf6] dark:bg-purple-500" }
               ].map(stat => (
                 <div key={stat.label} className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between text-[8px] font-bold tracking-wider text-muted-foreground">
@@ -574,10 +574,10 @@ export default function Landing() {
               }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#2563eb]">
+              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#2563eb] dark:text-blue-400">
                 <Camera className="w-6 h-6" strokeWidth={2} />
               </div>
-              <div className="w-6 h-6 rounded-full bg-[#2563eb] text-white text-xs font-bold flex items-center justify-center">1</div>
+              <div className="w-6 h-6 rounded-full bg-[#2563eb] dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center">1</div>
               <h3 className="text-lg font-bold">Object Detection</h3>
               <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
                 High-speed multispectral cameras identify individual waste items on the conveyor belt in milliseconds.
@@ -592,10 +592,10 @@ export default function Landing() {
               }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#10b981]">
+              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#10b981] dark:text-emerald-400">
                 <Layers className="w-6 h-6" strokeWidth={2} />
               </div>
-              <div className="w-6 h-6 rounded-full bg-[#10b981] text-white text-xs font-bold flex items-center justify-center">2</div>
+              <div className="w-6 h-6 rounded-full bg-[#10b981] dark:bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">2</div>
               <h3 className="text-lg font-bold">AI Classification</h3>
               <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
                 Our neural network classifies materials (HDPE, PET, Paper, Metal) with laboratory-grade precision.
@@ -610,10 +610,10 @@ export default function Landing() {
               }}
               className="flex flex-col items-center text-center gap-5"
             >
-              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#8b5cf6]">
+              <div className="w-16 h-16 rounded-2xl bg-card border border-[#cbd5e1] dark:border-border shadow-sm flex items-center justify-center text-[#8b5cf6] dark:text-purple-400">
                 <Cpu className="w-6 h-6" strokeWidth={2} />
               </div>
-              <div className="w-6 h-6 rounded-full bg-[#8b5cf6] text-white text-xs font-bold flex items-center justify-center">3</div>
+              <div className="w-6 h-6 rounded-full bg-[#8b5cf6] dark:bg-purple-600 text-white text-xs font-bold flex items-center justify-center">3</div>
               <h3 className="text-lg font-bold">Automated Sorting</h3>
               <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
                 Robotic actuators or air-jet systems execute precise physical separation at speeds up to 300 items per minute.
@@ -626,7 +626,7 @@ export default function Landing() {
       {/* 6. CTA / Inquiry Form Section */}
       <section id="inquiry-section" className="px-6 sm:px-12 py-20 sm:py-28 max-w-7xl mx-auto">
         <div className="bg-card text-white border border-white/10 rounded-3xl p-8 sm:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative overflow-hidden shadow-2xl">
-          <div className="absolute w-80 h-80 bg-[#2563eb]/20 rounded-full blur-[100px] -bottom-20 -left-20 pointer-events-none" />
+          <div className="absolute w-80 h-80 bg-[#2563eb]/20 dark:bg-blue-500/10 rounded-full blur-[100px] -bottom-20 -left-20 pointer-events-none" />
 
           {/* Left Column */}
           <div className="flex flex-col gap-6 relative z-10">
@@ -638,15 +638,15 @@ export default function Landing() {
             </p>
             <div className="flex flex-col gap-3 pt-2 text-xs sm:text-sm font-medium text-muted-foreground">
               <div className="flex items-center gap-3">
-                <span className="w-5 h-5 rounded-full bg-[#10b981]/25 border border-[#10b981]/30 flex items-center justify-center text-[#10b981]">✓</span>
+                <span className="w-5 h-5 rounded-full bg-[#10b981]/25 dark:bg-emerald-500/20 border border-[#10b981]/30 dark:border-emerald-500/30 flex items-center justify-center text-[#10b981] dark:text-emerald-400">✓</span>
                 <span>On-site feasibility assessment</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="w-5 h-5 rounded-full bg-[#10b981]/25 border border-[#10b981]/30 flex items-center justify-center text-[#10b981]">✓</span>
+                <span className="w-5 h-5 rounded-full bg-[#10b981]/25 dark:bg-emerald-500/20 border border-[#10b981]/30 dark:border-emerald-500/30 flex items-center justify-center text-[#10b981] dark:text-emerald-400">✓</span>
                 <span>Custom ROI projection reports</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="w-5 h-5 rounded-full bg-[#10b981]/25 border border-[#10b981]/30 flex items-center justify-center text-[#10b981]">✓</span>
+                <span className="w-5 h-5 rounded-full bg-[#10b981]/25 dark:bg-emerald-500/20 border border-[#10b981]/30 dark:border-emerald-500/30 flex items-center justify-center text-[#10b981] dark:text-emerald-400">✓</span>
                 <span>Full stack hardware/software lease options</span>
               </div>
             </div>
@@ -656,7 +656,7 @@ export default function Landing() {
           <div className="bg-white dark:bg-card text-foreground dark:text-white rounded-2xl p-6 sm:p-8 border border-[#cbd5e1] dark:border-border shadow-xl relative z-10">
             {submitted ? (
               <div className="py-12 flex flex-col items-center justify-center text-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#10b981]/15 flex items-center justify-center text-[#10b981]">
+                <div className="w-16 h-16 rounded-full bg-[#10b981]/15 dark:bg-emerald-500/15 flex items-center justify-center text-[#10b981] dark:text-emerald-400">
                   <Check className="w-7 h-7" strokeWidth={2.5} />
                 </div>
                 <h3 className="text-xl font-bold">Welcome to SmartSort!</h3>
@@ -691,7 +691,7 @@ export default function Landing() {
                     className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 transition-all ${
                       errors.companyName
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 dark:focus:ring-blue-500/20 focus:border-[#2563eb] dark:focus:border-blue-500"
                     }`}
                   />
                   <FieldError message={errors.companyName} />
@@ -703,7 +703,7 @@ export default function Landing() {
                     value={form.tonsRange}
                     data-testid="inquiry-tons"
                     onChange={e => setForm({...form, tonsRange: e.target.value})}
-                    className="h-11 px-4 border border-[#cbd5e1] dark:border-border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 focus:border-[#2563eb] transition-all cursor-pointer"
+                    className="h-11 px-4 border border-[#cbd5e1] dark:border-border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 focus:ring-[#2563eb]/20 dark:focus:ring-blue-500/20 focus:border-[#2563eb] dark:focus:border-blue-500 transition-all cursor-pointer"
                   >
                     <option value="Less than 50">Less than 50 Tons</option>
                     <option value="50 - 200">50 - 200 Tons</option>
@@ -730,7 +730,7 @@ export default function Landing() {
                     className={`h-11 px-4 border rounded-lg text-sm bg-slate-50 dark:bg-secondary focus:outline-none focus:ring-2 transition-all ${
                       errors.email
                         ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 focus:border-[#2563eb]"
+                        : "border-[#cbd5e1] dark:border-border focus:ring-[#2563eb]/20 dark:focus:ring-blue-500/20 focus:border-[#2563eb] dark:focus:border-blue-500"
                     }`}
                   />
                   <FieldError message={errors.email} />
@@ -753,7 +753,7 @@ export default function Landing() {
                         form.email.trim() !== "" &&
                         !errors.companyName &&
                         !errors.email
-                        ? "bg-[#2563eb] hover:bg-[#1d4ed8] text-white active:scale-[0.98] cursor-pointer"
+                        ? "bg-[#2563eb] dark:bg-blue-600 hover:bg-[#1d4ed8] dark:hover:bg-blue-700 text-white active:scale-[0.98] cursor-pointer"
                         : "bg-slate-100 text-slate-400 border border-transparent cursor-not-allowed"
                   }`}
                 >
@@ -786,16 +786,16 @@ export default function Landing() {
             {/* Branding Column */}
             <div className="md:col-span-2 flex flex-col gap-4">
               <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
-                Smart<span className="text-[#006c49]">Sort</span>
+                Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
               </span>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Redefining the industrial waste landscape through artificial intelligence and automated robotics. Built for a sustainable, data-driven future.
               </p>
               {/* Small Social Icons Mock */}
               <div className="flex gap-4.5 pt-2 text-muted-foreground">
-                <span className="w-5 h-5 rounded bg-slate-200 dark:bg-[#1e3a5f] flex items-center justify-center font-bold text-xs cursor-pointer hover:text-[#2563eb]">𝕏</span>
-                <span className="w-5 h-5 rounded bg-slate-200 dark:bg-[#1e3a5f] flex items-center justify-center font-bold text-xs cursor-pointer hover:text-[#2563eb]">in</span>
-                <span className="w-5 h-5 rounded bg-slate-200 dark:bg-[#1e3a5f] flex items-center justify-center font-bold text-xs cursor-pointer hover:text-[#2563eb]">f</span>
+                <span className="w-5 h-5 rounded bg-slate-200 dark:bg-[#1e3a5f] flex items-center justify-center font-bold text-xs cursor-pointer hover:text-[#2563eb] dark:hover:text-blue-400">𝕏</span>
+                <span className="w-5 h-5 rounded bg-slate-200 dark:bg-[#1e3a5f] flex items-center justify-center font-bold text-xs cursor-pointer hover:text-[#2563eb] dark:hover:text-blue-400">in</span>
+                <span className="w-5 h-5 rounded bg-slate-200 dark:bg-[#1e3a5f] flex items-center justify-center font-bold text-xs cursor-pointer hover:text-[#2563eb] dark:hover:text-blue-400">f</span>
               </div>
             </div>
 
@@ -811,7 +811,7 @@ export default function Landing() {
                 <ul className="flex flex-col gap-2.5 text-xs text-muted-foreground">
                   {col.items.map(item => (
                     <li key={item}>
-                      <a href="#" className="hover:text-[#2563eb] transition-colors">{item}</a>
+                      <a href="#" className="hover:text-[#2563eb] dark:hover:text-blue-400 transition-colors">{item}</a>
                     </li>
                   ))}
                 </ul>
@@ -822,8 +822,8 @@ export default function Landing() {
           <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">&copy; 2026 SmartSort Intelligence Systems. All rights reserved.</p>
             {/* <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#22c55e] rounded-full animate-pulse" />
-              <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-wide">All Systems Operational</span>
+              <span className="w-2.5 h-2.5 bg-[#22c55e] dark:bg-green-500 rounded-full animate-pulse" />
+              <span className="text-[10px] font-bold text-[#22c55e] dark:text-green-400 uppercase tracking-wide">All Systems Operational</span>
             </div> */}
           </div>
 

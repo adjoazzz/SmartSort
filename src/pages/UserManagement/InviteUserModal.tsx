@@ -202,7 +202,7 @@ export function InviteUserModal({
 
               {status === "success" ? (
                 <div className="p-8 flex flex-col items-center justify-center text-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-[#10b981]/10 flex items-center justify-center text-[#10b981]">
+                  <div className="w-16 h-16 rounded-full bg-[#10b981]/10 dark:bg-emerald-500/10 flex items-center justify-center text-[#10b981] dark:text-emerald-400">
                     <CheckCircle className="w-8 h-8" strokeWidth={2} />
                   </div>
                   <div>
@@ -213,7 +213,7 @@ export function InviteUserModal({
                       {t("userModal.inviteMsg", { email, role })}
                     </p>
                     {submitError && (
-                      <p className="text-xs text-[#ba1a1a] font-medium mt-3 leading-relaxed">
+                      <p className="text-xs text-[#ba1a1a] dark:text-red-400 font-medium mt-3 leading-relaxed">
                         {submitError}
                       </p>
                     )}
@@ -242,12 +242,12 @@ export function InviteUserModal({
                       }}
                       className={`h-11 px-4 border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
                         nameError
-                          ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
-                          : "border-border focus:border-[#006c49] focus:ring-[#006c49]/20"
+                          ? "border-[#ba1a1a] dark:border-red-500 focus:border-[#ba1a1a] dark:focus:border-red-400 focus:ring-[#ba1a1a]/20 dark:focus:ring-red-400/20"
+                          : "border-border focus:border-[#006c49] dark:focus:border-emerald-500 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
                       }`}
                     />
                     {nameError && (
-                      <span className="text-xs text-[#ba1a1a] font-medium">
+                      <span className="text-xs text-[#ba1a1a] dark:text-red-400 font-medium">
                         {nameError}
                       </span>
                     )}
@@ -271,12 +271,12 @@ export function InviteUserModal({
                       }}
                       className={`h-11 px-4 border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 transition-all ${
                         emailError
-                          ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/20"
-                          : "border-border focus:border-[#006c49] focus:ring-[#006c49]/20"
+                          ? "border-[#ba1a1a] dark:border-red-500 focus:border-[#ba1a1a] dark:focus:border-red-400 focus:ring-[#ba1a1a]/20 dark:focus:ring-red-400/20"
+                          : "border-border focus:border-[#006c49] dark:focus:border-emerald-500 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
                       }`}
                     />
                     {emailError && (
-                      <span className="text-xs text-[#ba1a1a] font-medium">
+                      <span className="text-xs text-[#ba1a1a] dark:text-red-400 font-medium">
                         {emailError}
                       </span>
                     )}
@@ -293,7 +293,7 @@ export function InviteUserModal({
                       id="role"
                       value={role}
                       onChange={(e) => setRole(e.target.value)}
-                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer"
+                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 focus:border-[#006c49] dark:focus:border-emerald-500 transition-all cursor-pointer"
                     >
                       <option value="Admin">Admin</option>
                       <option value="Manager">Manager</option>
@@ -314,7 +314,7 @@ export function InviteUserModal({
                       value={assignedFacility}
                       onChange={(e) => setAssignedFacility(e.target.value)}
                       disabled={currentUserRole === "manager"}
-                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 focus:border-[#006c49] dark:focus:border-emerald-500 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <option value="HQ Corporate Center">
                         HQ Corporate Center
@@ -335,7 +335,7 @@ export function InviteUserModal({
                   </div>
 
                   <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 mt-2 flex gap-3 items-start">
-                    <Info className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#0284c7]" strokeWidth={2} />
+                    <Info className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#0284c7] dark:text-sky-400" strokeWidth={2} />
                     <p className="text-[11px] text-muted-foreground leading-relaxed">
                       {t("userModal.infoText")}
                     </p>

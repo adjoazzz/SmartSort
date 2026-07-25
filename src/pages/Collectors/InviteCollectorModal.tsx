@@ -185,7 +185,7 @@ export function InviteCollectorModal({
         {/* Success state */}
         {status === "success" ? (
           <div className="p-8 flex flex-col items-center justify-center text-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-[#10b981]/10 flex items-center justify-center text-[#10b981]">
+            <div className="w-16 h-16 rounded-full bg-[#10b981]/10 dark:bg-emerald-500/10 flex items-center justify-center text-[#10b981] dark:text-emerald-500">
               <CheckCircle className="w-8 h-8" strokeWidth={2} />
             </div>
             <div>
@@ -219,7 +219,7 @@ export function InviteCollectorModal({
                 placeholder="e.g., Kwame Mensah"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 focus:border-[#006c49] dark:focus:border-emerald-500 transition-all bg-card"
               />
             </div>
 
@@ -238,7 +238,7 @@ export function InviteCollectorModal({
                 placeholder="e.g., kwame@smartsort.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all bg-card"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white placeholder-[#94a3b8] dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 focus:border-[#006c49] dark:focus:border-emerald-500 transition-all bg-card"
               />
             </div>
 
@@ -254,7 +254,7 @@ export function InviteCollectorModal({
                 id="collector-facility"
                 value={facility}
                 onChange={(e) => setFacility(e.target.value)}
-                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 focus:border-[#006c49] transition-all cursor-pointer w-full"
+                className="h-11 px-4 border border-border rounded-lg text-sm text-foreground dark:text-white bg-card focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 focus:border-[#006c49] dark:focus:border-emerald-500 transition-all cursor-pointer w-full"
               >
                 {facilities.map((fac) => (
                   <option key={fac.id} value={fac.name}>
@@ -266,7 +266,7 @@ export function InviteCollectorModal({
 
             {/* Info banner */}
             <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 flex gap-3 items-start">
-              <Info className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#0284c7]" strokeWidth={2} />
+              <Info className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#0284c7] dark:text-sky-500" strokeWidth={2} />
               <p className="text-[11px] text-muted-foreground leading-relaxed">
                 A welcome email will be sent with a link to the collector portal
                 and a secure, system-generated temporary password.
@@ -276,7 +276,7 @@ export function InviteCollectorModal({
             {/* Error message */}
             {status === "error" && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 flex gap-3 items-start">
-                <AlertCircle className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#ef4444]" strokeWidth={2} />
+                <AlertCircle className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#ef4444] dark:text-red-500" strokeWidth={2} />
                 <p className="text-[11px] text-red-600 dark:text-red-400 leading-relaxed">
                   {errorMessage}
                 </p>

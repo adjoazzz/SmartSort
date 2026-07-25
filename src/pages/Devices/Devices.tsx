@@ -244,7 +244,7 @@ export default function Devices() {
           {/* Local Table Search Bar */}
           <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-card flex items-center">
             <div className="flex items-center w-full max-w-md bg-background dark:bg-secondary rounded-lg border border-border focus-within:border-border dark:focus-within:border-border focus-within:bg-card focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
-              <Search className="w-4 h-4 mr-3 text-[#94A3B8]" strokeWidth={2.5} />
+              <Search className="w-4 h-4 mr-3 text-[#94A3B8] dark:text-slate-400" strokeWidth={2.5} />
               <input
                 type="text"
                 placeholder="Search devices, locations, or serials..."
@@ -344,12 +344,12 @@ export default function Devices() {
                           value={device.fill}
                           className={`h-1.5 bg-muted ${
                             device.fill > 85
-                              ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                              : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                              ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
+                              : "[&>[data-slot=progress-indicator]]:bg-[#10b981] dark:[&>[data-slot=progress-indicator]]:bg-emerald-500"
                           }`}
                         />
                         <span
-                          className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a]" : "text-foreground dark:text-white"} w-8`}
+                          className={`text-sm font-medium ${device.fill > 85 ? "text-[#ba1a1a] dark:text-red-400" : "text-foreground dark:text-white"} w-8`}
                         >
                           {device.fill}%
                         </span>
@@ -413,7 +413,7 @@ export default function Devices() {
                       Live Status &amp; Levels
                     </p>
                   </div>
-                  <button className="text-xs font-bold text-[#10b981] uppercase tracking-wider hover:text-[#006c49] transition-colors cursor-pointer">
+                  <button className="text-xs font-bold text-[#10b981] dark:text-emerald-400 uppercase tracking-wider hover:text-[#006c49] transition-colors cursor-pointer">
                     Edit Specs
                   </button>
                 </div>
@@ -512,7 +512,7 @@ export default function Devices() {
                           }
                         />
                         <div
-                          className={`block w-8 h-5 rounded-full transition-colors ${showSortingEvents ? "bg-[#10b981]" : "bg-[#e2e8f0] dark:bg-[#334155]"}`}
+                          className={`block w-8 h-5 rounded-full transition-colors ${showSortingEvents ? "bg-[#10b981] dark:bg-emerald-500" : "bg-[#e2e8f0] dark:bg-[#334155]"}`}
                         ></div>
                         <div
                           className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${showSortingEvents ? "transform translate-x-3" : ""}`}

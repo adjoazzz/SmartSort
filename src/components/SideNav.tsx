@@ -261,7 +261,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
               onClose();
               navigate("/");
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] dark:text-red-400 hover:bg-[#ffdad6]/50 dark:hover:bg-red-500/10 font-semibold transition-colors text-left cursor-pointer"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[#ba1a1a] dark:text-red-500 hover:bg-[#ffdad6]/50 dark:hover:bg-red-500/10 font-semibold transition-colors text-left cursor-pointer"
           >
             <LogOut className="w-5 h-5" strokeWidth={2} />
             {t("sideNav.signOut")}

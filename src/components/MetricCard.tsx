@@ -18,15 +18,15 @@ export function MetricCard({
   value,
   trend,
   trendDirection = "neutral",
-  iconColorClass = "text-[#006c49]",
-  iconBgClass = "bg-[#10b981]/10",
+  iconColorClass = "text-[#006c49] dark:text-emerald-400",
+  iconBgClass = "bg-[#10b981]/10 dark:bg-emerald-500/10",
   iconSvg,
   linkTo,
 }: MetricCardProps) {
   // Determine trend styling
   let trendColor = "text-muted-foreground";
-  if (trendDirection === "up") trendColor = "text-[#006c49]";
-  if (trendDirection === "down") trendColor = "text-[#ba1a1a]";
+  if (trendDirection === "up") trendColor = "text-[#006c49] dark:text-emerald-400";
+  if (trendDirection === "down") trendColor = "text-[#ba1a1a] dark:text-red-500";
 
   const cardContent = (
     <>
@@ -50,21 +50,21 @@ export function MetricCard({
             {value}
           </span>
           {linkTo && (
-            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-[#006c49] transition-colors" strokeWidth={2} />
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-[#006c49] dark:group-hover:text-emerald-400 transition-colors" strokeWidth={2} />
           )}
         </div>
 
         {trend && (
           <div className="flex items-center gap-1.5">
             {trendDirection === "up" && (
-              <TrendingUp className="w-3 h-3 text-[#006c49]" strokeWidth={3} />
+              <TrendingUp className="w-3 h-3 text-[#006c49] dark:text-emerald-400" strokeWidth={3} />
             )}
             {trendDirection === "down" && (
-              <TrendingDown className="w-3 h-3 text-[#ba1a1a]" strokeWidth={3} />
+              <TrendingDown className="w-3 h-3 text-[#ba1a1a] dark:text-red-500" strokeWidth={3} />
             )}
             {trendDirection === "neutral" && (
-              <div className="w-2.5 h-2.5 rounded-full bg-[#515f74]/20 flex items-center justify-center">
-                <div className="w-1 h-1 rounded-full bg-[#515f74]"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-[#515f74]/20 dark:bg-slate-700/50 flex items-center justify-center">
+                <div className="w-1 h-1 rounded-full bg-[#515f74] dark:bg-slate-400"></div>
               </div>
             )}
             <span className={`text-sm font-medium ${trendColor}`}>{trend}</span>
@@ -82,7 +82,7 @@ export function MetricCard({
       <Link
         to={linkTo}
         data-testid="metric-card"
-        className={`${baseClasses} hover:border-[#006c49]/30 cursor-pointer no-underline active:scale-[0.98]`}
+        className={`${baseClasses} hover:border-[#006c49]/30 dark:hover:border-emerald-500/30 cursor-pointer no-underline active:scale-[0.98]`}
       >
         {cardContent}
       </Link>

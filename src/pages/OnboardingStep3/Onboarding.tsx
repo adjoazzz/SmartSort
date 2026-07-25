@@ -182,7 +182,7 @@ export default function Onboarding() {
       {/* Header */}
       <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
         <span className="text-lg font-semibold text-foreground dark:text-white">
-          Smart<span className="text-[#006c49]">Sort</span>
+          Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
         </span>
         <div className="flex gap-2">
           <button className="px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors">
@@ -243,16 +243,16 @@ export default function Onboarding() {
                 {cameraState !== "success" && (
                   <>
                     <div
-                      className={`absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] rounded-tl-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49]"}`}
+                      className={`absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] rounded-tl-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49] dark:border-emerald-500"}`}
                     />
                     <div
-                      className={`absolute top-0 right-0 w-8 h-8 border-t-[3px] border-r-[3px] rounded-tr-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49]"}`}
+                      className={`absolute top-0 right-0 w-8 h-8 border-t-[3px] border-r-[3px] rounded-tr-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49] dark:border-emerald-500"}`}
                     />
                     <div
-                      className={`absolute bottom-0 left-0 w-8 h-8 border-b-[3px] border-l-[3px] rounded-bl-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49]"}`}
+                      className={`absolute bottom-0 left-0 w-8 h-8 border-b-[3px] border-l-[3px] rounded-bl-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49] dark:border-emerald-500"}`}
                     />
                     <div
-                      className={`absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] rounded-br-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49]"}`}
+                      className={`absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] rounded-br-md z-10 transition-colors ${cameraState === "permission_denied" ? "border-red-400" : "border-[#006c49] dark:border-emerald-500"}`}
                     />
                   </>
                 )}
@@ -430,7 +430,7 @@ export default function Onboarding() {
               </button>
             </div>
 
-            <div className="border-t border-[#bbcabf] pt-6 flex flex-col gap-4 mt-2">
+            <div className="border-t border-[#bbcabf] dark:border-border pt-6 flex flex-col gap-4 mt-2">
               <button
                 onClick={handleSubmit}
                 className="h-12 w-full bg-primary hover:bg-primary/90 active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
@@ -448,7 +448,7 @@ export default function Onboarding() {
             </div>
 
             <div className="mt-4 border border-[#bbcabf]/50 dark:border-border bg-background dark:bg-secondary rounded-lg p-4 flex items-start gap-3">
-              <LifeBuoy className="w-5 h-5 text-[#23acf1] flex-shrink-0 mt-0.5" strokeWidth={2} />
+              <LifeBuoy className="w-5 h-5 text-[#23acf1] dark:text-sky-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
               <div>
                 <p className="text-sm font-semibold text-foreground dark:text-white">
                   Need help with installation?

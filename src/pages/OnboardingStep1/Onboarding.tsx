@@ -40,7 +40,7 @@ function FeatureCard({ iconBg, iconColor, title, description, icon }: any) {
  */
 function AnalyticsIcon() {
   return (
-    <BarChart2 className="w-4 h-4 text-[#006c49]" strokeWidth={2} />
+    <BarChart2 className="w-4 h-4 text-[#006c49] dark:text-emerald-400" strokeWidth={2} />
   );
 }
 
@@ -49,7 +49,7 @@ function AnalyticsIcon() {
  */
 function EfficiencyIcon() {
   return (
-    <Clock className="w-4 h-4 text-[#23acf1]" strokeWidth={2} />
+    <Clock className="w-4 h-4 text-[#23acf1] dark:text-sky-400" strokeWidth={2} />
   );
 }
 
@@ -115,7 +115,7 @@ export default function Onboarding() {
       {/* Header */}
       <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
         <span className="text-lg font-semibold text-foreground dark:text-white">
-          Smart<span className="text-[#006c49]">Sort</span>
+          Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
         </span>
         <div className="flex gap-2">
           <button className="px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors">
@@ -130,7 +130,7 @@ export default function Onboarding() {
           {/* Left — Marketing */}
           <div className="flex flex-col gap-8">
             <div>
-              <span className="inline-flex items-center bg-[#10b981] text-white text-xs font-semibold tracking-widest px-4 py-1.5 rounded-full">
+              <span className="inline-flex items-center bg-[#10b981] dark:bg-emerald-500 text-white text-xs font-semibold tracking-widest px-4 py-1.5 rounded-full">
                 STEP 1 OF 2
               </span>
             </div>
@@ -165,7 +165,7 @@ export default function Onboarding() {
             </div>
 
             <p className="text-xs text-muted-foreground dark:text-slate-400 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#10b981]" strokeWidth={2} />
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#10b981] dark:text-emerald-400" strokeWidth={2} />
               ISO 14001 compliant — trusted by 500+ enterprises
             </p>
           </div>

@@ -51,7 +51,7 @@ export function JobCard({
 }: JobCardProps) {
   if (job.status === "Pending") {
     return (
-      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 relative flex flex-col gap-4 group">
+      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-emerald-500/40 transition-all duration-300 relative flex flex-col gap-4 group">
         {/* Top Tags */}
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
@@ -66,7 +66,7 @@ export function JobCard({
           </div>
           {job.urgency === "Critical" && (
             <span
-              className="text-[#ba1a1a] animate-pulse flex items-center justify-center font-black text-sm"
+              className="text-[#ba1a1a] dark:text-red-500 animate-pulse flex items-center justify-center font-black text-sm"
               title="Critical Status"
             >
               ⚠️
@@ -86,7 +86,7 @@ export function JobCard({
               Fill Level
             </span>
             <span
-              className={`text-sm font-extrabold ${job.fill >= 90 ? "text-[#ba1a1a]" : "text-foreground"}`}
+              className={`text-sm font-extrabold ${job.fill >= 90 ? "text-[#ba1a1a] dark:text-red-400" : "text-foreground"}`}
             >
               {job.fill}% Full
             </span>
@@ -96,7 +96,7 @@ export function JobCard({
               Response Time
             </span>
             <span
-              className={`text-sm font-extrabold ${job.urgency === "Critical" ? "text-[#ba1a1a]" : "text-foreground"}`}
+              className={`text-sm font-extrabold ${job.urgency === "Critical" ? "text-[#ba1a1a] dark:text-red-400" : "text-foreground"}`}
             >
               {job.responseTime}
             </span>
@@ -111,7 +111,7 @@ export function JobCard({
           <select
             value={localAssignment || "Unassigned"}
             onChange={(e) => onCollectorSelect(job.id, e.target.value)}
-            className="w-full h-10 px-3 border border-slate-200 dark:border-border rounded-xl text-xs font-semibold bg-slate-50 dark:bg-card text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-[#006c49]/20"
+            className="w-full h-10 px-3 border border-slate-200 dark:border-border rounded-xl text-xs font-semibold bg-slate-50 dark:bg-card text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
           >
             <option value="Unassigned">Unassigned</option>
             {availableCollectors.map((collector) => (
@@ -139,7 +139,7 @@ export function JobCard({
 
   if (job.status === "In Transit") {
     return (
-      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 flex flex-col gap-4 group">
+      <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-emerald-500/40 transition-all duration-300 flex flex-col gap-4 group">
         {/* Top Tags */}
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
@@ -205,7 +205,7 @@ export function JobCard({
 
   // Completed
   return (
-    <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-[#006c49]/40 transition-all duration-300 flex flex-col gap-4 group">
+    <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-emerald-500/40 transition-all duration-300 flex flex-col gap-4 group">
       {/* Top tags */}
       <div className="flex items-center justify-between">
         <span className="bg-slate-50 dark:bg-secondary text-slate-500 dark:text-muted-foreground text-[9px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase border border-slate-200/20">

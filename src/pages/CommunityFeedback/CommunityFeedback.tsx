@@ -215,8 +215,8 @@ export default function CommunityFeedback() {
       value: activeReportsCount.toString(),
       trend: "Live from DB",
       trendDirection: "neutral" as const,
-      iconColorClass: "text-[#ba1a1a]",
-      iconBgClass: "bg-[#ffdad6]",
+      iconColorClass: "text-[#ba1a1a] dark:text-red-500",
+      iconBgClass: "bg-[#ffdad6] dark:bg-red-500/10",
       icon: (
         <FileText className="w-4 h-4" strokeWidth={2} />
       ),
@@ -226,8 +226,8 @@ export default function CommunityFeedback() {
       value: "2.4h",
       trend: "Overall avg",
       trendDirection: "neutral" as const,
-      iconColorClass: "text-[#0284c7]",
-      iconBgClass: "bg-[#23acf1]/10",
+      iconColorClass: "text-[#0284c7] dark:text-sky-500",
+      iconBgClass: "bg-[#23acf1]/10 dark:bg-sky-500/10",
       icon: (
         <Clock className="w-4 h-4" strokeWidth={2} />
       ),
@@ -237,8 +237,8 @@ export default function CommunityFeedback() {
       value: resolutionRatePercent,
       trend: `${resolvedCount} of ${totalReports}`,
       trendDirection: "neutral" as const,
-      iconColorClass: "text-[#006c49]",
-      iconBgClass: "bg-[#10b981]/10",
+      iconColorClass: "text-[#006c49] dark:text-emerald-400",
+      iconBgClass: "bg-[#10b981]/10 dark:bg-emerald-500/10",
       icon: (
         <CheckCircle className="w-4 h-4" strokeWidth={2} />
       ),
@@ -248,8 +248,8 @@ export default function CommunityFeedback() {
       value: sentimentLabel,
       trend: "Live updates",
       trendDirection: "neutral" as const,
-      iconColorClass: "text-[#d97706]",
-      iconBgClass: "bg-[#fef3c7]",
+      iconColorClass: "text-[#d97706] dark:text-amber-500",
+      iconBgClass: "bg-[#fef3c7] dark:bg-amber-500/10",
       icon: (
         <Smile className="w-4 h-4" strokeWidth={2} />
       ),
@@ -353,7 +353,7 @@ export default function CommunityFeedback() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="block pl-9 pr-10 py-1.5 border border-border rounded-lg bg-card text-muted-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 appearance-none outline-none"
+                className="block pl-9 pr-10 py-1.5 border border-border rounded-lg bg-card text-muted-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 appearance-none outline-none"
               >
                 <option>Status: All</option>
                 <option>Pending</option>
@@ -365,7 +365,7 @@ export default function CommunityFeedback() {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="block px-4 py-1.5 border border-border rounded-lg bg-card text-muted-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 appearance-none pr-8 outline-none"
+                className="block px-4 py-1.5 border border-border rounded-lg bg-card text-muted-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20 appearance-none pr-8 outline-none"
               >
                 <option>Category: All</option>
                 <option>Overflowing Bin</option>
@@ -464,7 +464,7 @@ export default function CommunityFeedback() {
                     <TableCell className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-1.5">
                         <button
-                          className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-[#006c49] dark:hover:text-emerald-400 hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
                           title="Convert to Job"
                         >
                           <FilePlus className="w-[18px] h-[18px]" strokeWidth={2} />
@@ -473,13 +473,13 @@ export default function CommunityFeedback() {
                           onClick={() =>
                             handleUpdateStatus(item.id, item.status)
                           }
-                          className="p-1.5 text-muted-foreground hover:text-[#0284c7] hover:bg-[#0284c7]/10 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-[#0284c7] dark:hover:text-sky-400 hover:bg-[#0284c7]/10 dark:hover:bg-sky-500/10 rounded-lg transition-colors cursor-pointer"
                           title={`Update status: ${item.status === "Pending" ? "In Progress" : item.status === "In Progress" ? "Resolved" : "Pending"}`}
                         >
                           <MessageCircle className="w-[18px] h-[18px]" strokeWidth={2} />
                         </button>
                         <button
-                          className="p-1.5 text-muted-foreground hover:text-foreground dark:text-white hover:bg-[#e2e8f0] rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-muted-foreground hover:text-foreground dark:text-white hover:bg-[#e2e8f0] dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
                           <Eye className="w-[18px] h-[18px]" strokeWidth={2} />
@@ -517,7 +517,7 @@ export default function CommunityFeedback() {
                   onClick={() => setCurrentPage(page)}
                   className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
                     isActive
-                      ? "bg-primary/10 text-[#006c49]"
+                      ? "bg-primary/10 text-[#006c49] dark:text-emerald-400"
                       : "text-muted-foreground font-medium hover:bg-muted dark:hover:bg-muted"
                   }`}
                 >
@@ -545,13 +545,13 @@ export default function CommunityFeedback() {
             </h3>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-md bg-[#10b981]"></span>
+                <span className="w-3 h-3 rounded-md bg-[#10b981] dark:bg-emerald-500"></span>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Reports
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-md bg-[#0284c7]"></span>
+                <span className="w-3 h-3 rounded-md bg-[#0284c7] dark:bg-sky-500"></span>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Resolved
                 </span>
@@ -561,50 +561,50 @@ export default function CommunityFeedback() {
 
           <div className="h-48 w-full relative flex items-end gap-3 pb-4">
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981]/20 h-1/4 rounded-t-sm group-hover:bg-[#10b981]/30 transition-colors"></div>
-              <div className="w-full bg-[#0284c7]/20 h-1/6 rounded-t-sm group-hover:bg-[#0284c7]/30 transition-colors"></div>
+              <div className="w-full bg-[#10b981]/20 dark:bg-emerald-500/20 h-1/4 rounded-t-sm group-hover:bg-[#10b981]/30 dark:group-hover:bg-emerald-500/30 transition-colors"></div>
+              <div className="w-full bg-[#0284c7]/20 dark:bg-sky-500/20 h-1/6 rounded-t-sm group-hover:bg-[#0284c7]/30 dark:group-hover:bg-sky-500/30 transition-colors"></div>
               <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Mon
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981]/40 h-2/4 rounded-t-sm group-hover:bg-[#10b981]/50 transition-colors"></div>
-              <div className="w-full bg-[#0284c7]/40 h-1/4 rounded-t-sm group-hover:bg-[#0284c7]/50 transition-colors"></div>
+              <div className="w-full bg-[#10b981]/40 dark:bg-emerald-500/40 h-2/4 rounded-t-sm group-hover:bg-[#10b981]/50 dark:group-hover:bg-emerald-500/50 transition-colors"></div>
+              <div className="w-full bg-[#0284c7]/40 dark:bg-sky-500/40 h-1/4 rounded-t-sm group-hover:bg-[#0284c7]/50 dark:group-hover:bg-sky-500/50 transition-colors"></div>
               <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Tue
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981] h-4/5 rounded-t-sm transition-colors"></div>
-              <div className="w-full bg-[#0284c7] h-3/5 rounded-t-sm transition-colors"></div>
+              <div className="w-full bg-[#10b981] dark:bg-emerald-500 h-4/5 rounded-t-sm transition-colors"></div>
+              <div className="w-full bg-[#0284c7] dark:bg-sky-500 h-3/5 rounded-t-sm transition-colors"></div>
               <span className="text-[10px] text-foreground dark:text-white text-center mt-2 font-bold uppercase">
                 Wed
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981]/40 h-2/5 rounded-t-sm group-hover:bg-[#10b981]/50 transition-colors"></div>
-              <div className="w-full bg-[#0284c7]/40 h-1/5 rounded-t-sm group-hover:bg-[#0284c7]/50 transition-colors"></div>
+              <div className="w-full bg-[#10b981]/40 dark:bg-emerald-500/40 h-2/5 rounded-t-sm group-hover:bg-[#10b981]/50 dark:group-hover:bg-emerald-500/50 transition-colors"></div>
+              <div className="w-full bg-[#0284c7]/40 dark:bg-sky-500/40 h-1/5 rounded-t-sm group-hover:bg-[#0284c7]/50 dark:group-hover:bg-sky-500/50 transition-colors"></div>
               <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Thu
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981]/60 h-3/5 rounded-t-sm group-hover:bg-[#10b981]/70 transition-colors"></div>
-              <div className="w-full bg-[#0284c7]/60 h-2/5 rounded-t-sm group-hover:bg-[#0284c7]/70 transition-colors"></div>
+              <div className="w-full bg-[#10b981]/60 dark:bg-emerald-500/60 h-3/5 rounded-t-sm group-hover:bg-[#10b981]/70 dark:group-hover:bg-emerald-500/70 transition-colors"></div>
+              <div className="w-full bg-[#0284c7]/60 dark:bg-sky-500/60 h-2/5 rounded-t-sm group-hover:bg-[#0284c7]/70 dark:group-hover:bg-sky-500/70 transition-colors"></div>
               <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Fri
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981]/20 h-1/5 rounded-t-sm group-hover:bg-[#10b981]/30 transition-colors"></div>
-              <div className="w-full bg-[#0284c7]/20 h-1/6 rounded-t-sm group-hover:bg-[#0284c7]/30 transition-colors"></div>
+              <div className="w-full bg-[#10b981]/20 dark:bg-emerald-500/20 h-1/5 rounded-t-sm group-hover:bg-[#10b981]/30 dark:group-hover:bg-emerald-500/30 transition-colors"></div>
+              <div className="w-full bg-[#0284c7]/20 dark:bg-sky-500/20 h-1/6 rounded-t-sm group-hover:bg-[#0284c7]/30 dark:group-hover:bg-sky-500/30 transition-colors"></div>
               <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Sat
               </span>
             </div>
             <div className="flex-1 flex flex-col justify-end h-full gap-1 group">
-              <div className="w-full bg-[#10b981]/20 h-[10%] rounded-t-sm group-hover:bg-[#10b981]/30 transition-colors"></div>
-              <div className="w-full bg-[#0284c7]/20 h-[5%] rounded-t-sm group-hover:bg-[#0284c7]/30 transition-colors"></div>
+              <div className="w-full bg-[#10b981]/20 dark:bg-emerald-500/20 h-[10%] rounded-t-sm group-hover:bg-[#10b981]/30 dark:group-hover:bg-emerald-500/30 transition-colors"></div>
+              <div className="w-full bg-[#0284c7]/20 dark:bg-sky-500/20 h-[5%] rounded-t-sm group-hover:bg-[#0284c7]/30 dark:group-hover:bg-sky-500/30 transition-colors"></div>
               <span className="text-[10px] text-muted-foreground text-center mt-2 font-bold uppercase">
                 Sun
               </span>
@@ -614,7 +614,7 @@ export default function CommunityFeedback() {
 
         <div className="bg-card rounded-xl p-6 text-white flex flex-col justify-between overflow-hidden relative shadow-lg">
           <div className="relative z-10">
-            <span className="text-[#10b981] font-bold text-[10px] uppercase tracking-widest">
+            <span className="text-[#10b981] dark:text-emerald-400 font-bold text-[10px] uppercase tracking-widest">
               Sustainability Highlight
             </span>
             <h3 className="text-3xl font-bold mt-3 text-white">4.2 Tons</h3>
@@ -629,7 +629,7 @@ export default function CommunityFeedback() {
           </div>
           {/* Decorative background pattern */}
           <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-primary/40 rounded-full blur-3xl"></div>
-          <div className="absolute right-4 top-4 text-[#006c49]/30">
+          <div className="absolute right-4 top-4 text-[#006c49]/30 dark:text-emerald-400/30">
             <Leaf className="w-20 h-20 opacity-30" strokeWidth={1} />
           </div>
         </div>
@@ -690,7 +690,7 @@ export default function CommunityFeedback() {
                 placeholder="Describe the issue in detail..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="px-3 py-2.5 border border-border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] focus:outline-none focus:ring-2 focus:border-[#006c49] focus:ring-[#006c49]/10 transition-all resize-none"
+                className="px-3 py-2.5 border border-border rounded-lg text-sm bg-card text-foreground dark:text-white placeholder-[#94a3b8] dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-[#006c49] dark:focus:border-emerald-500 focus:ring-[#006c49]/10 dark:focus:ring-emerald-500/10 transition-all resize-none"
               />
             </div>
           </div>

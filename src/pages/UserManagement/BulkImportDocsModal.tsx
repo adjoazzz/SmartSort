@@ -48,7 +48,7 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
               {/* Header */}
               <div className="border-b border-border px-6 py-4 flex items-center justify-between bg-background dark:bg-secondary">
                 <div className="flex items-center gap-2.5">
-                  <FileText className="w-5 h-5 text-[#006c49]" strokeWidth={2.5} />
+                  <FileText className="w-5 h-5 text-[#006c49] dark:text-emerald-400" strokeWidth={2.5} />
                   <h2 className="text-lg font-bold text-foreground dark:text-white">
                     Bulk Import Documentation
                   </h2>
@@ -100,7 +100,7 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                       </thead>
                       <tbody className="divide-y divide-[#f1f5f9] dark:divide-[#0f2942] text-muted-foreground">
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49] dark:text-emerald-400">
                             name
                           </td>
                           <td className="px-4 py-2">String</td>
@@ -109,14 +109,14 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                           </td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49] dark:text-emerald-400">
                             email
                           </td>
                           <td className="px-4 py-2">String (Email)</td>
                           <td className="px-4 py-2">Unique email address</td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49] dark:text-emerald-400">
                             role
                           </td>
                           <td className="px-4 py-2">String</td>
@@ -125,7 +125,7 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                           </td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49] dark:text-emerald-400">
                             assignedFacility
                           </td>
                           <td className="px-4 py-2">String</td>
@@ -134,7 +134,7 @@ Alex Vance,alex.vance@smartsort.com,Viewer,South Hub Logistics,SUSPENDED`;
                           </td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49]">
+                          <td className="px-4 py-2 font-semibold font-mono text-[#006c49] dark:text-emerald-400">
                             status
                           </td>
                           <td className="px-4 py-2">String</td>

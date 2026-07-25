@@ -30,8 +30,8 @@ export function SelectField({
         onChange={(e) => onChange(e.target.value)}
         className={`h-10 px-3 border rounded-lg text-sm bg-card text-foreground dark:text-white focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer ${
           error
-            ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10"
-            : "border-border focus:border-[#006c49] focus:ring-[#006c49]/10"
+            ? "border-[#ba1a1a] dark:border-red-500 focus:border-[#ba1a1a] dark:focus:border-red-500 focus:ring-[#ba1a1a]/10 dark:focus:ring-red-500/10"
+            : "border-border focus:border-[#006c49] dark:focus:border-emerald-500 focus:ring-[#006c49]/10 dark:focus:ring-emerald-500/10"
         }`}
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23515f74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
@@ -50,7 +50,7 @@ export function SelectField({
         ))}
       </select>
       {error && (
-        <span className="text-[11px] font-medium text-[#ba1a1a]">{error}</span>
+        <span className="text-[11px] font-medium text-[#ba1a1a] dark:text-red-500">{error}</span>
       )}
     </div>
   );

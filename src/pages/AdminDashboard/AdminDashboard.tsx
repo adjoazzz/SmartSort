@@ -358,8 +358,8 @@ export default function AdminDashboard() {
           value={`${metrics.activeFacilitiesCount}/${metrics.facilitiesCount}`}
           trend="All systems nominal"
           trendDirection="neutral"
-          iconColorClass="text-[#10b981]"
-          iconBgClass="bg-[#10b981]/10"
+          iconColorClass="text-[#10b981] dark:text-emerald-500"
+          iconBgClass="bg-[#10b981]/10 dark:bg-emerald-500/10"
           iconSvg={<Warehouse className="w-4 h-4" strokeWidth={2.5} />}
         />
         <MetricCard
@@ -367,8 +367,8 @@ export default function AdminDashboard() {
           value={metrics.deviceStatus}
           trend="+2.1% connectivity sync"
           trendDirection="up"
-          iconColorClass="text-[#3b82f6]"
-          iconBgClass="bg-[#3b82f6]/10"
+          iconColorClass="text-[#3b82f6] dark:text-blue-500"
+          iconBgClass="bg-[#3b82f6]/10 dark:bg-blue-500/10"
           iconSvg={<Smartphone className="w-4 h-4" strokeWidth={2.5} />}
         />
         <MetricCard
@@ -376,8 +376,8 @@ export default function AdminDashboard() {
           value={metrics.totalItemsSorted}
           trend={`Recycling rate: ${metrics.recyclingRate}`}
           trendDirection="up"
-          iconColorClass="text-[#10b981]"
-          iconBgClass="bg-[#10b981]/10"
+          iconColorClass="text-[#10b981] dark:text-emerald-500"
+          iconBgClass="bg-[#10b981]/10 dark:bg-emerald-500/10"
           iconSvg={<Activity className="w-4 h-4" strokeWidth={2.5} />}
         />
         <MetricCard
@@ -385,8 +385,8 @@ export default function AdminDashboard() {
           value={`${metrics.totalPendingTonnage} Tons`}
           trend={`${metrics.criticalAlertsCount} critical system alerts`}
           trendDirection={metrics.criticalAlertsCount > 0 ? "down" : "neutral"}
-          iconColorClass="text-[#f59e0b]"
-          iconBgClass="bg-[#f59e0b]/10"
+          iconColorClass="text-[#f59e0b] dark:text-amber-500"
+          iconBgClass="bg-[#f59e0b]/10 dark:bg-amber-500/10"
           iconSvg={<DollarSign className="w-4 h-4" strokeWidth={2.5} />}
         />
       </div>
@@ -704,7 +704,7 @@ export default function AdminDashboard() {
                       <Link
                         to={`/dashboard?facilityId=${fac.id}`}
                         data-testid={`admin-inspect-${fac.id}`}
-                        className="text-xs bg-[#006c49] text-white px-2.5 py-1 rounded hover:bg-[#006c49]/90 font-medium transition-colors cursor-pointer active:scale-[0.98] inline-block"
+                        className="text-xs bg-[#006c49] dark:bg-emerald-600 text-white px-2.5 py-1 rounded hover:bg-[#006c49]/90 dark:hover:bg-emerald-700 font-medium transition-colors cursor-pointer active:scale-[0.98] inline-block"
                       >
                         Inspect
                       </Link>

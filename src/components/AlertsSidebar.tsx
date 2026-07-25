@@ -69,24 +69,24 @@ interface AlertsSidebarProps {
 
 const severityConfig = {
   CRITICAL: {
-    dotColor: "bg-[#ba1a1a]",
-    bgColor: "bg-[#ffdad6]/20",
-    textColor: "text-[#ba1a1a]",
-    borderColor: "border-[#ba1a1a]/20",
+    dotColor: "bg-[#ba1a1a] dark:bg-red-500",
+    bgColor: "bg-[#ffdad6]/20 dark:bg-red-500/10",
+    textColor: "text-[#ba1a1a] dark:text-red-500",
+    borderColor: "border-[#ba1a1a]/20 dark:border-red-500/20",
     icon: <AlertTriangle className="w-3.5 h-3.5" strokeWidth={2.5} />,
   },
   WARNING: {
-    dotColor: "bg-[#d97706]",
-    bgColor: "bg-[#fef3c7]/40",
-    textColor: "text-[#d97706]",
-    borderColor: "border-[#d97706]/20",
+    dotColor: "bg-[#d97706] dark:bg-amber-500",
+    bgColor: "bg-[#fef3c7]/40 dark:bg-amber-500/10",
+    textColor: "text-[#d97706] dark:text-amber-500",
+    borderColor: "border-[#d97706]/20 dark:border-amber-500/20",
     icon: <AlertCircle className="w-3.5 h-3.5" strokeWidth={2.5} />,
   },
   INFO: {
-    dotColor: "bg-[#0284c7]",
-    bgColor: "bg-[#e0f2fe]/40",
-    textColor: "text-[#0284c7]",
-    borderColor: "border-[#0284c7]/20",
+    dotColor: "bg-[#0284c7] dark:bg-sky-500",
+    bgColor: "bg-[#e0f2fe]/40 dark:bg-sky-500/10",
+    textColor: "text-[#0284c7] dark:text-sky-500",
+    borderColor: "border-[#0284c7]/20 dark:border-sky-500/20",
     icon: <Info className="w-3.5 h-3.5" strokeWidth={2.5} />,
   },
 };
@@ -140,7 +140,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-border/40 dark:border-border/40 bg-transparent flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#ffdad6]/30 flex items-center justify-center text-[#ba1a1a]">
+                <div className="w-9 h-9 rounded-xl bg-[#ffdad6]/30 flex items-center justify-center text-[#ba1a1a] dark:text-red-500">
                   <Bell className="w-[18px] h-[18px]" strokeWidth={2.5} />
                 </div>
                 <div>
@@ -218,7 +218,7 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                           </div>
 
                           <ChevronRight
-                            className="w-3.5 h-3.5 text-muted-foreground group-hover:text-[#006c49] transition-colors flex-shrink-0 mt-1"
+                            className="w-3.5 h-3.5 text-muted-foreground group-hover:text-[#006c49] dark:group-hover:text-emerald-400 dark:text-emerald-400 transition-colors flex-shrink-0 mt-1"
                             strokeWidth={2.5}
                           />
                         </div>

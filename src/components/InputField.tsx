@@ -35,12 +35,12 @@ export function InputField({
         {...rest}
         className={`h-10 px-3 border rounded-lg text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 transition-all ${
           error
-            ? "border-[#ba1a1a] focus:border-[#ba1a1a] focus:ring-[#ba1a1a]/10"
-            : "border-border focus:border-[#006c49] focus:ring-[#006c49]/10"
+            ? "border-[#ba1a1a] dark:border-red-500 focus:border-[#ba1a1a] dark:focus:border-red-500 focus:ring-[#ba1a1a]/10 dark:focus:ring-red-500/10"
+            : "border-border focus:border-[#006c49] dark:focus:border-emerald-500 focus:ring-[#006c49]/10 dark:focus:ring-emerald-500/10"
         }`}
       />
       {error && (
-        <span className="text-[11px] font-medium text-[#ba1a1a]">{error}</span>
+        <span className="text-[11px] font-medium text-[#ba1a1a] dark:text-red-500">{error}</span>
       )}
     </div>
   );

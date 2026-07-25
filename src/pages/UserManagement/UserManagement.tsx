@@ -53,8 +53,8 @@ const KPIS = [
     value: "24",
     trend: "+3 this month",
     trendDirection: "up" as const,
-    iconColorClass: "text-[#006c49]",
-    iconBgClass: "bg-[#10b981]/10",
+    iconColorClass: "text-[#006c49] dark:text-emerald-400",
+    iconBgClass: "bg-[#10b981]/10 dark:bg-emerald-400/10",
     icon: <Users className="w-4 h-4" strokeWidth={2} />,
   },
   {
@@ -62,8 +62,8 @@ const KPIS = [
     value: "3",
     trend: "No change",
     trendDirection: "neutral" as const,
-    iconColorClass: "text-[#0284c7]",
-    iconBgClass: "bg-[#0284c7]/10",
+    iconColorClass: "text-[#0284c7] dark:text-sky-400",
+    iconBgClass: "bg-[#0284c7]/10 dark:bg-sky-400/10",
     icon: <Shield className="w-4 h-4" strokeWidth={2} />,
   },
   {
@@ -71,8 +71,8 @@ const KPIS = [
     value: "5",
     trend: "+2 new",
     trendDirection: "down" as const,
-    iconColorClass: "text-[#d97706]",
-    iconBgClass: "bg-[#fef3c7]",
+    iconColorClass: "text-[#d97706] dark:text-amber-500",
+    iconBgClass: "bg-[#fef3c7] dark:bg-amber-500/10",
     icon: <Clock className="w-4 h-4" strokeWidth={2} />,
   },
   {
@@ -119,7 +119,7 @@ const AUDIT_LOG: AuditEntry[] = [
         as Viewer.
       </>
     ),
-    color: "text-[#006c49]",
+    color: "text-[#006c49] dark:text-emerald-400",
   },
   {
     time: "09:15",
@@ -133,7 +133,7 @@ const AUDIT_LOG: AuditEntry[] = [
         from IP 192.168.1.104.
       </>
     ),
-    color: "text-[#ba1a1a]",
+    color: "text-[#ba1a1a] dark:text-red-400",
   },
   {
     time: "Yesterday",
@@ -160,8 +160,8 @@ const AUDIT_LOG: AuditEntry[] = [
 const PERMISSIONS: PermGroup[] = [
   {
     role: "Administrator",
-    badgeBg: "bg-[#10b981]/10",
-    badgeText: "text-[#006c49]",
+    badgeBg: "bg-[#10b981]/10 dark:bg-emerald-400/10",
+    badgeText: "text-[#006c49] dark:text-emerald-400",
     badgeBorder: "border-[#10b981]/20",
     badgeLabel: "Full Access",
     perms: [
@@ -173,8 +173,8 @@ const PERMISSIONS: PermGroup[] = [
   },
   {
     role: "Manager",
-    badgeBg: "bg-[#0284c7]/10",
-    badgeText: "text-[#0284c7]",
+    badgeBg: "bg-[#0284c7]/10 dark:bg-sky-400/10",
+    badgeText: "text-[#0284c7] dark:text-sky-400",
     badgeBorder: "border-[#0284c7]/20",
     badgeLabel: "Functional Access",
     perms: [
@@ -253,17 +253,17 @@ const getRoleBadge = (role: string) => {
   > = {
     Admin: {
       bg: "bg-[#f3e8ff] dark:bg-[#7c3aed]/10",
-      text: "text-[#7c3aed]",
+      text: "text-[#7c3aed] dark:text-violet-400",
       hasChevron: true,
     },
     Manager: {
       bg: "bg-[#e0f2fe] dark:bg-[#2563eb]/10",
-      text: "text-[#2563eb]",
+      text: "text-[#2563eb] dark:text-blue-400",
       hasChevron: false,
     },
     Collector: {
       bg: "bg-[#fef3c7] dark:bg-[#b45309]/10",
-      text: "text-[#b45309]",
+      text: "text-[#b45309] dark:text-amber-500",
       hasChevron: false,
     },
     Viewer: {
@@ -306,10 +306,10 @@ const getStatusBadge = (status: string) => {
       ? "text-[#92400e] dark:text-[#fbbf24]"
       : "text-[#15803d] dark:text-[#22c55e]";
   const dot = isSuspended
-    ? "bg-[#b91c1c]"
+    ? "bg-[#b91c1c] dark:bg-red-500"
     : isPending
-      ? "bg-[#d97706]"
-      : "bg-[#15803d]";
+      ? "bg-[#d97706] dark:bg-amber-500"
+      : "bg-[#15803d] dark:bg-emerald-500";
   const label = isSuspended ? "SUSPENDED" : isPending ? "PENDING" : "ACTIVE";
 
   return (
@@ -334,7 +334,7 @@ const getInitials = (name: string) =>
 /** Reusable SVG icon wrapper for the permissions check/x marks */
 function PermIcon({ granted }: { granted: boolean }) {
   return granted ? (
-    <CheckCircle className="w-[14px] h-[14px] text-[#10b981] shrink-0" strokeWidth={2} />
+    <CheckCircle className="w-[14px] h-[14px] text-[#10b981] dark:text-emerald-400 shrink-0" strokeWidth={2} />
   ) : (
     <XCircle className="w-[14px] h-[14px] text-muted-foreground shrink-0" strokeWidth={2} />
   );
@@ -399,7 +399,7 @@ function ActionMenu({
     <div className="relative inline-block">
       <button
         onClick={onToggle}
-        className="p-1.5 text-muted-foreground hover:text-[#006c49] hover:bg-primary/10 rounded-lg transition-colors"
+        className="p-1.5 text-muted-foreground hover:text-[#006c49] dark:hover:text-emerald-400 hover:bg-primary/10 rounded-lg transition-colors"
         title="More actions"
         aria-label="Edit entry"
       >
@@ -432,13 +432,13 @@ function ActionMenu({
                   }}
                   className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
                     item.danger
-                      ? "text-[#ba1a1a] hover:bg-[#ffdad6]/30"
+                      ? "text-[#ba1a1a] dark:text-red-400 hover:bg-[#ffdad6]/30 dark:hover:bg-red-400/10"
                       : "text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
                   }`}
                 >
                   <item.icon
-                    className="w-[15px] h-[15px]"
-                    stroke={item.danger ? "currentColor" : "#515f74"}
+                    className={`w-[15px] h-[15px] ${!item.danger ? "text-[#515f74] dark:text-slate-400" : ""}`}
+                    stroke="currentColor"
                     strokeWidth={2}
                   />
                   {item.label}
@@ -700,7 +700,7 @@ export default function UserManagement() {
             {isLoading ? (
               <div className="h-5 w-10 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
             ) : (
-              <span className="text-lg font-bold text-[#15803d]">
+              <span className="text-lg font-bold text-[#15803d] dark:text-emerald-500">
                 {activeUsers}
               </span>
             )}
@@ -713,7 +713,7 @@ export default function UserManagement() {
             {isLoading ? (
               <div className="h-5 w-10 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
             ) : (
-              <span className="text-lg font-bold text-[#7c3aed]">
+              <span className="text-lg font-bold text-[#7c3aed] dark:text-violet-500">
                 {activeAdmins}
               </span>
             )}
@@ -726,7 +726,7 @@ export default function UserManagement() {
             {isLoading ? (
               <div className="h-5 w-10 bg-slate-200 dark:bg-muted rounded animate-pulse"></div>
             ) : (
-              <span className="text-lg font-bold text-[#d97706]">
+              <span className="text-lg font-bold text-[#d97706] dark:text-amber-500">
                 {pendingInvites}
               </span>
             )}
@@ -739,7 +739,7 @@ export default function UserManagement() {
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
               showFilters
-                ? "bg-primary/10 border-[#0a5cf5] text-[#0a5cf5]"
+                ? "bg-primary/10 dark:bg-blue-500/10 border-[#0a5cf5] dark:border-blue-400 text-[#0a5cf5] dark:text-blue-400"
                 : "bg-card text-foreground dark:text-white hover:bg-background dark:hover:bg-secondary"
             }`}
           >
@@ -764,7 +764,7 @@ export default function UserManagement() {
         {showFilters && (
           <div className="p-4 border-b border-[#f1f5f9] dark:border-[#0f2942] bg-background dark:bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center w-full max-w-md bg-card rounded-lg border border-border focus-within:border-border dark:focus-within:border-border focus-within:shadow-sm transition-all overflow-hidden px-4 py-2">
-              <Search className="w-4 h-4 shrink-0 text-[#94A3B8] mr-3" strokeWidth={2.5} />
+              <Search className="w-4 h-4 shrink-0 text-[#94A3B8] dark:text-slate-400 mr-3" strokeWidth={2.5} />
               <input
                 type="text"
                 placeholder="Search by name or email..."

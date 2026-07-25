@@ -24,33 +24,33 @@ const KPI_DATA = [
     value: "74.2%",
     trend: "12.4%",
     trendDirection: "up",
-    icon: <Recycle className="w-5 h-5 text-[#10b981]" strokeWidth={2} />,
-    iconBg: "bg-transparent border border-border",
-    progressColor: "bg-[#10b981]",
+    icon: <Recycle className="w-5 h-5 text-[#10b981] dark:text-emerald-400" strokeWidth={2} />,
+    iconBg: "bg-[#bbf7d0]/50 dark:bg-emerald-500/10",
+    progressColor: "bg-[#10b981] dark:bg-emerald-500",
     progressWidth: "74%",
-    trendColors: "bg-[#bbf7d0]/50 text-[#006c49]",
+    trendColors: "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400",
   },
   {
     title: "Contamination",
     value: "8.1%",
     trend: "4.2%",
     trendDirection: "down",
-    icon: <AlertTriangle className="w-5 h-5 text-[#ba1a1a]" strokeWidth={2} />,
-    iconBg: "bg-[#fca5a5]/20",
-    progressColor: "bg-[#ba1a1a]",
+    icon: <AlertTriangle className="w-5 h-5 text-[#ba1a1a] dark:text-red-500" strokeWidth={2} />,
+    iconBg: "bg-[#fca5a5]/20 dark:bg-red-500/10",
+    progressColor: "bg-[#ba1a1a] dark:bg-red-500",
     progressWidth: "8%",
-    trendColors: "bg-[#ffdad6] text-[#ba1a1a]",
+    trendColors: "bg-[#ffdad6] dark:bg-red-500/20 text-[#ba1a1a] dark:text-red-400",
   },
   {
     title: "Total Tonnage",
     value: "1,248.5 t",
     trend: "8.1%",
     trendDirection: "up",
-    icon: <ShoppingBag className="w-5 h-5 text-[#3b82f6]" strokeWidth={2} />,
-    iconBg: "bg-transparent border border-border",
-    progressColor: "bg-[#3b82f6]",
+    icon: <ShoppingBag className="w-5 h-5 text-[#3b82f6] dark:text-blue-400" strokeWidth={2} />,
+    iconBg: "bg-[#dbeafe]/50 dark:bg-blue-500/10",
+    progressColor: "bg-[#3b82f6] dark:bg-blue-500",
     progressWidth: "75%",
-    trendColors: "bg-[#dbeafe] text-[#2563eb]",
+    trendColors: "bg-[#dbeafe] dark:bg-blue-500/20 text-[#2563eb] dark:text-blue-400",
   },
   {
     title: "Carbon Offset",
@@ -63,9 +63,9 @@ const KPI_DATA = [
       </span>
     ),
     iconBg: "bg-transparent border border-border",
-    progressColor: "bg-[#334155]",
+    progressColor: "bg-[#334155] dark:bg-slate-400",
     progressWidth: "40%",
-    trendColors: "bg-[#bbf7d0]/50 text-[#006c49]",
+    trendColors: "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400",
   },
 ];
 
@@ -74,13 +74,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-card text-foreground p-3 rounded-lg shadow-xl text-sm border border-border">
         <p className="font-bold mb-2 pb-2 border-b border-border">{label}</p>
-        <div className="flex justify-between gap-4 mb-1">
-          <span className="text-muted-foreground">Recycling:</span>
-          <span className="text-[#10b981] font-bold">{payload[0].value}%</span>
+        <div className="mb-1">
+          <span className="text-xs text-muted-foreground mr-2">Clean Sorting:</span>
+          <span className="text-[#10b981] dark:text-emerald-400 font-bold">{payload[0].value}%</span>
         </div>
-        <div className="flex justify-between gap-4">
-          <span className="text-muted-foreground">Contam:</span>
-          <span className="text-[#fca5a5] font-bold">{payload[1].value}%</span>
+        <div>
+          <span className="text-xs text-muted-foreground mr-2">Contamination:</span>
+          <span className="text-[#fca5a5] dark:text-red-400 font-bold">{payload[1].value}%</span>
         </div>
       </div>
     );
@@ -321,14 +321,12 @@ export default function Analytics() {
                 </p>
               </div>
               <div className="flex gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></div>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {t("analytics.recycling")}
-                  </span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#10b981] dark:bg-emerald-500"></div>
+                  <span className="text-xs text-muted-foreground">Clean</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#fca5a5]"></div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#fca5a5] dark:bg-red-400"></div>
                   <span className="text-sm text-muted-foreground font-medium">
                     {t("analytics.contamination")}
                   </span>
@@ -551,9 +549,9 @@ export default function Analytics() {
                             className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold
                           ${
                             row.growthTrend === "up"
-                              ? "bg-[#bbf7d0]/50 text-[#006c49]"
+                              ? "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400"
                               : row.growthTrend === "down"
-                                ? "bg-[#ffdad6] text-[#ba1a1a]"
+                                ? "bg-[#ffdad6] dark:bg-red-500/20 text-[#ba1a1a] dark:text-red-400"
                                 : "bg-muted text-muted-foreground"
                           }
                         `}

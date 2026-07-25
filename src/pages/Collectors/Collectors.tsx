@@ -184,7 +184,7 @@ export default function Collectors() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#10b981]/10 text-[#006c49] font-bold text-xs flex items-center justify-center border border-[#10b981]/25">
+                        <div className="w-8 h-8 rounded-full bg-[#10b981]/10 dark:bg-emerald-500/10 text-[#006c49] dark:text-emerald-400 font-bold text-xs flex items-center justify-center border border-[#10b981]/25 dark:border-emerald-500/25">
                           {collector.name ? collector.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "C"}
                         </div>
                         <div className="flex flex-col">
@@ -201,7 +201,7 @@ export default function Collectors() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       <div className="flex flex-col">
-                        <span className="font-bold text-[#d97706] text-xs">⭐ {Number(collector.rating).toFixed(1)}</span>
+                        <span className="font-bold text-[#d97706] dark:text-amber-500 text-xs">⭐ {Number(collector.rating).toFixed(1)}</span>
                         <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">
                           {Number(collector.rating) >= 4.5 ? "98% on-time" : "92% on-time"}
                         </span>
@@ -222,7 +222,7 @@ export default function Collectors() {
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <button
                         onClick={() => setSelectedCollector(collector)}
-                        className="text-[#006c49] text-sm font-semibold hover:underline"
+                        className="text-[#006c49] dark:text-emerald-400 text-sm font-semibold hover:underline"
                       >
                         View Profile
                       </button>

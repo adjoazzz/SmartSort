@@ -198,11 +198,11 @@ export default function CollectorMap() {
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
             Accepted Bins:
           </span>
-          <span className="text-sm font-black text-[#0284c7]">
+          <span className="text-sm font-black text-[#0284c7] dark:text-sky-500">
             {activeAssignments.length} In-Transit
           </span>
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
-          <span className="text-sm font-black text-[#10b981]">
+          <span className="text-sm font-black text-[#10b981] dark:text-emerald-500">
             {completedTodayList.length} Completed
           </span>
         </div>
@@ -231,12 +231,12 @@ export default function CollectorMap() {
                       onClick={() => setSelectedJobId(job.id)}
                       className={`border rounded-xl p-3.5 transition-all cursor-pointer relative ${
                         isSelected
-                          ? "border-[#0284c7] bg-[#0284c7]/5 dark:bg-[#0c4a6e]/20 shadow-sm"
+                          ? "border-[#0284c7] dark:border-sky-500 bg-[#0284c7]/5 dark:bg-[#0c4a6e]/20 shadow-sm"
                           : "border-slate-100 dark:border-border hover:border-slate-200 dark:hover:border-border bg-card"
                       }`}
                     >
                       {/* Step Indicator badge */}
-                      <span className="absolute top-3.5 left-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#0284c7] text-white text-[10px] font-black">
+                      <span className="absolute top-3.5 left-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#0284c7] dark:bg-sky-500 text-white text-[10px] font-black">
                         {idx + 1}
                       </span>
 
@@ -263,9 +263,9 @@ export default function CollectorMap() {
                         <div className="flex items-center gap-2 mt-2">
                           <Progress
                             value={job.fill}
-                            className="w-16 h-1 bg-slate-100 dark:bg-slate-800 [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                            className="w-16 h-1 bg-slate-100 dark:bg-slate-800 [&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
                           />
-                          <span className="text-[9px] font-bold text-[#ba1a1a]">
+                          <span className="text-[9px] font-bold text-[#ba1a1a] dark:text-red-400">
                             {job.fill}% Full
                           </span>
                         </div>
@@ -280,7 +280,7 @@ export default function CollectorMap() {
                               setNavigatingJobId(job.id);
                               setIsNavigating(true);
                             }}
-                            className="flex-1 py-1.5 bg-[#0284c7] text-white text-[10px] font-bold rounded-md hover:bg-[#0369a1] transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
+                            className="flex-1 py-1.5 bg-[#0284c7] dark:bg-sky-600 text-white text-[10px] font-bold rounded-md hover:bg-[#0369a1] dark:hover:bg-sky-700 transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
                           >
                             <Navigation className="w-2.5 h-2.5" strokeWidth={3} />
                             Navigate
@@ -808,7 +808,7 @@ export default function CollectorMap() {
                             <span className="text-xs font-black text-foreground dark:text-white truncate">
                               {selectedJob.location}
                             </span>
-                            <span className="text-[10px] font-mono text-[#0284c7] font-bold">
+                            <span className="text-[10px] font-mono text-[#0284c7] dark:text-sky-500 font-bold">
                               ({selectedJob.device})
                             </span>
                           </div>
@@ -830,7 +830,7 @@ export default function CollectorMap() {
                           </span>
                           <span>
                             Fill Density:{" "}
-                            <strong className="text-[#ba1a1a]">
+                            <strong className="text-[#ba1a1a] dark:text-red-500">
                               {selectedJob.fill}%
                             </strong>
                           </span>
@@ -859,9 +859,9 @@ export default function CollectorMap() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-black/10"
           >
-            <div className="bg-card border border-[#006c49] rounded-xl px-8 py-6 shadow-md flex flex-col items-center gap-3">
-              <div className="h-14 w-14 rounded-full bg-[#10b981]/15 text-[#10b981] flex items-center justify-center animate-[bounce_1s_infinite]">
-                <Check className="w-7 h-7 text-[#10b981]" strokeWidth={3.5} />
+            <div className="bg-card border border-[#006c49] dark:border-emerald-500 rounded-xl px-8 py-6 shadow-md flex flex-col items-center gap-3">
+              <div className="h-14 w-14 rounded-full bg-[#10b981]/15 dark:bg-emerald-500/15 text-[#10b981] dark:text-emerald-400 flex items-center justify-center animate-[bounce_1s_infinite]">
+                <Check className="w-7 h-7 text-[#10b981] dark:text-emerald-400" strokeWidth={3.5} />
               </div>
               <h3 className="font-black text-lg text-foreground dark:text-white">
                 Bin Cleared Successfully!
@@ -926,7 +926,7 @@ export default function CollectorMap() {
                   className="bg-card border border-border rounded-xl max-w-md w-full p-6 shadow-md relative overflow-hidden flex flex-col gap-6"
                 >
                   <div className="flex justify-between items-center border-b border-[#f1f5f9] dark:border-[#0f2942] pb-3">
-                    <div className="flex items-center gap-2 text-[#0284c7]">
+                    <div className="flex items-center gap-2 text-[#0284c7] dark:text-sky-400">
                       <Navigation className="w-[18px] h-[18px]" strokeWidth={2.5} />
                       <span className="text-sm font-bold tracking-wider uppercase">
                         Active HUD Navigation
@@ -969,7 +969,7 @@ export default function CollectorMap() {
                           feet
                         </span>
                       </span>
-                      <span className="text-sm font-semibold text-[#0284c7] mt-1">
+                      <span className="text-sm font-semibold text-[#0284c7] dark:text-sky-400 mt-1">
                         {NAV_INSTRUCTIONS[navStep]}
                       </span>
                     </div>
@@ -1036,7 +1036,7 @@ export default function CollectorMap() {
                   {/* Header */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] flex items-center justify-center shrink-0">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] dark:text-emerald-400 flex items-center justify-center shrink-0">
                         <CheckSquare className="w-5 h-5" strokeWidth={2.5} />
                       </div>
                       <div>
@@ -1067,7 +1067,7 @@ export default function CollectorMap() {
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
                       Fill
                     </span>
-                    <span className="text-[11px] font-bold text-[#ba1a1a]">
+                    <span className="text-[11px] font-bold text-[#ba1a1a] dark:text-red-400">
                       {job.fill}%
                     </span>
                   </div>
@@ -1079,8 +1079,8 @@ export default function CollectorMap() {
                     </p>
                     {checklist.map((item, i) => (
                       <div key={i} className="flex items-start gap-2.5">
-                        <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-primary/10 flex items-center justify-center shrink-0">
-                          <Check className="w-[9px] h-[9px] text-[#006c49]" strokeWidth={3.5} />
+                        <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] dark:border-emerald-500 bg-primary/10 flex items-center justify-center shrink-0">
+                          <Check className="w-[9px] h-[9px] text-[#006c49] dark:text-emerald-400" strokeWidth={3.5} />
                         </div>
                         <span className="text-xs text-foreground dark:text-muted-foreground">
                           {item}

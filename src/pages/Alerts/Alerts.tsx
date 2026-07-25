@@ -31,22 +31,22 @@ const TRENDS_DATA = [
 function DeviceIcon({ type }: { type: string }) {
   if (type === "conveyor") {
     return (
-      <Settings className="w-5 h-5 text-[#515f74]" strokeWidth={2} />
+      <Settings className="w-5 h-5 text-[#515f74] dark:text-slate-400" strokeWidth={2} />
     );
   }
   if (type === "bin") {
     return (
-      <Trash2 className="w-5 h-5 text-[#515f74]" strokeWidth={2} />
+      <Trash2 className="w-5 h-5 text-[#515f74] dark:text-slate-400" strokeWidth={2} />
     );
   }
   if (type === "sensor") {
     return (
-      <PlusSquare className="w-5 h-5 text-[#515f74]" strokeWidth={2} />
+      <PlusSquare className="w-5 h-5 text-[#515f74] dark:text-slate-400" strokeWidth={2} />
     );
   }
   if (type === "compactor") {
     return (
-      <Power className="w-5 h-5 text-[#515f74]" strokeWidth={2} />
+      <Power className="w-5 h-5 text-[#515f74] dark:text-slate-400" strokeWidth={2} />
     );
   }
   return null;
@@ -184,7 +184,7 @@ export default function Alerts() {
               <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-1">
                 CRITICAL
               </span>
-              <span className="text-[28px] leading-none font-bold text-[#ba1a1a]">
+              <span className="text-[28px] leading-none font-bold text-[#ba1a1a] dark:text-red-500">
                 {String(summaryData?.critical || 0).padStart(2, "0")}
               </span>
             </div>
@@ -192,7 +192,7 @@ export default function Alerts() {
               <span className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-1">
                 WARNINGS
               </span>
-              <span className="text-[28px] leading-none font-bold text-[#0284c7]">
+              <span className="text-[28px] leading-none font-bold text-[#0284c7] dark:text-sky-500">
                 {String(summaryData?.warning || 0).padStart(2, "0")}
               </span>
             </div>
@@ -219,7 +219,7 @@ export default function Alerts() {
                   <option value="warning">Warning</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8]" strokeWidth={2} />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8] dark:text-slate-500" strokeWidth={2} />
                 </div>
               </div>
             </div>
@@ -239,7 +239,7 @@ export default function Alerts() {
                   <option value="smartbins">SmartBins</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8]" strokeWidth={2} />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8] dark:text-slate-500" strokeWidth={2} />
                 </div>
               </div>
             </div>
@@ -260,7 +260,7 @@ export default function Alerts() {
                   <option value="30d">Last 30 Days</option>
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8]" strokeWidth={2} />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8] dark:text-slate-500" strokeWidth={2} />
                 </div>
               </div>
             </div>
@@ -362,7 +362,7 @@ export default function Alerts() {
                 filteredAlerts.map((alert: any) => (
                   <TableRow
                     key={alert.id}
-                    className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
+                    className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9] dark:border-[#0f2942]"
                   >
                     <TableCell className="px-6 py-5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
@@ -459,7 +459,7 @@ export default function Alerts() {
               <h2 className="text-lg font-bold text-foreground dark:text-white">
                 Severity Trends
               </h2>
-              <span className="text-sm font-bold text-[#006c49]">
+              <span className="text-sm font-bold text-[#006c49] dark:text-emerald-400">
                 Live Updates
               </span>
             </div>
@@ -512,7 +512,7 @@ export default function Alerts() {
           ) : (
             <div className="col-span-1 bg-card dark:bg-background rounded-xl p-6 shadow-sm flex flex-col justify-between text-white relative overflow-hidden">
               <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-4 text-[#10b981]">
+                <div className="flex items-center gap-2 mb-4 text-[#10b981] dark:text-emerald-500">
                   <Cpu className="w-[18px] h-[18px]" strokeWidth={2} />
                   <span className="text-[11px] font-bold tracking-wider uppercase">
                     MAINTENANCE AI
@@ -525,7 +525,7 @@ export default function Alerts() {
                   hours to prevent further critical alerts.
                 </p>
                 <div className="mt-auto">
-                  <button className="w-full bg-[#10b981] hover:bg-[#059669] text-foreground dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm cursor-pointer">
+                  <button className="w-full bg-[#10b981] dark:bg-emerald-600 hover:bg-[#059669] dark:hover:bg-emerald-700 text-foreground dark:text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm text-sm cursor-pointer">
                     Schedule Preventive Check
                   </button>
                 </div>

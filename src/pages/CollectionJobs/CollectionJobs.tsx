@@ -135,8 +135,8 @@ const KPIS = [
     value: "24",
     trend: "12% increase",
     trendDirection: "down" as const,
-    iconColorClass: "text-[#006c49]",
-    iconBgClass: "bg-[#10b981]/10",
+    iconColorClass: "text-[#006c49] dark:text-emerald-400",
+    iconBgClass: "bg-[#10b981]/10 dark:bg-emerald-500/10",
     icon: (
       <Clock className="w-4 h-4" strokeWidth={2} />
     ),
@@ -146,8 +146,8 @@ const KPIS = [
     value: "18m 24s",
     trend: "4m faster",
     trendDirection: "up" as const,
-    iconColorClass: "text-[#0284c7]",
-    iconBgClass: "bg-[#0284c7]/10",
+    iconColorClass: "text-[#0284c7] dark:text-sky-500",
+    iconBgClass: "bg-[#0284c7]/10 dark:bg-sky-500/10",
     icon: (
       <Clock className="w-4 h-4" strokeWidth={2} />
     ),
@@ -168,8 +168,8 @@ const KPIS = [
     value: "82%",
     trend: "Critical Priority",
     trendDirection: "down" as const,
-    iconColorClass: "text-[#ba1a1a]",
-    iconBgClass: "bg-[#ffdad6]",
+    iconColorClass: "text-[#ba1a1a] dark:text-red-500",
+    iconBgClass: "bg-[#ffdad6] dark:bg-red-500/10",
     icon: (
       <Zap className="w-4 h-4" strokeWidth={2} />
     ),
@@ -470,7 +470,7 @@ export default function CollectionJobs() {
             <BreadcrumbItem>
               <BreadcrumbLink
                 href="#"
-                className="hover:text-[#006c49] transition-colors"
+                className="hover:text-[#006c49] dark:hover:text-emerald-400 transition-colors"
               >
                 Logistics
               </BreadcrumbLink>
@@ -495,7 +495,7 @@ export default function CollectionJobs() {
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 currentView === "board"
                   ? "bg-card shadow-sm text-[#006c49] dark:text-emerald-400"
-                  : "text-muted-foreground hover:text-[#0f172a]"
+                  : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
               }`}
             >
               Board View
@@ -505,7 +505,7 @@ export default function CollectionJobs() {
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 currentView === "list"
                   ? "bg-card shadow-sm text-[#006c49] dark:text-emerald-400"
-                  : "text-muted-foreground hover:text-[#0f172a]"
+                  : "text-muted-foreground hover:text-[#0f172a] dark:hover:text-white"
               }`}
             >
               List View
@@ -574,7 +574,7 @@ export default function CollectionJobs() {
             {/* Header */}
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 bg-[#2563eb] rounded-full" />
+                <span className="w-2.5 h-2.5 bg-[#2563eb] dark:bg-blue-500 rounded-full" />
                 <span className="text-sm font-black tracking-wider text-foreground uppercase">
                   In Progress
                 </span>
@@ -685,8 +685,8 @@ export default function CollectionJobs() {
               </h3>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center bg-card rounded-xl border border-border focus-within:border-[#006c49] transition-all overflow-hidden px-3.5 py-2">
-                  <Search className="w-3.5 h-3.5 mr-2 text-[#94A3B8]" strokeWidth={2.5} />
+                <div className="flex items-center bg-card rounded-xl border border-border focus-within:border-[#006c49] dark:focus-within:border-emerald-500 transition-all overflow-hidden px-3.5 py-2">
+                  <Search className="w-3.5 h-3.5 mr-2 text-[#94A3B8] dark:text-slate-400" strokeWidth={2.5} />
                   <input
                     type="text"
                     placeholder="Search jobs..."
@@ -697,7 +697,7 @@ export default function CollectionJobs() {
                 </div>
 
                 <select
-                  className="bg-card border border-border text-muted-foreground text-xs font-bold rounded-xl px-3.5 py-2 hover:bg-background dark:hover:bg-secondary cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20"
+                  className="bg-card border border-border text-muted-foreground text-xs font-bold rounded-xl px-3.5 py-2 hover:bg-background dark:hover:bg-secondary cursor-pointer outline-none focus:ring-2 focus:ring-[#006c49]/20 dark:focus:ring-emerald-500/20"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
@@ -760,12 +760,12 @@ export default function CollectionJobs() {
                         <div className="flex items-center gap-2.5">
                           <div className="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                             <div
-                              className={`h-full ${job.fill >= 90 ? "bg-[#ba1a1a]" : job.fill >= 80 ? "bg-amber-500" : "bg-green-500"} rounded-full`}
+                              className={`h-full ${job.fill >= 90 ? "bg-[#ba1a1a] dark:bg-red-500" : job.fill >= 80 ? "bg-amber-500" : "bg-green-500"} rounded-full`}
                               style={{ width: `${job.fill}%` }}
                             />
                           </div>
                           <span
-                            className={`text-xs font-bold ${job.fill >= 90 ? "text-[#ba1a1a]" : ""}`}
+                            className={`text-xs font-bold ${job.fill >= 90 ? "text-[#ba1a1a] dark:text-red-400" : ""}`}
                           >
                             {job.fill}%
                           </span>
@@ -811,7 +811,7 @@ export default function CollectionJobs() {
                                     AVAILABLE_COLLECTORS[0],
                                   )
                                 }
-                                className="px-3 py-1.5 bg-primary/10 text-[#006c49] font-bold rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
+                                className="px-3 py-1.5 bg-primary/10 text-[#006c49] dark:text-emerald-400 font-bold rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
                               >
                                 Select Collector
                               </button>
@@ -871,7 +871,7 @@ export default function CollectionJobs() {
                 <h4 className="font-bold text-base">Optimization Insight</h4>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   3 bins in the{" "}
-                  <span className="text-[#10b981] font-semibold">
+                  <span className="text-[#10b981] dark:text-emerald-400 font-semibold">
                     North Wing
                   </span>{" "}
                   are reaching capacity. Suggesting a batch collection route to

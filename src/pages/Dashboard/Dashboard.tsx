@@ -40,17 +40,17 @@ const KPIS = [
     trend: "System nominal",
     trendDirection: "neutral" as const,
     iconColorClass: "text-muted-foreground",
-    iconBgClass: "bg-[#515f74]/10",
+    iconBgClass: "bg-[#515f74]/10 dark:bg-slate-400/10",
+    icon: <Database className="w-5 h-5" strokeWidth={2} />,
     linkTo: "/devices",
-    icon: <Cpu className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "TOTAL ITEMS SORTED",
     value: "42,891",
     trend: "+12.4% vs yesterday",
     trendDirection: "up" as const,
-    iconColorClass: "text-[#006c49]",
-    iconBgClass: "bg-[#10b981]/10",
+    iconColorClass: "text-[#006c49] dark:text-emerald-400",
+    iconBgClass: "bg-[#10b981]/10 dark:bg-emerald-400/10",
     icon: <Box className="w-4 h-4" strokeWidth={2} />,
   },
   {
@@ -58,8 +58,8 @@ const KPIS = [
     value: "84.2%",
     trend: "+2.4% threshold",
     trendDirection: "up" as const,
-    iconColorClass: "text-[#0284c7]",
-    iconBgClass: "bg-[#23acf1]/10",
+    iconColorClass: "text-[#0284c7] dark:text-sky-400",
+    iconBgClass: "bg-[#23acf1]/10 dark:bg-sky-400/10",
     icon: <DollarSign className="w-4 h-4" strokeWidth={2} />,
   },
   {
@@ -67,8 +67,8 @@ const KPIS = [
     value: "4.1%",
     trend: "-0.8% reduction",
     trendDirection: "up" as const,
-    iconColorClass: "text-[#d97706]",
-    iconBgClass: "bg-[#fef3c7]",
+    iconColorClass: "text-[#d97706] dark:text-amber-500",
+    iconBgClass: "bg-[#fef3c7] dark:bg-amber-500/10",
     icon: <AlertTriangle className="w-4 h-4" strokeWidth={2} />,
   },
 ];
@@ -85,10 +85,10 @@ const THROUGHPUT_DATA = [
 ];
 
 const DEVICE_BINS = [
-  { label: "Main Conveyor A1", value: 88, color: "bg-[#ba1a1a]" },
-  { label: "Glass Separator B2", value: 42, color: "bg-[#10b981]" },
-  { label: "Paper Compactor C1", value: 15, color: "bg-[#10b981]" },
-  { label: "Organic Bin D5", value: 72, color: "bg-[#f59e0b]" },
+  { label: "Main Conveyor A1", value: 88, color: "bg-[#ba1a1a] dark:bg-red-500" },
+  { label: "Glass Separator B2", value: 42, color: "bg-[#10b981] dark:bg-emerald-500" },
+  { label: "Paper Compactor C1", value: 15, color: "bg-[#10b981] dark:bg-emerald-500" },
+  { label: "Organic Bin D5", value: 72, color: "bg-[#f59e0b] dark:bg-amber-500" },
 ];
 
 const RECENT_EVENTS = [
@@ -329,7 +329,7 @@ export default function Dashboard() {
       ? binsOnly.map((d: any) => ({
           label: d.location || d.customBinId,
           value: d.fillLevel ?? 0,
-          color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a]" : "bg-[#10b981]",
+          color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a] dark:bg-red-500" : "bg-[#10b981] dark:bg-emerald-500",
         }))
       : DEVICE_BINS;
 
@@ -479,13 +479,11 @@ export default function Dashboard() {
             </h2>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-sm bg-[#10b981]" />
-                <span className="text-[10px] font-bold text-muted-foreground uppercase">
-                  {t("dashboard.charts.sorted")}
-                </span>
+                <div className="w-3 h-3 rounded-sm bg-[#10b981] dark:bg-emerald-500" />
+                <span className="text-xs text-muted-foreground">Normal</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-sm bg-[#e2e8f0]" />
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-[#e2e8f0] dark:bg-slate-700" />
                 <span className="text-[10px] font-bold text-muted-foreground uppercase">
                   {t("dashboard.charts.rejected")}
                 </span>
@@ -563,7 +561,7 @@ export default function Dashboard() {
                         />
                         {/* Sorted Part */}
                         <div
-                          className="w-full bg-[#10b981] transition-all duration-500"
+                          className="w-full bg-[#10b981] dark:bg-emerald-500 transition-all duration-500"
                           style={{ height: `${sortedHeightPercent}%` }}
                         />
                       </div>
@@ -756,9 +754,9 @@ export default function Dashboard() {
                     <Progress
                       value={bin.value}
                       className={`h-2 bg-muted ${
-                        bin.color === "bg-[#ba1a1a]"
-                          ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
-                          : "[&>[data-slot=progress-indicator]]:bg-[#10b981]"
+                        bin.color === "bg-[#ba1a1a] dark:bg-red-500" || bin.color === "bg-[#ba1a1a]"
+                          ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
+                          : "[&>[data-slot=progress-indicator]]:bg-[#10b981] dark:[&>[data-slot=progress-indicator]]:bg-emerald-500"
                       }`}
                     />
                   </div>
@@ -846,7 +844,7 @@ export default function Dashboard() {
                           variant={evt.detectionType as any}
                         />
                       </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a]">
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a] dark:text-red-400">
                         {evt.confidence}
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap">

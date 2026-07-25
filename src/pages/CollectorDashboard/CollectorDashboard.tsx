@@ -203,7 +203,7 @@ export default function CollectorDashboard() {
                 strokeDashoffset={150.7 - (150.7 * quotaPercentage) / 100}
                 strokeLinecap="round"
                 stroke="currentColor"
-                className="text-[#006c49] transition-all duration-1000"
+                className="text-[#006c49] dark:text-emerald-400 transition-all duration-1000"
                 fill="transparent"
               />
             </svg>
@@ -260,7 +260,7 @@ export default function CollectorDashboard() {
               onClick={() => setActiveTab("available_jobs")}
               className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 activeTab === "available_jobs"
-                  ? "bg-white dark:bg-card text-[#006c49] shadow-sm border border-border/50"
+                  ? "bg-white dark:bg-card text-[#006c49] dark:text-emerald-400 shadow-sm border border-border/50"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -270,7 +270,7 @@ export default function CollectorDashboard() {
               onClick={() => setActiveTab("my_jobs")}
               className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 activeTab === "my_jobs"
-                  ? "bg-white dark:bg-card text-[#006c49] shadow-sm border border-border/50"
+                  ? "bg-white dark:bg-card text-[#006c49] dark:text-emerald-400 shadow-sm border border-border/50"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -288,7 +288,7 @@ export default function CollectorDashboard() {
               displayedJobs.map((job: any) => (
                 <div
                   key={job.id}
-                  className="border border-border/80 dark:border-border rounded-xl p-3 bg-card flex flex-col gap-2 hover:border-[#0284c7] transition-all"
+                  className="border border-border/80 dark:border-border rounded-xl p-3 bg-card flex flex-col gap-2 hover:border-[#0284c7] dark:hover:border-sky-500 transition-all"
                 >
                   <div className="flex justify-between items-start gap-2">
                     <div>
@@ -315,9 +315,9 @@ export default function CollectorDashboard() {
                     <div className="flex items-center gap-1.5">
                       <Progress
                         value={job.fill}
-                        className="w-12 h-1 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a]"
+                        className="w-12 h-1 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
                       />
-                      <span className="text-[9px] font-bold text-[#ba1a1a]">
+                      <span className="text-[9px] font-bold text-[#ba1a1a] dark:text-red-400">
                         {job.fill}%
                       </span>
                     </div>
@@ -396,7 +396,7 @@ export default function CollectorDashboard() {
                   {/* Header */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] flex items-center justify-center shrink-0">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 text-[#006c49] dark:text-emerald-400 flex items-center justify-center shrink-0">
                         <CheckSquare className="w-5 h-5" strokeWidth={2.5} />
                       </div>
                       <div>
@@ -427,7 +427,7 @@ export default function CollectorDashboard() {
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
                       Fill
                     </span>
-                    <span className="text-[11px] font-bold text-[#ba1a1a]">
+                    <span className="text-[11px] font-bold text-[#ba1a1a] dark:text-red-400">
                       {job.fill}%
                     </span>
                   </div>
@@ -439,8 +439,8 @@ export default function CollectorDashboard() {
                     </p>
                     {checklist.map((item, i) => (
                       <div key={i} className="flex items-start gap-2.5">
-                        <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] bg-primary/10 flex items-center justify-center shrink-0">
-                          <Check className="w-[9px] h-[9px] text-[#006c49]" strokeWidth={3.5} />
+                        <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] dark:border-emerald-500 bg-primary/10 flex items-center justify-center shrink-0">
+                          <Check className="w-[9px] h-[9px] text-[#006c49] dark:text-emerald-400" strokeWidth={3.5} />
                         </div>
                         <span className="text-xs text-foreground dark:text-muted-foreground">
                           {item}

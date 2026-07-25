@@ -63,7 +63,7 @@ export default function Onboarding() {
       {/* Header */}
       <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
         <span className="text-lg font-semibold text-foreground dark:text-white">
-          Smart<span className="text-[#006c49]">Sort</span>
+          Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
         </span>
         <div className="flex gap-2">
           <button className="px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-lg hover:bg-background dark:hover:bg-secondary transition-colors">
@@ -123,7 +123,7 @@ export default function Onboarding() {
           <div className="bg-card border border-border rounded-xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-xs font-semibold text-[#006c49] tracking-widest uppercase mb-1">
+                <h2 className="text-xs font-semibold text-[#006c49] dark:text-emerald-400 tracking-widest uppercase mb-1">
                   CONFIGURATION
                 </h2>
                 <h3 className="text-2xl font-semibold text-foreground dark:text-white">
@@ -134,8 +134,8 @@ export default function Onboarding() {
                 <span className="text-sm font-medium text-muted-foreground">
                   Step 2 of 2
                 </span>
-                <div className="w-16 h-1.5 bg-[#d5e3fd] rounded-full overflow-hidden">
-                  <div className="w-full h-full bg-[#10b981]" />
+                <div className="w-16 h-1.5 bg-[#d5e3fd] dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="w-full h-full bg-[#10b981] dark:bg-emerald-500" />
                 </div>
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function Onboarding() {
               </p>
             </div>
 
-            <div className="border-t border-[#bbcabf] pt-6 flex items-center justify-between mt-2">
+            <div className="border-t border-[#bbcabf] dark:border-border pt-6 flex items-center justify-between mt-2">
               <button
                 onClick={() => navigate("/onboarding-1")}
                 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground dark:text-white transition-colors"
@@ -221,7 +221,7 @@ export default function Onboarding() {
 
               <button
                 onClick={handleSubmit}
-                className="h-12 px-6 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center gap-2"
+                className="h-12 px-6 bg-[#10b981] dark:bg-emerald-500 hover:bg-[#0ea5e9] dark:hover:bg-sky-500 active:scale-[0.98] text-white text-base font-semibold tracking-wide rounded-lg transition-all shadow-sm flex items-center gap-2"
               >
                 Complete Sign Up
                 <ChevronRight className="w-[18px] h-[18px]" strokeWidth={2} />
@@ -264,8 +264,8 @@ export default function Onboarding() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-card/40 backdrop-blur-sm">
           <div className="bg-card rounded-xl shadow-md max-w-sm w-full overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 flex flex-col gap-4 text-center items-center">
-              <div className="w-16 h-16 bg-[#e1f5ee] rounded-full flex items-center justify-center mb-2">
-                <CheckCircle2 className="w-8 h-8 text-[#006c49]" strokeWidth={2.5} />
+              <div className="w-16 h-16 bg-[#e1f5ee] dark:bg-emerald-500/10 rounded-full flex items-center justify-center mb-2">
+                <CheckCircle2 className="w-8 h-8 text-[#006c49] dark:text-emerald-400" strokeWidth={2.5} />
               </div>
               <h3 className="text-xl font-bold text-foreground dark:text-white">
                 Verification Pending
@@ -280,7 +280,7 @@ export default function Onboarding() {
             <div className="px-6 py-5 bg-background dark:bg-secondary border-t border-border">
               <button
                 onClick={() => navigate("/login")}
-                className="w-full h-11 bg-[#10b981] hover:bg-[#0ea5e9] active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all shadow-sm"
+                className="w-full h-11 bg-[#10b981] dark:bg-emerald-500 hover:bg-[#0ea5e9] dark:hover:bg-sky-500 active:scale-[0.98] text-white text-sm font-semibold tracking-wide rounded-lg transition-all shadow-sm"
               >
                 Return to Login
               </button>

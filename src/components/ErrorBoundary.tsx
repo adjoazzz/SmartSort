@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
           action: 'Frontend Crash',
           actorName: 'Frontend Client',
           details: `Error: ${error.message}\nStack: ${errorInfo.componentStack}`,
-          color: 'text-[#ba1a1a]',
+          color: 'text-[#ba1a1a] dark:text-red-500',
         }),
       }
     ).catch(console.error);

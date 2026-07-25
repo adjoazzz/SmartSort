@@ -13,29 +13,29 @@ export function StatusBadge({
 }: StatusBadgeProps) {
   const styles = {
     danger: {
-      bg: "bg-[#ffdad6]",
-      text: "text-[#ba1a1a]",
-      dot: "bg-[#ba1a1a]",
+      bg: "bg-[#ffdad6] dark:bg-red-500/10",
+      text: "text-[#ba1a1a] dark:text-red-500",
+      dot: "bg-[#ba1a1a] dark:bg-red-500",
     },
     success: {
-      bg: "bg-[#bbf7d0]",
-      text: "text-[#006c49]",
-      dot: "bg-[#10b981]",
+      bg: "bg-[#bbf7d0] dark:bg-emerald-500/10",
+      text: "text-[#006c49] dark:text-emerald-400",
+      dot: "bg-[#10b981] dark:bg-emerald-500",
     },
     warning: {
-      bg: "bg-[#fef3c7]",
-      text: "text-[#d97706]",
-      dot: "bg-[#f59e0b]",
+      bg: "bg-[#fef3c7] dark:bg-amber-500/10",
+      text: "text-[#d97706] dark:text-amber-500",
+      dot: "bg-[#f59e0b] dark:bg-amber-500",
     },
     info: {
-      bg: "bg-[#e0f2fe]",
-      text: "text-[#0284c7]",
-      dot: "bg-[#38bdf8]",
+      bg: "bg-[#e0f2fe] dark:bg-sky-500/10",
+      text: "text-[#0284c7] dark:text-sky-500",
+      dot: "bg-[#38bdf8] dark:bg-sky-400",
     },
     neutral: {
       bg: "bg-muted",
       text: "text-muted-foreground",
-      dot: "bg-[#94a3b8]",
+      dot: "bg-[#94a3b8] dark:bg-slate-500",
     },
   };
 

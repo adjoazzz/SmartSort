@@ -130,7 +130,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
               data-testid="header-search-btn"
               className="flex items-center w-full bg-background dark:bg-secondary rounded-xl border border-transparent hover:border-border dark:hover:border-border hover:bg-white dark:hover:bg-card hover:shadow-sm transition-all overflow-hidden px-4 py-2 cursor-pointer active:scale-[0.98]"
             >
-              <Search className="w-4 h-4 mr-3 text-[#94A3B8]" strokeWidth={2.5} />
+              <Search className="w-4 h-4 mr-3 text-[#94A3B8] dark:text-slate-400" strokeWidth={2.5} />
               <div className="flex-1 text-sm font-medium text-muted-foreground flex justify-between items-center">
                 <span>
                   {t("headerNav.searchPlaceholder") || "Search or jump to..."}
@@ -283,7 +283,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
               aria-label="Open alerts"
             >
               <Bell className="w-5 h-5" strokeWidth={2.5} />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-[#ba1a1a] rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
+              <span className="absolute top-0 right-0 w-2 h-2 bg-[#ba1a1a] dark:bg-red-500 rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
             </button>
           )}
 
@@ -313,7 +313,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
                   </label>
                   <div className="relative">
                     <select
-                      className="w-full text-sm font-medium bg-background dark:bg-secondary border border-border rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] text-foreground dark:text-white appearance-none cursor-pointer"
+                      className="w-full text-sm font-medium bg-background dark:bg-secondary border border-border rounded-lg pl-3 pr-8 py-2 outline-none focus:border-[#006c49] dark:focus:border-emerald-500 dark:border-emerald-500 text-foreground dark:text-white appearance-none cursor-pointer"
                       value={i18n.language || "en"}
                       onChange={(e) => i18n.changeLanguage(e.target.value)}
                     >
@@ -422,7 +422,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
               ref={profileBtnRef}
               onClick={() => setIsProfileOpen((prev) => !prev)}
               data-testid="header-profile-btn"
-              className="w-9 h-9 rounded-full bg-[#e2e8f0] overflow-hidden border-2 border-white shadow-sm ring-1 ring-[#cbd5e1] cursor-pointer hover:ring-[#94a3b8] transition-all active:scale-[0.98]"
+              className="w-9 h-9 rounded-full bg-[#e2e8f0] dark:bg-slate-700 overflow-hidden border-2 border-white dark:border-secondary shadow-sm ring-1 ring-[#cbd5e1] dark:ring-slate-600 cursor-pointer hover:ring-[#94a3b8] dark:hover:ring-slate-400 transition-all active:scale-[0.98]"
               aria-label="Open profile menu"
               aria-expanded={isProfileOpen}
             >

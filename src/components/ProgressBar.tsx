@@ -11,7 +11,7 @@ export function ProgressBar({
   label,
   value,
   valueLabel,
-  colorClass = "bg-[#10b981]",
+  colorClass = "bg-[#10b981] dark:bg-emerald-500",
 }: ProgressBarProps) {
   return (
     <div className="flex flex-col gap-2 w-full">
