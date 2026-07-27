@@ -1,6 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
-import { Cpu, Box, DollarSign, AlertTriangle, Loader2, Download } from "lucide-react";
+import { Cpu, Box, DollarSign, AlertTriangle, Loader2, Download, Database } from "lucide-react";
 import { useNavigate, useSearchParams, Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";

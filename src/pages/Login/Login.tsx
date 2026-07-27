@@ -7,57 +7,7 @@ import imgAiCore from "../../assets/smartsort_ai_core.png";
 
 // --- Custom SVGs for UI Icons ---
 
-function LogoSvg() {
-  return (
-    <svg
-      width="36"
-      height="36"
-      viewBox="0 0 100 100"
-      fill="none"
-      className="text-primary"
-    >
-      <polygon
-        points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5"
-        stroke="currentColor"
-        strokeWidth="8"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <line
-        x1="50"
-        y1="5"
-        x2="50"
-        y2="50"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
-      <line
-        x1="50"
-        y1="50"
-        x2="90"
-        y2="72.5"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
-      <line
-        x1="50"
-        y1="50"
-        x2="10"
-        y2="72.5"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
-      <polygon
-        points="50,35 65,42.5 65,57.5 50,65 35,57.5 35,42.5"
-        fill="currentColor"
-        opacity="0.8"
-      />
-    </svg>
-  );
-}
+
 
 // --- Validation Helpers ---
 
@@ -355,10 +305,10 @@ export default function Login() {
       <div className="w-full md:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16 bg-card relative">
         {/* Top Branding Header */}
         <div className="flex items-center gap-3">
-          <LogoSvg />
+          <img src="/logo.png" alt="SmartSort Logo" className="w-9 h-9 object-contain rounded-md" />
           <div className="flex flex-col">
             <span className="text-lg font-black tracking-tight text-foreground">
-              SmartSort
+              Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
             </span>
             <span className="text-[9px] font-bold tracking-widest text-primary dark:text-primary uppercase -mt-1">
               Air

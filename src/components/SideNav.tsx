@@ -162,10 +162,12 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
         className={`fixed top-0 left-0 bottom-0 w-64 bg-card border-r border-border shadow-md z-[70] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="h-16 border-b border-border flex items-center justify-between px-6 shrink-0">
-          <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
-            Smart
-            <span className="text-[#006c49] dark:text-emerald-400">Sort</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="SmartSort Logo" className="w-8 h-8 object-contain rounded-md" />
+            <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
+              Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
+            </span>
+          </div>
           <button
             onClick={onClose}
             aria-label="Close sidebar menu"

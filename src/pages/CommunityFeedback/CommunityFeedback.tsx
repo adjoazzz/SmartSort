@@ -1,6 +1,6 @@
 import { apiService } from "../../lib/apiService";
 import React, { useState, useEffect } from "react";
-import { FileText, Clock, CheckCircle, Smile, ChevronDown, FilterX, Download, MapPin, FilePlus, MessageCircle, Eye, ChevronLeft, ChevronRight, Leaf, Send, Filter } from "lucide-react";
+import { FileText, Clock, CheckCircle, Smile, ChevronDown, FilterX, Download, MapPin, FilePlus, MessageCircle, Eye, ChevronLeft, ChevronRight, Leaf, Send, Filter, Plus } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
