@@ -207,7 +207,7 @@ export default function Dashboard() {
     useRealtimeData<any>(fetchWasteCategories, { tables: ["ProcessedItem"] });
 
   const { data: contaminationEventsData, isLoading: contaminationLoading, refresh: refreshContamination } =
-    useRealtimeData<any[]>(fetchContaminationEvents, { tables: ["ProcessedItem"] });
+    useRealtimeData<any>(fetchContaminationEvents, { tables: ["ProcessedItem"] });
 
   // Manually re-trigger fetches when facilityId query parameter shifts (Drill-down update)
   useEffect(() => {

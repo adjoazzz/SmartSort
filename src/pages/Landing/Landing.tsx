@@ -6,7 +6,8 @@ import emailjs from "@emailjs/browser";
 import { AlertCircle, Sun, Moon, ArrowRight, Play, Sidebar, Target, Clock, LayoutGrid, Camera, Layers, Cpu, Check, Loader2 } from "lucide-react";
 import imgHero from "../../assets/smartsort_hero.png";
 import imgLaptopUi from "../../assets/smartsort_laptop_ui.png";
-import ErrorButton from "../../../sentry";
+import ErrorButton from "../../components/SentryTestButton";
+
 
 
 // --- Environment Variables ---

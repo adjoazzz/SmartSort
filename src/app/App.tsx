@@ -18,7 +18,7 @@ export default function App() {
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Toaster position="top-right" richColors />
       <ErrorBoundary>
-        <RouterProvider router={router} fallbackElement={<RouteLoadingSkeleton />} />
+        <RouterProvider router={router} />
       </ErrorBoundary>
     </ThemeProvider>
   );
