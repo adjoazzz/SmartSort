@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "typecheck": "npx tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -83,6 +83,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",
+    "typescript": "^6.0.3",
     "vite": "^6.4.2"
   },
   "pnpm": {
