@@ -1,18 +1,8 @@
+// IMPORTANT: Require instrument.js at the top before any other modules
+const Sentry = require('./instrument');
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
-const Sentry = require('@sentry/node');
-const { nodeProfilingIntegration } = require('@sentry/profiling-node');
 
-// Sentry Initialization
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  integrations: [
-    nodeProfilingIntegration(),
-  ],
-  tracesSampleRate: 1.0, 
-  profilesSampleRate: 1.0,
-});
 
 // Startup Env Check
 const requiredEnvVars = ['DATABASE_URL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
@@ -33,9 +23,6 @@ const { prisma } = require('./lib/prisma');
 // Initialize the Express app
 const app = express();
 
-// Sentry Request Handler must be the first middleware on the app
-Sentry.setupExpressErrorHandler(app);
-
 // Global Middlewares
 app.use(requestId);
 app.use(requestLogger);
@@ -43,7 +30,7 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Health Check Endpoint (Phase 8.2)
+// Health Check Endpoint
 app.get('/health', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -64,15 +51,21 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// Sentry Test / Debug Endpoint
+app.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("My first Sentry error!");
+});
+
 // API Router
 app.use('/api', routes);
 
-// The error handler must be registered before any other error middleware and after all controllers
-// Wait, Sentry.setupExpressErrorHandler(app) automatically registers handlers in v8.
-// We just need to ensure our global errorHandler comes after.
+// Sentry Error Handler must be registered after all routes and before custom error handlers
+Sentry.setupExpressErrorHandler(app);
 
 // Global Error Handler
 app.use(errorHandler);
+
+
 
 // Define the port
 const PORT = process.env.PORT || 5000;

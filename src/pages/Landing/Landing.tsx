@@ -6,6 +6,8 @@ import emailjs from "@emailjs/browser";
 import { AlertCircle, Sun, Moon, ArrowRight, Play, Sidebar, Target, Clock, LayoutGrid, Camera, Layers, Cpu, Check, Loader2 } from "lucide-react";
 import imgHero from "../../assets/smartsort_hero.png";
 import imgLaptopUi from "../../assets/smartsort_laptop_ui.png";
+import ErrorButton from "../../../sentry";
+
 
 // --- Environment Variables ---
 const API_BASE_URL =
@@ -263,6 +265,7 @@ export default function Landing() {
             )}
           </button>
 
+          {/* <ErrorButton /> */}
           <button 
             onClick={() => navigate("/login")}
             data-testid="landing-login-btn"
@@ -270,6 +273,7 @@ export default function Landing() {
           >
             Log In
           </button>
+
           <button 
             onClick={scrollToInquiry}
             data-testid="landing-request-demo-btn"
@@ -289,11 +293,7 @@ export default function Landing() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-5 flex flex-col gap-6"
         >
-          {/* <div>
-            <span className="inline-flex items-center bg-[#2563eb]/10 dark:bg-[#2563eb]/20 text-[#2563eb] dark:text-[#60a5fa] text-[10px] font-bold tracking-widest px-4.5 py-1.5 rounded-full uppercase border border-[#2563eb]/20">
-              ⚡ AI-Powered Waste Stewardship
-            </span>
-          </div> */}
+
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground dark:text-white tracking-tight leading-[1.15]">
             The Future of <br />
@@ -821,10 +821,6 @@ export default function Landing() {
 
           <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">&copy; 2026 SmartSort Intelligence Systems. All rights reserved.</p>
-            {/* <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#22c55e] dark:bg-green-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-bold text-[#22c55e] dark:text-green-400 uppercase tracking-wide">All Systems Operational</span>
-            </div> */}
           </div>
 
         </div>

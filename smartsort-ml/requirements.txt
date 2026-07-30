@@ -4,3 +4,7 @@ numpy
 Pillow
 requests
 opencv-python
+sentry-sdk
+python-dotenv
+
+

@@ -1,25 +1,37 @@
+import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN", "https://bda3cc28b42072d77d287827eb5782d0@o4511825282269184.ingest.de.sentry.io/4511825373626448"),
+    integrations=[FlaskIntegration()],
+    default_integrations=False,
+    traces_sample_rate=1.0,
+)
+
+
+
 from flask import Flask, request, jsonify
 import numpy as np
 import io
-import os
 import logging
 import requests
 import base64
 from functools import wraps
 from PIL import Image
-import sentry_sdk
-
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN", ""),
-    traces_sample_rate=1.0,
-    profiles_sample_rate=1.0,
-)
 
 # ── Logging Configuration ──────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+
 
 # ── Environment & Config ───────────────────────────────────────────────────────
 ML_API_KEY = os.environ.get('ML_API_KEY', 'smartsort-ml-secret-key-2026')
@@ -171,6 +183,13 @@ def index():
         "model": model_type,
         "classes": class_names
     })
+
+
+@app.route('/debug-sentry', methods=['GET'])
+def debug_sentry():
+    """Endpoint to trigger a test error for Sentry SDK validation."""
+    raise RuntimeError("Sentry test error from SmartSort ML Service!")
+
 
 
 if __name__ == '__main__':
