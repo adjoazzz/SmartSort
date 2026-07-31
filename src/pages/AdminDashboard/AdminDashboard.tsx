@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Warehouse, Smartphone, Activity, DollarSign } from "lucide-react";
 import { Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { authFetch } from "../../lib/authFetch";
 import { toast } from "sonner";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, LayersControl, useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { MapLibreMap, MapPin, VehicleTelemetry } from "../../components/MapLibreMap";
 import {
   Table,
   TableHeader,
@@ -26,34 +24,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// Default Leaflet icon fix
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-});
 
-// Custom glowing markers
-const createGlowingMarker = (color: string) =>
-  L.divIcon({
-    className: "custom-glow-marker",
-    html: `<div style="background-color: ${color}; width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 0 12px ${color}, 0 0 24px ${color}; border: 2.5px solid white; transition: all 0.3s ease;"></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-  });
 
-const createTruckMarker = (rotation: number) =>
-  L.divIcon({
-    className: "custom-truck-marker",
-    html: `<div style="background-color: #3b82f6; color: white; width: 34px; height: 34px; border-radius: 8px; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 14px; font-weight: bold; transform: rotate(${rotation}deg); transition: transform 0.05s linear;"><span style="display: block; transform: rotate(-90deg); margin: auto;">🚚</span></div>`,
-    iconSize: [34, 34],
-    iconAnchor: [17, 17],
-  });
 
 interface Facility {
   id: string;
@@ -118,18 +91,19 @@ const STREET_ROUTES: Record<string, [number, number][]> = {
   ],
 };
 
-function LiveTruckLayer({ activeDispatches, facilities, trackingTruckId }: { activeDispatches: BulkJob[], facilities: Facility[], trackingTruckId: string | null }) {
+function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility[]) {
   const [truckPositions, setTruckPositions] = useState<
     Array<{ id: string; name: string; pos: [number, number]; route: [number, number][]; targetIndex: number; rotation: number }>
   >([]);
-  const map = useMap();
 
   useEffect(() => {
     setTruckPositions((prev) => {
-      return activeDispatches.map((j) => {
+      let changed = prev.length !== activeDispatches.length;
+      const next = activeDispatches.map((j) => {
         const existing = prev.find((t) => t.id === j.id);
         if (existing) return existing;
 
+        changed = true;
         const facility = facilities.find((f) => f.id === j.facilityId);
         const defaultRoute: [number, number][] = [
           KNUST_DEPOT,
@@ -146,6 +120,8 @@ function LiveTruckLayer({ activeDispatches, facilities, trackingTruckId }: { act
           rotation: 0,
         };
       });
+      
+      return changed ? next : prev;
     });
   }, [activeDispatches, facilities]);
 
@@ -184,29 +160,7 @@ function LiveTruckLayer({ activeDispatches, facilities, trackingTruckId }: { act
     return () => clearInterval(timer);
   }, [truckPositions.length]);
 
-  useEffect(() => {
-    if (trackingTruckId) {
-      const truck = truckPositions.find((t) => t.id === trackingTruckId);
-      if (truck) {
-        map.setView(truck.pos, 18, { animate: false }); // Lock camera tightly
-      }
-    }
-  }, [trackingTruckId, truckPositions, map]);
-
-  return (
-    <>
-      {truckPositions.map((truck) => (
-        <Marker key={truck.id} position={truck.pos} icon={createTruckMarker(truck.rotation)}>
-          <Popup>
-            <div className="text-xs text-foreground p-1">
-              <strong className="block font-bold">{truck.name}</strong>
-              <span className="text-muted-foreground block text-[10px]">Tonnage Garbage Transit Route</span>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </>
-  );
+  return truckPositions;
 }
 
 export default function AdminDashboard() {
@@ -234,6 +188,39 @@ export default function AdminDashboard() {
 
 
   const [trackingTruckId, setTrackingTruckId] = useState<string | null>(null);
+
+  const activeDispatches = useMemo(() => bulkJobs.filter((j) => j.status === "Dispatched"), [bulkJobs]);
+  const truckPositions = useLiveTruckPositions(activeDispatches, facilities);
+
+  const vehicleTelemetryList: VehicleTelemetry[] = truckPositions.map((t) => ({
+    id: t.id,
+    label: t.name,
+    lat: t.pos[0],
+    lng: t.pos[1],
+    heading: t.rotation,
+    status: "En-Route",
+  }));
+
+  const facilityPins: MapPin[] = facilities.map((fac) => {
+    const color =
+      fac.pendingTonnage >= 4.0
+        ? "#ba1a1a"
+        : fac.pendingTonnage >= 2.0
+          ? "#f59e0b"
+          : "#10b981";
+
+    return {
+      id: fac.id,
+      lat: fac.latitude,
+      lng: fac.longitude,
+      title: fac.name,
+      subtitle: `${fac.region} • ${fac.pendingTonnage} Tons Pending`,
+      urgency: fac.status,
+      fill: fac.averageFill,
+      color,
+    };
+  });
+
 
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -423,113 +410,15 @@ export default function AdminDashboard() {
                 Stop Tracking
               </button>
             )}
-            <MapContainer
-              center={[6.675, -1.57]}
-              zoom={15}
-              style={{ width: "100%", height: "100%" }}
-              scrollWheelZoom={false}
-              className="z-10"
-            >
-              <LiveTruckLayer
-                activeDispatches={bulkJobs.filter((j) => j.status === "Dispatched")}
-                facilities={facilities}
-                trackingTruckId={trackingTruckId}
-              />
-              <LayersControl position="topright">
-                <LayersControl.BaseLayer checked name="CartoDB Voyager">
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-                  />
-                </LayersControl.BaseLayer>
-                <LayersControl.BaseLayer name="Dark Mode">
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                  />
-                </LayersControl.BaseLayer>
-                <LayersControl.BaseLayer name="Satellite">
-                  <TileLayer
-                    attribution='Tiles &copy; Esri'
-                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                  />
-                </LayersControl.BaseLayer>
-                <LayersControl.BaseLayer name="Standard Street">
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                </LayersControl.BaseLayer>
-              </LayersControl>
+            <MapLibreMap
+              initialCenter={[-1.57, 6.675]}
+              initialZoom={14}
+              pins={facilityPins}
+              vehicles={vehicleTelemetryList}
+              activeTrackingId={trackingTruckId}
+              height="100%"
+            />
 
-              {/* KNUST Central Depot */}
-              <Marker
-                position={KNUST_DEPOT}
-                icon={L.divIcon({
-                  className: "depot-marker",
-                  html: `<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 3px; border: 2.5px solid white;"></div>`,
-                })}
-              >
-                <Popup>
-                  <div className="text-xs font-bold text-foreground">KNUST Operations Depot</div>
-                </Popup>
-              </Marker>
-
-              {/* Plotted Facilities */}
-              {facilities.map((fac) => {
-                const color =
-                  fac.pendingTonnage >= 4.0
-                    ? "#ef4444"
-                    : fac.pendingTonnage >= 2.0
-                      ? "#f59e0b"
-                      : "#10b981";
-
-                return (
-                  <Marker
-                    key={fac.id}
-                    position={[fac.latitude, fac.longitude]}
-                    icon={createGlowingMarker(color)}
-                  >
-                    <Popup>
-                      <div className="text-xs text-foreground p-1 flex flex-col gap-1">
-                        <strong className="text-sm block">{fac.name}</strong>
-                        <span>Region: {fac.region}</span>
-                        <span>Avg Bin Fill: {fac.averageFill}%</span>
-                        <span>Pending Tonnage: {fac.pendingTonnage} Tons</span>
-                        <span
-                          className={`font-bold uppercase tracking-wider text-[9px] ${fac.status === "Active" ? "text-emerald-500" : "text-red-500"}`}
-                        >
-                          Status: {fac.status}
-                        </span>
-                        <Link
-                          to={`/dashboard?facilityId=${fac.id}`}
-                          className="text-[11px] text-[#006c49] dark:text-emerald-400 hover:underline font-bold mt-1 block text-center"
-                        >
-                          Inspect Facility ➔
-                        </Link>
-                      </div>
-                    </Popup>
-                  </Marker>
-                );
-              })}
-
-
-
-              {/* Transit Route Polylines */}
-              {facilities.map((fac) => {
-                const routePositions = STREET_ROUTES[fac.name] || [KNUST_DEPOT, [fac.latitude, fac.longitude]];
-                return (
-                  <Polyline
-                    key={`route-${fac.id}`}
-                    positions={routePositions}
-                    color="#ffffff"
-                    weight={2}
-                    dashArray="5 10"
-                    opacity={0.5}
-                  />
-                );
-              })}
-            </MapContainer>
           </div>
         </div>
 

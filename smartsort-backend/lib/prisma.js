@@ -11,7 +11,7 @@ const pool = new Pool({
   ssl: isSupabaseDatabase ? { rejectUnauthorized: false } : undefined,
   max: 5, // Limit connections to prevent reaching the 15 session limit
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 15000,
 });
 
 const prisma = new PrismaClient({
