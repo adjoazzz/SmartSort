@@ -12,22 +12,12 @@ import {
 } from "../../components/ui/tabs";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
+import type { CollectorJob } from "./collectorTypes";
 
 // Lazy-load the map to avoid importing Leaflet CSS globally
 const BinLocatorMap = React.lazy(() =>
   import("../../components/BinLocatorMap").then((m) => ({ default: m.BinLocatorMap }))
 );
-
-interface CollectorJob {
-  id: string;
-  device: string;
-  location: string;
-  zone: string;
-  fill: number;
-  urgency: string;
-  status: string;
-  isAssignedToMe: boolean;
-}
 
 const COLLECTOR_JOBS: CollectorJob[] = [
   {
