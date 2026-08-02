@@ -96,6 +96,11 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
     Array<{ id: string; name: string; pos: [number, number]; route: [number, number][]; targetIndex: number; rotation: number }>
   >([]);
 
+  const dispatchKey = useMemo(
+    () => activeDispatches.map((d) => `${d.id}:${d.facilityId}:${d.collectorName}`).join("|"),
+    [activeDispatches]
+  );
+
   useEffect(() => {
     setTruckPositions((prev) => {
       let changed = prev.length !== activeDispatches.length;
@@ -120,19 +125,22 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
           rotation: 0,
         };
       });
-      
+
       return changed ? next : prev;
     });
-  }, [activeDispatches, facilities]);
+  }, [dispatchKey, facilities]);
 
   useEffect(() => {
-    if (truckPositions.length === 0) return;
+    const hasActiveTrucks = truckPositions.some((t) => t.targetIndex < t.route.length);
+    if (!hasActiveTrucks) return;
 
     const timer = setInterval(() => {
-      setTruckPositions((prevTrucks) =>
-        prevTrucks.map((truck) => {
+      setTruckPositions((prevTrucks) => {
+        let hasMovingTrucks = false;
+        const updated = prevTrucks.map((truck) => {
           if (truck.targetIndex >= truck.route.length) return truck;
 
+          hasMovingTrucks = true;
           const targetWaypoint = truck.route[truck.targetIndex];
           const targetLat = targetWaypoint[0];
           const targetLng = targetWaypoint[1];
@@ -144,7 +152,7 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
           const angle = Math.atan2(deltaLng, deltaLat) * (180 / Math.PI);
 
           if (distance < stepSize) {
-            return { ...truck, pos: [targetLat, targetLng], targetIndex: truck.targetIndex + 1, rotation: angle };
+            return { ...truck, pos: [targetLat, targetLng] as [number, number], targetIndex: truck.targetIndex + 1, rotation: angle };
           }
 
           const ratio = stepSize / distance;
@@ -153,15 +161,18 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
             pos: [truck.pos[0] + deltaLat * ratio, truck.pos[1] + deltaLng * ratio] as [number, number],
             rotation: angle,
           };
-        }),
-      );
+        });
+
+        return hasMovingTrucks ? updated : prevTrucks;
+      });
     }, 30);
 
     return () => clearInterval(timer);
-  }, [truckPositions.length]);
+  }, [truckPositions]);
 
   return truckPositions;
 }
+
 
 export default function AdminDashboard() {
   const [facilities, setFacilities] = useState<Facility[]>([]);

@@ -14,9 +14,10 @@ const char* password = "99*1z67Q";
 // Enter your PC's IP address
 // ===========================
 String serverName = "http://192.168.137.1:5001/predict"; 
+String fillLevelServerName = "http://192.168.137.1:5001/api/fill-levels";
 
 // ===========================
-// HC-SR04 Pins
+// HC-SR04 Trigger Pins
 // ===========================
 #define TRIG_PIN 13
 #define ECHO_PIN 12
@@ -43,6 +44,7 @@ String serverName = "http://192.168.137.1:5001/predict";
 
 bool objectPresent = false;
 unsigned long lastTriggerTime = 0;
+const unsigned long TRIGGER_COOLDOWN = 5000; // Minimum 5 seconds between captures
 
 httpd_handle_t stream_httpd = NULL;
 
@@ -105,9 +107,13 @@ void startCameraServer() {
 }
 
 void setup() {
-  Serial.begin(115200);
-  Serial.setDebugOutput(true);
-  Serial.println();
+  // Use 9600 to match Uno's SoftwareSerial limitation
+  Serial.begin(9600);
+  Serial.setDebugOutput(false); // Disable debug to not confuse Uno
+  
+  // A slight delay to allow Serial to stabilize
+  delay(1000);
+  Serial.println("\nESP32-CAM Booting...");
   
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
@@ -154,62 +160,75 @@ void setup() {
 
   // Connect to WiFi
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
   }
-  Serial.println("\nWiFi connected.");
-  Serial.print("Live Stream is running at: http://");
-  Serial.print(WiFi.localIP());
-  Serial.println(":81/stream");
   
   startCameraServer();
+  Serial.println("ESP32-CAM Ready");
+}
+
+int readTriggerDistance() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+  if (duration == 0) return 999;
+  return duration * 0.034 / 2;
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    char cmd = Serial.read();
-    
-    // Ignore newlines and carriage returns
-    if (cmd == '\n' || cmd == '\r') {
-      return;
+  // 1. Check Trigger Ultrasonic Sensor
+  if (millis() - lastTriggerTime > TRIGGER_COOLDOWN) {
+    int dist = readTriggerDistance();
+    if (dist > 0 && dist < DIST_THRESHOLD_CM) {
+      // Object detected!
+      takeAndSendPicture();
+      lastTriggerTime = millis();
     }
+  }
+
+  // 2. Check for incoming Serial data (e.g., from Uno or PC for manual trigger)
+  if (Serial.available() > 0) {
+    String incoming = Serial.readStringUntil('\n');
+    incoming.trim(); // Remove whitespace/newlines
     
-    if (cmd == 'C' || cmd == 'c') {
-      Serial.println("Manual capture triggered. Taking picture...");
-      
-      // Take picture
-      camera_fb_t * fb = esp_camera_fb_get();
-      if (!fb) {
-        Serial.println("Camera capture failed");
-        return;
-      }
-      
-      // Send to ML backend
-      sendImageToBackend(fb);
-      
-      // Return frame buffer
-      esp_camera_fb_return(fb);
-      
-      Serial.println("\nReady for next capture. Type 'C' to take another picture.");
+    if (incoming.length() == 0) return;
+    
+    if (incoming == "C" || incoming == "c") {
+      takeAndSendPicture();
+      lastTriggerTime = millis();
+    } 
+    else if (incoming.startsWith("F:")) {
+      // Parse Fill Levels from Uno: F:<glass>,<metal>,<paper>,<plastic>,<rejected>
+      sendFillLevelsToBackend(incoming);
     }
   }
   
   delay(100);
 }
 
+void takeAndSendPicture() {
+  // Turn on flashlight if needed (GPIO4) - not enabled here to save power/heat
+  
+  camera_fb_t * fb = esp_camera_fb_get();
+  if (!fb) {
+    Serial.println("Camera capture failed");
+    return;
+  }
+  
+  sendImageToBackend(fb);
+  esp_camera_fb_return(fb);
+}
+
 void sendImageToBackend(camera_fb_t * fb) {
   if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("WiFi not connected");
     return;
   }
 
-  // Let's use WiFiClient directly for multipart/form-data for reliability with large payloads
-  sendMultipartDirect(fb);
-}
-
-void sendMultipartDirect(camera_fb_t * fb) {
   WiFiClient client;
   
   String host = serverName.substring(7);
@@ -221,7 +240,6 @@ void sendMultipartDirect(camera_fb_t * fb) {
   String path = host.substring(slashIndex);
   
   if (!client.connect(ip.c_str(), port)) {
-    Serial.println("Connection to server failed");
     return;
   }
 
@@ -267,11 +285,7 @@ void sendMultipartDirect(camera_fb_t * fb) {
   
   client.stop();
   
-  Serial.println("--- Server Response ---");
-  Serial.println(response);
-  Serial.println("-----------------------");
-  
-  // Parse JSON response (skipping HTTP headers)
+  // Parse JSON response
   int jsonStart = response.indexOf('{');
   if (jsonStart >= 0) {
     String jsonStr = response.substring(jsonStart);
@@ -281,11 +295,8 @@ void sendMultipartDirect(camera_fb_t * fb) {
     
     if (!error) {
       String bin = doc["bin"].as<String>();
-      Serial.print("Predicted Bin: ");
-      Serial.println(bin);
       
       // Send command to Arduino Uno
-      // class_names = ['glass', 'metal', 'paper', 'plastic', 'rejected_waste']
       if (bin == "glass") {
         Serial.print('G');
       } else if (bin == "metal") {
@@ -297,11 +308,45 @@ void sendMultipartDirect(camera_fb_t * fb) {
       } else if (bin == "rejected_waste") {
         Serial.print('R');
       }
-      
-    } else {
-      Serial.println("JSON parse failed");
     }
-  } else {
-    Serial.println("Invalid response from server");
+  }
+}
+
+void sendFillLevelsToBackend(String fillData) {
+  if (WiFi.status() != WL_CONNECTED) return;
+  
+  // fillData format: "F:10,20,30,40" (distances in cm)
+  String data = fillData.substring(2); // Remove "F:"
+  
+  int commas[3];
+  int commaIndex = 0;
+  for(int i = 0; i < data.length() && commaIndex < 3; i++) {
+    if(data.charAt(i) == ',') {
+      commas[commaIndex++] = i;
+    }
+  }
+  
+  if (commaIndex == 3) {
+    String d1 = data.substring(0, commas[0]);
+    String d2 = data.substring(commas[0] + 1, commas[1]);
+    String d3 = data.substring(commas[1] + 1, commas[2]);
+    String d4 = data.substring(commas[2] + 1);
+    
+    // Create JSON payload
+    StaticJsonDocument<200> doc;
+    doc["glass_cm"] = d1.toInt();
+    doc["metal_cm"] = d2.toInt();
+    doc["paper_plastic_cm"] = d3.toInt();
+    doc["rejected_cm"] = d4.toInt();
+    
+    String jsonOutput;
+    serializeJson(doc, jsonOutput);
+    
+    HTTPClient http;
+    http.begin(fillLevelServerName);
+    http.addHeader("Content-Type", "application/json");
+    
+    int httpResponseCode = http.POST(jsonOutput);
+    http.end();
   }
 }
