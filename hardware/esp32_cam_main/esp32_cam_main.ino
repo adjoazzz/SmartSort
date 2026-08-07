@@ -94,8 +94,8 @@ void loop() {
     if (WiFi.status() != WL_CONNECTED) return; // Try again next loop
   }
 
-  // 2. Every 5 minutes (300,000 ms), ask Arduino for fill levels
-  if (now - lastFillLevelTime > 300000) {
+  // 2. Every 2 minutes (120,000 ms), ask Arduino for fill levels
+  if (now - lastFillLevelTime > 120000) {
     lastFillLevelTime = now;
     Serial.println("READ_LEVELS"); 
   }

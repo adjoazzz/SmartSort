@@ -11,8 +11,16 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 #define TRIGGER_DISTANCE_CM 15.0
 
 // Fill Sensor #1 (Glass Bin)
-#define FILL_TRIG_A0 A0
-#define FILL_ECHO_A1 A1
+#define FILL1_TRIG A0
+#define FILL1_ECHO A1
+
+// Fill Sensor #2 (Metal Bin)
+#define FILL2_TRIG A2
+#define FILL2_ECHO A3
+
+// Fill Sensor #3 (Paper/Plastic Bin)
+#define FILL3_TRIG 2
+#define FILL3_ECHO 3
 
 // Stepper Motor (28BYJ-48 via ULN2003)
 #define STEPS_PER_REV   2048
@@ -35,14 +43,17 @@ Servo flapServo;
 unsigned long lastTriggerTime = 0;
 
 void setup() {
+  lastTriggerTime = millis() - 5000UL; // Expire the cooldown so it can trigger immediately!
   Serial.begin(9600);       // To PC
   espSerial.begin(9600);    // To ESP32-CAM
 
   // Setup sensors
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
-  pinMode(FILL_TRIG_A0, OUTPUT);
-  pinMode(FILL_ECHO_A1, INPUT);
+  
+  pinMode(FILL1_TRIG, OUTPUT); pinMode(FILL1_ECHO, INPUT);
+  pinMode(FILL2_TRIG, OUTPUT); pinMode(FILL2_ECHO, INPUT);
+  pinMode(FILL3_TRIG, OUTPUT); pinMode(FILL3_ECHO, INPUT);
 
   // Setup Motors
   stepper.setSpeed(STEPPER_SPEED);
@@ -77,16 +88,22 @@ void loop() {
        handleSortCommand(category);
     } 
     else if (incoming == "READ_LEVELS") {
-       float fillDist = readUltrasonicCm(FILL_TRIG_A0, FILL_ECHO_A1);
-       if (fillDist <= 0 || fillDist > 200) fillDist = 50.0; 
+       float glassDist = readUltrasonicCm(FILL1_TRIG, FILL1_ECHO);
+       if (glassDist <= 0 || glassDist > 200) glassDist = 50.0; 
+       
+       float metalDist = readUltrasonicCm(FILL2_TRIG, FILL2_ECHO);
+       if (metalDist <= 0 || metalDist > 200) metalDist = 50.0; 
+       
+       float paperDist = readUltrasonicCm(FILL3_TRIG, FILL3_ECHO);
+       if (paperDist <= 0 || paperDist > 200) paperDist = 50.0; 
 
-       String response = "LEVELS:" + String(fillDist, 1) + ",50.0,50.0";
+       String response = "LEVELS:" + String(glassDist, 1) + "," + String(metalDist, 1) + "," + String(paperDist, 1);
        espSerial.println(response);
        
        // Print to Serial Monitor so you can see it too
-       Serial.print("ESP32 requested fill levels. Glass Bin: ");
-       Serial.print(fillDist);
-       Serial.println(" cm");
+       Serial.print("Fill levels (cm) - Glass: "); Serial.print(glassDist);
+       Serial.print(", Metal: "); Serial.print(metalDist);
+       Serial.print(", Paper/Plastic: "); Serial.println(paperDist);
     }
   }
 
@@ -95,12 +112,18 @@ void loop() {
 
 // Moves stepper, drops item, and resets
 void handleSortCommand(String category) {
-  int targetAngle = 0; // Default to 0 (Glass)
+  int targetAngle = -1; // -1 means unrecognized
   
   if (category.equalsIgnoreCase("glass")) targetAngle = 0;
   else if (category.equalsIgnoreCase("metal")) targetAngle = 45;
   else if (category.equalsIgnoreCase("paper") || category.equalsIgnoreCase("plastic")) targetAngle = 90;
   else if (category.equalsIgnoreCase("rejected_waste")) targetAngle = 135;
+
+  if (targetAngle == -1) {
+    Serial.println("ERROR: Unrecognized category: " + category);
+    espSerial.println("ERR:UNKNOWN_CATEGORY");
+    return; // Abort the sorting motion!
+  }
 
   int angleDiff = targetAngle - currentAngle;
   
@@ -131,7 +154,19 @@ void handleSortCommand(String category) {
   flapServo.write(FLAP_CLOSED_DEG);
   Serial.println("Flap closed.");
 
-  // 4. Tell ESP32 we are done
+  // 4. Return Stepper to Home (0 degrees)
+  if (currentAngle != 0) {
+    long stepsToHome = (long)(0 - currentAngle) * STEPS_PER_REV / 360;
+    Serial.println("Returning chute to home (Glass bin)...");
+    stepper.step(stepsToHome);
+    currentAngle = 0;
+
+    // Turn off stepper coils to prevent heat
+    digitalWrite(STEPPER_IN1, LOW); digitalWrite(STEPPER_IN2, LOW);
+    digitalWrite(STEPPER_IN3, LOW); digitalWrite(STEPPER_IN4, LOW);
+  }
+
+  // 5. Tell ESP32 we are done
   Serial.println("Sort Complete!");
   espSerial.println("ACK:SORTED"); 
 }
