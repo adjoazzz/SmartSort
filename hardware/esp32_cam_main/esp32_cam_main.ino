@@ -8,8 +8,8 @@
 // --- UPDATE THESE WITH YOUR DETAILS ---
 const char* WIFI_SSID       = "DESKTOP-KB425NS 6794";
 const char* WIFI_PASSWORD   = "99*1z67Q";
-const char* ML_PREDICT_URL  = "http://10.232.76.49:5001/predict";
-const char* FILL_LEVELS_URL = "http://10.232.76.49:5001/api/fill-levels";
+const char* ML_PREDICT_URL  = "http://192.168.137.77:5001/predict";
+const char* FILL_LEVELS_URL = "http://192.168.137.77:5001/api/fill-levels";
 const char* ML_API_KEY      = "smartsort-ml-secret-key-2026";
 // -------------------
 
@@ -94,8 +94,8 @@ void loop() {
     if (WiFi.status() != WL_CONNECTED) return; // Try again next loop
   }
 
-  // 2. Every 2 minutes (120,000 ms), ask Arduino for fill levels
-  if (now - lastFillLevelTime > 120000) {
+  // 2. Every 5 seconds (5,000 ms), ask Arduino for fill levels
+  if (now - lastFillLevelTime > 5000) {
     lastFillLevelTime = now;
     Serial.println("READ_LEVELS"); 
   }

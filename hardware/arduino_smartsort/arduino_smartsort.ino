@@ -8,7 +8,7 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 // Trigger Sensor (Landing Zone)
 #define TRIG_PIN     4
 #define ECHO_PIN    12
-#define TRIGGER_DISTANCE_CM 15.0
+#define TRIGGER_DISTANCE_CM 5.0
 
 // Fill Sensor #1 (Glass Bin)
 #define FILL1_TRIG A0
