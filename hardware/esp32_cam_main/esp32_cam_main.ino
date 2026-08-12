@@ -8,8 +8,8 @@
 // --- UPDATE THESE WITH YOUR DETAILS ---
 const char* WIFI_SSID       = "DESKTOP-KB425NS 6794";
 const char* WIFI_PASSWORD   = "99*1z67Q";
-const char* ML_PREDICT_URL  = "http://192.168.137.77:5001/predict";
-const char* FILL_LEVELS_URL = "http://192.168.137.77:5001/api/fill-levels";
+const char* ML_PREDICT_URL  = "http://10.232.76.49:5001/predict";
+const char* FILL_LEVELS_URL = "http://10.232.76.49:5001/api/fill-levels";
 const char* ML_API_KEY      = "smartsort-ml-secret-key-2026";
 // -------------------
 
