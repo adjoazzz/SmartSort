@@ -143,14 +143,23 @@ void loop() {
     // Handle Fill Level Data
     else if (incoming.startsWith("LEVELS:")) {
       String data = incoming.substring(7);
-      int commaIndex = data.indexOf(',');
-      if (commaIndex > 0) {
-        String glassLevel = data.substring(0, commaIndex);
+      
+      // Parse 4 values: glass, metal, paper, rejected
+      int idx1 = data.indexOf(',');
+      int idx2 = data.indexOf(',', idx1 + 1);
+      int idx3 = data.indexOf(',', idx2 + 1);
+      
+      if (idx1 > 0 && idx2 > 0 && idx3 > 0) {
+        String glassLevel = data.substring(0, idx1);
+        String metalLevel = data.substring(idx1 + 1, idx2);
+        String paperLevel = data.substring(idx2 + 1, idx3);
+        String rejectedLevel = data.substring(idx3 + 1);
+        
         if (WiFi.status() == WL_CONNECTED) {
           HTTPClient http;
           http.begin(FILL_LEVELS_URL);
           http.addHeader("Content-Type", "application/json");
-          String json = "{\"glass_cm\":" + glassLevel + ",\"metal_cm\":50.0,\"paper_plastic_cm\":50.0}";
+          String json = "{\"glass_cm\":" + glassLevel + ",\"metal_cm\":" + metalLevel + ",\"paper_plastic_cm\":" + paperLevel + ",\"rejected_waste_cm\":" + rejectedLevel + "}";
           http.POST(json);
           http.end();
         }

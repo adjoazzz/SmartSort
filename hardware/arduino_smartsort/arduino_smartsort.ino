@@ -22,6 +22,10 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 #define FILL3_TRIG 2
 #define FILL3_ECHO 3
 
+// Fill Sensor #4 (Rejected Waste Bin)
+#define FILL4_TRIG A4
+#define FILL4_ECHO A5
+
 // Stepper Motor (28BYJ-48 via ULN2003)
 #define STEPS_PER_REV   2048
 #define STEPPER_IN1      8
@@ -54,6 +58,7 @@ void setup() {
   pinMode(FILL1_TRIG, OUTPUT); pinMode(FILL1_ECHO, INPUT);
   pinMode(FILL2_TRIG, OUTPUT); pinMode(FILL2_ECHO, INPUT);
   pinMode(FILL3_TRIG, OUTPUT); pinMode(FILL3_ECHO, INPUT);
+  pinMode(FILL4_TRIG, OUTPUT); pinMode(FILL4_ECHO, INPUT);
 
   // Setup Motors
   stepper.setSpeed(STEPPER_SPEED);
@@ -97,13 +102,17 @@ void loop() {
        float paperDist = readUltrasonicCm(FILL3_TRIG, FILL3_ECHO);
        if (paperDist <= 0 || paperDist > 200) paperDist = 50.0; 
 
-       String response = "LEVELS:" + String(glassDist, 1) + "," + String(metalDist, 1) + "," + String(paperDist, 1);
+       float rejectedDist = readUltrasonicCm(FILL4_TRIG, FILL4_ECHO);
+       if (rejectedDist <= 0 || rejectedDist > 200) rejectedDist = 50.0; 
+
+       String response = "LEVELS:" + String(glassDist, 1) + "," + String(metalDist, 1) + "," + String(paperDist, 1) + "," + String(rejectedDist, 1);
        espSerial.println(response);
        
        // Print to Serial Monitor so you can see it too
        Serial.print("Fill levels (cm) - Glass: "); Serial.print(glassDist);
        Serial.print(", Metal: "); Serial.print(metalDist);
-       Serial.print(", Paper/Plastic: "); Serial.println(paperDist);
+       Serial.print(", Paper/Plastic: "); Serial.print(paperDist);
+       Serial.print(", Rejected: "); Serial.println(rejectedDist);
     }
   }
 
