@@ -65,6 +65,8 @@ void setup() {
   
   flapServo.attach(SERVO_PIN);
   flapServo.write(FLAP_CLOSED_DEG); // Ensure it starts closed
+  delay(500);
+  flapServo.detach(); // Detach to prevent twitching when idle
 
   Serial.println("Arduino Ready: Trigger, Fill Level, Stepper, and Servo all active!");
 }
@@ -155,6 +157,7 @@ void handleSortCommand(String category) {
 
   // 2. Open the Flap to drop the item!
   Serial.println("Opening flap...");
+  flapServo.attach(SERVO_PIN);
   flapServo.write(FLAP_OPEN_DEG);
   
   delay(FLAP_HOLD_MS); // Wait for item to fall
@@ -162,6 +165,8 @@ void handleSortCommand(String category) {
   // 3. Close the Flap
   flapServo.write(FLAP_CLOSED_DEG);
   Serial.println("Flap closed.");
+  delay(500); // Wait for it to physically return to closed position
+  flapServo.detach(); // Detach to prevent twitching when idle
 
   // 4. Return Stepper to Home (0 degrees)
   if (currentAngle != 0) {
