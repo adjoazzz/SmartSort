@@ -165,6 +165,8 @@ export function InviteCollectorModal({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-card/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
       <div className="bg-card rounded-xl shadow-md w-full max-w-md overflow-hidden flex flex-col relative">
@@ -266,7 +268,10 @@ export function InviteCollectorModal({
 
             {/* Info banner */}
             <div className="bg-background dark:bg-secondary border border-border rounded-lg p-3 flex gap-3 items-start">
-              <Info className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#0284c7] dark:text-sky-500" strokeWidth={2} />
+              <Info
+                className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#0284c7] dark:text-sky-500"
+                strokeWidth={2}
+              />
               <p className="text-[11px] text-muted-foreground leading-relaxed">
                 A welcome email will be sent with a link to the collector portal
                 and a secure, system-generated temporary password.
@@ -276,7 +281,10 @@ export function InviteCollectorModal({
             {/* Error message */}
             {status === "error" && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 flex gap-3 items-start">
-                <AlertCircle className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#ef4444] dark:text-red-500" strokeWidth={2} />
+                <AlertCircle
+                  className="w-[18px] h-[18px] shrink-0 mt-0.5 text-[#ef4444] dark:text-red-500"
+                  strokeWidth={2}
+                />
                 <p className="text-[11px] text-red-600 dark:text-red-400 leading-relaxed">
                   {errorMessage}
                 </p>
@@ -304,7 +312,10 @@ export function InviteCollectorModal({
               >
                 {status === "sending" ? (
                   <>
-                    <Loader2 className="animate-spin w-3.5 h-3.5" strokeWidth={2.5} />
+                    <Loader2
+                      className="animate-spin w-3.5 h-3.5"
+                      strokeWidth={2.5}
+                    />
                     Sending Invite…
                   </>
                 ) : (

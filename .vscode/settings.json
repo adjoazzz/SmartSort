@@ -1,7 +1,5 @@
 {
-    "cSpell.words": [
-        "Breakroom"
-    ],
-    "markdown.extension.completion.enabled": false,
-    "markdown.extension.tableFormatter.enabled": false
+  "cSpell.words": ["Breakroom"],
+  "markdown.extension.completion.enabled": false,
+  "markdown.extension.tableFormatter.enabled": false
 }

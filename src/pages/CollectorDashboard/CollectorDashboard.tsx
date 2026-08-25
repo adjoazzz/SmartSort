@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Loader2, CheckSquare, X, Check } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -72,11 +72,20 @@ const COLLECTOR_JOBS: CollectorJob[] = [
   },
 ];
 
+const KNUST_FACILITIES = [
+  { id: "fac-sci", name: "College of Science", region: "KNUST", coords: [6.6735, -1.5658] as [number, number] },
+  { id: "fac-pharm", name: "College of Pharmacy", region: "KNUST", coords: [6.6786, -1.5711] as [number, number] },
+  { id: "fac-eng", name: "College of Engineering", region: "KNUST", coords: [6.6732, -1.5674] as [number, number] },
+];
+
 export default function CollectorDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"my_jobs" | "available_jobs" | "map_view">(
     "available_jobs",
   );
+  const [selectedFacilityId, setSelectedFacilityId] = useState<string>("fac-sci");
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [facilities, setFacilities] = useState(KNUST_FACILITIES);
 
   // Sync state with localStorage
   const [jobs, setJobs] = useState<CollectorJob[]>(() => {
@@ -94,6 +103,33 @@ export default function CollectorDashboard() {
   useEffect(() => {
     localStorage.setItem("collector_jobs", JSON.stringify(jobs));
   }, [jobs]);
+
+  // Fetch facilities from API to stay synced with Admin Dashboard if online
+  useEffect(() => {
+    const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+    fetch(`${baseUrl}/api/admin/facilities`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((f: any) => ({
+            id: f.id,
+            name: f.name,
+            region: f.region || "KNUST",
+            coords: [f.latitude, f.longitude] as [number, number],
+          }));
+          setFacilities(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const currentFacility = useMemo(() => {
+    return (
+      facilities.find((f) => f.id === selectedFacilityId) ||
+      facilities[0] ||
+      KNUST_FACILITIES[0]
+    );
+  }, [facilities, selectedFacilityId]);
 
   const [isOptimized, setIsOptimized] = useState(true);
   const [isOffline, setIsOffline] = useState(false);
@@ -169,11 +205,11 @@ export default function CollectorDashboard() {
       description="Welcome back, Kwame. Here are your tasks for today."
       hideAlertsIcon={true}
     >
-      {/* Quota & Offline Sync Top Bar */}
+      {/* Quota & Facility Location Sync Bar */}
       <div className="flex flex-col md:flex-row items-slate-200 md:items-center justify-between gap-4 bg-card border border-border rounded-xl p-5 mb-6 shadow-sm">
         <div className="flex items-center gap-4">
           {/* Circular Quota Progress Ring */}
-          <div className="relative h-14 w-14 flex items-center justify-center">
+          <div className="relative h-14 w-14 flex items-center justify-center shrink-0">
             <svg className="h-full w-full transform -rotate-90">
               <circle
                 cx="28"
@@ -212,31 +248,48 @@ export default function CollectorDashboard() {
           </div>
         </div>
 
-        {/* Offline Sync Mode Control */}
-        <div className="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-3 md:pt-0 border-[#f1f5f9] dark:border-[#0f2942]">
-          <div className="flex flex-col text-right">
-            <span className="text-xs font-bold text-foreground dark:text-white flex items-center gap-1.5 justify-end">
-              <span
-                className={`h-2 w-2 rounded-full ${isOffline ? "bg-amber-500 animate-pulse" : "bg-emerald-500 animate-ping"}`}
-              />
-              {isOffline ? "Local Cache Mode" : "Real-time Telemetry"}
+        {/* Collector Assigned Facility Location Selector */}
+        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              Assigned Collector Facility
             </span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
-              {isOffline ? "Syncing to local db" : "Syncing to cloud servers"}
-            </span>
+            <select
+              value={selectedFacilityId}
+              onChange={(e) => setSelectedFacilityId(e.target.value)}
+              className="h-9 px-3 bg-background border border-border rounded-lg text-xs font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+            >
+              {facilities.map((fac) => (
+                <option key={fac.id} value={fac.id}>
+                  📍 {fac.name} ({fac.region})
+                </option>
+              ))}
+            </select>
           </div>
-          <button
-            onClick={() => setIsOffline(!isOffline)}
-            className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              isOffline ? "bg-amber-500" : "bg-primary"
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                isOffline ? "translate-x-4" : "translate-x-0"
+
+          {/* Offline Sync Mode Control */}
+          <div className="flex items-center gap-2 border-l border-border pl-3 ml-1">
+            <div className="flex flex-col text-right">
+              <span className="text-xs font-bold text-foreground dark:text-white flex items-center gap-1.5 justify-end">
+                <span
+                  className={`h-2 w-2 rounded-full ${isOffline ? "bg-amber-500 animate-pulse" : "bg-emerald-500 animate-ping"}`}
+                />
+                {isOffline ? "Local Cache" : "Real-time Sync"}
+              </span>
+            </div>
+            <button
+              onClick={() => setIsOffline(!isOffline)}
+              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                isOffline ? "bg-amber-500" : "bg-primary"
               }`}
-            />
-          </button>
+            >
+              <span
+                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  isOffline ? "translate-x-4" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -272,68 +325,82 @@ export default function CollectorDashboard() {
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
             {displayedJobs.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground text-xs">
-                No active jobs to display.
+                No active jobs to display for {currentFacility.name}.
               </div>
             ) : (
-              displayedJobs.map((job: any) => (
-                <div
-                  key={job.id}
-                  className="border border-border/80 dark:border-border rounded-xl p-3 bg-card flex flex-col gap-2 hover:border-[#0284c7] dark:hover:border-sky-500 transition-all"
-                >
-                  <div className="flex justify-between items-start gap-2">
-                    <div>
-                      <span className="text-xs font-extrabold text-foreground dark:text-white block">
-                        {job.location}
-                      </span>
-                      <span className="text-[9px] font-mono text-slate-400 dark:text-slate-500">
-                        {job.device} • {job.zone}
-                      </span>
-                    </div>
-                    <StatusBadge
-                      label={job.urgency}
-                      variant={
-                        job.urgency === "Critical"
-                          ? "danger"
-                          : job.urgency === "High"
-                            ? "warning"
-                            : "success"
-                      }
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 mt-1">
-                    <div className="flex items-center gap-1.5">
-                      <Progress
-                        value={job.fill}
-                        className="w-12 h-1 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
+              displayedJobs.map((job: any) => {
+                const isSelected = selectedJobId === job.id;
+                return (
+                  <div
+                    key={job.id}
+                    onClick={() => setSelectedJobId(job.id)}
+                    className={`border rounded-xl p-3 bg-card flex flex-col gap-2 transition-all cursor-pointer ${
+                      isSelected
+                        ? "border-[#006c49] dark:border-emerald-400 ring-2 ring-[#006c49]/20 shadow-sm"
+                        : "border-border/80 dark:border-border hover:border-[#0284c7]"
+                    }`}
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <span className="text-xs font-extrabold text-foreground dark:text-white block">
+                          {job.location}
+                        </span>
+                        <span className="text-[9px] font-mono text-slate-400 dark:text-slate-500">
+                          {job.device} • {job.zone}
+                        </span>
+                      </div>
+                      <StatusBadge
+                        label={job.urgency}
+                        variant={
+                          job.urgency === "Critical"
+                            ? "danger"
+                            : job.urgency === "High"
+                              ? "warning"
+                              : "success"
+                        }
                       />
-                      <span className="text-[9px] font-bold text-[#ba1a1a] dark:text-red-400">
-                        {job.fill}%
-                      </span>
                     </div>
 
-                    <div className="flex items-center gap-1">
-                      {activeTab === "available_jobs" ? (
-                        <button
-                          onClick={() => handleClaimJob(job.id)}
-                          className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-all cursor-pointer"
-                        >
-                          Claim
-                        </button>
-                      ) : job.status !== "Completed" ? (
-                        <button
-                          onClick={() => setRemindJobId(job.id)}
-                          className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-all cursor-pointer"
-                        >
-                          Mark Done
-                        </button>
-                      ) : (
-                        <span className="text-[10px] text-emerald-500 font-bold">✓ Done</span>
-                      )}
+                    <div className="flex items-center justify-between gap-3 mt-1">
+                      <div className="flex items-center gap-1.5">
+                        <Progress
+                          value={job.fill}
+                          className="w-12 h-1 bg-muted [&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
+                        />
+                        <span className="text-[9px] font-bold text-[#ba1a1a] dark:text-red-400">
+                          {job.fill}%
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        {activeTab === "available_jobs" ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClaimJob(job.id);
+                            }}
+                            className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-all cursor-pointer"
+                          >
+                            Claim
+                          </button>
+                        ) : job.status !== "Completed" ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setRemindJobId(job.id);
+                            }}
+                            className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-md hover:bg-primary/90 transition-all cursor-pointer"
+                          >
+                            Mark Done
+                          </button>
+                        ) : (
+                          <span className="text-[10px] text-emerald-500 font-bold">✓ Done</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
@@ -344,13 +411,17 @@ export default function CollectorDashboard() {
             fallback={
               <div className="flex items-center justify-center h-full text-muted-foreground text-sm gap-2">
                 <Loader2 className="animate-spin w-4 h-4" strokeWidth={2} />
-                Loading map…
+                Loading campus map…
               </div>
             }
           >
             <BinLocatorMap
-              jobs={jobs}
+              jobs={displayedJobs}
+              facilityName={currentFacility.name}
+              facilityCoords={currentFacility.coords}
               activeTab={activeTab}
+              selectedJobId={selectedJobId}
+              onSelectJob={(job) => setSelectedJobId(job.id)}
               onClaimJob={handleClaimJob}
               onCompleteJob={(id) => setRemindJobId(id)}
             />

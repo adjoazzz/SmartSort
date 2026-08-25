@@ -1,9 +1,26 @@
 import { authFetch } from "../../lib/authFetch";
 import React from "react";
-import { Recycle, AlertTriangle, ShoppingBag, TrendingUp, TrendingDown, Minus, Box, Magnet, Droplet, Filter, ChevronDown, ArrowUpDown, MoreVertical, Download } from "lucide-react";
+import {
+  Recycle,
+  AlertTriangle,
+  ShoppingBag,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Box,
+  Magnet,
+  Droplet,
+  Filter,
+  ChevronDown,
+  ArrowUpDown,
+  MoreVertical,
+  Download,
+  FileSpreadsheet,
+} from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { useTranslation } from "react-i18next";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
+import { toast } from "sonner";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import {
@@ -24,33 +41,51 @@ const KPI_DATA = [
     value: "74.2%",
     trend: "12.4%",
     trendDirection: "up",
-    icon: <Recycle className="w-5 h-5 text-[#10b981] dark:text-emerald-400" strokeWidth={2} />,
+    icon: (
+      <Recycle
+        className="w-5 h-5 text-[#10b981] dark:text-emerald-400"
+        strokeWidth={2}
+      />
+    ),
     iconBg: "bg-[#bbf7d0]/50 dark:bg-emerald-500/10",
     progressColor: "bg-[#10b981] dark:bg-emerald-500",
     progressWidth: "74%",
-    trendColors: "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400",
+    trendColors:
+      "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400",
   },
   {
     title: "Contamination",
     value: "8.1%",
     trend: "4.2%",
     trendDirection: "down",
-    icon: <AlertTriangle className="w-5 h-5 text-[#ba1a1a] dark:text-red-500" strokeWidth={2} />,
+    icon: (
+      <AlertTriangle
+        className="w-5 h-5 text-[#ba1a1a] dark:text-red-500"
+        strokeWidth={2}
+      />
+    ),
     iconBg: "bg-[#fca5a5]/20 dark:bg-red-500/10",
     progressColor: "bg-[#ba1a1a] dark:bg-red-500",
     progressWidth: "8%",
-    trendColors: "bg-[#ffdad6] dark:bg-red-500/20 text-[#ba1a1a] dark:text-red-400",
+    trendColors:
+      "bg-[#ffdad6] dark:bg-red-500/20 text-[#ba1a1a] dark:text-red-400",
   },
   {
     title: "Total Tonnage",
     value: "1,248.5 t",
     trend: "8.1%",
     trendDirection: "up",
-    icon: <ShoppingBag className="w-5 h-5 text-[#3b82f6] dark:text-blue-400" strokeWidth={2} />,
+    icon: (
+      <ShoppingBag
+        className="w-5 h-5 text-[#3b82f6] dark:text-blue-400"
+        strokeWidth={2}
+      />
+    ),
     iconBg: "bg-[#dbeafe]/50 dark:bg-blue-500/10",
     progressColor: "bg-[#3b82f6] dark:bg-blue-500",
     progressWidth: "75%",
-    trendColors: "bg-[#dbeafe] dark:bg-blue-500/20 text-[#2563eb] dark:text-blue-400",
+    trendColors:
+      "bg-[#dbeafe] dark:bg-blue-500/20 text-[#2563eb] dark:text-blue-400",
   },
   {
     title: "Carbon Offset",
@@ -65,7 +100,8 @@ const KPI_DATA = [
     iconBg: "bg-transparent border border-border",
     progressColor: "bg-[#334155] dark:bg-slate-400",
     progressWidth: "40%",
-    trendColors: "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400",
+    trendColors:
+      "bg-[#bbf7d0]/50 dark:bg-emerald-500/20 text-[#006c49] dark:text-emerald-400",
   },
 ];
 
@@ -75,12 +111,20 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="bg-card text-foreground p-3 rounded-lg shadow-xl text-sm border border-border">
         <p className="font-bold mb-2 pb-2 border-b border-border">{label}</p>
         <div className="mb-1">
-          <span className="text-xs text-muted-foreground mr-2">Clean Sorting:</span>
-          <span className="text-[#10b981] dark:text-emerald-400 font-bold">{payload[0].value}%</span>
+          <span className="text-xs text-muted-foreground mr-2">
+            Clean Sorting:
+          </span>
+          <span className="text-[#10b981] dark:text-emerald-400 font-bold">
+            {payload[0].value}%
+          </span>
         </div>
         <div>
-          <span className="text-xs text-muted-foreground mr-2">Contamination:</span>
-          <span className="text-[#fca5a5] dark:text-red-400 font-bold">{payload[1].value}%</span>
+          <span className="text-xs text-muted-foreground mr-2">
+            Contamination:
+          </span>
+          <span className="text-[#fca5a5] dark:text-red-400 font-bold">
+            {payload[1].value}%
+          </span>
         </div>
       </div>
     );
@@ -127,11 +171,9 @@ function KpiCard({ data }: { data: (typeof KPI_DATA)[0] }) {
 }
 
 function CategoryIcon({ type }: { type: string }) {
-  if (type === "boxes")
-    return <Box className="w-4 h-4" strokeWidth={2} />;
-  if (type === "magnet")
-    return <Magnet className="w-4 h-4" strokeWidth={2} />;
-    return <Droplet className="w-4 h-4" strokeWidth={2} />;
+  if (type === "boxes") return <Box className="w-4 h-4" strokeWidth={2} />;
+  if (type === "magnet") return <Magnet className="w-4 h-4" strokeWidth={2} />;
+  return <Droplet className="w-4 h-4" strokeWidth={2} />;
   return null;
 }
 
@@ -250,6 +292,33 @@ export default function Analytics() {
     });
 
     doc.save("smartsort-analytics-report.pdf");
+    toast.success("PDF analytics report generated!");
+  };
+
+  const handleExportCSV = () => {
+    const headers = [
+      "Category",
+      "Volume (Metric Tons)",
+      "MoM Growth",
+      "Target Goal",
+    ];
+    const rows = (categoriesData ?? []).map((cat) => [
+      `"${cat.name}"`,
+      cat.volume,
+      `"${cat.growth}"`,
+      `"${cat.goal}%"`,
+    ]);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "smartsort-analytics-report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("CSV analytics data exported successfully!");
   };
 
   return (
@@ -264,6 +333,17 @@ export default function Analytics() {
           >
             <Download className="w-4 h-4" strokeWidth={2.5} />
             Export PDF
+          </button>
+          <button
+            onClick={handleExportCSV}
+            data-testid="export-csv-btn"
+            className="bg-card border border-border text-foreground hover:bg-slate-100 dark:hover:bg-secondary text-sm font-semibold rounded-lg px-4 py-2 transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
+          >
+            <FileSpreadsheet
+              className="w-4 h-4 text-emerald-600 dark:text-emerald-400"
+              strokeWidth={2.5}
+            />
+            Export CSV
           </button>
           <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-1 shadow-sm">
             <input
@@ -557,10 +637,16 @@ export default function Analytics() {
                         `}
                           >
                             {row.growthTrend === "up" && (
-                              <TrendingUp className="w-2.5 h-2.5" strokeWidth={3} />
+                              <TrendingUp
+                                className="w-2.5 h-2.5"
+                                strokeWidth={3}
+                              />
                             )}
                             {row.growthTrend === "down" && (
-                              <TrendingDown className="w-2.5 h-2.5" strokeWidth={3} />
+                              <TrendingDown
+                                className="w-2.5 h-2.5"
+                                strokeWidth={3}
+                              />
                             )}
                             {row.growthTrend === "neutral" && (
                               <Minus className="w-2.5 h-2.5" strokeWidth={3} />
@@ -583,7 +669,10 @@ export default function Analytics() {
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-right">
                           <button className="text-muted-foreground hover:text-foreground dark:text-white transition-colors p-1 cursor-pointer">
-                            <MoreVertical className="w-4.5 h-4.5" strokeWidth={2} />
+                            <MoreVertical
+                              className="w-4.5 h-4.5"
+                              strokeWidth={2}
+                            />
                           </button>
                         </td>
                       </tr>

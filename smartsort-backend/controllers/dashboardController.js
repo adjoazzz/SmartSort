@@ -80,6 +80,16 @@ class DashboardController {
       next(err);
     }
   }
+
+  async getSustainabilityMetrics(req, res, next) {
+    try {
+      const facilityId = req.query.facilityId;
+      const data = await dashboardService.getSustainabilityMetrics(facilityId);
+      res.status(200).json(data);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new DashboardController();

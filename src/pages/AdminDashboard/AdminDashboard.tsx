@@ -5,7 +5,11 @@ import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { authFetch } from "../../lib/authFetch";
 import { toast } from "sonner";
-import { MapLibreMap, MapPin, VehicleTelemetry } from "../../components/MapLibreMap";
+import {
+  MapLibreMap,
+  MapPin,
+  VehicleTelemetry,
+} from "../../components/MapLibreMap";
 import {
   Table,
   TableHeader,
@@ -23,10 +27,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-
-
-
 
 interface Facility {
   id: string;
@@ -71,10 +71,10 @@ const KNUST_DEPOT: [number, number] = [6.673, -1.565];
 const STREET_ROUTES: Record<string, [number, number][]> = {
   "College of Science": [
     KNUST_DEPOT,
-    [6.6730, -1.5658],
+    [6.673, -1.5658],
     [6.6735, -1.5658],
     [6.6735, -1.5667],
-    [6.6730, -1.5667],
+    [6.673, -1.5667],
   ],
   "College of Pharmacy": [
     KNUST_DEPOT,
@@ -91,14 +91,27 @@ const STREET_ROUTES: Record<string, [number, number][]> = {
   ],
 };
 
-function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility[]) {
+function useLiveTruckPositions(
+  activeDispatches: BulkJob[],
+  facilities: Facility[],
+) {
   const [truckPositions, setTruckPositions] = useState<
-    Array<{ id: string; name: string; pos: [number, number]; route: [number, number][]; targetIndex: number; rotation: number }>
+    Array<{
+      id: string;
+      name: string;
+      pos: [number, number];
+      route: [number, number][];
+      targetIndex: number;
+      rotation: number;
+    }>
   >([]);
 
   const dispatchKey = useMemo(
-    () => activeDispatches.map((d) => `${d.id}:${d.facilityId}:${d.collectorName}`).join("|"),
-    [activeDispatches]
+    () =>
+      activeDispatches
+        .map((d) => `${d.id}:${d.facilityId}:${d.collectorName}`)
+        .join("|"),
+    [activeDispatches],
   );
 
   useEffect(() => {
@@ -112,9 +125,14 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
         const facility = facilities.find((f) => f.id === j.facilityId);
         const defaultRoute: [number, number][] = [
           KNUST_DEPOT,
-          [facility ? facility.latitude : 6.673, facility ? facility.longitude : -1.566],
+          [
+            facility ? facility.latitude : 6.673,
+            facility ? facility.longitude : -1.566,
+          ],
         ];
-        const route = facility ? (STREET_ROUTES[facility.name] || defaultRoute) : defaultRoute;
+        const route = facility
+          ? STREET_ROUTES[facility.name] || defaultRoute
+          : defaultRoute;
 
         return {
           id: j.id,
@@ -131,7 +149,9 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
   }, [dispatchKey, facilities]);
 
   useEffect(() => {
-    const hasActiveTrucks = truckPositions.some((t) => t.targetIndex < t.route.length);
+    const hasActiveTrucks = truckPositions.some(
+      (t) => t.targetIndex < t.route.length,
+    );
     if (!hasActiveTrucks) return;
 
     const timer = setInterval(() => {
@@ -152,13 +172,21 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
           const angle = Math.atan2(deltaLng, deltaLat) * (180 / Math.PI);
 
           if (distance < stepSize) {
-            return { ...truck, pos: [targetLat, targetLng] as [number, number], targetIndex: truck.targetIndex + 1, rotation: angle };
+            return {
+              ...truck,
+              pos: [targetLat, targetLng] as [number, number],
+              targetIndex: truck.targetIndex + 1,
+              rotation: angle,
+            };
           }
 
           const ratio = stepSize / distance;
           return {
             ...truck,
-            pos: [truck.pos[0] + deltaLat * ratio, truck.pos[1] + deltaLng * ratio] as [number, number],
+            pos: [
+              truck.pos[0] + deltaLat * ratio,
+              truck.pos[1] + deltaLng * ratio,
+            ] as [number, number],
             rotation: angle,
           };
         });
@@ -172,7 +200,6 @@ function useLiveTruckPositions(activeDispatches: BulkJob[], facilities: Facility
 
   return truckPositions;
 }
-
 
 export default function AdminDashboard() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -197,10 +224,12 @@ export default function AdminDashboard() {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
   const [trackingTruckId, setTrackingTruckId] = useState<string | null>(null);
 
-  const activeDispatches = useMemo(() => bulkJobs.filter((j) => j.status === "Dispatched"), [bulkJobs]);
+  const activeDispatches = useMemo(
+    () => bulkJobs.filter((j) => j.status === "Dispatched"),
+    [bulkJobs],
+  );
   const truckPositions = useLiveTruckPositions(activeDispatches, facilities);
 
   const vehicleTelemetryList: VehicleTelemetry[] = truckPositions.map((t) => ({
@@ -232,7 +261,6 @@ export default function AdminDashboard() {
     };
   });
 
-
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
@@ -255,8 +283,6 @@ export default function AdminDashboard() {
       setFacilities(facData);
       setMetrics(metData);
       setBulkJobs(jobData);
-
-
     } catch (e: any) {
       toast.error(e.message || "Connection error to telemetry server");
     } finally {
@@ -269,8 +295,6 @@ export default function AdminDashboard() {
     const interval = setInterval(loadData, 10000); // Poll every 10s
     return () => clearInterval(interval);
   }, []);
-
-
 
   const handleDispatchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -305,11 +329,14 @@ export default function AdminDashboard() {
 
   const handleCompletePickup = async (jobId: string) => {
     try {
-      const response = await authFetch(`${baseUrl}/api/admin/bulk-jobs/${jobId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Completed" }),
-      });
+      const response = await authFetch(
+        `${baseUrl}/api/admin/bulk-jobs/${jobId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Completed" }),
+        },
+      );
 
       if (!response.ok) throw new Error("Failed to complete pickup");
 
@@ -322,11 +349,14 @@ export default function AdminDashboard() {
 
   const handleTransitPickup = async (jobId: string) => {
     try {
-      const response = await authFetch(`${baseUrl}/api/admin/bulk-jobs/${jobId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Dispatched" }),
-      });
+      const response = await authFetch(
+        `${baseUrl}/api/admin/bulk-jobs/${jobId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Dispatched" }),
+        },
+      );
 
       if (!response.ok) throw new Error("Failed to dispatch truck");
 
@@ -339,7 +369,11 @@ export default function AdminDashboard() {
 
   // Facility comparative chart data
   const chartData = facilities.map((f) => ({
-    name: f.name.replace(" Central Hub", "").replace(" Sorting Center", "").replace(" Plant", "").replace(" Hub", ""),
+    name: f.name
+      .replace(" Central Hub", "")
+      .replace(" Sorting Center", "")
+      .replace(" Plant", "")
+      .replace(" Hub", ""),
     "Pending Tonnage": f.pendingTonnage,
     "Bin Capacity %": f.averageFill,
   }));
@@ -429,7 +463,6 @@ export default function AdminDashboard() {
               activeTrackingId={trackingTruckId}
               height="100%"
             />
-
           </div>
         </div>
 
@@ -440,7 +473,8 @@ export default function AdminDashboard() {
               Third-Party Dispatch Controller
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
-              Select an overloaded facility and assign a partner garbage collection agency in Ghana.
+              Select an overloaded facility and assign a partner garbage
+              collection agency in Ghana.
             </p>
           </div>
 
@@ -503,7 +537,9 @@ export default function AdminDashboard() {
               disabled={isSubmitting || !selectedFacilityId}
               className="h-10 bg-primary hover:bg-primary/90 text-white font-bold text-sm rounded-lg transition-all shadow-md mt-2 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
             >
-              {isSubmitting ? "Processing Dispatch..." : "Assign Dispatch Route"}
+              {isSubmitting
+                ? "Processing Dispatch..."
+                : "Assign Dispatch Route"}
             </button>
           </form>
 
@@ -514,7 +550,10 @@ export default function AdminDashboard() {
             </h4>
             <div style={{ width: "100%", height: "150px" }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 5 }}>
+                <BarChart
+                  data={chartData}
+                  margin={{ top: 5, right: 5, left: -25, bottom: 5 }}
+                >
                   <XAxis dataKey="name" stroke="#94a3b8" fontSize={9} />
                   <YAxis stroke="#94a3b8" fontSize={9} />
                   <Tooltip
@@ -526,7 +565,11 @@ export default function AdminDashboard() {
                       fontSize: "11px",
                     }}
                   />
-                  <Bar dataKey="Pending Tonnage" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                  <Bar
+                    dataKey="Pending Tonnage"
+                    fill="#f59e0b"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -543,7 +586,8 @@ export default function AdminDashboard() {
               Onboarded Facilities Health Metrics
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
-              Direct tracking status of connected devices, fill ratios, and active error warnings.
+              Direct tracking status of connected devices, fill ratios, and
+              active error warnings.
             </p>
           </div>
 
@@ -574,7 +618,10 @@ export default function AdminDashboard() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2 min-w-[120px]">
-                        <Progress value={fac.averageFill} className="h-2 flex-1" />
+                        <Progress
+                          value={fac.averageFill}
+                          className="h-2 flex-1"
+                        />
                         <span className="text-xs font-mono font-bold text-foreground">
                           {fac.averageFill}%
                         </span>
@@ -597,7 +644,9 @@ export default function AdminDashboard() {
                           ⚠️ {fac.alertCount} Alerts
                         </span>
                       ) : (
-                        <span className="text-xs text-muted-foreground">None</span>
+                        <span className="text-xs text-muted-foreground">
+                          None
+                        </span>
                       )}
                     </TableCell>
                     <TableCell className="text-right">
@@ -623,7 +672,8 @@ export default function AdminDashboard() {
               Active Dispatch Routes
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
-              Current partner collection routes underway based on tonnage alerts.
+              Current partner collection routes underway based on tonnage
+              alerts.
             </p>
           </div>
 
@@ -684,11 +734,17 @@ export default function AdminDashboard() {
                       {job.status === "Dispatched" && (
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => setTrackingTruckId(trackingTruckId === job.id ? null : job.id)}
+                            onClick={() =>
+                              setTrackingTruckId(
+                                trackingTruckId === job.id ? null : job.id,
+                              )
+                            }
                             data-testid={`admin-track-truck-${job.id}`}
-                            className={`px-2.5 py-1 ${trackingTruckId === job.id ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'} text-[10px] font-bold rounded cursor-pointer transition-colors flex items-center gap-1 active:scale-[0.98]`}
+                            className={`px-2.5 py-1 ${trackingTruckId === job.id ? "bg-red-100 text-red-700 hover:bg-red-200" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"} text-[10px] font-bold rounded cursor-pointer transition-colors flex items-center gap-1 active:scale-[0.98]`}
                           >
-                            {trackingTruckId === job.id ? "🎯 Tracking..." : "🎯 Track"}
+                            {trackingTruckId === job.id
+                              ? "🎯 Tracking..."
+                              : "🎯 Track"}
                           </button>
                           <button
                             onClick={() => handleCompletePickup(job.id)}
@@ -702,7 +758,13 @@ export default function AdminDashboard() {
 
                       {job.status === "Completed" && (
                         <span className="text-[9.5px] text-muted-foreground italic">
-                          Collected: {job.completedAt ? new Date(job.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Done"}
+                          Collected:{" "}
+                          {job.completedAt
+                            ? new Date(job.completedAt).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                            : "Done"}
                         </span>
                       )}
                     </div>

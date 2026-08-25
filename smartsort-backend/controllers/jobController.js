@@ -76,6 +76,15 @@ class JobController {
       next(err);
     }
   }
+
+  async autoScheduleJobs(req, res, next) {
+    try {
+      const result = await jobService.autoScheduleJobs(req.body);
+      res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new JobController();

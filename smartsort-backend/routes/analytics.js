@@ -4,6 +4,7 @@ const dashboardController = require('../controllers/dashboardController');
 const { restrictToFacility } = require('../middleware/auth');
 
 router.get('/historical', restrictToFacility, dashboardController.getHistoricalAnalytics);
+router.get('/sustainability', restrictToFacility, dashboardController.getSustainabilityMetrics);
 
 router.get('/tonnage', (req, res) => {
   res.status(200).json([

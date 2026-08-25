@@ -1,6 +1,16 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useEffect, useState } from "react";
-import { Clock, Users, Zap, Filter, Upload, Sliders, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Clock,
+  Users,
+  Zap,
+  Filter,
+  Upload,
+  Sliders,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { MetricCard } from "../../components/MetricCard";
@@ -23,6 +33,7 @@ import {
   TableCell,
 } from "../../components/ui/table";
 import { JobCard } from "./JobCard";
+import { AutomatedScheduleModal } from "./AutomatedScheduleModal";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
 
 /* ── Static Mock Data (Enriched to match screenshot) ──────────────── */
@@ -137,9 +148,7 @@ const KPIS = [
     trendDirection: "down" as const,
     iconColorClass: "text-[#006c49] dark:text-emerald-400",
     iconBgClass: "bg-[#10b981]/10 dark:bg-emerald-500/10",
-    icon: (
-      <Clock className="w-4 h-4" strokeWidth={2} />
-    ),
+    icon: <Clock className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "Avg Response Time",
@@ -148,9 +157,7 @@ const KPIS = [
     trendDirection: "up" as const,
     iconColorClass: "text-[#0284c7] dark:text-sky-500",
     iconBgClass: "bg-[#0284c7]/10 dark:bg-sky-500/10",
-    icon: (
-      <Clock className="w-4 h-4" strokeWidth={2} />
-    ),
+    icon: <Clock className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "Active Collectors",
@@ -159,9 +166,7 @@ const KPIS = [
     trendDirection: "neutral" as const,
     iconColorClass: "text-muted-foreground",
     iconBgClass: "bg-muted",
-    icon: (
-      <Users className="w-4 h-4" strokeWidth={2} />
-    ),
+    icon: <Users className="w-4 h-4" strokeWidth={2} />,
   },
   {
     title: "Tonnage Goal",
@@ -170,9 +175,7 @@ const KPIS = [
     trendDirection: "down" as const,
     iconColorClass: "text-[#ba1a1a] dark:text-red-500",
     iconBgClass: "bg-[#ffdad6] dark:bg-red-500/10",
-    icon: (
-      <Zap className="w-4 h-4" strokeWidth={2} />
-    ),
+    icon: <Zap className="w-4 h-4" strokeWidth={2} />,
   },
 ];
 
@@ -239,12 +242,12 @@ export default function CollectionJobs() {
     return response.json();
   };
 
-  const {
-    data: summaryData,
-    refresh: refreshSummary,
-  } = useRealtimeData<any>(fetchJobsSummary, {
-    tables: ["CollectionJob", "User"],
-  });
+  const { data: summaryData, refresh: refreshSummary } = useRealtimeData<any>(
+    fetchJobsSummary,
+    {
+      tables: ["CollectionJob", "User"],
+    },
+  );
 
   const refresh = async () => {
     await Promise.all([refreshJobs(), refreshSummary()]);
@@ -270,7 +273,8 @@ export default function CollectionJobs() {
   }, []);
 
   const handleDeployBatchRoute = async () => {
-    const targetFacility = facilities.find((f) => f.name.includes("Accra")) || facilities[0];
+    const targetFacility =
+      facilities.find((f) => f.name.includes("Accra")) || facilities[0];
     if (!targetFacility) {
       toast.error("No onboarded facility found to request dispatch.");
       return;
@@ -286,7 +290,9 @@ export default function CollectionJobs() {
         }),
       });
       if (response.ok) {
-        toast.success("Dispatch request successfully sent to Admin dashboard overview!");
+        toast.success(
+          "Dispatch request successfully sent to Admin dashboard overview!",
+        );
         refresh();
       } else {
         toast.error("Failed to submit dispatch request.");
@@ -302,6 +308,7 @@ export default function CollectionJobs() {
     Record<string, string>
   >({});
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isAutoSchedulerOpen, setIsAutoSchedulerOpen] = useState(false);
   const [editingJobId, setEditingJobId] = useState<string | null>(null);
 
   const [newJob, setNewJob] = useState({
@@ -440,7 +447,10 @@ export default function CollectionJobs() {
   const dynamicKpis = [
     {
       ...KPIS[0],
-      value: summaryData?.pendingJobs !== undefined ? String(summaryData.pendingJobs) : KPIS[0].value,
+      value:
+        summaryData?.pendingJobs !== undefined
+          ? String(summaryData.pendingJobs)
+          : KPIS[0].value,
     },
     {
       ...KPIS[1],
@@ -448,8 +458,14 @@ export default function CollectionJobs() {
     },
     {
       ...KPIS[2],
-      value: summaryData?.activeCollectors !== undefined ? summaryData.activeCollectors : KPIS[2].value,
-      trend: summaryData?.totalCollectors !== undefined ? `/ ${summaryData.totalCollectors} Total` : KPIS[2].trend,
+      value:
+        summaryData?.activeCollectors !== undefined
+          ? summaryData.activeCollectors
+          : KPIS[2].value,
+      trend:
+        summaryData?.totalCollectors !== undefined
+          ? `/ ${summaryData.totalCollectors} Total`
+          : KPIS[2].trend,
     },
     {
       ...KPIS[3],
@@ -515,6 +531,15 @@ export default function CollectionJobs() {
           <button className="px-4 py-2.5 bg-card border border-border hover:bg-slate-50 dark:hover:bg-secondary text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
             <Filter className="w-3.5 h-3.5" strokeWidth={2.5} />
             Filters
+          </button>
+
+          <button
+            onClick={() => setIsAutoSchedulerOpen(true)}
+            data-testid="auto-scheduler-rules-btn"
+            className="px-4 py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+          >
+            <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            Auto-Scheduler Rules
           </button>
 
           <button className="px-4 py-2.5 bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-xl flex items-center gap-2 shadow-md transition-all active:scale-[0.98] cursor-pointer">
@@ -686,7 +711,10 @@ export default function CollectionJobs() {
 
               <div className="flex items-center gap-2">
                 <div className="flex items-center bg-card rounded-xl border border-border focus-within:border-[#006c49] dark:focus-within:border-emerald-500 transition-all overflow-hidden px-3.5 py-2">
-                  <Search className="w-3.5 h-3.5 mr-2 text-[#94A3B8] dark:text-slate-400" strokeWidth={2.5} />
+                  <Search
+                    className="w-3.5 h-3.5 mr-2 text-[#94A3B8] dark:text-slate-400"
+                    strokeWidth={2.5}
+                  />
                   <input
                     type="text"
                     placeholder="Search jobs..."
@@ -905,6 +933,11 @@ export default function CollectionJobs() {
           </div>
         </div>
       )}
+      <AutomatedScheduleModal
+        isOpen={isAutoSchedulerOpen}
+        onClose={() => setIsAutoSchedulerOpen(false)}
+        onScheduledSuccess={refresh}
+      />
     </PageLayout>
   );
 }

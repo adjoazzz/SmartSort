@@ -35,6 +35,8 @@ export interface MapPin {
 export interface MapLibreMapProps {
   initialCenter?: [number, number]; // [lng, lat]
   initialZoom?: number;
+  center?: [number, number]; // [lng, lat] for dynamic camera transitions
+  zoom?: number;
   pins?: MapPin[];
   vehicles?: VehicleTelemetry[];
   activeTrackingId?: string | null;
@@ -165,6 +167,8 @@ function createPinIconElement(color: string, fill: number): HTMLElement {
 export function MapLibreMap({
   initialCenter = [-0.187, 5.6037], // [lng, lat] (Accra, Ghana)
   initialZoom = 13,
+  center,
+  zoom,
   pins = [],
   vehicles = [],
   activeTrackingId = null,
@@ -190,8 +194,8 @@ export function MapLibreMap({
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: OPEN_FREE_MAP_LIBERTY_STYLE,
-      center: initialCenter,
-      zoom: initialZoom,
+      center: center || initialCenter,
+      zoom: zoom || initialZoom,
       pitch: 30, // 3D perspective for Uber/Bolt feel
       bearing: 0,
       attributionControl: { compact: true },
@@ -235,6 +239,18 @@ export function MapLibreMap({
       mapRef.current = null;
     };
   }, []);
+
+  // 1b. Smooth flyTo when center or zoom prop changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapLoaded || !center) return;
+    map.flyTo({
+      center,
+      zoom: zoom ?? map.getZoom(),
+      essential: true,
+      duration: 1200,
+    });
+  }, [center, zoom, mapLoaded]);
 
   // 2. Render & update static Pin Markers (Bins / Facilities)
   useEffect(() => {

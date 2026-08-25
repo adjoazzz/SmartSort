@@ -233,6 +233,76 @@ class JobService {
       }
     });
   }
+
+  async autoScheduleJobs(rules = {}) {
+    const threshold = Number(rules.threshold) || 80;
+    const autoAssign = Boolean(rules.autoAssign);
+    const facilityId = rules.facilityId;
+
+    const deviceWhere = {
+      fillLevel: { gte: threshold },
+      ...(facilityId ? { facilityId } : {}),
+      status: { not: 'Offline' }
+    };
+
+    // Find candidate devices exceeding threshold
+    const candidateDevices = await prisma.device.findMany({
+      where: deviceWhere,
+      include: {
+        collectionJobs: {
+          where: { status: { in: ['Pending', 'In Progress'] } }
+        }
+      }
+    });
+
+    // Filter devices that don't already have an open job
+    const devicesNeedingCollection = candidateDevices.filter(
+      (d) => d.collectionJobs.length === 0
+    );
+
+    if (devicesNeedingCollection.length === 0) {
+      return {
+        createdCount: 0,
+        message: `No new bins currently exceed the ${threshold}% fill threshold without an active job.`,
+        createdJobs: []
+      };
+    }
+
+    // Get active collectors if autoAssign is true
+    let activeCollectors = [];
+    if (autoAssign) {
+      activeCollectors = await prisma.user.findMany({
+        where: { role: 'COLLECTOR', status: 'ACTIVE' }
+      });
+    }
+
+    const createdJobs = [];
+    for (let i = 0; i < devicesNeedingCollection.length; i++) {
+      const device = devicesNeedingCollection[i];
+      const priority = device.fillLevel >= 95 ? 'Urgent' : device.fillLevel >= 85 ? 'High' : 'Normal';
+      const assignedCollector = activeCollectors.length > 0
+        ? activeCollectors[i % activeCollectors.length].id
+        : null;
+
+      const job = await prisma.collectionJob.create({
+        data: {
+          deviceId: device.id,
+          priority,
+          status: 'Pending',
+          collectorId: assignedCollector,
+        },
+        include: { device: true }
+      });
+      createdJobs.push(formatJob(job));
+    }
+
+    return {
+      createdCount: createdJobs.length,
+      threshold,
+      message: `Successfully auto-scheduled ${createdJobs.length} collection job(s) for bins ≥${threshold}% capacity.`,
+      createdJobs
+    };
+  }
 }
 
 module.exports = new JobService();

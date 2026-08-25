@@ -7,6 +7,7 @@ const { schemas } = require('../utils/validators');
 
 router.get('/', restrictToFacility, jobController.getJobs);
 router.post('/', requireManagerOrAdmin, validate(schemas.job.create), jobController.createJob);
+router.post('/auto-schedule', requireManagerOrAdmin, jobController.autoScheduleJobs);
 router.patch('/:id', requireManagerOrAdmin, validate(schemas.job.update), jobController.updateJob);
 router.get('/summary', restrictToFacility, jobController.getJobsSummary);
 

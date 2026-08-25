@@ -1,6 +1,14 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useState, useEffect } from "react";
-import { Cpu, Box, DollarSign, AlertTriangle, Loader2, Download, Database } from "lucide-react";
+import {
+  Cpu,
+  Box,
+  DollarSign,
+  AlertTriangle,
+  Loader2,
+  Download,
+  Database,
+} from "lucide-react";
 import { useNavigate, useSearchParams, Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
@@ -85,10 +93,26 @@ const THROUGHPUT_DATA = [
 ];
 
 const DEVICE_BINS = [
-  { label: "Main Conveyor A1", value: 88, color: "bg-[#ba1a1a] dark:bg-red-500" },
-  { label: "Glass Separator B2", value: 42, color: "bg-[#10b981] dark:bg-emerald-500" },
-  { label: "Paper Compactor C1", value: 15, color: "bg-[#10b981] dark:bg-emerald-500" },
-  { label: "Organic Bin D5", value: 72, color: "bg-[#f59e0b] dark:bg-amber-500" },
+  {
+    label: "Main Conveyor A1",
+    value: 88,
+    color: "bg-[#ba1a1a] dark:bg-red-500",
+  },
+  {
+    label: "Glass Separator B2",
+    value: 42,
+    color: "bg-[#10b981] dark:bg-emerald-500",
+  },
+  {
+    label: "Paper Compactor C1",
+    value: 15,
+    color: "bg-[#10b981] dark:bg-emerald-500",
+  },
+  {
+    label: "Organic Bin D5",
+    value: 72,
+    color: "bg-[#f59e0b] dark:bg-amber-500",
+  },
 ];
 
 const RECENT_EVENTS = [
@@ -158,13 +182,17 @@ export default function Dashboard() {
   };
 
   const fetchMetrics = async () => {
-    const response = await authFetch(`${baseUrl}/api/dashboard/metrics${queryParam}`);
+    const response = await authFetch(
+      `${baseUrl}/api/dashboard/metrics${queryParam}`,
+    );
     if (!response.ok) throw new Error("Failed to fetch dashboard metrics");
     return response.json();
   };
 
   const fetchThroughput = async () => {
-    const response = await authFetch(`${baseUrl}/api/dashboard/throughput${queryParam}`);
+    const response = await authFetch(
+      `${baseUrl}/api/dashboard/throughput${queryParam}`,
+    );
     if (!response.ok) throw new Error("Failed to fetch throughput data");
     return response.json();
   };
@@ -191,23 +219,39 @@ export default function Dashboard() {
   };
 
   // Realtime subscriptions — instant updates when DB changes
-  const { data: devicesData, isLoading: devicesLoading, refresh: refreshDevices } = useRealtimeData<
-    any
-  >(fetchDevices, { tables: ["Device"] });
+  const {
+    data: devicesData,
+    isLoading: devicesLoading,
+    refresh: refreshDevices,
+  } = useRealtimeData<any>(fetchDevices, { tables: ["Device"] });
 
-  const { data: metricsData, isLoading: metricsLoading, refresh: refreshMetrics } = useRealtimeData<any>(
-    fetchMetrics,
-    { tables: ["Device", "ProcessedItem"] },
-  );
+  const {
+    data: metricsData,
+    isLoading: metricsLoading,
+    refresh: refreshMetrics,
+  } = useRealtimeData<any>(fetchMetrics, {
+    tables: ["Device", "ProcessedItem"],
+  });
 
-  const { data: throughputData, isLoading: throughputLoading, refresh: refreshThroughput } =
-    useRealtimeData<any[]>(fetchThroughput, { tables: ["ProcessedItem"] });
+  const {
+    data: throughputData,
+    isLoading: throughputLoading,
+    refresh: refreshThroughput,
+  } = useRealtimeData<any[]>(fetchThroughput, { tables: ["ProcessedItem"] });
 
-  const { data: wasteCategoriesData, isLoading: wasteLoading, refresh: refreshWasteCategories } =
-    useRealtimeData<any>(fetchWasteCategories, { tables: ["ProcessedItem"] });
+  const {
+    data: wasteCategoriesData,
+    isLoading: wasteLoading,
+    refresh: refreshWasteCategories,
+  } = useRealtimeData<any>(fetchWasteCategories, { tables: ["ProcessedItem"] });
 
-  const { data: contaminationEventsData, isLoading: contaminationLoading, refresh: refreshContamination } =
-    useRealtimeData<any>(fetchContaminationEvents, { tables: ["ProcessedItem"] });
+  const {
+    data: contaminationEventsData,
+    isLoading: contaminationLoading,
+    refresh: refreshContamination,
+  } = useRealtimeData<any>(fetchContaminationEvents, {
+    tables: ["ProcessedItem"],
+  });
 
   // Manually re-trigger fetches when facilityId query parameter shifts (Drill-down update)
   useEffect(() => {
@@ -329,14 +373,18 @@ export default function Dashboard() {
       ? binsOnly.map((d: any) => ({
           label: d.location || d.customBinId,
           value: d.fillLevel ?? 0,
-          color: (d.fillLevel ?? 0) > 85 ? "bg-[#ba1a1a] dark:bg-red-500" : "bg-[#10b981] dark:bg-emerald-500",
+          color:
+            (d.fillLevel ?? 0) > 85
+              ? "bg-[#ba1a1a] dark:bg-red-500"
+              : "bg-[#10b981] dark:bg-emerald-500",
         }))
       : DEVICE_BINS;
 
   const hasValidThroughput = throughputData?.some(
     (d: any) => d.sorted > 0 || d.rejected > 0,
   );
-  const chartData = (throughputData && hasValidThroughput) ? throughputData : THROUGHPUT_DATA;
+  const chartData =
+    throughputData && hasValidThroughput ? throughputData : THROUGHPUT_DATA;
   const maxTotal = Math.max(
     ...chartData.map((d: any) => (d.sorted ?? 0) + (d.rejected ?? 0)),
     1,
@@ -416,7 +464,8 @@ export default function Dashboard() {
           <div className="flex items-center gap-2">
             <span className="text-lg">⚠️</span>
             <span className="text-sm font-semibold">
-              Viewing Facility Telemetry as Administrator. Some manager features are restricted.
+              Viewing Facility Telemetry as Administrator. Some manager features
+              are restricted.
             </span>
           </div>
           <Link
@@ -699,10 +748,12 @@ export default function Dashboard() {
                       />
                       <div className="flex flex-col">
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-foreground transition-colors">
-                          {t(
-                            `dashboard.charts.${cat.category.toLowerCase()}`,
-                            cat.category,
-                          ) as string}
+                          {
+                            t(
+                              `dashboard.charts.${cat.category.toLowerCase()}`,
+                              cat.category,
+                            ) as string
+                          }
                         </span>
                         <span className="text-base font-black text-foreground">
                           {cat.percentage}%
@@ -754,7 +805,8 @@ export default function Dashboard() {
                     <Progress
                       value={bin.value}
                       className={`h-2 bg-muted ${
-                        bin.color === "bg-[#ba1a1a] dark:bg-red-500" || bin.color === "bg-[#ba1a1a]"
+                        bin.color === "bg-[#ba1a1a] dark:bg-red-500" ||
+                        bin.color === "bg-[#ba1a1a]"
                           ? "[&>[data-slot=progress-indicator]]:bg-[#ba1a1a] dark:[&>[data-slot=progress-indicator]]:bg-red-500"
                           : "[&>[data-slot=progress-indicator]]:bg-[#10b981] dark:[&>[data-slot=progress-indicator]]:bg-emerald-500"
                       }`}
@@ -827,46 +879,53 @@ export default function Dashboard() {
                       </TableCell>
                     </TableRow>
                   ))
-                : (contaminationEventsData?.data || RECENT_EVENTS).map((evt: any) => (
-                    <TableRow
-                      key={evt.id}
-                      className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
-                    >
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-muted-foreground">
-                        {evt.time}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
-                        {evt.source}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <StatusBadge
-                          label={evt.detection}
-                          variant={evt.detectionType as any}
-                        />
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a] dark:text-red-400">
-                        {evt.confidence}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap">
-                        <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
-                          <img
-                            src={eventImages[evt.img] || evt.img || "https://placehold.co/100x100?text=No+Img"}
-                            alt="Snapshot"
-                            className="w-full h-full object-cover"
+                : (contaminationEventsData?.data || RECENT_EVENTS).map(
+                    (evt: any) => (
+                      <TableRow
+                        key={evt.id}
+                        className="hover:bg-background dark:hover:bg-secondary transition-colors border-b border-[#f1f5f9]"
+                      >
+                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-muted-foreground">
+                          {evt.time}
+                        </TableCell>
+                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground dark:text-white">
+                          {evt.source}
+                        </TableCell>
+                        <TableCell className="px-6 py-4 whitespace-nowrap">
+                          <StatusBadge
+                            label={evt.detection}
+                            variant={evt.detectionType as any}
                           />
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-muted-foreground font-mono bg-background dark:bg-secondary">
-                        {evt.action}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#ba1a1a] dark:text-red-400">
+                          {evt.confidence}
+                        </TableCell>
+                        <TableCell className="px-6 py-4 whitespace-nowrap">
+                          <div className="w-10 h-10 rounded-md overflow-hidden border border-border">
+                            <img
+                              src={
+                                eventImages[evt.img] ||
+                                evt.img ||
+                                "https://placehold.co/100x100?text=No+Img"
+                              }
+                              alt="Snapshot"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-muted-foreground font-mono bg-background dark:bg-secondary">
+                          {evt.action}
+                        </TableCell>
+                      </TableRow>
+                    ),
+                  )}
             </TableBody>
           </Table>
 
           <div className="flex items-center justify-between p-4 border-t border-[#f1f5f9] dark:border-[#0f2942]">
             <span className="text-sm font-medium text-muted-foreground">
-              Page {detectionsPage} of {contaminationEventsData?.totalPages || 1}
+              Page {detectionsPage} of{" "}
+              {contaminationEventsData?.totalPages || 1}
             </span>
             <div className="flex gap-2">
               <button
@@ -879,7 +938,10 @@ export default function Dashboard() {
               <button
                 className="px-3 py-1 bg-white dark:bg-secondary border border-[#e2e8f0] dark:border-[#1e293b] rounded-md text-sm font-medium text-foreground hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors"
                 onClick={() => setDetectionsPage((p) => p + 1)}
-                disabled={!contaminationEventsData || detectionsPage >= contaminationEventsData.totalPages}
+                disabled={
+                  !contaminationEventsData ||
+                  detectionsPage >= contaminationEventsData.totalPages
+                }
               >
                 Next
               </button>
