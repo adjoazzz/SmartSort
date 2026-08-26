@@ -13,9 +13,9 @@ export async function authFetch(
     headers.set("Authorization", `Bearer ${session.access_token}`);
   }
 
-  // Abort after 10 seconds to prevent indefinite hangs
+  // Abort after 30 seconds to prevent indefinite hangs
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
     return await fetch(input, {

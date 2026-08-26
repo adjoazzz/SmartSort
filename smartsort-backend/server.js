@@ -75,4 +75,5 @@ app.listen(PORT, () => {
   logger.info(`Server is running on http://localhost:${PORT}`);
 });
 
+// Server export
 module.exports = app;

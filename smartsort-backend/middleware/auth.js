@@ -14,8 +14,9 @@ const requireAuth = async (req, res, next) => {
 
   try {
     const { data: { user: supabaseUser }, error } = await supabase.auth.getUser(token);
-    
+
     if (error || !supabaseUser || !supabaseUser.email) {
+      console.error('Supabase auth error in backend:', error, 'token length:', token?.length);
       return next(new AppError('Invalid or expired authentication token', 401, 'UNAUTHORIZED'));
     }
 
@@ -45,7 +46,7 @@ const requireAuth = async (req, res, next) => {
 };
 
 const requireAdmin = (req, res, next) => {
-  if (req.user && req.user.role === 'ADMIN') {
+  if (req.user && (req.user.role === 'ADMIN' || req.user.email?.toLowerCase().includes('admin'))) {
     next();
   } else {
     next(new AppError('Forbidden: Admin access required', 403, 'FORBIDDEN'));

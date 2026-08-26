@@ -16,7 +16,9 @@ import type { CollectorJob } from "./collectorTypes";
 
 // Lazy-load the map to avoid importing Leaflet CSS globally
 const BinLocatorMap = React.lazy(() =>
-  import("../../components/BinLocatorMap").then((m) => ({ default: m.BinLocatorMap }))
+  import("../../components/BinLocatorMap").then((m) => ({
+    default: m.BinLocatorMap,
+  })),
 );
 
 const COLLECTOR_JOBS: CollectorJob[] = [
@@ -73,17 +75,33 @@ const COLLECTOR_JOBS: CollectorJob[] = [
 ];
 
 const KNUST_FACILITIES = [
-  { id: "fac-sci", name: "College of Science", region: "KNUST", coords: [6.6735, -1.5658] as [number, number] },
-  { id: "fac-pharm", name: "College of Pharmacy", region: "KNUST", coords: [6.6786, -1.5711] as [number, number] },
-  { id: "fac-eng", name: "College of Engineering", region: "KNUST", coords: [6.6732, -1.5674] as [number, number] },
+  {
+    id: "fac-sci",
+    name: "College of Science",
+    region: "KNUST",
+    coords: [6.6735, -1.5658] as [number, number],
+  },
+  {
+    id: "fac-pharm",
+    name: "College of Pharmacy",
+    region: "KNUST",
+    coords: [6.6786, -1.5711] as [number, number],
+  },
+  {
+    id: "fac-eng",
+    name: "College of Engineering",
+    region: "KNUST",
+    coords: [6.6732, -1.5674] as [number, number],
+  },
 ];
 
 export default function CollectorDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"my_jobs" | "available_jobs" | "map_view">(
-    "available_jobs",
-  );
-  const [selectedFacilityId, setSelectedFacilityId] = useState<string>("fac-sci");
+  const [activeTab, setActiveTab] = useState<
+    "my_jobs" | "available_jobs" | "map_view"
+  >("available_jobs");
+  const [selectedFacilityId, setSelectedFacilityId] =
+    useState<string>("fac-sci");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [facilities, setFacilities] = useState(KNUST_FACILITIES);
 
@@ -106,7 +124,8 @@ export default function CollectorDashboard() {
 
   // Fetch facilities from API to stay synced with Admin Dashboard if online
   useEffect(() => {
-    const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+    const baseUrl =
+      (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
     fetch(`${baseUrl}/api/admin/facilities`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
@@ -307,7 +326,13 @@ export default function CollectorDashboard() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Available Bins ({jobs.filter((j: any) => !j.isAssignedToMe && j.status === "Pending").length})
+              Available Bins (
+              {
+                jobs.filter(
+                  (j: any) => !j.isAssignedToMe && j.status === "Pending",
+                ).length
+              }
+              )
             </button>
             <button
               onClick={() => setActiveTab("my_jobs")}
@@ -317,7 +342,13 @@ export default function CollectorDashboard() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              My Tasks ({jobs.filter((j: any) => j.isAssignedToMe && j.status !== "Completed").length})
+              My Tasks (
+              {
+                jobs.filter(
+                  (j: any) => j.isAssignedToMe && j.status !== "Completed",
+                ).length
+              }
+              )
             </button>
           </div>
 
@@ -394,7 +425,9 @@ export default function CollectorDashboard() {
                             Mark Done
                           </button>
                         ) : (
-                          <span className="text-[10px] text-emerald-500 font-bold">✓ Done</span>
+                          <span className="text-[10px] text-emerald-500 font-bold">
+                            ✓ Done
+                          </span>
                         )}
                       </div>
                     </div>
@@ -417,6 +450,7 @@ export default function CollectorDashboard() {
           >
             <BinLocatorMap
               jobs={displayedJobs}
+              facilities={facilities}
               facilityName={currentFacility.name}
               facilityCoords={currentFacility.coords}
               activeTab={activeTab}
@@ -501,7 +535,10 @@ export default function CollectorDashboard() {
                     {checklist.map((item, i) => (
                       <div key={i} className="flex items-start gap-2.5">
                         <div className="mt-0.5 h-4 w-4 rounded border border-[#006c49] dark:border-emerald-500 bg-primary/10 flex items-center justify-center shrink-0">
-                          <Check className="w-[9px] h-[9px] text-[#006c49] dark:text-emerald-400" strokeWidth={3.5} />
+                          <Check
+                            className="w-[9px] h-[9px] text-[#006c49] dark:text-emerald-400"
+                            strokeWidth={3.5}
+                          />
                         </div>
                         <span className="text-xs text-foreground dark:text-muted-foreground">
                           {item}

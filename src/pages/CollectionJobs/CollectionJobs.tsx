@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Clock,
   Users,
@@ -10,6 +11,7 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  Navigation,
 } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -203,6 +205,7 @@ const getInitials = (name: string) =>
 /* ── Component ───────────────────────────────────────────── */
 
 export default function CollectionJobs() {
+  const navigate = useNavigate();
   // Switched layouts: Board View vs List View
   const [currentView, setCurrentView] = useState<"board" | "list">("board");
 
@@ -531,6 +534,15 @@ export default function CollectionJobs() {
           <button className="px-4 py-2.5 bg-card border border-border hover:bg-slate-50 dark:hover:bg-secondary text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
             <Filter className="w-3.5 h-3.5" strokeWidth={2.5} />
             Filters
+          </button>
+
+          <button
+            onClick={() => navigate("/route-optimization")}
+            data-testid="ai-route-optimizer-btn"
+            className="px-4 py-2.5 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+          >
+            <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            AI Route Optimizer
           </button>
 
           <button

@@ -3,8 +3,8 @@ import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 // ─── OpenFreeMap Liberty Style ───────────────────────────────────────────────
-export const OPEN_FREE_MAP_LIBERTY_STYLE = "https://tiles.openfreemap.org/styles/liberty";
-
+export const OPEN_FREE_MAP_LIBERTY_STYLE =
+  "https://tiles.openfreemap.org/styles/liberty";
 
 // ─── Types & Interfaces ──────────────────────────────────────────────────────
 export interface VehicleTelemetry {
@@ -28,6 +28,9 @@ export interface MapPin {
   fill?: number;
   status?: string;
   color?: string;
+  waypointNumber?: number | string;
+  pinType?: "bin" | "facility";
+  iconUrl?: string;
   onClaim?: (id: string) => void;
   onComplete?: (id: string) => void;
 }
@@ -46,7 +49,7 @@ export interface MapLibreMapProps {
   onVehicleClick?: (vehicle: VehicleTelemetry) => void;
   /** Helper interface callback to connect custom WebSocket / Event streams */
   onRegisterTelemetryStream?: (
-    listener: (telemetry: VehicleTelemetry) => void
+    listener: (telemetry: VehicleTelemetry) => void,
   ) => (() => void) | void;
 }
 
@@ -111,54 +114,162 @@ function createVehicleIconElement(heading = 0, status = "active"): HTMLElement {
   return container;
 }
 
-function createPinIconElement(color: string, fill: number): HTMLElement {
+function isFacilityPin(pin: MapPin): boolean {
+  return (
+    pin.pinType === "facility" ||
+    Boolean(pin.iconUrl && pin.iconUrl.includes("facility")) ||
+    pin.id.startsWith("fac") ||
+    Boolean(
+      pin.title && /depot|plant|facility|college\s+of/i.test(pin.title),
+    ) ||
+    Boolean(
+      pin.subtitle &&
+      /depot|plant|facility\s+area|hub\s+depot/i.test(pin.subtitle),
+    )
+  );
+}
+
+function createPinIconElement(pin: MapPin): HTMLElement {
   const container = document.createElement("div");
   container.className = "pin-marker-container";
   container.style.cursor = "pointer";
 
-  const ringColor = fill >= 90 ? "#ba1a1a" : fill >= 70 ? "#f59e0b" : color;
+  const isFacility = isFacilityPin(pin);
+  const iconSrc = isFacility
+    ? "/facility-marker-icon.png"
+    : pin.iconUrl || "/bin-marker-icon.png";
+  const iconAlt = isFacility ? "Facility" : "Smart Bin";
+
+  const fill = pin.fill ?? 0;
+  const color = pin.color || (isFacility ? "#3b82f6" : "#0284c7");
+  const ringColor = isFacility
+    ? color
+    : fill >= 90
+      ? "#ba1a1a"
+      : fill >= 70
+        ? "#f59e0b"
+        : color;
+  const isCritical = !isFacility && fill >= 85;
+  const isWaypoint =
+    pin.waypointNumber !== undefined && pin.waypointNumber !== null;
 
   container.innerHTML = `
     <div style="
       position: relative;
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 46px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     ">
+      ${
+        isCritical
+          ? `
+        <!-- Pulsing critical halo -->
+        <div style="
+          position: absolute;
+          inset: -3px;
+          border-radius: 50%;
+          background: #ba1a1a33;
+          animation: bin-pulse 2s infinite ease-in-out;
+          pointer-events: none;
+        "></div>
+      `
+          : ""
+      }
+
+      <!-- Outer Pin Teardrop with Glow & Shadow -->
       <div style="
-        width: 28px;
-        height: 28px;
-        background: ${color};
-        border: 3px solid white;
-        border-radius: 50% 50% 50% 0;
-        transform: rotate(-45deg);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-      "></div>
-      <div style="
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: 28px;
-        height: 28px;
-        border-radius: 50% 50% 50% 0;
+        width: 36px;
+        height: 36px;
+        background: #ffffff;
         border: 2.5px solid ${ringColor};
+        border-radius: 50% 50% 50% 0;
         transform: rotate(-45deg);
-        opacity: 0.5;
-        pointer-events: none;
-      "></div>
-      <div style="
-        position: absolute;
-        top: 6px;
-        left: 7px;
-        color: white;
-        font-size: 11px;
-        font-weight: 800;
-        pointer-events: none;
-        line-height: 1;
-      ">🗑</div>
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <!-- Counter-rotated Inner Wrapper with Custom Icon -->
+        <div style="
+          transform: rotate(45deg);
+          width: 22px;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <img
+            src="${iconSrc}"
+            alt="${iconAlt}"
+            style="
+              width: 20px;
+              height: 20px;
+              object-fit: contain;
+              display: block;
+            "
+          />
+        </div>
+      </div>
+
+      <!-- Waypoint Number Badge (Left) if part of optimized route -->
+      ${
+        isWaypoint
+          ? `
+        <div style="
+          position: absolute;
+          top: -4px;
+          left: -4px;
+          background: #0f172a;
+          color: #ffffff;
+          font-size: 9px;
+          font-weight: 800;
+          font-family: ui-monospace, monospace;
+          padding: 1.5px 5px;
+          border-radius: 9999px;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+          border: 1.5px solid white;
+          line-height: 1.1;
+          z-index: 12;
+        ">${typeof pin.waypointNumber === "number" ? `#${pin.waypointNumber}` : pin.waypointNumber}</div>
+      `
+          : ""
+      }
+
+      <!-- Fill Percentage Badge (Right) -->
+      ${
+        fill > 0
+          ? `
+        <div style="
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          background: ${ringColor};
+          color: white;
+          font-size: 9px;
+          font-weight: 800;
+          font-family: ui-monospace, monospace;
+          padding: 1.5px 4px;
+          border-radius: 8px;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+          border: 1.5px solid white;
+          line-height: 1.1;
+          z-index: 10;
+        ">${fill}%</div>
+      `
+          : ""
+      }
     </div>
+    <style>
+      @keyframes bin-pulse {
+        0% { transform: scale(0.85); opacity: 0.8; }
+        50% { transform: scale(1.35); opacity: 0.15; }
+        100% { transform: scale(0.85); opacity: 0.8; }
+      }
+    </style>
   `;
   return container;
 }
@@ -183,7 +294,9 @@ export function MapLibreMap({
 
   // Markers references
   const pinMarkersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
-  const vehicleMarkersRef = useRef<Map<string, { marker: maplibregl.Marker; telemetry: VehicleTelemetry }>>(new Map());
+  const vehicleMarkersRef = useRef<
+    Map<string, { marker: maplibregl.Marker; telemetry: VehicleTelemetry }>
+  >(new Map());
 
   const [mapLoaded, setMapLoaded] = useState(false);
 
@@ -208,7 +321,7 @@ export function MapLibreMap({
         showZoom: true,
         visualizePitch: true,
       }),
-      "top-right"
+      "top-right",
     );
 
     map.addControl(new maplibregl.FullscreenControl(), "top-right");
@@ -232,7 +345,9 @@ export function MapLibreMap({
       pinMarkersRef.current.forEach((m: maplibregl.Marker) => m.remove());
       pinMarkersRef.current.clear();
 
-      vehicleMarkersRef.current.forEach(({ marker }: { marker: maplibregl.Marker }) => marker.remove());
+      vehicleMarkersRef.current.forEach(
+        ({ marker }: { marker: maplibregl.Marker }) => marker.remove(),
+      );
       vehicleMarkersRef.current.clear();
 
       map.remove();
@@ -269,23 +384,40 @@ export function MapLibreMap({
 
     // Add or update pins
     pins.forEach((pin) => {
-      const color = pin.color || "#0284c7";
       const existing = pinMarkersRef.current.get(pin.id);
 
       if (existing) {
         existing.setLngLat([pin.lng, pin.lat]);
       } else {
-        const el = createPinIconElement(color, pin.fill ?? 0);
-        const popup = new maplibregl.Popup({ offset: 25, maxWidth: "260px" }).setHTML(`
-          <div style="font-family:system-ui,sans-serif;padding:4px;">
-            <div style="font-weight:700;font-size:13px;color:#0f172a;margin-bottom:2px;">${pin.title}</div>
-            ${pin.subtitle ? `<div style="font-size:11px;color:#64748b;font-family:monospace;margin-bottom:6px;">${pin.subtitle}</div>` : ""}
-            ${pin.urgency ? `<span style="display:inline-block;padding:2px 8px;border-radius:99px;background:#0284c722;color:#0284c7;font-weight:700;font-size:11px;margin-bottom:6px;">${pin.urgency}</span>` : ""}
-            ${pin.fill !== undefined ? `
-              <div style="font-size:11px;color:#64748b;margin-top:4px;">
-                Fill: <strong style="color:${pin.fill >= 80 ? "#ba1a1a" : "#006c49"}">${pin.fill}%</strong>
+        const el = createPinIconElement(pin);
+        const isFac = isFacilityPin(pin);
+        const iconSrc = isFac
+          ? "/facility-marker-icon.png"
+          : pin.iconUrl || "/bin-marker-icon.png";
+        const iconAlt = isFac ? "Facility" : "Smart Bin";
+
+        const popup = new maplibregl.Popup({ offset: 25, maxWidth: "260px" })
+          .setHTML(`
+          <div style="font-family:system-ui,sans-serif;padding:6px;min-width:180px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <div style="width:24px;height:24px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <img src="${iconSrc}" alt="${iconAlt}" style="width:16px;height:16px;object-fit:contain;" />
               </div>
-            ` : ""}
+              <div style="font-weight:700;font-size:13px;color:#0f172a;line-height:1.2;">${pin.title}</div>
+            </div>
+            ${pin.subtitle ? `<div style="font-size:11px;color:#64748b;font-family:monospace;margin-bottom:6px;">${pin.subtitle}</div>` : ""}
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              ${pin.urgency ? `<span style="display:inline-block;padding:2px 8px;border-radius:99px;background:#0284c722;color:#0284c7;font-weight:700;font-size:11px;">${pin.urgency}</span>` : ""}
+              ${
+                pin.fill !== undefined
+                  ? `
+                <span style="font-size:11px;color:${pin.fill >= 80 ? "#ba1a1a" : "#006c49"};font-weight:700;font-family:monospace;">
+                  Fill: ${pin.fill}%
+                </span>
+              `
+                  : ""
+              }
+            </div>
           </div>
         `);
 
@@ -319,8 +451,14 @@ export function MapLibreMap({
       existing.telemetry = telemetry;
     } else {
       // Create new vehicle marker
-      const el = createVehicleIconElement(telemetry.heading ?? 0, telemetry.status ?? "Active");
-      const marker = new maplibregl.Marker({ element: el, rotationAlignment: "map" })
+      const el = createVehicleIconElement(
+        telemetry.heading ?? 0,
+        telemetry.status ?? "Active",
+      );
+      const marker = new maplibregl.Marker({
+        element: el,
+        rotationAlignment: "map",
+      })
         .setLngLat([telemetry.lng, telemetry.lat])
         .addTo(map);
 
@@ -369,11 +507,11 @@ export function MapLibreMap({
   }, [onRegisterTelemetryStream, mapLoaded, activeTrackingId]);
 
   return (
-    <div
-      className={`relative w-full ${className}`}
-      style={{ height }}
-    >
-      <div ref={containerRef} className="w-full h-full rounded-xl overflow-hidden shadow-inner" />
+    <div className={`relative w-full ${className}`} style={{ height }}>
+      <div
+        ref={containerRef}
+        className="w-full h-full rounded-xl overflow-hidden shadow-inner"
+      />
     </div>
   );
 }

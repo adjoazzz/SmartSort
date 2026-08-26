@@ -47,6 +47,7 @@ const getNavItems = (t: any) => [
     icon: <Briefcase className="w-5 h-5" strokeWidth={2} />,
     children: [
       { path: "/jobs", label: t("sideNav.jobs") },
+      { path: "/route-optimization", label: "AI Route Optimizer" },
       { path: "/collectors", label: t("sideNav.collectors") },
     ],
   },
@@ -89,6 +90,7 @@ const getAdminNavItems = (t: any) => [
     icon: <Briefcase className="w-5 h-5" strokeWidth={2} />,
     children: [
       { path: "/jobs", label: t("sideNav.jobs") },
+      { path: "/route-optimization", label: "AI Route Optimizer" },
       { path: "/collectors", label: t("sideNav.collectors") },
     ],
   },
@@ -135,9 +137,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
     if (roleLower === "manager") {
       // Managers can access: Dashboard, Analytics, Devices, Collection, Community Feedback, User Management
       // They cannot access: Alerts
-      return navItems.filter(
-        (item) => item.path !== "/alerts"
-      );
+      return navItems.filter((item) => item.path !== "/alerts");
     }
 
     // Viewers/others can only access: Dashboard, Analytics, Devices
@@ -145,7 +145,7 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
       (item) =>
         item.path === "/dashboard" ||
         item.path === "/analytics" ||
-        item.path === "/devices"
+        item.path === "/devices",
     );
   }, [role, navItems, adminNavItems, t]);
 
@@ -163,9 +163,14 @@ export function SideNav({ isOpen, onClose }: SideNavProps) {
       >
         <div className="h-16 border-b border-border flex items-center justify-between px-6 shrink-0">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="SmartSort Logo" className="w-8 h-8 object-contain rounded-md" />
+            <img
+              src="/logo.png"
+              alt="SmartSort Logo"
+              className="w-8 h-8 object-contain rounded-md"
+            />
             <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
-              Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
+              Smart
+              <span className="text-[#006c49] dark:text-emerald-400">Sort</span>
             </span>
           </div>
           <button

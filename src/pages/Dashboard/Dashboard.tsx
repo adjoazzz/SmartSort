@@ -14,6 +14,7 @@ import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Progress } from "../../components/ui/progress";
+import { BinLocatorMap } from "../../components/BinLocatorMap";
 import {
   Table,
   TableHeader,
@@ -765,6 +766,27 @@ export default function Dashboard() {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Live Facility & IoT Smart Bin Map Section */}
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-[440px]">
+        <div className="px-5 py-4 border-b border-border flex justify-between items-center bg-slate-50/50 dark:bg-secondary/30">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2.5 w-2.5 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <h3 className="font-bold text-sm text-foreground dark:text-white">
+              Live Facility & IoT Smart Bin Map
+            </h3>
+          </div>
+          <span className="text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">
+            IOT TELEMETRY SYNC
+          </span>
+        </div>
+        <div className="flex-1 relative" style={{ height: "420px" }}>
+          <BinLocatorMap title="LIVE FACILITY & IOT SMART BIN MAP" />
         </div>
       </div>
 

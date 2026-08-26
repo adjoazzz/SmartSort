@@ -241,25 +241,62 @@ export default function AdminDashboard() {
     status: "En-Route",
   }));
 
-  const facilityPins: MapPin[] = facilities.map((fac) => {
-    const color =
-      fac.pendingTonnage >= 4.0
-        ? "#ba1a1a"
-        : fac.pendingTonnage >= 2.0
-          ? "#f59e0b"
-          : "#10b981";
+  const allMapPins: MapPin[] = useMemo(() => {
+    const facPins: MapPin[] = facilities.map((fac) => {
+      const color =
+        fac.pendingTonnage >= 4.0
+          ? "#ba1a1a"
+          : fac.pendingTonnage >= 2.0
+            ? "#f59e0b"
+            : "#10b981";
 
-    return {
-      id: fac.id,
-      lat: fac.latitude,
-      lng: fac.longitude,
-      title: fac.name,
-      subtitle: `${fac.region} • ${fac.pendingTonnage} Tons Pending`,
-      urgency: fac.status,
-      fill: fac.averageFill,
-      color,
-    };
-  });
+      return {
+        id: fac.id,
+        lat: fac.latitude,
+        lng: fac.longitude,
+        title: fac.name,
+        subtitle: `${fac.region} • ${fac.pendingTonnage} Tons Pending`,
+        urgency: fac.status,
+        fill: fac.averageFill,
+        type: "facility" as const,
+        isFacility: true,
+        tonnage: fac.pendingTonnage,
+        color,
+      };
+    });
+
+    // Smart bin pins clustered around facilities
+    const binPins: MapPin[] = facilities.flatMap((fac) => {
+      const binCount = fac.deviceCount || 4;
+      return Array.from({ length: Math.min(binCount, 4) }).map((_, binIdx) => {
+        const angle = (binIdx * (360 / Math.min(binCount, 4)) * Math.PI) / 180;
+        const radius = 0.0035 + (binIdx % 2) * 0.0015;
+        const lat = fac.latitude + Math.sin(angle) * radius;
+        const lng = fac.longitude + Math.cos(angle) * radius;
+        const fill = Math.min(
+          98,
+          Math.max(25, fac.averageFill + (binIdx * 11 - 15)),
+        );
+        const color =
+          fill >= 90 ? "#ba1a1a" : fill >= 70 ? "#f59e0b" : "#10b981";
+
+        return {
+          id: `BIN-${fac.id.slice(0, 4)}-${binIdx + 1}`,
+          lat,
+          lng,
+          title: `${fac.name} - Bin #${binIdx + 1}`,
+          subtitle: `IoT Smart Bin • Fill ${fill}%`,
+          urgency: fill >= 90 ? "Critical" : fill >= 70 ? "Warning" : "Normal",
+          fill,
+          type: "bin" as const,
+          isFacility: false,
+          color,
+        };
+      });
+    });
+
+    return [...facPins, ...binPins];
+  }, [facilities]);
 
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -458,7 +495,7 @@ export default function AdminDashboard() {
             <MapLibreMap
               initialCenter={[-1.57, 6.675]}
               initialZoom={14}
-              pins={facilityPins}
+              pins={allMapPins}
               vehicles={vehicleTelemetryList}
               activeTrackingId={trackingTruckId}
               height="100%"

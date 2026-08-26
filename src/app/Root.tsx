@@ -32,13 +32,13 @@ export function Root() {
 
       const role = localStorage.getItem("userRole"); // still stored during login for fast UI toggle
       if (role === "collector") {
-        const allowedPaths = ["/collector-dashboard", "/profile"];
+        const allowedPaths = [
+          "/collector-dashboard",
+          "/collector-map",
+          "/profile",
+        ];
         if (!allowedPaths.includes(location.pathname)) {
           navigate("/collector-dashboard");
-        }
-      } else {
-        if (location.pathname === "/collector-dashboard") {
-          navigate("/dashboard");
         }
       }
       setLoading(false);
