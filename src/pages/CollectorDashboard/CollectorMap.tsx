@@ -20,7 +20,7 @@ import { CompletionChecklist } from "./CompletionChecklist";
 import { ConfettiOverlay } from "./ConfettiOverlay";
 
 // ─── KNUST Campus Center (approximate) ───────────────────────────────────────
-const KNUST_CENTER: [number, number] = [-1.5680, 6.6740]; // [lng, lat]
+const KNUST_CENTER: [number, number] = [-1.568, 6.674]; // [lng, lat]
 
 export default function CollectorMap() {
   const navigate = useNavigate();
@@ -75,13 +75,17 @@ export default function CollectorMap() {
 
   // Job being navigated to (for the HUD)
   const navigatingJob = useMemo(
-    () => (navigatingJobId ? jobs.find((j) => j.id === navigatingJobId) ?? null : null),
+    () =>
+      navigatingJobId
+        ? (jobs.find((j) => j.id === navigatingJobId) ?? null)
+        : null,
     [jobs, navigatingJobId],
   );
 
   // Job being reminded about (for the checklist)
   const remindJob = useMemo(
-    () => (remindJobId ? jobs.find((j) => j.id === remindJobId) ?? null : null),
+    () =>
+      remindJobId ? (jobs.find((j) => j.id === remindJobId) ?? null) : null,
     [jobs, remindJobId],
   );
 

@@ -30,6 +30,9 @@ export interface MapPin {
   color?: string;
   waypointNumber?: number | string;
   pinType?: "bin" | "facility";
+  type?: "bin" | "facility";
+  isFacility?: boolean;
+  tonnage?: number;
   iconUrl?: string;
   onClaim?: (id: string) => void;
   onComplete?: (id: string) => void;
@@ -53,24 +56,26 @@ export interface MapLibreMapProps {
   ) => (() => void) | void;
 }
 
-// ─── SVG Marker Factories ────────────────────────────────────────────────────
+// ─── Vehicle Marker Factory ──────────────────────────────────────────────────
 function createVehicleIconElement(heading = 0, status = "active"): HTMLElement {
   const container = document.createElement("div");
   container.className = "vehicle-marker-container";
-  container.style.width = "40px";
-  container.style.height = "40px";
+  container.style.width = "48px";
+  container.style.height = "48px";
   container.style.display = "flex";
   container.style.alignItems = "center";
   container.style.justifyContent = "center";
   container.style.cursor = "pointer";
 
   const color = status === "Idle" ? "#f59e0b" : "#006c49";
+  // Rotate the truck icon to match heading (0° = north / up)
+  const rotation = heading - 90; // image faces right, so offset by -90
 
   container.innerHTML = `
     <div style="
       position: relative;
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -78,29 +83,38 @@ function createVehicleIconElement(heading = 0, status = "active"): HTMLElement {
       <!-- Outer Pulsing Halo -->
       <div style="
         position: absolute;
-        inset: -4px;
-        background: ${color}33;
+        inset: -5px;
+        background: ${color}30;
         border-radius: 50%;
         animation: vehicle-pulse 2s infinite ease-in-out;
       "></div>
 
-      <!-- Vehicle Body Shadow & Badge -->
+      <!-- Vehicle Badge Circle -->
       <div style="
-        width: 32px;
-        height: 32px;
-        background: #0f172a;
-        border: 2.5px solid white;
+        width: 40px;
+        height: 40px;
+        background: #ffffff;
+        border: 2.5px solid ${color};
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3);
         transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       ">
-        <!-- Directional Truck Arrow Pointer -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 19 21 12 17 5 21 12 2" fill="${color}" fill-opacity="0.3"></polygon>
-        </svg>
+        <!-- Truck Icon (rotated to match heading) -->
+        <img
+          src="/truck-marker-icon.png"
+          alt="Collection Truck"
+          style="
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            transform: rotate(${rotation}deg);
+            transition: transform 0.3s ease;
+            display: block;
+          "
+        />
       </div>
     </div>
     <style>
@@ -115,16 +129,20 @@ function createVehicleIconElement(heading = 0, status = "active"): HTMLElement {
 }
 
 function isFacilityPin(pin: MapPin): boolean {
+  // 1. Explicit boolean flag takes highest priority
+  if (pin.isFacility !== undefined) return pin.isFacility;
+  // 2. Explicit type / pinType field
+  if (pin.type === "facility" || pin.pinType === "facility") return true;
+  if (pin.type === "bin" || pin.pinType === "bin") return false;
+  // 3. Heuristic fallbacks (icon URL, ID prefix, title text)
   return (
-    pin.pinType === "facility" ||
     Boolean(pin.iconUrl && pin.iconUrl.includes("facility")) ||
-    pin.id.startsWith("fac") ||
+    pin.id.startsWith("FAC-") ||
+    pin.id.startsWith("DEPOT-") ||
     Boolean(
-      pin.title && /depot|plant|facility|college\s+of/i.test(pin.title),
-    ) ||
-    Boolean(
-      pin.subtitle &&
-      /depot|plant|facility\s+area|hub\s+depot/i.test(pin.subtitle),
+      pin.title &&
+      /depot|plant|^facility/i.test(pin.title) &&
+      !/bin/i.test(pin.title),
     )
   );
 }
@@ -328,6 +346,14 @@ export function MapLibreMap({
 
     map.on("load", () => {
       setMapLoaded(true);
+    });
+
+    // Suppress missing sprite image warnings from the Liberty tile style
+    // by providing a transparent 1x1 pixel fallback
+    map.on("styleimagemissing", (e: { id: string }) => {
+      if (!map.hasImage(e.id)) {
+        map.addImage(e.id, { width: 1, height: 1, data: new Uint8Array(4) });
+      }
     });
 
     mapRef.current = map;

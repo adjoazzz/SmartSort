@@ -18,11 +18,19 @@ export async function authFetch(
   const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
-    return await fetch(input, {
+    const response = await fetch(input, {
       ...init,
       headers,
       signal: init?.signal ?? controller.signal,
     });
+
+    if (response.status === 401) {
+      await supabase.auth.signOut();
+      localStorage.removeItem("userRole");
+      window.location.href = "/login";
+    }
+
+    return response;
   } finally {
     clearTimeout(timeoutId);
   }

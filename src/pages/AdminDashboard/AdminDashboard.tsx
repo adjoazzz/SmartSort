@@ -225,6 +225,9 @@ export default function AdminDashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [trackingTruckId, setTrackingTruckId] = useState<string | null>(null);
+  const [layerFilter, setLayerFilter] = useState<"all" | "bins" | "facilities">(
+    "all",
+  );
 
   const activeDispatches = useMemo(
     () => bulkJobs.filter((j) => j.status === "Dispatched"),
@@ -297,6 +300,18 @@ export default function AdminDashboard() {
 
     return [...facPins, ...binPins];
   }, [facilities]);
+
+  const filteredPins: MapPin[] = useMemo(() => {
+    if (layerFilter === "facilities")
+      return allMapPins.filter(
+        (p) => p.isFacility === true || p.type === "facility",
+      );
+    if (layerFilter === "bins")
+      return allMapPins.filter(
+        (p) => p.isFacility === false || p.type === "bin",
+      );
+    return allMapPins;
+  }, [layerFilter, allMapPins]);
 
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -492,10 +507,45 @@ export default function AdminDashboard() {
                 Stop Tracking
               </button>
             )}
+
+            {/* Layer Filter Pills */}
+            <div className="absolute top-3 right-14 z-10 bg-slate-900/90 text-white backdrop-blur-md p-1 rounded-xl shadow-lg border border-slate-700/60 flex items-center gap-1 text-xs">
+              <button
+                onClick={() => setLayerFilter("all")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  layerFilter === "all"
+                    ? "bg-emerald-500 text-white shadow-sm"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/80"
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setLayerFilter("bins")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  layerFilter === "bins"
+                    ? "bg-sky-500 text-white shadow-sm"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/80"
+                }`}
+              >
+                Bins
+              </button>
+              <button
+                onClick={() => setLayerFilter("facilities")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  layerFilter === "facilities"
+                    ? "bg-purple-500 text-white shadow-sm"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/80"
+                }`}
+              >
+                Facilities
+              </button>
+            </div>
+
             <MapLibreMap
               initialCenter={[-1.57, 6.675]}
               initialZoom={14}
-              pins={allMapPins}
+              pins={filteredPins}
               vehicles={vehicleTelemetryList}
               activeTrackingId={trackingTruckId}
               height="100%"
