@@ -56,26 +56,24 @@ export interface MapLibreMapProps {
   ) => (() => void) | void;
 }
 
-// ─── Vehicle Marker Factory ──────────────────────────────────────────────────
+// ─── SVG Marker Factories ────────────────────────────────────────────────────
 function createVehicleIconElement(heading = 0, status = "active"): HTMLElement {
   const container = document.createElement("div");
   container.className = "vehicle-marker-container";
-  container.style.width = "48px";
-  container.style.height = "48px";
+  container.style.width = "40px";
+  container.style.height = "40px";
   container.style.display = "flex";
   container.style.alignItems = "center";
   container.style.justifyContent = "center";
   container.style.cursor = "pointer";
 
   const color = status === "Idle" ? "#f59e0b" : "#006c49";
-  // Rotate the truck icon to match heading (0° = north / up)
-  const rotation = heading - 90; // image faces right, so offset by -90
 
   container.innerHTML = `
     <div style="
       position: relative;
-      width: 44px;
-      height: 44px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -83,38 +81,29 @@ function createVehicleIconElement(heading = 0, status = "active"): HTMLElement {
       <!-- Outer Pulsing Halo -->
       <div style="
         position: absolute;
-        inset: -5px;
-        background: ${color}30;
+        inset: -4px;
+        background: ${color}33;
         border-radius: 50%;
         animation: vehicle-pulse 2s infinite ease-in-out;
       "></div>
 
-      <!-- Vehicle Badge Circle -->
+      <!-- Vehicle Body Shadow & Badge -->
       <div style="
-        width: 40px;
-        height: 40px;
-        background: #ffffff;
-        border: 2.5px solid ${color};
+        width: 32px;
+        height: 32px;
+        background: #0f172a;
+        border: 2.5px solid white;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.35);
         transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       ">
-        <!-- Truck Icon (rotated to match heading) -->
-        <img
-          src="/truck-marker-icon.png"
-          alt="Collection Truck"
-          style="
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-            transform: rotate(${rotation}deg);
-            transition: transform 0.3s ease;
-            display: block;
-          "
-        />
+        <!-- Directional Truck Arrow Pointer -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 19 21 12 17 5 21 12 2" fill="${color}" fill-opacity="0.3"></polygon>
+        </svg>
       </div>
     </div>
     <style>

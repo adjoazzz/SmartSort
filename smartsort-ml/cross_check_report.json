@@ -1,0 +1,3024 @@
+{
+  "total_captures": 215,
+  "class_distribution": {
+    "glass": 14,
+    "metal": 3,
+    "paper": 175,
+    "plastic": 17,
+    "rejected_waste": 6
+  },
+  "low_confidence_count": 48,
+  "mismatch_count": 0,
+  "results": [
+    {
+      "filename": "capture_1786579117_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 95.17,
+      "scores": {
+        "glass": 0.49,
+        "metal": 0.21,
+        "paper": 95.17,
+        "plastic": 2.21,
+        "rejected_waste": 1.92
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786579414_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.22,
+      "scores": {
+        "glass": 0.14,
+        "metal": 0.01,
+        "paper": 99.22,
+        "plastic": 0.0,
+        "rejected_waste": 0.63
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786579420_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 47.52,
+      "scores": {
+        "glass": 44.29,
+        "metal": 0.18,
+        "paper": 47.52,
+        "plastic": 0.34,
+        "rejected_waste": 7.68
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786579507_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.84,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.0,
+        "paper": 99.84,
+        "plastic": 0.0,
+        "rejected_waste": 0.12
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786579859_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.89,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 99.89,
+        "plastic": 0.01,
+        "rejected_waste": 0.09
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786579867_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 46.93,
+      "scores": {
+        "glass": 11.4,
+        "metal": 1.25,
+        "paper": 18.79,
+        "plastic": 46.93,
+        "rejected_waste": 21.63
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786579905_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 65.88,
+      "scores": {
+        "glass": 34.06,
+        "metal": 0.0,
+        "paper": 0.05,
+        "plastic": 65.88,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580303_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.57,
+      "scores": {
+        "glass": 0.07,
+        "metal": 0.0,
+        "paper": 98.57,
+        "plastic": 0.08,
+        "rejected_waste": 1.27
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580331_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 48.89,
+      "scores": {
+        "glass": 3.49,
+        "metal": 0.08,
+        "paper": 48.89,
+        "plastic": 46.1,
+        "rejected_waste": 1.44
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580357_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 67.0,
+      "scores": {
+        "glass": 7.89,
+        "metal": 1.54,
+        "paper": 16.1,
+        "plastic": 67.0,
+        "rejected_waste": 7.48
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580363_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 53.73,
+      "scores": {
+        "glass": 3.87,
+        "metal": 1.68,
+        "paper": 27.27,
+        "plastic": 53.73,
+        "rejected_waste": 13.44
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580389_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 66.45,
+      "scores": {
+        "glass": 4.88,
+        "metal": 0.44,
+        "paper": 20.18,
+        "plastic": 66.45,
+        "rejected_waste": 8.05
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580397_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 71.43,
+      "scores": {
+        "glass": 2.28,
+        "metal": 0.01,
+        "paper": 71.43,
+        "plastic": 0.01,
+        "rejected_waste": 26.27
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580418_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580427_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580447_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580454_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580479_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.7,
+      "scores": {
+        "glass": 1.49,
+        "metal": 0.0,
+        "paper": 97.7,
+        "plastic": 0.0,
+        "rejected_waste": 0.81
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580486_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.77,
+      "scores": {
+        "glass": 1.46,
+        "metal": 0.0,
+        "paper": 97.77,
+        "plastic": 0.01,
+        "rejected_waste": 0.76
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580523_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 59.43,
+      "scores": {
+        "glass": 59.43,
+        "metal": 0.0,
+        "paper": 39.01,
+        "plastic": 0.0,
+        "rejected_waste": 1.56
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580569_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.56,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.56,
+        "plastic": 0.0,
+        "rejected_waste": 0.44
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580605_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 95.93,
+      "scores": {
+        "glass": 0.13,
+        "metal": 0.0,
+        "paper": 95.93,
+        "plastic": 0.01,
+        "rejected_waste": 3.93
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580611_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.95,
+      "scores": {
+        "glass": 0.08,
+        "metal": 0.0,
+        "paper": 98.95,
+        "plastic": 0.0,
+        "rejected_waste": 0.96
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580621_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.84,
+      "scores": {
+        "glass": 0.07,
+        "metal": 0.0,
+        "paper": 99.84,
+        "plastic": 0.04,
+        "rejected_waste": 0.05
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580654_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.01,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 97.01,
+        "plastic": 0.0,
+        "rejected_waste": 2.98
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580661_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 72.11,
+      "scores": {
+        "glass": 0.08,
+        "metal": 0.01,
+        "paper": 72.11,
+        "plastic": 1.05,
+        "rejected_waste": 26.75
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580669_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 61.01,
+      "scores": {
+        "glass": 61.01,
+        "metal": 0.04,
+        "paper": 21.81,
+        "plastic": 1.16,
+        "rejected_waste": 15.98
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580677_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580685_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.96,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.0,
+        "paper": 99.96,
+        "plastic": 0.01,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580716_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 70.13,
+      "scores": {
+        "glass": 0.07,
+        "metal": 0.07,
+        "paper": 70.13,
+        "plastic": 0.33,
+        "rejected_waste": 29.4
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580731_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 96.82,
+      "scores": {
+        "glass": 0.66,
+        "metal": 0.6,
+        "paper": 96.82,
+        "plastic": 0.64,
+        "rejected_waste": 1.28
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580737_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.31,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.22,
+        "paper": 98.31,
+        "plastic": 1.28,
+        "rejected_waste": 0.18
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580743_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580777_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.94,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.94,
+        "plastic": 0.0,
+        "rejected_waste": 0.06
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786580879_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 89.0,
+      "scores": {
+        "glass": 1.7,
+        "metal": 1.69,
+        "paper": 89.0,
+        "plastic": 1.02,
+        "rejected_waste": 6.59
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786581116_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 92.61,
+      "scores": {
+        "glass": 92.61,
+        "metal": 0.68,
+        "paper": 3.81,
+        "plastic": 2.17,
+        "rejected_waste": 0.73
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786581141_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 88.41,
+      "scores": {
+        "glass": 0.03,
+        "metal": 0.03,
+        "paper": 88.41,
+        "plastic": 1.39,
+        "rejected_waste": 10.14
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1786581164_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 74.65,
+      "scores": {
+        "glass": 1.71,
+        "metal": 0.01,
+        "paper": 74.65,
+        "plastic": 21.85,
+        "rejected_waste": 1.78
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787751886_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 95.69,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.0,
+        "paper": 95.69,
+        "plastic": 0.0,
+        "rejected_waste": 4.28
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787751894_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 87.42,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 87.42,
+        "plastic": 0.0,
+        "rejected_waste": 12.58
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752048_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 61.78,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.0,
+        "paper": 61.78,
+        "plastic": 0.0,
+        "rejected_waste": 38.18
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752054_rejected_waste.jpg",
+      "stored_label": "rejected_waste",
+      "predicted_label": "rejected_waste",
+      "confidence": 92.55,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 7.45,
+        "plastic": 0.0,
+        "rejected_waste": 92.55
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752089_rejected_waste.jpg",
+      "stored_label": "rejected_waste",
+      "predicted_label": "rejected_waste",
+      "confidence": 89.43,
+      "scores": {
+        "glass": 0.18,
+        "metal": 0.01,
+        "paper": 10.36,
+        "plastic": 0.01,
+        "rejected_waste": 89.43
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752102_rejected_waste.jpg",
+      "stored_label": "rejected_waste",
+      "predicted_label": "rejected_waste",
+      "confidence": 99.49,
+      "scores": {
+        "glass": 0.05,
+        "metal": 0.0,
+        "paper": 0.29,
+        "plastic": 0.18,
+        "rejected_waste": 99.49
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752117_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 57.5,
+      "scores": {
+        "glass": 57.5,
+        "metal": 27.59,
+        "paper": 3.95,
+        "plastic": 4.06,
+        "rejected_waste": 6.9
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752122_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.93,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.0,
+        "paper": 99.93,
+        "plastic": 0.02,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752140_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 92.68,
+      "scores": {
+        "glass": 92.68,
+        "metal": 0.0,
+        "paper": 0.04,
+        "plastic": 7.24,
+        "rejected_waste": 0.04
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752161_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 95.15,
+      "scores": {
+        "glass": 95.15,
+        "metal": 0.0,
+        "paper": 0.8,
+        "plastic": 2.23,
+        "rejected_waste": 1.82
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752178_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 49.03,
+      "scores": {
+        "glass": 23.07,
+        "metal": 0.0,
+        "paper": 25.94,
+        "plastic": 49.03,
+        "rejected_waste": 1.95
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752190_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 80.32,
+      "scores": {
+        "glass": 17.5,
+        "metal": 0.0,
+        "paper": 1.99,
+        "plastic": 80.32,
+        "rejected_waste": 0.19
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752223_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.68,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.68,
+        "plastic": 0.32,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752254_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 86.88,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 86.88,
+        "plastic": 13.11,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752279_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 94.99,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 94.99,
+        "plastic": 4.99,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752291_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.65,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.65,
+        "plastic": 0.29,
+        "rejected_waste": 0.06
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752310_rejected_waste.jpg",
+      "stored_label": "rejected_waste",
+      "predicted_label": "rejected_waste",
+      "confidence": 51.44,
+      "scores": {
+        "glass": 12.31,
+        "metal": 3.74,
+        "paper": 30.18,
+        "plastic": 2.33,
+        "rejected_waste": 51.44
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752329_rejected_waste.jpg",
+      "stored_label": "rejected_waste",
+      "predicted_label": "rejected_waste",
+      "confidence": 43.7,
+      "scores": {
+        "glass": 28.89,
+        "metal": 11.45,
+        "paper": 6.03,
+        "plastic": 9.93,
+        "rejected_waste": 43.7
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752399_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.62,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.62,
+        "plastic": 0.35,
+        "rejected_waste": 0.03
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752428_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.98,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.98,
+        "plastic": 0.02,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752433_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752439_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.04,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 99.04,
+        "plastic": 0.9,
+        "rejected_waste": 0.05
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752480_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 88.83,
+      "scores": {
+        "glass": 0.05,
+        "metal": 0.0,
+        "paper": 88.83,
+        "plastic": 10.92,
+        "rejected_waste": 0.2
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752500_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 55.45,
+      "scores": {
+        "glass": 55.45,
+        "metal": 1.92,
+        "paper": 2.8,
+        "plastic": 39.74,
+        "rejected_waste": 0.09
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752586_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752592_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752609_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 74.45,
+      "scores": {
+        "glass": 24.02,
+        "metal": 0.06,
+        "paper": 1.45,
+        "plastic": 74.45,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752628_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.76,
+      "scores": {
+        "glass": 0.98,
+        "metal": 0.0,
+        "paper": 97.76,
+        "plastic": 1.26,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752650_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 69.59,
+      "scores": {
+        "glass": 10.67,
+        "metal": 0.01,
+        "paper": 69.59,
+        "plastic": 19.72,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752669_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.93,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.93,
+        "plastic": 0.07,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752691_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.9,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.9,
+        "plastic": 0.1,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752716_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.86,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.86,
+        "plastic": 0.11,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752728_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.15,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.15,
+        "plastic": 0.84,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752739_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 84.86,
+      "scores": {
+        "glass": 1.18,
+        "metal": 0.12,
+        "paper": 84.86,
+        "plastic": 13.01,
+        "rejected_waste": 0.82
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752751_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 72.14,
+      "scores": {
+        "glass": 14.53,
+        "metal": 0.23,
+        "paper": 72.14,
+        "plastic": 11.61,
+        "rejected_waste": 1.49
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752768_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 77.04,
+      "scores": {
+        "glass": 1.72,
+        "metal": 1.45,
+        "paper": 19.61,
+        "plastic": 77.04,
+        "rejected_waste": 0.18
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752779_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 83.63,
+      "scores": {
+        "glass": 2.28,
+        "metal": 0.78,
+        "paper": 11.74,
+        "plastic": 83.63,
+        "rejected_waste": 1.56
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752793_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 43.08,
+      "scores": {
+        "glass": 12.96,
+        "metal": 1.23,
+        "paper": 43.08,
+        "plastic": 41.55,
+        "rejected_waste": 1.19
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752806_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.56,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.01,
+        "paper": 99.56,
+        "plastic": 0.35,
+        "rejected_waste": 0.04
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752811_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 94.13,
+      "scores": {
+        "glass": 0.1,
+        "metal": 0.01,
+        "paper": 94.13,
+        "plastic": 4.78,
+        "rejected_waste": 0.98
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752817_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 94.08,
+      "scores": {
+        "glass": 1.38,
+        "metal": 0.15,
+        "paper": 4.13,
+        "plastic": 94.08,
+        "rejected_waste": 0.27
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787752828_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 90.21,
+      "scores": {
+        "glass": 1.08,
+        "metal": 0.62,
+        "paper": 7.87,
+        "plastic": 90.21,
+        "rejected_waste": 0.23
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753260_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.84,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.84,
+        "plastic": 0.0,
+        "rejected_waste": 0.16
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753296_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 93.84,
+      "scores": {
+        "glass": 0.43,
+        "metal": 0.01,
+        "paper": 93.84,
+        "plastic": 5.48,
+        "rejected_waste": 0.25
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753311_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 80.92,
+      "scores": {
+        "glass": 1.75,
+        "metal": 0.05,
+        "paper": 80.92,
+        "plastic": 16.84,
+        "rejected_waste": 0.44
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753341_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 96.28,
+      "scores": {
+        "glass": 0.56,
+        "metal": 0.14,
+        "paper": 96.28,
+        "plastic": 0.43,
+        "rejected_waste": 2.6
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753358_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 96.59,
+      "scores": {
+        "glass": 0.64,
+        "metal": 0.11,
+        "paper": 96.59,
+        "plastic": 0.27,
+        "rejected_waste": 2.39
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753408_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.01,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753429_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753447_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.95,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.95,
+        "plastic": 0.0,
+        "rejected_waste": 0.05
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753538_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.24,
+      "scores": {
+        "glass": 0.07,
+        "metal": 0.0,
+        "paper": 99.24,
+        "plastic": 0.06,
+        "rejected_waste": 0.63
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753559_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753580_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.98,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.98,
+        "plastic": 0.0,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753617_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753624_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.44,
+      "scores": {
+        "glass": 0.08,
+        "metal": 0.0,
+        "paper": 99.44,
+        "plastic": 0.06,
+        "rejected_waste": 0.43
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753717_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.98,
+      "scores": {
+        "glass": 0.06,
+        "metal": 0.0,
+        "paper": 98.98,
+        "plastic": 0.05,
+        "rejected_waste": 0.91
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753726_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.13,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.0,
+        "paper": 99.13,
+        "plastic": 0.14,
+        "rejected_waste": 0.7
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753737_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.0,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753746_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.01,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753753_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753758_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753764_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.42,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.42,
+        "plastic": 0.58,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753770_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.95,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.95,
+        "plastic": 0.05,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753776_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 57.81,
+      "scores": {
+        "glass": 15.98,
+        "metal": 0.01,
+        "paper": 25.91,
+        "plastic": 57.81,
+        "rejected_waste": 0.29
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753782_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787753987_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.0,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754009_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754027_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.85,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 99.85,
+        "plastic": 0.02,
+        "rejected_waste": 0.12
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754060_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.14,
+      "scores": {
+        "glass": 0.15,
+        "metal": 0.01,
+        "paper": 99.14,
+        "plastic": 0.01,
+        "rejected_waste": 0.7
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754094_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754122_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 95.34,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.05,
+        "paper": 95.34,
+        "plastic": 4.27,
+        "rejected_waste": 0.33
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754140_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.65,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 99.65,
+        "plastic": 0.21,
+        "rejected_waste": 0.13
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754174_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.11,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.11,
+        "plastic": 0.88,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754197_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 94.45,
+      "scores": {
+        "glass": 2.28,
+        "metal": 0.88,
+        "paper": 94.45,
+        "plastic": 0.1,
+        "rejected_waste": 2.28
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754215_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.25,
+      "scores": {
+        "glass": 0.11,
+        "metal": 0.02,
+        "paper": 99.25,
+        "plastic": 0.0,
+        "rejected_waste": 0.62
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754234_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 48.81,
+      "scores": {
+        "glass": 48.81,
+        "metal": 0.8,
+        "paper": 39.08,
+        "plastic": 0.07,
+        "rejected_waste": 11.24
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754252_rejected_waste.jpg",
+      "stored_label": "rejected_waste",
+      "predicted_label": "rejected_waste",
+      "confidence": 98.09,
+      "scores": {
+        "glass": 0.03,
+        "metal": 0.0,
+        "paper": 1.88,
+        "plastic": 0.0,
+        "rejected_waste": 98.09
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754281_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.35,
+      "scores": {
+        "glass": 0.62,
+        "metal": 0.0,
+        "paper": 99.35,
+        "plastic": 0.0,
+        "rejected_waste": 0.03
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754309_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754357_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.83,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.0,
+        "paper": 99.83,
+        "plastic": 0.0,
+        "rejected_waste": 0.15
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754364_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754384_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 92.94,
+      "scores": {
+        "glass": 0.08,
+        "metal": 0.04,
+        "paper": 92.94,
+        "plastic": 0.01,
+        "rejected_waste": 6.94
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754400_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754416_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754430_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.75,
+      "scores": {
+        "glass": 0.17,
+        "metal": 0.0,
+        "paper": 99.75,
+        "plastic": 0.02,
+        "rejected_waste": 0.06
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754442_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754453_metal.jpg",
+      "stored_label": "metal",
+      "predicted_label": "metal",
+      "confidence": 57.62,
+      "scores": {
+        "glass": 7.89,
+        "metal": 57.62,
+        "paper": 10.85,
+        "plastic": 16.25,
+        "rejected_waste": 7.38
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754484_metal.jpg",
+      "stored_label": "metal",
+      "predicted_label": "metal",
+      "confidence": 73.72,
+      "scores": {
+        "glass": 0.19,
+        "metal": 73.72,
+        "paper": 7.94,
+        "plastic": 8.14,
+        "rejected_waste": 10.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754499_metal.jpg",
+      "stored_label": "metal",
+      "predicted_label": "metal",
+      "confidence": 68.24,
+      "scores": {
+        "glass": 2.58,
+        "metal": 68.24,
+        "paper": 2.34,
+        "plastic": 26.33,
+        "rejected_waste": 0.52
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754506_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 59.54,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.01,
+        "paper": 40.29,
+        "plastic": 59.54,
+        "rejected_waste": 0.14
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754511_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 81.37,
+      "scores": {
+        "glass": 2.18,
+        "metal": 0.2,
+        "paper": 81.37,
+        "plastic": 0.52,
+        "rejected_waste": 15.73
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754549_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754555_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.22,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.01,
+        "paper": 97.22,
+        "plastic": 0.01,
+        "rejected_waste": 2.73
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754561_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 88.12,
+      "scores": {
+        "glass": 6.01,
+        "metal": 0.02,
+        "paper": 88.12,
+        "plastic": 0.94,
+        "rejected_waste": 4.91
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754571_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 96.02,
+      "scores": {
+        "glass": 0.39,
+        "metal": 0.01,
+        "paper": 96.02,
+        "plastic": 0.11,
+        "rejected_waste": 3.48
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754577_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.98,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.98,
+        "plastic": 0.0,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754583_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.96,
+      "scores": {
+        "glass": 0.4,
+        "metal": 0.0,
+        "paper": 98.96,
+        "plastic": 0.59,
+        "rejected_waste": 0.06
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754588_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.03,
+      "scores": {
+        "glass": 0.19,
+        "metal": 0.0,
+        "paper": 99.03,
+        "plastic": 0.7,
+        "rejected_waste": 0.08
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754594_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 70.41,
+      "scores": {
+        "glass": 27.59,
+        "metal": 0.01,
+        "paper": 70.41,
+        "plastic": 0.34,
+        "rejected_waste": 1.65
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754601_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 86.81,
+      "scores": {
+        "glass": 2.99,
+        "metal": 0.02,
+        "paper": 86.81,
+        "plastic": 0.72,
+        "rejected_waste": 9.46
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754608_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.86,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.86,
+        "plastic": 0.0,
+        "rejected_waste": 0.13
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754615_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754620_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.94,
+      "scores": {
+        "glass": 0.03,
+        "metal": 0.0,
+        "paper": 99.94,
+        "plastic": 0.0,
+        "rejected_waste": 0.03
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754627_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 94.59,
+      "scores": {
+        "glass": 3.42,
+        "metal": 0.03,
+        "paper": 94.59,
+        "plastic": 0.01,
+        "rejected_waste": 1.96
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754633_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.59,
+      "scores": {
+        "glass": 0.59,
+        "metal": 0.01,
+        "paper": 98.59,
+        "plastic": 0.02,
+        "rejected_waste": 0.78
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754640_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.79,
+      "scores": {
+        "glass": 0.92,
+        "metal": 0.01,
+        "paper": 97.79,
+        "plastic": 0.04,
+        "rejected_waste": 1.24
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754647_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.48,
+      "scores": {
+        "glass": 0.15,
+        "metal": 0.01,
+        "paper": 99.48,
+        "plastic": 0.01,
+        "rejected_waste": 0.35
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754652_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 96.63,
+      "scores": {
+        "glass": 1.4,
+        "metal": 0.03,
+        "paper": 96.63,
+        "plastic": 0.04,
+        "rejected_waste": 1.89
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754658_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.91,
+      "scores": {
+        "glass": 0.58,
+        "metal": 0.01,
+        "paper": 98.91,
+        "plastic": 0.01,
+        "rejected_waste": 0.5
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754664_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.57,
+      "scores": {
+        "glass": 0.05,
+        "metal": 0.01,
+        "paper": 99.57,
+        "plastic": 0.01,
+        "rejected_waste": 0.37
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754671_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.85,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 99.85,
+        "plastic": 0.0,
+        "rejected_waste": 0.13
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754678_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.95,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.01,
+        "paper": 99.95,
+        "plastic": 0.0,
+        "rejected_waste": 0.03
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754684_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.63,
+      "scores": {
+        "glass": 0.72,
+        "metal": 0.03,
+        "paper": 98.63,
+        "plastic": 0.04,
+        "rejected_waste": 0.58
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754709_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.69,
+      "scores": {
+        "glass": 0.67,
+        "metal": 0.01,
+        "paper": 98.69,
+        "plastic": 0.01,
+        "rejected_waste": 0.62
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754722_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.96,
+      "scores": {
+        "glass": 1.64,
+        "metal": 0.03,
+        "paper": 97.96,
+        "plastic": 0.02,
+        "rejected_waste": 0.36
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754730_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.64,
+      "scores": {
+        "glass": 0.1,
+        "metal": 0.01,
+        "paper": 99.64,
+        "plastic": 0.01,
+        "rejected_waste": 0.24
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754744_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.85,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 99.85,
+        "plastic": 0.01,
+        "rejected_waste": 0.13
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754757_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.8,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.0,
+        "paper": 99.8,
+        "plastic": 0.0,
+        "rejected_waste": 0.15
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754770_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.29,
+      "scores": {
+        "glass": 0.67,
+        "metal": 0.39,
+        "paper": 98.29,
+        "plastic": 0.02,
+        "rejected_waste": 0.64
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754778_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.48,
+      "scores": {
+        "glass": 0.07,
+        "metal": 0.01,
+        "paper": 99.48,
+        "plastic": 0.04,
+        "rejected_waste": 0.41
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754792_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.45,
+      "scores": {
+        "glass": 0.25,
+        "metal": 0.01,
+        "paper": 99.45,
+        "plastic": 0.01,
+        "rejected_waste": 0.28
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754805_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.39,
+      "scores": {
+        "glass": 1.18,
+        "metal": 0.03,
+        "paper": 97.39,
+        "plastic": 0.07,
+        "rejected_waste": 1.33
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754813_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 96.9,
+      "scores": {
+        "glass": 0.62,
+        "metal": 0.03,
+        "paper": 96.9,
+        "plastic": 0.08,
+        "rejected_waste": 2.37
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754827_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.79,
+      "scores": {
+        "glass": 0.03,
+        "metal": 0.0,
+        "paper": 99.79,
+        "plastic": 0.01,
+        "rejected_waste": 0.17
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754840_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.81,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.0,
+        "paper": 99.81,
+        "plastic": 0.0,
+        "rejected_waste": 0.18
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754853_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.55,
+      "scores": {
+        "glass": 0.06,
+        "metal": 0.01,
+        "paper": 99.55,
+        "plastic": 0.03,
+        "rejected_waste": 0.36
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754867_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.47,
+      "scores": {
+        "glass": 0.11,
+        "metal": 0.0,
+        "paper": 99.47,
+        "plastic": 0.01,
+        "rejected_waste": 0.42
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787754875_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.23,
+      "scores": {
+        "glass": 0.08,
+        "metal": 0.01,
+        "paper": 99.23,
+        "plastic": 0.03,
+        "rejected_waste": 0.65
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755386_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 67.5,
+      "scores": {
+        "glass": 67.5,
+        "metal": 0.0,
+        "paper": 6.65,
+        "plastic": 25.85,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755418_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 92.05,
+      "scores": {
+        "glass": 0.31,
+        "metal": 0.0,
+        "paper": 92.05,
+        "plastic": 7.57,
+        "rejected_waste": 0.07
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755426_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 51.05,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.0,
+        "paper": 51.05,
+        "plastic": 1.06,
+        "rejected_waste": 47.85
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755452_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.79,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.01,
+        "paper": 99.79,
+        "plastic": 0.0,
+        "rejected_waste": 0.2
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755457_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 81.49,
+      "scores": {
+        "glass": 13.92,
+        "metal": 1.07,
+        "paper": 81.49,
+        "plastic": 0.03,
+        "rejected_waste": 3.49
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755468_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 55.06,
+      "scores": {
+        "glass": 31.75,
+        "metal": 0.62,
+        "paper": 55.06,
+        "plastic": 0.06,
+        "rejected_waste": 12.5
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755474_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.26,
+      "scores": {
+        "glass": 1.32,
+        "metal": 0.02,
+        "paper": 97.26,
+        "plastic": 0.01,
+        "rejected_waste": 1.4
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755482_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 46.29,
+      "scores": {
+        "glass": 34.43,
+        "metal": 0.81,
+        "paper": 46.29,
+        "plastic": 0.06,
+        "rejected_waste": 18.41
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755575_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.7,
+      "scores": {
+        "glass": 0.12,
+        "metal": 0.0,
+        "paper": 99.7,
+        "plastic": 0.05,
+        "rejected_waste": 0.12
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755609_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.0,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755624_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.96,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.0,
+        "paper": 99.96,
+        "plastic": 0.0,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755630_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 57.84,
+      "scores": {
+        "glass": 57.84,
+        "metal": 0.92,
+        "paper": 23.38,
+        "plastic": 0.1,
+        "rejected_waste": 17.76
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755636_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 94.54,
+      "scores": {
+        "glass": 4.13,
+        "metal": 0.02,
+        "paper": 94.54,
+        "plastic": 0.08,
+        "rejected_waste": 1.23
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787755642_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 57.7,
+      "scores": {
+        "glass": 57.7,
+        "metal": 0.87,
+        "paper": 23.74,
+        "plastic": 0.12,
+        "rejected_waste": 17.57
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756157_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756168_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756183_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.57,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.01,
+        "paper": 99.57,
+        "plastic": 0.38,
+        "rejected_waste": 0.04
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756191_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 56.95,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 56.95,
+        "plastic": 42.44,
+        "rejected_waste": 0.61
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756203_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.98,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.98,
+        "plastic": 0.0,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756222_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756250_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 100.0,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 100.0,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756265_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.99,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.99,
+        "plastic": 0.0,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756274_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.91,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.0,
+        "paper": 99.91,
+        "plastic": 0.03,
+        "rejected_waste": 0.06
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756288_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 90.09,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.04,
+        "paper": 90.09,
+        "plastic": 9.83,
+        "rejected_waste": 0.04
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756306_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 82.35,
+      "scores": {
+        "glass": 0.02,
+        "metal": 0.74,
+        "paper": 82.35,
+        "plastic": 16.45,
+        "rejected_waste": 0.45
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756355_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 93.41,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.07,
+        "paper": 93.41,
+        "plastic": 6.29,
+        "rejected_waste": 0.22
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756389_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 59.63,
+      "scores": {
+        "glass": 0.32,
+        "metal": 3.04,
+        "paper": 59.63,
+        "plastic": 36.91,
+        "rejected_waste": 0.1
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756397_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.88,
+      "scores": {
+        "glass": 0.0,
+        "metal": 0.08,
+        "paper": 99.88,
+        "plastic": 0.04,
+        "rejected_waste": 0.0
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756411_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 62.54,
+      "scores": {
+        "glass": 0.04,
+        "metal": 0.96,
+        "paper": 36.28,
+        "plastic": 62.54,
+        "rejected_waste": 0.19
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756437_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 69.48,
+      "scores": {
+        "glass": 0.01,
+        "metal": 0.0,
+        "paper": 69.48,
+        "plastic": 30.25,
+        "rejected_waste": 0.26
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756466_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 75.8,
+      "scores": {
+        "glass": 0.34,
+        "metal": 0.23,
+        "paper": 23.61,
+        "plastic": 75.8,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756505_plastic.jpg",
+      "stored_label": "plastic",
+      "predicted_label": "plastic",
+      "confidence": 90.4,
+      "scores": {
+        "glass": 1.02,
+        "metal": 0.14,
+        "paper": 8.42,
+        "plastic": 90.4,
+        "rejected_waste": 0.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756518_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.45,
+      "scores": {
+        "glass": 0.05,
+        "metal": 0.4,
+        "paper": 99.45,
+        "plastic": 0.09,
+        "rejected_waste": 0.01
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756537_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 97.79,
+      "scores": {
+        "glass": 0.11,
+        "metal": 0.2,
+        "paper": 97.79,
+        "plastic": 0.58,
+        "rejected_waste": 1.31
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756560_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 77.59,
+      "scores": {
+        "glass": 17.24,
+        "metal": 0.46,
+        "paper": 77.59,
+        "plastic": 0.02,
+        "rejected_waste": 4.68
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756589_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 95.14,
+      "scores": {
+        "glass": 3.26,
+        "metal": 0.07,
+        "paper": 95.14,
+        "plastic": 0.01,
+        "rejected_waste": 1.52
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756618_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 87.85,
+      "scores": {
+        "glass": 9.65,
+        "metal": 0.05,
+        "paper": 87.85,
+        "plastic": 0.02,
+        "rejected_waste": 2.43
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756626_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.3,
+      "scores": {
+        "glass": 0.59,
+        "metal": 0.08,
+        "paper": 98.3,
+        "plastic": 0.01,
+        "rejected_waste": 1.02
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756664_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 42.68,
+      "scores": {
+        "glass": 42.68,
+        "metal": 0.78,
+        "paper": 40.02,
+        "plastic": 0.04,
+        "rejected_waste": 16.48
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756692_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 51.34,
+      "scores": {
+        "glass": 38.02,
+        "metal": 0.47,
+        "paper": 51.34,
+        "plastic": 0.03,
+        "rejected_waste": 10.15
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756703_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 99.0,
+      "scores": {
+        "glass": 0.22,
+        "metal": 0.06,
+        "paper": 99.0,
+        "plastic": 0.01,
+        "rejected_waste": 0.71
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756738_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 91.5,
+      "scores": {
+        "glass": 3.26,
+        "metal": 0.59,
+        "paper": 91.5,
+        "plastic": 0.15,
+        "rejected_waste": 4.5
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756745_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 90.07,
+      "scores": {
+        "glass": 2.98,
+        "metal": 0.48,
+        "paper": 90.07,
+        "plastic": 0.27,
+        "rejected_waste": 6.2
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756751_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 92.35,
+      "scores": {
+        "glass": 5.22,
+        "metal": 0.06,
+        "paper": 92.35,
+        "plastic": 0.01,
+        "rejected_waste": 2.35
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756758_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 57.22,
+      "scores": {
+        "glass": 57.22,
+        "metal": 0.99,
+        "paper": 27.5,
+        "plastic": 0.04,
+        "rejected_waste": 14.25
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756764_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 98.73,
+      "scores": {
+        "glass": 0.35,
+        "metal": 0.03,
+        "paper": 98.73,
+        "plastic": 0.0,
+        "rejected_waste": 0.89
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756779_glass.jpg",
+      "stored_label": "glass",
+      "predicted_label": "glass",
+      "confidence": 43.14,
+      "scores": {
+        "glass": 43.14,
+        "metal": 0.86,
+        "paper": 40.32,
+        "plastic": 0.04,
+        "rejected_waste": 15.65
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756794_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 73.75,
+      "scores": {
+        "glass": 19.26,
+        "metal": 0.62,
+        "paper": 73.75,
+        "plastic": 0.18,
+        "rejected_waste": 6.19
+      },
+      "matches_stored": true
+    },
+    {
+      "filename": "capture_1787756860_paper.jpg",
+      "stored_label": "paper",
+      "predicted_label": "paper",
+      "confidence": 89.65,
+      "scores": {
+        "glass": 5.2,
+        "metal": 0.22,
+        "paper": 89.65,
+        "plastic": 0.06,
+        "rejected_waste": 4.87
+      },
+      "matches_stored": true
+    }
+  ]
+}
