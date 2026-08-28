@@ -44,6 +44,7 @@ while True:
         ret, buffer = cv2.imencode(".jpg", frame)
         if ret:
             try:
+                files = {"image": ("capture.jpg", buffer.tobytes(), "image/jpeg")}
                 headers = {"Authorization": f"Bearer {ML_API_KEY}"}
                 response = requests.post(
                     API_URL, files=files, headers=headers, timeout=5
