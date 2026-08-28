@@ -2,13 +2,31 @@ import React, { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-// ─── Free Tile Styles ───────────────────────────────────────────────────────
-export const CARTO_VOYAGER_STYLE =
-  "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
-export const CARTO_POSITRON_STYLE =
-  "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
-export const CARTO_DARK_MATTER_STYLE =
-  "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+// ─── Reliable Fallback Style ───────────────────────────────────────────────────────
+export const OSM_RASTER_STYLE: any = {
+  version: 8,
+  sources: {
+    osm: {
+      type: "raster",
+      tiles: [
+        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      ],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap Contributors",
+    }
+  },
+  layers: [
+    {
+      id: "osm",
+      type: "raster",
+      source: "osm",
+      minzoom: 0,
+      maxzoom: 19
+    }
+  ]
+};
 
 // ─── Types & Interfaces ──────────────────────────────────────────────────────
 export interface VehicleTelemetry {
@@ -317,7 +335,7 @@ export function MapLibreMap({
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: CARTO_VOYAGER_STYLE,
+      style: OSM_RASTER_STYLE,
       center: center || initialCenter,
       zoom: zoom || initialZoom,
       pitch: 30, // 3D perspective for Uber/Bolt feel
