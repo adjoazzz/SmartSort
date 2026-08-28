@@ -23,9 +23,10 @@ class DeviceController {
   async updateDevice(req, res, next) {
     try {
       const { id } = req.params;
-      const { location, status, fillLevel, lastSortedItem } = req.body;
+      const { location, status, fillLevel, lastSortedItem, customBinId } = req.body;
 
       const updatedDevice = await deviceService.updateDevice(id, {
+        ...(customBinId !== undefined ? { customBinId } : {}),
         ...(location !== undefined ? { location } : {}),
         ...(status !== undefined ? { status } : {}),
         ...(fillLevel !== undefined ? { fillLevel } : {}),

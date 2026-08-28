@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { authFetch } from "../../lib/authFetch";
-import { toast } from "sonner";
+import { toast } from "../../lib/toast";
 import {
   MapLibreMap,
   MapPin,

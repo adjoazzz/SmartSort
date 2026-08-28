@@ -2,9 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-// ─── OpenFreeMap Liberty Style ───────────────────────────────────────────────
+// ─── OpenFreeMap Styles ───────────────────────────────────────────────────────
+export const OPEN_FREE_MAP_BRIGHT_STYLE =
+  "https://tiles.openfreemap.org/styles/bright";
 export const OPEN_FREE_MAP_LIBERTY_STYLE =
   "https://tiles.openfreemap.org/styles/liberty";
+export const OPEN_FREE_MAP_POSITRON_STYLE =
+  "https://tiles.openfreemap.org/styles/positron";
 
 // ─── Types & Interfaces ──────────────────────────────────────────────────────
 export interface VehicleTelemetry {
@@ -313,7 +317,7 @@ export function MapLibreMap({
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: OPEN_FREE_MAP_LIBERTY_STYLE,
+      style: OPEN_FREE_MAP_BRIGHT_STYLE,
       center: center || initialCenter,
       zoom: zoom || initialZoom,
       pitch: 30, // 3D perspective for Uber/Bolt feel
@@ -337,12 +341,15 @@ export function MapLibreMap({
       setMapLoaded(true);
     });
 
-    // Suppress missing sprite image warnings from the Liberty tile style
+    // Suppress missing sprite image warnings from tile styles
     // by providing a transparent 1x1 pixel fallback
+    const transparentPixel = { width: 1, height: 1, data: new Uint8Array(4) };
     map.on("styleimagemissing", (e: { id: string }) => {
-      if (!map.hasImage(e.id)) {
-        map.addImage(e.id, { width: 1, height: 1, data: new Uint8Array(4) });
-      }
+      try {
+        if (!map.hasImage(e.id)) {
+          map.addImage(e.id, transparentPixel);
+        }
+      } catch (_) {}
     });
 
     mapRef.current = map;

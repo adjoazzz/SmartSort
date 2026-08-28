@@ -20,7 +20,7 @@ import {
 import { PageLayout } from "../../components/PageLayout";
 import { useTranslation } from "react-i18next";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
-import { toast } from "sonner";
+import { toast } from "../../lib/toast";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import {

@@ -3,64 +3,7 @@ import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, AlertCircle, Info, Bell, X, ChevronRight, ArrowRight } from "lucide-react";
-
-interface Alert {
-  id: string;
-  timestamp: string;
-  type: string;
-  device: string;
-  severity: "CRITICAL" | "WARNING" | "INFO";
-  message: string;
-  status: string;
-}
-
-const RECENT_ALERTS: Alert[] = [
-  {
-    id: "ALT-9921",
-    timestamp: "14:32:01",
-    type: "Hardware Failure",
-    device: "SS-UNIT-042",
-    severity: "CRITICAL",
-    message: "Conveyor belt motor jammed",
-    status: "Active",
-  },
-  {
-    id: "ALT-9920",
-    timestamp: "14:15:22",
-    type: "Sensor Calibration",
-    device: "SS-UNIT-015",
-    severity: "WARNING",
-    message: "Optical sensor B variance detected",
-    status: "Active",
-  },
-  {
-    id: "ALT-9919",
-    timestamp: "13:45:10",
-    type: "Network Disconnect",
-    device: "SS-UNIT-089",
-    severity: "CRITICAL",
-    message: "Lost connection to local hub",
-    status: "Active",
-  },
-  {
-    id: "ALT-9918",
-    timestamp: "13:12:05",
-    type: "Bin Full",
-    device: "SS-UNIT-104",
-    severity: "WARNING",
-    message: "Organic bin capacity at 95%",
-    status: "Active",
-  },
-  {
-    id: "ALT-9917",
-    timestamp: "11:30:00",
-    type: "Maintenance",
-    device: "SS-UNIT-003",
-    severity: "INFO",
-    message: "Scheduled firmware update complete",
-    status: "Resolved",
-  },
-];
+import { useAlerts } from "../contexts/AlertsContext";
 
 interface AlertsSidebarProps {
   isOpen: boolean;
@@ -113,7 +56,8 @@ const itemVariants = {
 
 export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
   const { t } = useTranslation();
-  const activeCount = RECENT_ALERTS.filter((a) => a.status === "Active").length;
+  const { alerts } = useAlerts();
+  const activeCount = alerts.filter((a) => a.status === "Active").length;
 
   return (
     <AnimatePresence>
@@ -169,8 +113,8 @@ export function AlertsSidebar({ isOpen, onClose }: AlertsSidebarProps) {
                 animate="show"
                 className="flex flex-col gap-2"
               >
-                {RECENT_ALERTS.map((alert) => {
-                  const config = severityConfig[alert.severity];
+                {alerts.map((alert) => {
+                  const config = severityConfig[alert.severity] || severityConfig.INFO;
 
                   return (
                     <motion.div key={alert.id} variants={itemVariants}>

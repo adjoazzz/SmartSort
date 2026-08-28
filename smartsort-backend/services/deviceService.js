@@ -21,14 +21,19 @@ class DeviceService {
   }
 
   async updateDevice(id, data) {
-    const device = await prisma.device.findUnique({
-      where: { customBinId: id },
+    const device = await prisma.device.findFirst({
+      where: {
+        OR: [
+          { customBinId: id },
+          { id }
+        ]
+      },
     });
     if (!device) {
       throw new AppError('Device not found', 404, 'NOT_FOUND');
     }
     return prisma.device.update({
-      where: { customBinId: id },
+      where: { id: device.id },
       data,
     });
   }

@@ -26,7 +26,7 @@ import {
 } from "../../components/MapLibreMap";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
 import { authFetch } from "../../lib/authFetch";
-import { toast } from "sonner";
+import { toast } from "../../lib/toast";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Progress } from "../../components/ui/progress";
 

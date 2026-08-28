@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
-import { toast } from "sonner";
+import { toast } from "../lib/toast";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 type Fetcher<T> = () => Promise<T>;

@@ -31,6 +31,7 @@ const schemas = {
       facilityId: z.string().nullable().optional(),
     }),
     update: z.object({
+      customBinId: z.string().min(1).max(50).optional(),
       location: z.string().min(1).max(255).optional(),
       status: z.enum(['Active', 'Offline', 'Maintenance', 'Full', 'Online']).optional(),
       fillLevel: z.number().min(0).max(100).optional(),

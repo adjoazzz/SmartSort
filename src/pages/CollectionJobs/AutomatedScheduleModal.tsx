@@ -19,7 +19,8 @@ import {
   DialogDescription,
   DialogFooter,
 } from "../../components/ui/dialog";
-import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { toast } from "../../lib/toast";
 import { authFetch } from "../../lib/authFetch";
 
 interface AutomatedScheduleModalProps {

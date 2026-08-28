@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { supabase } from "../lib/supabaseClient";
+import { AlertsProvider } from "../contexts/AlertsContext";
 
 export function Root() {
   const location = useLocation();
@@ -56,8 +57,10 @@ export function Root() {
   }
 
   return (
-    <div className="relative w-full h-screen bg-slate-50">
-      <Outlet />
-    </div>
+    <AlertsProvider>
+      <div className="relative w-full h-screen bg-slate-50">
+        <Outlet />
+      </div>
+    </AlertsProvider>
   );
 }

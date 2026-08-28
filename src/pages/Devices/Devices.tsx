@@ -13,6 +13,7 @@ import {
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { RegisterDeviceModal } from "../../components/RegisterDeviceModal";
+import { EditBinSpecsModal } from "../../components/EditBinSpecsModal";
 import {
   Table,
   TableHeader,
@@ -76,13 +77,13 @@ function SidebarDetailsSkeleton() {
         <div className="h-4 w-12 bg-slate-200 dark:bg-muted rounded-md"></div>
       </div>
 
-      <div className="flex justify-between gap-3 mb-8">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="flex flex-col items-center flex-1">
+      <div className="grid grid-cols-5 gap-2 mb-8">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex flex-col items-center">
             <div className="w-full h-32 bg-slate-50 dark:bg-secondary/30 rounded-t-md relative flex flex-col justify-end border-b-2 border-slate-200 dark:border-slate-800">
               <div className="absolute inset-x-0 bottom-0 bg-slate-200 dark:bg-muted h-[40%]" />
             </div>
-            <div className="h-3 w-12 bg-slate-200 dark:bg-muted rounded mt-3"></div>
+            <div className="h-3 w-10 bg-slate-200 dark:bg-muted rounded mt-2.5"></div>
           </div>
         ))}
       </div>
@@ -142,6 +143,7 @@ export default function Devices() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDevice, setSelectedDevice] = useState("982-AX-01");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showEditSpecsModal, setShowEditSpecsModal] = useState(false);
   const [page, setPage] = useState(1);
   const [showSortingEvents, setShowSortingEvents] = useState(false);
   const limit = 10;
@@ -159,7 +161,7 @@ export default function Devices() {
     return response.json();
   };
 
-  const { data: devicesResponse, isLoading } = useRealtimeData<any>(
+  const { data: devicesResponse, isLoading, refresh: refreshDevices } = useRealtimeData<any>(
     fetchDevices,
     {
       tables: ["Device"],
@@ -227,14 +229,36 @@ export default function Devices() {
   const currentDevice =
     filteredData.find((d) => d.id === selectedDevice) || filteredData[0];
 
-  // Dynamic calculated compartments and telemetry
-  const recyclingFill = currentDevice ? currentDevice.fill : 0;
-  const organicsFill = currentDevice
-    ? Math.min(100, Math.round(currentDevice.fill * 0.6))
-    : 0;
-  const generalFill = currentDevice
-    ? Math.min(100, Math.round(currentDevice.fill * 0.3))
-    : 0;
+  // Dynamic calculated compartments for all item categories
+  const categoryFills = React.useMemo(() => {
+    if (!currentDevice) {
+      return [
+        { name: "Plastic", fill: 0, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
+        { name: "Paper", fill: 0, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
+        { name: "Metal", fill: 0, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
+        { name: "Glass", fill: 0, color: "bg-[#10b981] dark:bg-emerald-400", border: "border-[#059669]" },
+        { name: "Rejected", fill: 0, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
+      ];
+    }
+
+    const idStr = currentDevice.id || "A";
+    const seed = (idStr.charCodeAt(0) * 3 + idStr.charCodeAt(idStr.length - 1) * 7) % 50;
+    const base = currentDevice.fill;
+
+    const plastic = Math.min(100, Math.max(0, Math.round(base * (0.85 + (seed % 15) / 100))));
+    const paper = Math.min(100, Math.max(0, Math.round(base * (0.65 + ((seed * 3) % 20) / 100))));
+    const metal = Math.min(100, Math.max(0, Math.round(base * (0.45 + ((seed * 5) % 25) / 100))));
+    const glass = Math.min(100, Math.max(0, Math.round(base * (0.55 + ((seed * 7) % 20) / 100))));
+    const rejected = Math.min(100, Math.max(0, Math.round(base * (0.25 + ((seed * 11) % 15) / 100))));
+
+    return [
+      { name: "Plastic", fill: plastic, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
+      { name: "Paper", fill: paper, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
+      { name: "Metal", fill: metal, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
+      { name: "Glass", fill: glass, color: "bg-[#10b981] dark:bg-emerald-400", border: "border-[#059669]" },
+      { name: "Rejected", fill: rejected, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
+    ];
+  }, [currentDevice]);
   const currentTemp = currentDevice
     ? (((currentDevice.fill * 3) % 7) + 18.2).toFixed(1)
     : "22.4";
@@ -476,65 +500,38 @@ export default function Devices() {
                       Live Status &amp; Levels
                     </p>
                   </div>
-                  <button className="text-xs font-bold text-[#10b981] dark:text-emerald-400 uppercase tracking-wider hover:text-[#006c49] transition-colors cursor-pointer">
+                  <button
+                    onClick={() => setShowEditSpecsModal(true)}
+                    className="text-xs font-bold text-[#10b981] dark:text-emerald-400 uppercase tracking-wider hover:text-[#006c49] transition-colors cursor-pointer"
+                  >
                     Edit Specs
                   </button>
                 </div>
 
-                <div className="flex justify-between gap-3 mb-8">
-                  {/* Recycling Bar */}
-                  <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#89ceff]">
+                <div className="grid grid-cols-5 gap-2 mb-8">
+                  {categoryFills.map((cat) => (
+                    <div key={cat.name} className="flex flex-col items-center">
                       <div
-                        className="w-full bg-[#89ceff] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
-                        style={{ height: `${recyclingFill}%` }}
-                      ></div>
-                      <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <span className="text-lg font-bold text-foreground dark:text-white">
-                          {recyclingFill}%
-                        </span>
+                        className={`w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 ${cat.border}`}
+                      >
+                        <div
+                          className={`w-full ${cat.color} flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500`}
+                          style={{ height: `${cat.fill}%` }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                          <span className="text-xs sm:text-sm font-bold text-foreground dark:text-white drop-shadow-sm">
+                            {cat.fill}%
+                          </span>
+                        </div>
+                      </div>
+                      <div
+                        className="mt-2.5 text-[9px] sm:text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center truncate w-full"
+                        title={cat.name}
+                      >
+                        {cat.name}
                       </div>
                     </div>
-                    <div className="mt-3 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center">
-                      Recycling
-                    </div>
-                  </div>
-
-                  {/* Organics Bar */}
-                  <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-[#6ffbbe]">
-                      <div
-                        className="w-full bg-[#6ffbbe] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
-                        style={{ height: `${organicsFill}%` }}
-                      ></div>
-                      <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <span className="text-lg font-bold text-foreground dark:text-white">
-                          {organicsFill}%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="mt-3 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center">
-                      Organics
-                    </div>
-                  </div>
-
-                  {/* General Bar */}
-                  <div className="flex flex-col items-center flex-1">
-                    <div className="w-full h-32 bg-background dark:bg-secondary rounded-t-md overflow-hidden relative flex flex-col justify-end border-b-2 border-border">
-                      <div
-                        className="w-full bg-[#cbd5e1] flex items-center justify-center absolute bottom-0 left-0 right-0 transition-all duration-500"
-                        style={{ height: `${generalFill}%` }}
-                      ></div>
-                      <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <span className="text-lg font-bold text-foreground dark:text-white">
-                          {generalFill}%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="mt-3 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase text-center">
-                      General
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 border-t border-[#f1f5f9] dark:border-[#0f2942] pt-5">
@@ -650,6 +647,26 @@ export default function Devices() {
       <RegisterDeviceModal
         isOpen={showRegisterModal}
         onClose={() => setShowRegisterModal(false)}
+      />
+      <EditBinSpecsModal
+        isOpen={showEditSpecsModal}
+        onClose={() => setShowEditSpecsModal(false)}
+        device={
+          currentDevice
+            ? {
+                id: currentDevice.id,
+                name: currentDevice.name,
+                location: currentDevice.location,
+                status: currentDevice.status,
+              }
+            : null
+        }
+        onSuccess={(updated) => {
+          setSelectedDevice(updated.id);
+          if (refreshDevices) {
+            refreshDevices();
+          }
+        }}
       />
     </PageLayout>
   );
