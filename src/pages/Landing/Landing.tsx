@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { motion } from "motion/react";
 import emailjs from "@emailjs/browser";
 import { AlertCircle, Sun, Moon, ArrowRight, Play, Sidebar, Target, Clock, LayoutGrid, Camera, Layers, Cpu, Check, Loader2 } from "lucide-react";
-import imgHero from "../../assets/smartsort_hero.png";
+import imgHero from "../../assets/smartsort_hero_new.jpg";
 import imgLaptopUi from "../../assets/smartsort_laptop_ui.png";
 import ErrorButton from "../../components/SentryTestButton";
 
@@ -241,9 +241,12 @@ export default function Landing() {
       {/* 1. Header Navbar */}
       <header className="h-20 bg-white/80 dark:bg-card/80 backdrop-blur-md border-b border-border/50 dark:border-border/50 flex items-center justify-between px-6 sm:px-12 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-10">
-          <span className="text-2xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
-            Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
-          </span>
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="SmartSort Logo" className="w-8 h-8 object-contain rounded-md" />
+            <span className="text-2xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
+              Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
+            </span>
+          </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
             <a href="#features" data-testid="landing-nav-features" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors active:scale-[0.98] inline-block">Features</a>
             <a href="#process" data-testid="landing-nav-process" className="hover:text-[#006c49] dark:hover:text-[#6ffbbe] transition-colors active:scale-[0.98] inline-block">How It Operates</a>
@@ -372,10 +375,6 @@ export default function Landing() {
             <div className="absolute bottom-6 left-6 right-6 bg-card/80 dark:bg-card/90 backdrop-blur-md border border-border/60 dark:border-white/5 p-5 sm:p-6 rounded-xl text-foreground dark:text-white shadow-xl flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Real-Time Analysis</span>
-                <span className="inline-flex items-center gap-1.5 bg-[#10b981]/20 dark:bg-emerald-500/20 text-[#10b981] dark:text-emerald-400 text-[9px] font-extrabold tracking-widest px-2.5 py-1 rounded-full uppercase">
-                  <span className="w-1.5 h-1.5 bg-[#10b981] dark:bg-emerald-500 rounded-full animate-ping" />
-                  Live
-                </span>
               </div>
               <div className="grid grid-cols-3 gap-4 border-t border-border/60 dark:border-white/10 pt-3">
                 <div className="flex flex-col">
@@ -786,9 +785,12 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-6 gap-10">
             {/* Branding Column */}
             <div className="md:col-span-2 flex flex-col gap-4">
-              <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
-                Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
-              </span>
+              <div className="flex items-center gap-3">
+                <img src="/logo.png" alt="SmartSort Logo" className="w-8 h-8 object-contain rounded-md" />
+                <span className="text-xl font-extrabold text-[#121c28] dark:text-white tracking-tight">
+                  Smart<span className="text-[#006c49] dark:text-emerald-400">Sort</span>
+                </span>
+              </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Redefining the industrial waste landscape through artificial intelligence and automated robotics. Built for a sustainable, data-driven future.
               </p>

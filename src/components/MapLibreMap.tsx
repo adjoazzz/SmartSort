@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-// ─── OpenFreeMap Styles ───────────────────────────────────────────────────────
-export const OPEN_FREE_MAP_BRIGHT_STYLE =
-  "https://tiles.openfreemap.org/styles/bright";
-export const OPEN_FREE_MAP_LIBERTY_STYLE =
-  "https://tiles.openfreemap.org/styles/liberty";
-export const OPEN_FREE_MAP_POSITRON_STYLE =
-  "https://tiles.openfreemap.org/styles/positron";
+// ─── Free Tile Styles ───────────────────────────────────────────────────────
+export const CARTO_VOYAGER_STYLE =
+  "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+export const CARTO_POSITRON_STYLE =
+  "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+export const CARTO_DARK_MATTER_STYLE =
+  "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
 // ─── Types & Interfaces ──────────────────────────────────────────────────────
 export interface VehicleTelemetry {
@@ -317,7 +317,7 @@ export function MapLibreMap({
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: OPEN_FREE_MAP_BRIGHT_STYLE,
+      style: CARTO_VOYAGER_STYLE,
       center: center || initialCenter,
       zoom: zoom || initialZoom,
       pitch: 30, // 3D perspective for Uber/Bolt feel
