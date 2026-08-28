@@ -3,7 +3,23 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { supabase } from "../../lib/supabaseClient";
 import { Shield, Truck, User, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import imgAiCore from "../../assets/smartsort_ai_core.png";
+import imgSlide1 from "../../assets/login_slide_1.jpg";
+import imgSlide2 from "../../assets/login_slide_2.jpg";
+
+const CAROUSEL_SLIDES = [
+  {
+    image: imgSlide1,
+    title: "Simple, Eco-Friendly Sorting",
+    description: "SmartSort integrates seamlessly with your existing recycling bins, providing an approachable and clean solution for waste management without overcomplicating the process."
+  },
+  {
+    image: imgSlide2,
+    title: "Automated Mechanical Precision",
+    description: "Using simple mechanical parts and DIY engineering, our automated slide gently routes recyclable items into their correct cardboard bins, saving time and improving sorting accuracy."
+  }
+];
 
 // --- Custom SVGs for UI Icons ---
 
@@ -77,6 +93,15 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-rotate carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Selected Login Role Toggle
   const [selectedRole, setSelectedRole] = useState<"manager" | "collector">(
@@ -577,65 +602,68 @@ export default function Login() {
         </div> */}
       </div>
 
-      {/* RIGHT PANEL: High-Tech Branding */}
-      <div
-        className="w-full md:w-1/2 bg-[#020e24] dark:bg-slate-900 text-white flex flex-col justify-center items-center p-8 sm:p-12 lg:p-16 relative overflow-hidden"
-        style={{
-          backgroundImage:
-            "radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      >
-        {/* Glow ambient background effects */}
-        <div className="absolute w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      {/* RIGHT PANEL: Dynamic Carousel */}
+      <div className="w-full md:w-1/2 relative flex flex-col justify-end p-8 sm:p-12 lg:p-16 overflow-hidden bg-[#020e24] dark:bg-slate-900">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full"
+          >
+            <img
+              src={CAROUSEL_SLIDES[currentSlide].image}
+              alt={CAROUSEL_SLIDES[currentSlide].title}
+              className="w-full h-full object-cover"
+            />
+            {/* Dark gradient overlay for text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#020e24] via-[#020e24]/70 to-[#020e24]/20 dark:from-slate-900 dark:via-slate-900/70 dark:to-slate-900/20" />
+          </motion.div>
+        </AnimatePresence>
 
-        <div className="max-w-md w-full flex flex-col items-center gap-10 relative z-10">
-          {/* Circular float card */}
-          <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-[#07132a]/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-md flex flex-col items-center justify-center gap-3 p-6 group hover:border-blue-500/30 transition-all duration-500">
-            {/* AI badge */}
-            <span className="absolute top-4 right-4 bg-primary text-[8px] font-extrabold tracking-widest px-2 py-0.5 rounded uppercase">
-              AI Engine
-            </span>
-
-            {/* Circular glowing orb */}
-            <div className="w-44 h-44 rounded-full flex items-center justify-center relative">
-              <div className="absolute inset-0 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-all" />
-              <img
-                src={imgAiCore}
-                alt="SmartSort AI Core"
-                className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-
-            {/* Bottom brand card status */}
-            <span className="text-lg font-black tracking-tight text-blue-400">
+        {/* Content on top */}
+        <div className="relative z-10 w-full max-w-lg mx-auto flex flex-col gap-6">
+          {/* SmartSort Brand Badge */}
+          <div className="mb-4">
+            <span className="bg-primary/90 backdrop-blur text-[10px] font-extrabold tracking-widest text-white px-2.5 py-1 rounded uppercase shadow-sm">
               SmartSort
             </span>
-
-            {/* Binary check badge */}
-            <span className="absolute bottom-4 left-4 bg-white/5 border border-white/10 text-[8.5px] font-mono tracking-wider px-2 py-0.5 rounded text-[#10b981] dark:text-emerald-400 flex items-center gap-1">
-              ✓ 1001100111100
-            </span>
           </div>
 
-          {/* Tagline block */}
-          <div className="text-center flex flex-col gap-4">
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Revolutionary Waste Management
-            </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">
-              SmartSort is the next generation waste management software which
-              growth with its users. Built with the best practices in mind it
-              fits your needs no matter if you need the whole software or just
-              one component. Is there still something missing? Get in touch so
-              that we can tailor it to your needs.
-            </p>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col gap-3 min-h-[140px]"
+            >
+              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">
+                {CAROUSEL_SLIDES[currentSlide].title}
+              </h3>
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-medium drop-shadow-md">
+                {CAROUSEL_SLIDES[currentSlide].description}
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
           {/* Dots Pagination */}
-          <div className="flex gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-white shadow-sm" />
-            <span className="w-2.5 h-2.5 rounded-full bg-white/20 hover:bg-white/40 cursor-pointer transition-colors" />
+          <div className="flex gap-2 pt-2">
+            {CAROUSEL_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                  currentSlide === idx
+                    ? "bg-white shadow-sm w-6"
+                    : "bg-white/40 hover:bg-white/70 cursor-pointer"
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>
