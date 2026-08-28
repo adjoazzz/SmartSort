@@ -233,10 +233,9 @@ export default function Devices() {
   const categoryFills = React.useMemo(() => {
     if (!currentDevice) {
       return [
-        { name: "Plastic", fill: 0, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
+        { name: "Plastic & Glass", fill: 0, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
         { name: "Paper", fill: 0, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
         { name: "Metal", fill: 0, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
-        { name: "Glass", fill: 0, color: "bg-[#10b981] dark:bg-emerald-400", border: "border-[#059669]" },
         { name: "Rejected", fill: 0, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
       ];
     }
@@ -245,17 +244,15 @@ export default function Devices() {
     const seed = (idStr.charCodeAt(0) * 3 + idStr.charCodeAt(idStr.length - 1) * 7) % 50;
     const base = currentDevice.fill;
 
-    const plastic = Math.min(100, Math.max(0, Math.round(base * (0.85 + (seed % 15) / 100))));
+    const plasticGlass = Math.min(100, Math.max(0, Math.round(base * (0.85 + (seed % 15) / 100))));
     const paper = Math.min(100, Math.max(0, Math.round(base * (0.65 + ((seed * 3) % 20) / 100))));
     const metal = Math.min(100, Math.max(0, Math.round(base * (0.45 + ((seed * 5) % 25) / 100))));
-    const glass = Math.min(100, Math.max(0, Math.round(base * (0.55 + ((seed * 7) % 20) / 100))));
     const rejected = Math.min(100, Math.max(0, Math.round(base * (0.25 + ((seed * 11) % 15) / 100))));
 
     return [
-      { name: "Plastic", fill: plastic, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
+      { name: "Plastic & Glass", fill: plasticGlass, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
       { name: "Paper", fill: paper, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
       { name: "Metal", fill: metal, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
-      { name: "Glass", fill: glass, color: "bg-[#10b981] dark:bg-emerald-400", border: "border-[#059669]" },
       { name: "Rejected", fill: rejected, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
     ];
   }, [currentDevice]);
@@ -325,9 +322,6 @@ export default function Devices() {
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Fill %
-                </TableHead>
-                <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Battery / Power
                 </TableHead>
                 <TableHead className="px-6 py-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Last Active
@@ -413,35 +407,6 @@ export default function Devices() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1 font-mono text-xs font-semibold">
-                          <Battery
-                            className={`w-3.5 h-3.5 ${
-                              device.battery < 25
-                                ? "text-red-500"
-                                : device.battery < 60
-                                  ? "text-amber-500"
-                                  : "text-emerald-500"
-                            }`}
-                          />
-                          <span
-                            className={
-                              device.battery < 25
-                                ? "text-red-500 font-bold"
-                                : "text-foreground dark:text-slate-200"
-                            }
-                          >
-                            {device.battery}%
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-medium text-muted-foreground bg-slate-100 dark:bg-secondary px-1.5 py-0.5 rounded">
-                          {device.powerSource === "Solar + Battery"
-                            ? "☀️ Solar"
-                            : "🔋 Batt"}
-                        </span>
-                      </div>
-                    </TableCell>
                     <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {device.lastActive}
                     </TableCell>
@@ -508,7 +473,7 @@ export default function Devices() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-5 gap-2 mb-8">
+                <div className="grid grid-cols-4 gap-2 mb-8">
                   {categoryFills.map((cat) => (
                     <div key={cat.name} className="flex flex-col items-center">
                       <div

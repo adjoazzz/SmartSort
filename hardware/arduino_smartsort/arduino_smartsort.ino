@@ -154,11 +154,11 @@ void handleSortCommand(String category)
 {
   int targetAngle = -1; // -1 means unrecognized
 
-  if (category.equalsIgnoreCase("glass"))
+  if (category.equalsIgnoreCase("glass") || category.equalsIgnoreCase("plastic"))
     targetAngle = 0;
   else if (category.equalsIgnoreCase("metal"))
     targetAngle = 45;
-  else if (category.equalsIgnoreCase("paper") || category.equalsIgnoreCase("plastic"))
+  else if (category.equalsIgnoreCase("paper"))
     targetAngle = 90;
   else if (category.equalsIgnoreCase("rejected_waste"))
     targetAngle = 135;
