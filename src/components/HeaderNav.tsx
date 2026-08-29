@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useTheme } from "next-themes";
-import { Menu, Search, Bell, Settings, ChevronDown } from "lucide-react";
+import { Menu, Search, Bell, Settings, ChevronDown, Download } from "lucide-react";
 import imgUserProfileAvatar from "../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
 import { SideNav } from "./SideNav";
 import { AlertsSidebar } from "./AlertsSidebar";
@@ -274,7 +274,18 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
           </CommandDialog>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 sm:gap-6">
+          {/* PWA Install Button */}
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-pwa-install"))}
+            data-testid="header-pwa-install-btn"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-[#006c49] dark:text-emerald-400 bg-[#006c49]/10 dark:bg-emerald-500/10 hover:bg-[#006c49]/20 rounded-lg transition-all active:scale-[0.98] cursor-pointer border border-[#006c49]/20"
+            title="Install SmartSort PWA"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Install App</span>
+          </button>
+
           {!hideAlertsIcon && (
             <button
               onClick={() => setIsAlertsOpen(true)}

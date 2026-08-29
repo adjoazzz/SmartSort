@@ -193,7 +193,10 @@ export function BinLocatorMap({
   title,
 }: BinLocatorMapProps) {
   const [facLat, facLng] = facilityCoords;
-  const mapCenter: [number, number] = [facLng, facLat]; // MapLibre uses [lng, lat]
+  const mapCenter: [number, number] = useMemo(
+    () => [facLng, facLat],
+    [facLng, facLat],
+  ); // MapLibre uses [lng, lat]
 
   // Layer filter state: 'all' | 'bins' | 'facilities'
   const [layerFilter, setLayerFilter] = useState<"all" | "bins" | "facilities">(
@@ -409,6 +412,7 @@ export function BinLocatorMap({
         zoom={16}
         pins={pins}
         height="100%"
+        className="w-full h-full"
         onMarkerClick={(pin) => {
           const matchedJob = activeJobList.find((j) => j.id === pin.id);
           if (matchedJob && onSelectJob) {

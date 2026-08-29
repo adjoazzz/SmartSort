@@ -11,11 +11,11 @@ export const OSM_RASTER_STYLE: any = {
       tiles: [
         "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
         "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
       ],
       tileSize: 256,
       attribution: "&copy; OpenStreetMap Contributors",
-    }
+    },
   },
   layers: [
     {
@@ -23,9 +23,9 @@ export const OSM_RASTER_STYLE: any = {
       type: "raster",
       source: "osm",
       minzoom: 0,
-      maxzoom: 19
-    }
-  ]
+      maxzoom: 19,
+    },
+  ],
 };
 
 // ─── Types & Interfaces ──────────────────────────────────────────────────────
@@ -356,8 +356,16 @@ export function MapLibreMap({
     map.addControl(new maplibregl.FullscreenControl(), "top-right");
 
     map.on("load", () => {
+      map.resize();
       setMapLoaded(true);
     });
+
+    // Extra safety resize after initial layout settles
+    const timer = setTimeout(() => {
+      try {
+        map.resize();
+      } catch (_) {}
+    }, 250);
 
     // Suppress missing sprite image warnings from tile styles
     // by providing a transparent 1x1 pixel fallback
@@ -425,53 +433,53 @@ export function MapLibreMap({
     // Add or update pins
     pins.forEach((pin) => {
       const existing = pinMarkersRef.current.get(pin.id);
-
       if (existing) {
-        existing.setLngLat([pin.lng, pin.lat]);
-      } else {
-        const el = createPinIconElement(pin);
-        const isFac = isFacilityPin(pin);
-        const iconSrc = isFac
-          ? "/facility-marker-icon.png"
-          : pin.iconUrl || "/bin-marker-icon.png";
-        const iconAlt = isFac ? "Facility" : "Smart Bin";
-
-        const popup = new maplibregl.Popup({ offset: 25, maxWidth: "260px" })
-          .setHTML(`
-          <div style="font-family:system-ui,sans-serif;padding:6px;min-width:180px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <div style="width:24px;height:24px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <img src="${iconSrc}" alt="${iconAlt}" style="width:16px;height:16px;object-fit:contain;" />
-              </div>
-              <div style="font-weight:700;font-size:13px;color:#0f172a;line-height:1.2;">${pin.title}</div>
-            </div>
-            ${pin.subtitle ? `<div style="font-size:11px;color:#64748b;font-family:monospace;margin-bottom:6px;">${pin.subtitle}</div>` : ""}
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              ${pin.urgency ? `<span style="display:inline-block;padding:2px 8px;border-radius:99px;background:#0284c722;color:#0284c7;font-weight:700;font-size:11px;">${pin.urgency}</span>` : ""}
-              ${
-                pin.fill !== undefined
-                  ? `
-                <span style="font-size:11px;color:${pin.fill >= 80 ? "#ba1a1a" : "#006c49"};font-weight:700;font-family:monospace;">
-                  Fill: ${pin.fill}%
-                </span>
-              `
-                  : ""
-              }
-            </div>
-          </div>
-        `);
-
-        const marker = new maplibregl.Marker({ element: el })
-          .setLngLat([pin.lng, pin.lat])
-          .setPopup(popup)
-          .addTo(map);
-
-        el.addEventListener("click", () => {
-          onMarkerClick?.(pin);
-        });
-
-        pinMarkersRef.current.set(pin.id, marker);
+        existing.remove();
+        pinMarkersRef.current.delete(pin.id);
       }
+
+      const el = createPinIconElement(pin);
+      const isFac = isFacilityPin(pin);
+      const iconSrc = isFac
+        ? "/facility-marker-icon.png"
+        : pin.iconUrl || "/bin-marker-icon.png";
+      const iconAlt = isFac ? "Facility" : "Smart Bin";
+
+      const popup = new maplibregl.Popup({ offset: 25, maxWidth: "260px" })
+        .setHTML(`
+        <div style="font-family:system-ui,sans-serif;padding:6px;min-width:180px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <div style="width:24px;height:24px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <img src="${iconSrc}" alt="${iconAlt}" style="width:16px;height:16px;object-fit:contain;" />
+            </div>
+            <div style="font-weight:700;font-size:13px;color:#0f172a;line-height:1.2;">${pin.title}</div>
+          </div>
+          ${pin.subtitle ? `<div style="font-size:11px;color:#64748b;font-family:monospace;margin-bottom:6px;">${pin.subtitle}</div>` : ""}
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            ${pin.urgency ? `<span style="display:inline-block;padding:2px 8px;border-radius:99px;background:#0284c722;color:#0284c7;font-weight:700;font-size:11px;">${pin.urgency}</span>` : ""}
+            ${
+              pin.fill !== undefined
+                ? `
+              <span style="font-size:11px;color:${pin.fill >= 80 ? "#ba1a1a" : "#006c49"};font-weight:700;font-family:monospace;">
+                Fill: ${pin.fill}%
+              </span>
+            `
+                : ""
+            }
+          </div>
+        </div>
+      `);
+
+      const marker = new maplibregl.Marker({ element: el })
+        .setLngLat([pin.lng, pin.lat])
+        .setPopup(popup)
+        .addTo(map);
+
+      el.addEventListener("click", () => {
+        onMarkerClick?.(pin);
+      });
+
+      pinMarkersRef.current.set(pin.id, marker);
     });
   }, [pins, mapLoaded, onMarkerClick]);
 
@@ -547,7 +555,7 @@ export function MapLibreMap({
   }, [onRegisterTelemetryStream, mapLoaded, activeTrackingId]);
 
   return (
-    <div className={`relative w-full ${className}`} style={{ height }}>
+    <div className={`relative w-full h-full ${className}`} style={{ height }}>
       <div
         ref={containerRef}
         className="w-full h-full rounded-xl overflow-hidden shadow-inner"

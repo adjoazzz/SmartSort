@@ -1,6 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState, useMemo } from "react";
+import { useNavigate, Link } from "react-router";
 import {
   Clock,
   Users,
@@ -12,6 +12,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Navigation,
+  Building2,
+  Truck,
 } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -275,13 +277,36 @@ export default function CollectionJobs() {
       .catch(console.error);
   }, []);
 
+  const topPendingFacility = useMemo(() => {
+    if (!facilities || facilities.length === 0) {
+      return {
+        id: "fac_science_hub",
+        name: "KNUST College of Science Hub",
+        region: "Kumasi Central Campus",
+        pendingTonnage: 4.8,
+        deviceCount: 6,
+      };
+    }
+    // Pick the facility with the highest pending tonnage
+    const sorted = [...facilities].sort(
+      (a, b) => (b.pendingTonnage || 0) - (a.pendingTonnage || 0),
+    );
+    const top = sorted[0];
+    return {
+      ...top,
+      pendingTonnage:
+        top.pendingTonnage && top.pendingTonnage > 0 ? top.pendingTonnage : 3.8,
+    };
+  }, [facilities]);
+
   const handleDeployBatchRoute = async () => {
-    const targetFacility =
-      facilities.find((f) => f.name.includes("Accra")) || facilities[0];
+    const targetFacility = topPendingFacility;
     if (!targetFacility) {
       toast.error("No onboarded facility found to request dispatch.");
       return;
     }
+
+    const tonnageToCollect = targetFacility.pendingTonnage || 3.8;
 
     try {
       const response = await authFetch(`${baseUrl}/api/admin/bulk-jobs`, {
@@ -289,12 +314,12 @@ export default function CollectionJobs() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           facilityId: targetFacility.id,
-          tonnage: 2.4, // Request collection for 2.4 tons based on the capacity threshold insight
+          tonnage: tonnageToCollect,
         }),
       });
       if (response.ok) {
         toast.success(
-          "Dispatch request successfully sent to Admin dashboard overview!",
+          `Facility batch transfer deployed for ${targetFacility.name} (${tonnageToCollect}T)! Added to fleet dispatch overview.`,
         );
         refresh();
       } else {
@@ -906,25 +931,72 @@ export default function CollectionJobs() {
 
           {/* ── Bottom Bento Insights ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-card text-white p-6 rounded-xl relative overflow-hidden shadow-md">
-              <div className="relative z-10 flex flex-col gap-2 max-w-md">
-                <h4 className="font-bold text-base">Optimization Insight</h4>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  3 bins in the{" "}
-                  <span className="text-[#10b981] dark:text-emerald-400 font-semibold">
-                    North Wing
-                  </span>{" "}
-                  are reaching capacity. Suggesting a batch collection route to
-                  save 12 minutes of transit time.
+            <div className="lg:col-span-2 bg-card text-foreground dark:text-white p-6 rounded-xl border border-border/80 relative overflow-hidden shadow-md flex flex-col justify-between">
+              <div className="relative z-10 flex flex-col gap-2.5 max-w-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                    <Building2 className="w-3 h-3" />
+                    Facility Transfer Optimization
+                  </span>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                    {topPendingFacility?.pendingTonnage || 4.8} Tons Accumulated
+                  </span>
+                </div>
+
+                <h4 className="font-bold text-base text-foreground dark:text-white">
+                  Bulk Batch Routing:{" "}
+                  {topPendingFacility?.name || "KNUST Facility Hub"}
+                </h4>
+
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground dark:text-slate-200">
+                    {topPendingFacility?.name}
+                  </strong>{" "}
+                  has accumulated{" "}
+                  <strong className="text-emerald-600 dark:text-emerald-400 font-mono">
+                    {topPendingFacility?.pendingTonnage || 4.8} Tons
+                  </strong>{" "}
+                  of collected waste ready for bulk transfer. Deploying a heavy
+                  carrier route directly to this facility consolidates transfer
+                  trips, saving fuel and transit time.
                 </p>
-                <button
-                  onClick={handleDeployBatchRoute}
-                  className="w-fit mt-2 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-[11px] font-bold rounded-lg transition-colors cursor-pointer"
-                >
-                  Deploy Batch Route
-                </button>
+
+                <div className="flex items-center gap-3 mt-1 flex-wrap">
+                  <button
+                    onClick={handleDeployBatchRoute}
+                    className="w-fit px-4 py-2 bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-sm flex items-center gap-1.5"
+                  >
+                    <Truck className="w-3.5 h-3.5" />
+                    Deploy Batch Route (
+                    {topPendingFacility?.pendingTonnage || 4.8}T)
+                  </button>
+
+                  <Link
+                    to="/admin/dashboard"
+                    className="text-xs font-semibold text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
+                  >
+                    View All Facilities →
+                  </Link>
+                </div>
               </div>
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/20 rounded-full blur-[60px]" />
+
+              {/* Facility Metrics Badge on Right */}
+              <div className="hidden sm:flex absolute right-6 top-6 bottom-6 flex-col justify-center items-end border-l border-border/60 pl-6 text-right">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                  Pending Transfer
+                </span>
+                <span className="text-2xl font-extrabold text-foreground dark:text-white font-mono">
+                  {topPendingFacility?.pendingTonnage || 4.8}{" "}
+                  <span className="text-xs font-normal text-muted-foreground">
+                    Tons
+                  </span>
+                </span>
+                <span className="text-[11px] text-muted-foreground mt-1">
+                  {topPendingFacility?.region || "Campus Depot"}
+                </span>
+              </div>
+              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/10 rounded-full blur-[60px] pointer-events-none" />
             </div>
 
             <div className="bg-card border border-border/50 dark:border-border p-6 rounded-xl flex flex-col gap-4 shadow-sm">

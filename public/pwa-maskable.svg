@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="pwaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006c49" />
+      <stop offset="50%" stop-color="#004d34" />
+      <stop offset="100%" stop-color="#071321" />
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Maskable full-bleed background -->
+  <rect width="512" height="512" fill="url(#pwaGrad)" />
+
+  <!-- Inner Elevated App Badge Shape -->
+  <rect x="76" y="76" width="360" height="360" rx="90" fill="#0b241c" stroke="#10b981" stroke-width="4" stroke-opacity="0.35" filter="url(#shadow)" />
+
+  <!-- Recycling Chute Arrows Emblem -->
+  <g transform="translate(256, 256) scale(1.15)">
+    <!-- Top Arrow -->
+    <path d="M-60 -95 L60 -95 L40 -125 M60 -95 L40 -65" fill="none" stroke="#10b981" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Right Down Arrow -->
+    <path d="M95 -40 L95 80 L65 60 M95 80 L125 60" fill="none" stroke="#34d399" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Bottom Left Arrow -->
+    <path d="M40 95 L-80 95 L-60 125 M-80 95 L-60 65" fill="none" stroke="#6ee7b7" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Center AI Sorting Core Node -->
+    <circle cx="0" cy="0" r="32" fill="url(#leafGrad)" />
+    <path d="M-12 0 L-4 8 L12 -8" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>

@@ -1,6 +1,25 @@
 import { apiService } from "../../lib/apiService";
 import React, { useState, useEffect } from "react";
-import { FileText, Clock, CheckCircle, Smile, ChevronDown, FilterX, Download, MapPin, FilePlus, MessageCircle, Eye, ChevronLeft, ChevronRight, Leaf, Send, Filter, Plus } from "lucide-react";
+import { useNavigate } from "react-router";
+import {
+  FileText,
+  Clock,
+  CheckCircle,
+  Smile,
+  ChevronDown,
+  FilterX,
+  Download,
+  MapPin,
+  FilePlus,
+  MessageCircle,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  Leaf,
+  Send,
+  Filter,
+  Plus,
+} from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -89,6 +108,7 @@ const ISSUE_CATEGORIES = [
 ];
 
 export default function CommunityFeedback() {
+  const navigate = useNavigate();
   interface FeedbackItem {
     id: string;
     userName: string;
@@ -113,7 +133,8 @@ export default function CommunityFeedback() {
   const itemsPerPage = 5;
 
   const fetchFeedbacks = async () => {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+    const baseUrl =
+      import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
     return apiService.get<FeedbackItem[]>(`${baseUrl}/api/feedback`);
   };
 
@@ -151,7 +172,8 @@ export default function CommunityFeedback() {
     }
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+      const baseUrl =
+        import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
       await apiService.post(`${baseUrl}/api/feedback`, {
         userName,
         location,
@@ -177,8 +199,11 @@ export default function CommunityFeedback() {
     else if (currentStatus === "Resolved") nextStatus = "Pending";
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
-      await apiService.patch(`${baseUrl}/api/feedback/${id}`, { status: nextStatus });
+      const baseUrl =
+        import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000";
+      await apiService.patch(`${baseUrl}/api/feedback/${id}`, {
+        status: nextStatus,
+      });
       await refresh();
     } catch (error) {
       console.error("Error updating status:", error);
@@ -217,9 +242,7 @@ export default function CommunityFeedback() {
       trendDirection: "neutral" as const,
       iconColorClass: "text-[#ba1a1a] dark:text-red-500",
       iconBgClass: "bg-[#ffdad6] dark:bg-red-500/10",
-      icon: (
-        <FileText className="w-4 h-4" strokeWidth={2} />
-      ),
+      icon: <FileText className="w-4 h-4" strokeWidth={2} />,
     },
     {
       title: "AVG RESPONSE TIME",
@@ -228,9 +251,7 @@ export default function CommunityFeedback() {
       trendDirection: "neutral" as const,
       iconColorClass: "text-[#0284c7] dark:text-sky-500",
       iconBgClass: "bg-[#23acf1]/10 dark:bg-sky-500/10",
-      icon: (
-        <Clock className="w-4 h-4" strokeWidth={2} />
-      ),
+      icon: <Clock className="w-4 h-4" strokeWidth={2} />,
     },
     {
       title: "RESOLUTION RATE",
@@ -239,9 +260,7 @@ export default function CommunityFeedback() {
       trendDirection: "neutral" as const,
       iconColorClass: "text-[#006c49] dark:text-emerald-400",
       iconBgClass: "bg-[#10b981]/10 dark:bg-emerald-500/10",
-      icon: (
-        <CheckCircle className="w-4 h-4" strokeWidth={2} />
-      ),
+      icon: <CheckCircle className="w-4 h-4" strokeWidth={2} />,
     },
     {
       title: "COMMUNITY SENTIMENT",
@@ -250,9 +269,7 @@ export default function CommunityFeedback() {
       trendDirection: "neutral" as const,
       iconColorClass: "text-[#d97706] dark:text-amber-500",
       iconBgClass: "bg-[#fef3c7] dark:bg-amber-500/10",
-      icon: (
-        <Smile className="w-4 h-4" strokeWidth={2} />
-      ),
+      icon: <Smile className="w-4 h-4" strokeWidth={2} />,
     },
   ];
 
@@ -271,10 +288,13 @@ export default function CommunityFeedback() {
     return matchesStatus && matchesCategory;
   });
 
-  const totalPages = Math.max(1, Math.ceil(filteredFeedbacks.length / itemsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredFeedbacks.length / itemsPerPage),
+  );
   const paginatedFeedbacks = filteredFeedbacks.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const handleExportPDF = () => {
@@ -349,7 +369,10 @@ export default function CommunityFeedback() {
         <div className="px-6 py-4 border-b border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between bg-background dark:bg-secondary">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" strokeWidth={2} />
+              <Filter
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+                strokeWidth={2}
+              />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -467,7 +490,10 @@ export default function CommunityFeedback() {
                           className="p-1.5 text-muted-foreground hover:text-[#006c49] dark:hover:text-emerald-400 hover:bg-primary/10 rounded-lg transition-colors cursor-pointer"
                           title="Convert to Job"
                         >
-                          <FilePlus className="w-[18px] h-[18px]" strokeWidth={2} />
+                          <FilePlus
+                            className="w-[18px] h-[18px]"
+                            strokeWidth={2}
+                          />
                         </button>
                         <button
                           onClick={() =>
@@ -476,7 +502,10 @@ export default function CommunityFeedback() {
                           className="p-1.5 text-muted-foreground hover:text-[#0284c7] dark:hover:text-sky-400 hover:bg-[#0284c7]/10 dark:hover:bg-sky-500/10 rounded-lg transition-colors cursor-pointer"
                           title={`Update status: ${item.status === "Pending" ? "In Progress" : item.status === "In Progress" ? "Resolved" : "Pending"}`}
                         >
-                          <MessageCircle className="w-[18px] h-[18px]" strokeWidth={2} />
+                          <MessageCircle
+                            className="w-[18px] h-[18px]"
+                            strokeWidth={2}
+                          />
                         </button>
                         <button
                           className="p-1.5 text-muted-foreground hover:text-foreground dark:text-white hover:bg-[#e2e8f0] dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
@@ -497,12 +526,14 @@ export default function CommunityFeedback() {
         <div className="px-6 py-4 border-t border-[#f1f5f9] dark:border-[#0f2942] flex items-center justify-between mt-auto bg-card">
           <div className="text-xs text-muted-foreground">
             Page{" "}
-            <span className="font-bold text-foreground dark:text-white">{currentPage}</span>{" "}
+            <span className="font-bold text-foreground dark:text-white">
+              {currentPage}
+            </span>{" "}
             of {totalPages}
           </div>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
               className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
             >
@@ -526,7 +557,9 @@ export default function CommunityFeedback() {
               );
             })}
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               className="p-1 text-muted-foreground hover:text-foreground dark:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
             >
@@ -623,8 +656,11 @@ export default function CommunityFeedback() {
             </p>
           </div>
           <div className="relative z-10 mt-8">
-            <button className="w-full py-2.5 bg-primary text-white font-bold text-xs rounded-lg hover:bg-primary/90 transition-colors shadow-sm tracking-wide">
-              View Impact Report
+            <button
+              onClick={() => navigate("/analytics")}
+              className="w-full py-2.5 bg-primary text-white font-bold text-xs rounded-lg hover:bg-primary/90 transition-colors shadow-sm tracking-wide cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              View Impact Report →
             </button>
           </div>
           {/* Decorative background pattern */}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { supabase } from "../lib/supabaseClient";
 import { AlertsProvider } from "../contexts/AlertsContext";
+import { PwaInstallPrompt } from "../components/PwaInstallPrompt";
 
 export function Root() {
   const location = useLocation();
@@ -78,6 +79,7 @@ export function Root() {
     <AlertsProvider>
       <div className="relative w-full h-screen bg-slate-50">
         <Outlet />
+        <PwaInstallPrompt />
       </div>
     </AlertsProvider>
   );

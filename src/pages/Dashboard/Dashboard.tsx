@@ -1,5 +1,5 @@
 import { authFetch } from "../../lib/authFetch";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Cpu,
   Box,
@@ -8,6 +8,11 @@ import {
   Loader2,
   Download,
   Database,
+  ShieldAlert,
+  Flame,
+  Zap,
+  ChevronRight,
+  Clock,
 } from "lucide-react";
 import { useNavigate, useSearchParams, Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
@@ -219,12 +224,24 @@ export default function Dashboard() {
     return response.json();
   };
 
+  const fetchFacilities = async () => {
+    const response = await authFetch(`${baseUrl}/api/dashboard/facilities`);
+    if (!response.ok) throw new Error("Failed to fetch facilities");
+    return response.json();
+  };
+
   // Realtime subscriptions — instant updates when DB changes
   const {
     data: devicesData,
     isLoading: devicesLoading,
     refresh: refreshDevices,
   } = useRealtimeData<any>(fetchDevices, { tables: ["Device"] });
+
+  const {
+    data: facilitiesData,
+    isLoading: facilitiesLoading,
+    refresh: refreshFacilities,
+  } = useRealtimeData<any[]>(fetchFacilities, { tables: ["Facility"] });
 
   const {
     data: metricsData,
@@ -261,11 +278,53 @@ export default function Dashboard() {
     refreshThroughput().catch(console.error);
     refreshWasteCategories().catch(console.error);
     refreshContamination().catch(console.error);
+    refreshFacilities().catch(console.error);
   }, [facilityId]);
 
   useEffect(() => {
     refreshContamination().catch(console.error);
   }, [detectionsPage]);
+
+  const mapFacilities = useMemo(() => {
+    if (
+      !facilitiesData ||
+      !Array.isArray(facilitiesData) ||
+      facilitiesData.length === 0
+    ) {
+      return undefined;
+    }
+    return facilitiesData.map((f: any) => ({
+      id: f.id,
+      name: f.name,
+      region: f.region || "Campus Hub",
+      coords: [
+        typeof f.latitude === "number" && f.latitude !== 0
+          ? f.latitude
+          : 6.6735,
+        typeof f.longitude === "number" && f.longitude !== 0
+          ? f.longitude
+          : -1.5658,
+      ] as [number, number],
+      capacity: Math.round(f.averageFill || 65),
+      status: f.status || "Operational",
+    }));
+  }, [facilitiesData]);
+
+  const currentFacility = useMemo(() => {
+    if (!mapFacilities || mapFacilities.length === 0) {
+      return {
+        id: "fac-sci",
+        name: "College of Science",
+        region: "KNUST Central",
+        coords: [6.6735, -1.5658] as [number, number],
+      };
+    }
+    if (facilityId) {
+      const match = mapFacilities.find((f) => f.id === facilityId);
+      if (match) return match;
+    }
+    return mapFacilities[0];
+  }, [mapFacilities, facilityId]);
 
   const isLoading =
     devicesLoading ||
@@ -275,6 +334,38 @@ export default function Dashboard() {
     contaminationLoading;
 
   const devices = devicesData?.data ?? [];
+
+  const mapJobs = useMemo(() => {
+    if (!devices || !Array.isArray(devices) || devices.length === 0)
+      return undefined;
+    return devices.map((d: any, idx: number) => ({
+      id: d.customBinId || d.id || `dev-${idx}`,
+      device: d.customBinId || d.id,
+      location: d.location || `Smart Bin ${d.customBinId || idx + 1}`,
+      zone: d.location || "Facility Area",
+      fill: typeof d.fillLevel === "number" ? d.fillLevel : 0,
+      urgency:
+        (d.fillLevel ?? 0) >= 85
+          ? "Critical"
+          : (d.fillLevel ?? 0) >= 70
+            ? "High"
+            : (d.fillLevel ?? 0) >= 50
+              ? "Medium"
+              : "Normal",
+      status:
+        d.status === "Active" || d.status === "Online"
+          ? "Pending"
+          : d.status || "Pending",
+      lat:
+        typeof d.latitude === "number" && d.latitude !== 0
+          ? d.latitude
+          : undefined,
+      lng:
+        typeof d.longitude === "number" && d.longitude !== 0
+          ? d.longitude
+          : undefined,
+    }));
+  }, [devices]);
 
   const dynamicKpis = [
     {
@@ -517,6 +608,48 @@ export default function Dashboard() {
                 />
               );
             })}
+      </div>
+
+      {/* Real-time Operations: Incident Priority & SLA Escalation Strip */}
+      <div className="bg-gradient-to-r from-red-500/[0.08] via-amber-500/[0.05] to-card border border-red-500/30 dark:border-red-500/20 rounded-xl p-4 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-red-500/15 text-red-500 flex items-center justify-center flex-shrink-0 animate-pulse">
+            <Flame className="w-5 h-5" strokeWidth={2.5} />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                Autonomous Incident Queue Active
+              </span>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                3 Critical Breaches
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              <strong>College of Science - Bin A1 (96%):</strong> SLA target
+              window expires in <strong>~12m</strong> before Tier-2 supervisor
+              escalation.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 flex-shrink-0 w-full md:w-auto justify-end">
+          <Link
+            to="/route-optimization"
+            className="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#006c49] hover:bg-[#006c49]/90 text-white shadow-xs flex items-center gap-1.5 transition-all"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>Auto-Route Fleet</span>
+          </Link>
+          <Link
+            to="/alerts"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-border bg-card hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground dark:text-white transition-all flex items-center gap-1"
+          >
+            <span>View Priority Queue</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
 
       {/* Middle Charts Row */}
@@ -785,8 +918,18 @@ export default function Dashboard() {
             IOT TELEMETRY SYNC
           </span>
         </div>
-        <div className="flex-1 relative" style={{ height: "420px" }}>
-          <BinLocatorMap title="LIVE FACILITY & IOT SMART BIN MAP" />
+        <div
+          className="flex-1 relative w-full h-[420px]"
+          style={{ minHeight: "420px" }}
+        >
+          <BinLocatorMap
+            title="LIVE FACILITY & IOT SMART BIN MAP"
+            jobs={mapJobs}
+            facilities={mapFacilities}
+            facilityName={currentFacility.name}
+            facilityCoords={currentFacility.coords}
+            height="420px"
+          />
         </div>
       </div>
 
