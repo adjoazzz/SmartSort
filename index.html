@@ -1,28 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Sort</title>
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      #root {
+        height: 100%;
+      }
+    </style>
+  </head>
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Smart Sort</title>
-      <link rel="icon" type="image/png" href="/logo.png" />
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-      <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
-    </head>
+  <body>
+    <div id="root">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          background-color: #f8fafc;
+          gap: 24px;
+        "
+      >
+        <img
+          src="/logo.png"
+          alt="SmartSort Logo"
+          style="
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow:
+              0 10px 25px -5px rgba(0, 108, 73, 0.12),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          "
+        />
 
-    <body>
-      <div id="root">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f8fafc; gap: 24px;">
-          <img src="/logo.png" alt="SmartSort Logo" style="width: 120px; height: 120px; object-fit: contain; border-radius: 20px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);" />
-          <div style="width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #10b981; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-          <style>
-            @keyframes spin { to { transform: rotate(360deg); } }
-          </style>
+        <!-- Modern Theme-Colored Line Loader -->
+        <div
+          style="
+            width: 180px;
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              height: 100%;
+              width: 50%;
+              border-radius: 9999px;
+              background: linear-gradient(
+                90deg,
+                #006c49,
+                #10b981,
+                #6ffbbe,
+                #3b82f6,
+                #006c49
+              );
+              background-size: 250% 100%;
+              animation:
+                smartsortLineMove 1.8s infinite ease-in-out,
+                smartsortColorShift 3s infinite linear;
+              box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            "
+          ></div>
         </div>
+
+        <style>
+          @keyframes smartsortLineMove {
+            0% {
+              left: -50%;
+              width: 40%;
+            }
+            50% {
+              left: 30%;
+              width: 60%;
+            }
+            100% {
+              left: 100%;
+              width: 40%;
+            }
+          }
+          @keyframes smartsortColorShift {
+            0% {
+              background-position: 0% 50%;
+            }
+            100% {
+              background-position: 250% 50%;
+            }
+          }
+        </style>
       </div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -50,8 +50,26 @@ export function Root() {
 
   if (loading) {
     return (
-      <div className="h-screen w-full bg-slate-50 flex items-center justify-center">
-        Loading...
+      <div className="h-screen w-full bg-[#f8fafc] dark:bg-[#071321] flex flex-col items-center justify-center gap-7">
+        <img
+          src="/logo.png"
+          alt="SmartSort Logo"
+          className="w-[120px] h-[120px] object-contain rounded-[20px] shadow-lg shadow-emerald-950/10"
+        />
+        <div className="w-[180px] h-[5px] bg-[#e2e8f0] dark:bg-slate-800 rounded-full overflow-hidden relative shadow-inner">
+          <div
+            className="absolute h-full rounded-full"
+            style={{
+              width: "50%",
+              background:
+                "linear-gradient(90deg, #006c49, #10b981, #6ffbbe, #3b82f6, #006c49)",
+              backgroundSize: "250% 100%",
+              animation:
+                "smartsortLineMove 1.8s infinite ease-in-out, smartsortColorShift 3s infinite linear",
+              boxShadow: "0 0 10px rgba(16, 185, 129, 0.5)",
+            }}
+          />
+        </div>
       </div>
     );
   }
