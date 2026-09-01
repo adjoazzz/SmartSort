@@ -14,7 +14,7 @@ const protectedLazyRoute =
     const m = await importFn();
     const LazyComponent = m.default;
     return {
-      element: (
+      Component: () => (
         <ProtectedRoute allowedRoles={allowedRoles}>
           <LazyComponent />
         </ProtectedRoute>
