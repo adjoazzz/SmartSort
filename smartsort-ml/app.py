@@ -5,20 +5,27 @@ try:
 except ImportError:
     pass
 
-import sentry_sdk
-from sentry_sdk.integrations.flask import FlaskIntegration
+try:
+    import sentry_sdk
+    from sentry_sdk.integrations.flask import FlaskIntegration
 
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN", "https://bda3cc28b42072d77d287827eb5782d0@o4511825282269184.ingest.de.sentry.io/4511825373626448"),
-    integrations=[FlaskIntegration()],
-    default_integrations=False,
-    traces_sample_rate=1.0,
-)
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN", "https://bda3cc28b42072d77d287827eb5782d0@o4511825282269184.ingest.de.sentry.io/4511825373626448"),
+        integrations=[FlaskIntegration()],
+        default_integrations=False,
+        traces_sample_rate=1.0,
+    )
+except ImportError:
+    pass
+
 
 
 
 from flask import Flask, request, jsonify
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
 import io
 import logging
 import requests
@@ -121,34 +128,38 @@ def require_api_key(f):
 
 def predict_image(img_bytes):
     """Run inference on raw image bytes. Returns (class_name, confidence%)."""
-    img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
-    img = img.resize(IMG_SIZE)
-    img_array = np.array(img, dtype=np.float32)
-    img_array = np.expand_dims(img_array, axis=0)  # Shape: (1, 224, 224, 3)
-
-    if interpreter is not None:
+    if interpreter is not None and np is not None:
+        img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+        img = img.resize(IMG_SIZE)
+        img_array = np.array(img, dtype=np.float32)
+        img_array = np.expand_dims(img_array, axis=0)  # Shape: (1, 224, 224, 3)
         input_details  = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
 
         interpreter.set_tensor(input_details[0]['index'], img_array)
         interpreter.invoke()
         scores = interpreter.get_tensor(output_details[0]['index'])[0]
-    elif keras_model is not None:
+        predicted_class = class_names[np.argmax(scores)]
+        confidence = float(100 * np.max(scores))
+        return predicted_class, confidence
+    elif keras_model is not None and np is not None:
+        img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+        img = img.resize(IMG_SIZE)
+        img_array = np.array(img, dtype=np.float32)
+        img_array = np.expand_dims(img_array, axis=0)
         predictions = keras_model.predict(img_array, verbose=0)
         scores = predictions[0]
+        predicted_class = class_names[np.argmax(scores)]
+        confidence = float(100 * np.max(scores))
+        return predicted_class, confidence
     else:
         # Fallback for local testing / dev environment when model file is not compiled on disk
         logger.warning("No model file available. Using deterministic fallback classification.")
-        img_sum = int(np.sum(img_array))
+        img_sum = sum(img_bytes) if isinstance(img_bytes, (bytes, bytearray)) else 100
         predicted_idx = img_sum % len(class_names)
         predicted_class = class_names[predicted_idx]
         confidence = 94.5
         return predicted_class, confidence
-
-
-    predicted_class = class_names[np.argmax(scores)]
-    confidence = float(100 * np.max(scores))
-    return predicted_class, confidence
 
 
 # ── Routes ─────────────────────────────────────────────────────────────────────
@@ -193,7 +204,7 @@ def predict():
             resp = requests.post(
                 "http://127.0.0.1:5000/api/bins/telemetry", 
                 json=telemetry_data, 
-                timeout=5
+                timeout=15
             )
             if resp.status_code == 200:
                 logger.info("Successfully sent telemetry to dashboard")

@@ -6,6 +6,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
+    "backend": "npm --prefix smartsort-backend run dev",
+    "backend:dev": "npm --prefix smartsort-backend run dev",
+    "backend:start": "npm --prefix smartsort-backend start",
+    "ml": "python smartsort-ml/app.py",
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {
