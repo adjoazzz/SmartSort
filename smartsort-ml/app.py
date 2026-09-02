@@ -25,8 +25,6 @@ import requests
 import base64
 from functools import wraps
 from PIL import Image
-import json
-import google.generativeai as genai
 
 # ── Logging Configuration ──────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
@@ -37,9 +35,6 @@ app = Flask(__name__)
 
 # ── Environment & Config ───────────────────────────────────────────────────────
 ML_API_KEY = os.environ.get('ML_API_KEY', 'smartsort-ml-secret-key-2026')
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
 MODEL_TFLITE = os.environ.get('ML_MODEL_PATH', 'smart_bin_model.tflite')
 MODEL_KERAS  = 'smart_bin_model.keras'
 IMG_SIZE = (224, 224)
@@ -127,12 +122,9 @@ def require_api_key(f):
 def predict_image(img_bytes):
     """Run inference on raw image bytes. Returns (class_name, confidence%)."""
     img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
-    img_resized = img.resize(IMG_SIZE)
-    img_array = np.array(img_resized, dtype=np.float32)
+    img = img.resize(IMG_SIZE)
+    img_array = np.array(img, dtype=np.float32)
     img_array = np.expand_dims(img_array, axis=0)  # Shape: (1, 224, 224, 3)
-
-    local_class = None
-    local_confidence = 0.0
 
     if interpreter is not None:
         input_details  = interpreter.get_input_details()
@@ -141,62 +133,22 @@ def predict_image(img_bytes):
         interpreter.set_tensor(input_details[0]['index'], img_array)
         interpreter.invoke()
         scores = interpreter.get_tensor(output_details[0]['index'])[0]
-        local_class = class_names[np.argmax(scores)]
-        local_confidence = float(100 * np.max(scores))
     elif keras_model is not None:
         predictions = keras_model.predict(img_array, verbose=0)
         scores = predictions[0]
-        local_class = class_names[np.argmax(scores)]
-        local_confidence = float(100 * np.max(scores))
     else:
         # Fallback for local testing / dev environment when model file is not compiled on disk
         logger.warning("No model file available. Using deterministic fallback classification.")
         img_sum = int(np.sum(img_array))
         predicted_idx = img_sum % len(class_names)
-        local_class = class_names[predicted_idx]
-        local_confidence = 94.5
+        predicted_class = class_names[predicted_idx]
+        confidence = 94.5
+        return predicted_class, confidence
 
-    gemini_class = None
-    gemini_confidence = 0.0
 
-    if GEMINI_API_KEY:
-        try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
-            prompt = (
-                "You are an expert waste sorting assistant. "
-                f"Classify this image into exactly one of the following categories: {', '.join(class_names)}. "
-                "Respond ONLY with a valid JSON object in this exact format: "
-                '{"class": "<category>", "confidence": <confidence_score_between_0_and_100>}'
-            )
-            response = model.generate_content([prompt, img])
-            text = response.text.strip()
-            
-            # Extract JSON block if it's wrapped in markdown
-            if text.startswith('```json'):
-                text = text.replace('```json', '', 1)
-                text = text.replace('```', '')
-            data = json.loads(text.strip())
-            
-            gemini_class = data.get("class")
-            gemini_confidence = float(data.get("confidence", 0.0))
-            
-            if gemini_class not in class_names:
-                logger.warning(f"Gemini returned invalid class: {gemini_class}")
-                gemini_class = None
-                gemini_confidence = 0.0
-            else:
-                logger.info(f"Gemini prediction: {gemini_class} ({gemini_confidence}%)")
-        except Exception as e:
-            logger.error(f"Gemini API error: {e}")
-
-    logger.info(f"Local prediction: {local_class} ({local_confidence}%)")
-    
-    if gemini_class and gemini_confidence > local_confidence:
-        logger.info("Using Gemini prediction over local.")
-        return gemini_class, gemini_confidence
-    else:
-        logger.info("Using Local prediction over Gemini.")
-        return local_class, local_confidence
+    predicted_class = class_names[np.argmax(scores)]
+    confidence = float(100 * np.max(scores))
+    return predicted_class, confidence
 
 
 # ── Routes ─────────────────────────────────────────────────────────────────────
@@ -205,10 +157,8 @@ def predict_image(img_bytes):
 @require_api_key
 def predict():
     """Accept an image and return the predicted waste bin class."""
-    logger.info("RECEIVED POST /predict REQUEST")
     if 'image' in request.files:
         file = request.files['image']
-        logger.info(f"File received: {file.filename}")
         img_bytes = file.read()
     elif request.data:
         img_bytes = request.data
@@ -252,10 +202,17 @@ def predict():
         except Exception as forward_err:
             logger.error(f"Failed to forward telemetry to dashboard: {forward_err}")
 
-        return jsonify({
+        import json
+        from flask import Response
+        
+        # ESP32-CAM is doing naive string parsing looking for EXACTLY '"bin":"'
+        # We must return compact JSON without spaces around the colon
+        compact_json = json.dumps({
             'bin': predicted_class,
             'confidence': round(confidence, 2)
-        })
+        }, separators=(',', ':'))
+        
+        return Response(compact_json, mimetype='application/json')
     except Exception as e:
         logger.error(f"Error processing image: {e}")
         return jsonify({'error': str(e)}), 500

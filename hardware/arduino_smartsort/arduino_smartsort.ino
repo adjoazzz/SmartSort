@@ -8,7 +8,7 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 // Trigger Sensor (Landing Zone)
 #define TRIG_PIN 4
 #define ECHO_PIN 12
-#define TRIGGER_DISTANCE_CM 5.0
+#define TRIGGER_DISTANCE_CM 2.0
 
 // Fill Sensor #1 (Glass Bin)
 #define FILL1_TRIG A0
@@ -198,17 +198,22 @@ void handleSortCommand(String category)
   Serial.println("Waiting 4s before dropping item...");
   delay(STEPPER_MOVE_DELAY_MS);
 
-  // 2. Open the Flap to drop the item!
+  // 2. Open the Flap FULLY (instant snap open)
   Serial.println("Opening flap...");
   flapServo.attach(SERVO_PIN);
-  flapServo.write(FLAP_OPEN_DEG);
+  flapServo.write(FLAP_OPEN_DEG); // Instant full open
 
   delay(FLAP_HOLD_MS); // Wait for item to fall
 
-  // 3. Close the Flap
-  flapServo.write(FLAP_CLOSED_DEG);
+  // 3. Close the Flap SLOWLY (gradual sweep)
+  Serial.println("Closing flap slowly...");
+  for (int angle = FLAP_OPEN_DEG; angle >= FLAP_CLOSED_DEG; angle--)
+  {
+    flapServo.write(angle);
+    delay(20); // 20ms per degree = ~1.8s total for 90° sweep
+  }
   Serial.println("Flap closed.");
-  delay(500);         // Wait for it to physically return to closed position
+  delay(200);         // Brief settle time
   flapServo.detach(); // Detach to prevent twitching when idle
 
   // Delay 4 seconds after flap closes before returning stepper home

@@ -9,19 +9,6 @@ const lazyRoute = (importFn: () => Promise<any>) => async () => {
   return { Component: m.default };
 };
 
-const protectedLazyRoute =
-  (importFn: () => Promise<any>, allowedRoles: string[]) => async () => {
-    const m = await importFn();
-    const LazyComponent = m.default;
-    return {
-      Component: () => (
-        <ProtectedRoute allowedRoles={allowedRoles}>
-          <LazyComponent />
-        </ProtectedRoute>
-      ),
-    };
-  };
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -48,94 +35,151 @@ export const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        lazy: protectedLazyRoute(
-          () => import("../pages/Dashboard/Dashboard"),
-          ["admin", "manager", "viewer"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager", "viewer"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(() => import("../pages/Dashboard/Dashboard")),
+          },
+        ],
       },
       {
         path: "collector-dashboard",
-        lazy: protectedLazyRoute(
-          () => import("../pages/CollectorDashboard/CollectorDashboard"),
-          ["collector", "admin"],
-        ),
+        element: <ProtectedRoute allowedRoles={["collector", "admin"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/CollectorDashboard/CollectorDashboard"),
+            ),
+          },
+        ],
       },
       {
         path: "collector-map",
-        lazy: protectedLazyRoute(
-          () => import("../pages/CollectorDashboard/CollectorDashboard"),
-          ["collector", "admin"],
-        ),
+        element: <ProtectedRoute allowedRoles={["collector", "admin"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/CollectorDashboard/CollectorDashboard"),
+            ),
+          },
+        ],
       },
       {
         path: "analytics",
-        lazy: protectedLazyRoute(
-          () => import("../pages/Analytics/Analytics"),
-          ["admin", "manager", "viewer"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager", "viewer"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(() => import("../pages/Analytics/Analytics")),
+          },
+        ],
       },
       {
         path: "devices",
-        lazy: protectedLazyRoute(
-          () => import("../pages/Devices/Devices"),
-          ["admin", "manager", "viewer"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager", "viewer"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(() => import("../pages/Devices/Devices")),
+          },
+        ],
       },
       {
         path: "alerts",
-        lazy: protectedLazyRoute(
-          () => import("../pages/Alerts/Alerts"),
-          ["admin"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(() => import("../pages/Alerts/Alerts")),
+          },
+        ],
       },
       {
         path: "jobs",
-        lazy: protectedLazyRoute(
-          () => import("../pages/CollectionJobs/CollectionJobs"),
-          ["admin", "manager"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/CollectionJobs/CollectionJobs"),
+            ),
+          },
+        ],
       },
       {
         path: "route-optimization",
-        lazy: protectedLazyRoute(
-          () => import("../pages/RouteOptimization/RouteOptimization"),
-          ["admin", "manager"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/RouteOptimization/RouteOptimization"),
+            ),
+          },
+        ],
       },
       {
         path: "collectors",
-        lazy: protectedLazyRoute(
-          () => import("../pages/Collectors/Collectors"),
-          ["admin", "manager"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(() => import("../pages/Collectors/Collectors")),
+          },
+        ],
       },
       {
         path: "community-feedback",
-        lazy: protectedLazyRoute(
-          () => import("../pages/CommunityFeedback/CommunityFeedback"),
-          ["admin", "manager"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/CommunityFeedback/CommunityFeedback"),
+            ),
+          },
+        ],
       },
       {
         path: "manager/users",
-        lazy: protectedLazyRoute(
-          () => import("../pages/UserManagement/UserManagement"),
-          ["admin", "manager"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin", "manager"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/UserManagement/UserManagement"),
+            ),
+          },
+        ],
       },
       {
         path: "admin/dashboard",
-        lazy: protectedLazyRoute(
-          () => import("../pages/AdminDashboard/AdminDashboard"),
-          ["admin"],
-        ),
+        element: <ProtectedRoute allowedRoles={["admin"]} />,
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(
+              () => import("../pages/AdminDashboard/AdminDashboard"),
+            ),
+          },
+        ],
       },
       {
         path: "profile",
-        lazy: protectedLazyRoute(
-          () => import("../pages/Profile/Profile"),
-          ["admin", "manager", "viewer", "collector"],
+        element: (
+          <ProtectedRoute
+            allowedRoles={["admin", "manager", "viewer", "collector"]}
+          />
         ),
+        children: [
+          {
+            index: true,
+            lazy: lazyRoute(() => import("../pages/Profile/Profile")),
+          },
+        ],
       },
     ],
   },

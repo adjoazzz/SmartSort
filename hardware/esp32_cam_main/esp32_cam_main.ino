@@ -135,14 +135,15 @@ void setup() {
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
 
-  // INCREASED RESOLUTION: VGA (640x480) for better ML accuracy
+  // REDUCED RESOLUTION: QVGA (320x240) to prevent HTTP POST memory crashes.
+  // The Python ML model downsizes to 224x224 anyway, so this is perfect.
   if (psramFound()) {
-    config.frame_size = FRAMESIZE_VGA;
-    config.jpeg_quality = 10; // Lower number = better quality (10-12 is good)
+    config.frame_size = FRAMESIZE_QVGA;
+    config.jpeg_quality = 12; // 10-12 is good
     config.fb_count = 2;
   } else {
-    config.frame_size = FRAMESIZE_VGA;
-    config.jpeg_quality = 12;
+    config.frame_size = FRAMESIZE_QVGA;
+    config.jpeg_quality = 15;
     config.fb_count = 1;
   }
   esp_camera_init(&config);

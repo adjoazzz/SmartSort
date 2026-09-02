@@ -278,7 +278,7 @@ export default function CollectionJobs() {
   }, []);
 
   const topPendingFacility = useMemo(() => {
-    if (!facilities || facilities.length === 0) {
+    if (!facilities || !Array.isArray(facilities) || facilities.length === 0) {
       return {
         id: "fac_science_hub",
         name: "KNUST College of Science Hub",
