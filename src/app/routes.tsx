@@ -3,10 +3,28 @@ import { Root } from "./Root";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { RouteErrorBoundary } from "../components/RouteErrorBoundary";
 
-// Helper for dynamic imports since components are default exports
+// Helper for dynamic imports with auto-recovery for stale chunks or network glitches
 const lazyRoute = (importFn: () => Promise<any>) => async () => {
-  const m = await importFn();
-  return { Component: m.default };
+  try {
+    const m = await importFn();
+    return { Component: m.default };
+  } catch (error: any) {
+    console.warn("[LazyRoute] Dynamic import failed, initiating automatic recovery...", error);
+    const key = "smartsort_chunk_reload_attempted";
+    const hasReloaded = sessionStorage.getItem(key);
+
+    if (!hasReloaded) {
+      sessionStorage.setItem(key, "true");
+      window.location.reload();
+      // Keep promise pending while page reloads to prevent rendering error screen
+      return new Promise<{ Component: any }>(() => {});
+    }
+
+    sessionStorage.removeItem(key);
+    // Final retry attempt
+    const m = await importFn();
+    return { Component: m.default };
+  }
 };
 
 export const router = createBrowserRouter([
