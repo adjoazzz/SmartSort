@@ -204,9 +204,16 @@ export default function Login() {
 
     try {
       if (isSignup) {
+        const fullName = `${firstName.trim()} ${lastName.trim()}`;
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName,
+              name: fullName,
+            },
+          },
         });
 
         if (error) throw error;
@@ -215,8 +222,9 @@ export default function Login() {
         if (data.user) {
           const fullName = `${firstName.trim()} ${lastName.trim()}`;
           await authFetch(
-            (import.meta as any).env?.VITE_API_BASE_URL + "/api/auth/sync" ||
-              "http://localhost:5000/api/auth/sync",
+            (import.meta as any).env?.VITE_API_BASE_URL
+              ? (import.meta as any).env.VITE_API_BASE_URL + "/api/auth/sync"
+              : "http://localhost:5000/api/auth/sync",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
