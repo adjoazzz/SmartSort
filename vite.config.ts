@@ -35,6 +35,7 @@ export default defineConfig({
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-i18next', 'i18next', 'react-router', 'maplibre-gl'],
+    include: ['react', 'react-dom', 'react-i18next', 'i18next', 'react-router'],
+    exclude: ['maplibre-gl'],
   }
 })
