@@ -399,6 +399,8 @@ export default function Onboarding() {
             <div className="flex flex-col gap-3">
               <InputField
                 id="serial"
+                name="serial"
+                autoComplete="off"
                 label="DEVICE SERIAL NUMBER"
                 placeholder="SS-XXXX-XXXX-XXXX"
                 value={serial}

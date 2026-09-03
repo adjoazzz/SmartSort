@@ -1,6 +1,6 @@
+#include <Servo.h>
 #include <SoftwareSerial.h>
 #include <Stepper.h>
-#include <Servo.h>
 
 // Communication with ESP32-CAM
 SoftwareSerial espSerial(10, 11); // RX, TX
@@ -8,7 +8,7 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 // Trigger Sensor (Landing Zone)
 #define TRIG_PIN 4
 #define ECHO_PIN 12
-#define TRIGGER_DISTANCE_CM 2.0
+#define TRIGGER_DISTANCE_CM 10.0
 
 // Fill Sensor #1 (Glass Bin)
 #define FILL1_TRIG A0
@@ -33,26 +33,27 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 #define STEPPER_IN3 6
 #define STEPPER_IN4 5
 #define STEPPER_SPEED 12           // RPM
-#define HOME_ANGLE 90              // Resting/home position in degrees
+#define HOME_ANGLE 0.0              // Resting/home position in degrees
 #define STEPPER_MOVE_DELAY_MS 4000 // 4-second delay between stepper movements
 
-Stepper stepper(STEPS_PER_REV, STEPPER_IN1, STEPPER_IN3, STEPPER_IN2, STEPPER_IN4);
-int currentAngle = HOME_ANGLE; // Track the current position of the deflector
+Stepper stepper(STEPS_PER_REV, STEPPER_IN1, STEPPER_IN3, STEPPER_IN2,
+                STEPPER_IN4);
+float currentAngle = HOME_ANGLE; // Track the current position of the deflector
 
 // SG90 Servo Flap
 Servo flapServo;
 #define SERVO_PIN 9
-#define FLAP_CLOSED_DEG 0 // Angle when holding the item
-#define FLAP_OPEN_DEG 90  // Angle to drop the item
-#define FLAP_HOLD_MS 2000 // How long to hold the flap open (2 seconds)
+#define FLAP_CLOSED_DEG 100 // Angle when holding the item (up / closed)
+#define FLAP_OPEN_DEG 180   // Angle to drop the item (swings the OTHER way)
+#define FLAP_HOLD_MS 2000  // How long to hold the flap open (2 seconds)
 
 unsigned long lastTriggerTime = 0;
 
-void setup()
-{
-  lastTriggerTime = millis() - 5000UL; // Expire the cooldown so it can trigger immediately!
-  Serial.begin(9600);                  // To PC
-  espSerial.begin(9600);               // To ESP32-CAM
+void setup() {
+  lastTriggerTime =
+      millis() - 5000UL; // Expire the cooldown so it can trigger immediately!
+  Serial.begin(9600);    // To PC
+  espSerial.begin(9600); // To ESP32-CAM
 
   // Setup sensors
   pinMode(TRIG_PIN, OUTPUT);
@@ -78,43 +79,45 @@ void setup()
   digitalWrite(STEPPER_IN4, LOW);
 
   flapServo.attach(SERVO_PIN);
-  flapServo.write(FLAP_CLOSED_DEG); // Ensure it starts closed
-  delay(500);
-  flapServo.detach(); // Detach to prevent twitching when idle
+  flapServo.write(FLAP_OPEN_DEG); // Assume it's dropped open at 0 when powered off
+  delay(100);
+  
+  // Slowly sweep to the closed (100) position so it doesn't snap violently on boot
+  for (int angle = FLAP_OPEN_DEG; angle <= FLAP_CLOSED_DEG; angle++) {
+    flapServo.write(angle);
+    delay(20); 
+  }
+  // We DO NOT detach here so the servo continuously holds the flap closed at 100 degrees.
 
-  Serial.println("Arduino Ready: Chute Home Position calibrated at 90 degrees!");
+  Serial.println(
+      "Arduino Ready: Chute Home Position calibrated at 0 degrees!");
   Serial.println("Sensors, Stepper, and Servo active and waiting for items.");
 }
 
-void loop()
-{
+void loop() {
   unsigned long now = millis();
 
   // 1. Check Trigger Sensor
   float distance = readUltrasonicCm(TRIG_PIN, ECHO_PIN);
-  if (distance > 0 && distance < TRIGGER_DISTANCE_CM && (now - lastTriggerTime > 5000))
-  {
+  if (distance > 0 && distance < TRIGGER_DISTANCE_CM &&
+      (now - lastTriggerTime > 5000)) {
     Serial.print("Item detected! Sending TRIGGER... ");
     espSerial.println("TRIGGER");
     lastTriggerTime = now; // Prevent multiple triggers in a row
   }
 
   // 2. Listen for ESP32-CAM commands
-  if (espSerial.available())
-  {
+  if (espSerial.available()) {
     String incoming = espSerial.readStringUntil('\n');
     incoming.trim();
 
-    if (incoming.startsWith("SORT:"))
-    {
+    if (incoming.startsWith("SORT:")) {
       String category = incoming.substring(5);
       Serial.println("✅ ML predicted: " + category);
 
       // Handle the full routing and dropping sequence
       handleSortCommand(category);
-    }
-    else if (incoming == "READ_LEVELS")
-    {
+    } else if (incoming == "READ_LEVELS") {
       float glassDist = readUltrasonicCm(FILL1_TRIG, FILL1_ECHO);
       if (glassDist <= 0 || glassDist > 200)
         glassDist = 50.0;
@@ -131,7 +134,9 @@ void loop()
       if (rejectedDist <= 0 || rejectedDist > 200)
         rejectedDist = 50.0;
 
-      String response = "LEVELS:" + String(glassDist, 1) + "," + String(metalDist, 1) + "," + String(paperDist, 1) + "," + String(rejectedDist, 1);
+      String response = "LEVELS:" + String(glassDist, 1) + "," +
+                        String(metalDist, 1) + "," + String(paperDist, 1) +
+                        "," + String(rejectedDist, 1);
       espSerial.println(response);
 
       // Print to Serial Monitor so you can see it too
@@ -150,41 +155,36 @@ void loop()
 }
 
 // Moves stepper, drops item, and resets
-void handleSortCommand(String category)
-{
-  int targetAngle = -1; // -1 means unrecognized
+void handleSortCommand(String category) {
+  float targetAngle = -999.0; // -999.0 means unrecognized
 
-  if (category.equalsIgnoreCase("glass") || category.equalsIgnoreCase("plastic"))
-    targetAngle = 0;
+  if (category.equalsIgnoreCase("plastic") || category.equalsIgnoreCase("paper"))
+    targetAngle = 0.0;
+  else if (category.equalsIgnoreCase("glass"))
+    targetAngle = -43.9;
   else if (category.equalsIgnoreCase("metal"))
-    targetAngle = 45;
-  else if (category.equalsIgnoreCase("paper"))
-    targetAngle = 90;
-  else if (category.equalsIgnoreCase("rejected_waste"))
-    targetAngle = 135;
+    targetAngle = -87.9;
+  else if (category.equalsIgnoreCase("rejected_waste") || category.equalsIgnoreCase("trash"))
+    targetAngle = 43.9;
 
-  if (targetAngle == -1)
-  {
+  if (targetAngle == -999.0) {
     Serial.println("ERROR: Unrecognized category: " + category);
     espSerial.println("ERR:UNKNOWN_CATEGORY");
     return; // Abort the sorting motion!
   }
 
-  int angleDiff = targetAngle - currentAngle;
+  float angleDiff = targetAngle - currentAngle;
 
   // 1. Move Stepper to the correct bin
-  if (angleDiff != 0)
-  {
-    long stepsToMove = (long)angleDiff * STEPS_PER_REV / 360;
+  if (abs(angleDiff) > 0.1) {
+    long stepsToMove = round(angleDiff * STEPS_PER_REV / 360.0);
     Serial.print("Routing chute to ");
     Serial.print(targetAngle);
     Serial.println(" degrees...");
 
     stepper.step(stepsToMove);
     currentAngle = targetAngle;
-  }
-  else
-  {
+  } else {
     Serial.println("Already at correct bin.");
   }
 
@@ -205,13 +205,20 @@ void handleSortCommand(String category)
 
   delay(FLAP_HOLD_MS); // Wait for item to fall
 
-  // 3. Close the Flap SLOWLY (gradual sweep)
-  Serial.println("Closing flap slowly...");
-  for (int angle = FLAP_OPEN_DEG; angle >= FLAP_CLOSED_DEG; angle--)
-  {
-    flapServo.write(angle);
-    delay(20); // 20ms per degree = ~1.8s total for 90° sweep
+  // 3. Close the Flap SLOWLY (gradual sweep upwards)
+  Serial.println("Closing flap slowly upwards...");
+  if (FLAP_OPEN_DEG < FLAP_CLOSED_DEG) {
+    for (int angle = FLAP_OPEN_DEG; angle <= FLAP_CLOSED_DEG; angle++) {
+      flapServo.write(angle);
+      delay(20); // 20ms per degree = ~1.8s for smooth lift
+    }
+  } else {
+    for (int angle = FLAP_OPEN_DEG; angle >= FLAP_CLOSED_DEG; angle--) {
+      flapServo.write(angle);
+      delay(20);
+    }
   }
+  flapServo.write(FLAP_CLOSED_DEG); // Ensure exact closed angle
   Serial.println("Flap closed.");
   delay(200);         // Brief settle time
   flapServo.detach(); // Detach to prevent twitching when idle
@@ -220,10 +227,9 @@ void handleSortCommand(String category)
   Serial.println("Waiting 4s before returning chute home...");
   delay(STEPPER_MOVE_DELAY_MS);
 
-  // 4. Return Stepper to Home (90 degrees)
-  if (currentAngle != HOME_ANGLE)
-  {
-    long stepsToHome = (long)(HOME_ANGLE - currentAngle) * STEPS_PER_REV / 360;
+  // 4. Return Stepper to Home
+  if (abs(currentAngle - HOME_ANGLE) > 0.1) {
+    long stepsToHome = round((HOME_ANGLE - currentAngle) * STEPS_PER_REV / 360.0);
     Serial.print("Returning chute to home (");
     Serial.print(HOME_ANGLE);
     Serial.println(" degrees)...");
@@ -243,8 +249,7 @@ void handleSortCommand(String category)
 }
 
 // Helper to read distance in cm
-float readUltrasonicCm(int trigPin, int echoPin)
-{
+float readUltrasonicCm(int trigPin, int echoPin) {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);

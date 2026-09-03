@@ -414,6 +414,9 @@ export default function Login() {
                     />
                     <input
                       id="signup-firstname"
+                      name="firstName"
+                      autoComplete="given-name"
+                      aria-label="First Name"
                       type="text"
                       placeholder="First Name"
                       value={firstName}
@@ -448,6 +451,9 @@ export default function Login() {
                     />
                     <input
                       id="signup-lastname"
+                      name="lastName"
+                      autoComplete="family-name"
+                      aria-label="Last Name"
                       type="text"
                       placeholder="Last Name"
                       value={lastName}
@@ -484,6 +490,9 @@ export default function Login() {
                 />
                 <input
                   id="login-email"
+                  name="email"
+                  autoComplete="username"
+                  aria-label="Email Address"
                   type="email"
                   placeholder="Email Address"
                   value={email}
@@ -520,6 +529,9 @@ export default function Login() {
                 />
                 <input
                   id="login-password"
+                  name="password"
+                  autoComplete="current-password"
+                  aria-label="Password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
@@ -578,6 +590,8 @@ export default function Login() {
 
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
+                  id="remember-me"
+                  name="rememberMe"
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}

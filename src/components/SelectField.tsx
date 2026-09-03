@@ -18,6 +18,7 @@ export function SelectField({
   value,
   onChange,
   error,
+  name,
 }: any) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -26,6 +27,7 @@ export function SelectField({
       </label>
       <select
         id={id}
+        name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`h-10 px-3 border rounded-lg text-sm bg-card text-foreground dark:text-white focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer ${

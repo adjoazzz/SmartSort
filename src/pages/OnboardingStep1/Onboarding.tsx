@@ -184,6 +184,8 @@ export default function Onboarding() {
             <div className="grid grid-cols-2 gap-3">
               <InputField
                 id="fname"
+                name="firstName"
+                autoComplete="given-name"
                 label="First name"
                 placeholder="Jane"
                 value={form.firstName}
@@ -192,6 +194,8 @@ export default function Onboarding() {
               />
               <InputField
                 id="lname"
+                name="lastName"
+                autoComplete="family-name"
                 label="Last name"
                 placeholder="Smith"
                 value={form.lastName}
@@ -202,6 +206,8 @@ export default function Onboarding() {
 
             <InputField
               id="email"
+              name="email"
+              autoComplete="email"
               label="Work email"
               type="email"
               placeholder="jane@company.com"
@@ -212,6 +218,7 @@ export default function Onboarding() {
 
             <SelectField
               id="role"
+              name="role"
               label="Select your role"
               value={form.role}
               onChange={set("role")}
@@ -221,6 +228,8 @@ export default function Onboarding() {
 
             <InputField
               id="password"
+              name="password"
+              autoComplete="new-password"
               label="Password"
               type="password"
               placeholder="Min. 8 characters"

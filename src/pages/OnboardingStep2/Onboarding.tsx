@@ -144,6 +144,8 @@ export default function Onboarding() {
               <div className="col-span-1 sm:col-span-2">
                 <InputField
                   id="orgName"
+                  name="organization"
+                  autoComplete="organization"
                   label="Organization Name"
                   placeholder="e.g. Global Logistics Corp"
                   value={form.orgName}
@@ -155,6 +157,7 @@ export default function Onboarding() {
               <div className="col-span-1 sm:col-span-2">
                 <SelectField
                   id="industry"
+                  name="industry"
                   label="Industry Type"
                   value={form.industry}
                   onChange={set("industry")}
@@ -174,6 +177,7 @@ export default function Onboarding() {
 
               <InputField
                 id="numFacilities"
+                name="facilitiesCount"
                 label="Number of Facilities"
                 type="number"
                 min={1}
@@ -186,6 +190,7 @@ export default function Onboarding() {
 
               <SelectField
                 id="annualWaste"
+                name="annualWaste"
                 label="Estimated Annual Waste Volume (Tons)"
                 value={form.annualWaste}
                 onChange={set("annualWaste")}
