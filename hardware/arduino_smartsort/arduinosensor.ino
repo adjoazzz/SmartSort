@@ -1,7 +1,7 @@
-#include <EEPROM.h>
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <Stepper.h>
+#include <EEPROM.h>
 
 // Communication with ESP32-CAM
 SoftwareSerial espSerial(10, 11); // RX, TX
@@ -34,13 +34,13 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 #define STEPPER_IN3 6
 #define STEPPER_IN4 5
 #define STEPPER_SPEED 12           // RPM
-#define HOME_ANGLE 0.0             // Resting/home position in degrees
+#define HOME_ANGLE 0.0              // Resting/home position in degrees
 #define STEPPER_MOVE_DELAY_MS 4000 // 4-second delay between stepper movements
 
 // EEPROM addresses for position persistence across power cycles
-#define EEPROM_MAGIC_ADDR 0     // Magic byte to detect first-ever run
-#define EEPROM_ANGLE_ADDR 1     // Saved angle (float, 4 bytes: addr 1-4)
-#define EEPROM_MAGIC_VALUE 0xA5 // Arbitrary marker = "valid data exists"
+#define EEPROM_MAGIC_ADDR 0        // Magic byte to detect first-ever run
+#define EEPROM_ANGLE_ADDR 1        // Saved angle (float, 4 bytes: addr 1-4)
+#define EEPROM_MAGIC_VALUE 0xA5    // Arbitrary marker = "valid data exists"
 
 Stepper stepper(STEPS_PER_REV, STEPPER_IN1, STEPPER_IN3, STEPPER_IN2,
                 STEPPER_IN4);
@@ -51,7 +51,7 @@ Servo flapServo;
 #define SERVO_PIN 9
 #define FLAP_CLOSED_DEG 100 // Angle when holding the item (up / closed)
 #define FLAP_OPEN_DEG 180   // Angle to drop the item (swings the OTHER way)
-#define FLAP_HOLD_MS 2000   // How long to hold the flap open (2 seconds)
+#define FLAP_HOLD_MS 2000  // How long to hold the flap open (2 seconds)
 
 unsigned long lastTriggerTime = 0;
 
@@ -89,8 +89,7 @@ void setup() {
 
     // Auto-return to home if not already there
     if (abs(currentAngle - HOME_ANGLE) > 0.1) {
-      long stepsToHome =
-          round((HOME_ANGLE - currentAngle) * STEPS_PER_REV / 360.0);
+      long stepsToHome = round((HOME_ANGLE - currentAngle) * STEPS_PER_REV / 360.0);
       Serial.println("Auto-homing stepper to 0 degrees...");
       stepper.step(stepsToHome);
       currentAngle = HOME_ANGLE;
@@ -114,37 +113,54 @@ void setup() {
   digitalWrite(STEPPER_IN4, LOW);
 
   flapServo.attach(SERVO_PIN);
-  flapServo.write(
-      FLAP_OPEN_DEG); // Assume it's dropped open at 0 when powered off
+  flapServo.write(FLAP_OPEN_DEG); // Assume it's dropped open at 0 when powered off
   delay(100);
-
-  // Slowly sweep to the closed (100) position so it doesn't snap violently on
-  // boot
+  
+  // Slowly sweep to the closed (100) position so it doesn't snap violently on boot
   for (int angle = FLAP_OPEN_DEG; angle <= FLAP_CLOSED_DEG; angle++) {
     flapServo.write(angle);
-    delay(20);
+    delay(20); 
   }
-  // We DO NOT detach here so the servo continuously holds the flap closed at
-  // 100 degrees.
+  // We DO NOT detach here so the servo continuously holds the flap closed at 100 degrees.
 
-  Serial.println("Arduino Ready: Chute Home Position calibrated at 0 degrees!");
+  Serial.println(
+      "Arduino Ready: Chute Home Position calibrated at 0 degrees!");
   Serial.println("Sensors, Stepper, and Servo active and waiting for items.");
 }
 
 void loop() {
   unsigned long now = millis();
 
-  // 1. Check Trigger Sensor (with confirmation read to filter noise)
+  // 1. Check Trigger Sensor (with triple-confirmation to filter false triggers)
   float distance = readUltrasonicCm(TRIG_PIN, ECHO_PIN);
+
+  // Debug: print distance every 2 seconds so you can see what the sensor reads
+  static unsigned long lastDebugPrint = 0;
+  if (now - lastDebugPrint > 2000) {
+    Serial.print("[DEBUG] Trigger sensor: ");
+    Serial.print(distance, 1);
+    Serial.println(" cm");
+    lastDebugPrint = now;
+  }
+
   if (distance > 0 && distance < TRIGGER_DISTANCE_CM &&
       (now - lastTriggerTime > 5000)) {
-    // Confirm detection: wait briefly and read again to avoid false triggers
-    delay(150);
-    float confirmDist = readUltrasonicCm(TRIG_PIN, ECHO_PIN);
-    if (confirmDist > 0 && confirmDist < TRIGGER_DISTANCE_CM) {
-      Serial.print("Item detected! Sending TRIGGER... ");
+    // Require 3 consecutive confirmed reads to avoid false triggers
+    int confirmCount = 0;
+    for (int i = 0; i < 3; i++) {
+      delay(100);
+      float confirmDist = readUltrasonicCm(TRIG_PIN, ECHO_PIN);
+      if (confirmDist > 0 && confirmDist < TRIGGER_DISTANCE_CM) {
+        confirmCount++;
+      }
+    }
+
+    if (confirmCount >= 3) {
+      Serial.print("Item detected (confirmed 3x)! Sending TRIGGER... ");
       espSerial.println("TRIGGER");
-      lastTriggerTime = now; // Prevent multiple triggers in a row
+      lastTriggerTime = now;
+    } else {
+      Serial.println("[DEBUG] False trigger filtered (only " + String(confirmCount) + "/3 confirmed)");
     }
   }
 
@@ -201,16 +217,14 @@ void loop() {
 void handleSortCommand(String category) {
   float targetAngle = -999.0; // -999.0 means unrecognized
 
-  if (category.equalsIgnoreCase("plastic") ||
-      category.equalsIgnoreCase("paper"))
-    targetAngle = 0.0; // Home position (0 steps)
+  if (category.equalsIgnoreCase("plastic") || category.equalsIgnoreCase("paper"))
+    targetAngle = 0.0;          // Home position (0 steps)
   else if (category.equalsIgnoreCase("glass"))
-    targetAngle = -49.2; // Left bin 1 (-280 steps)
+    targetAngle = -49.2;        // Left bin 1 (-280 steps)
   else if (category.equalsIgnoreCase("metal"))
-    targetAngle = -93.2; // Left bin 2 (-530 steps)
-  else if (category.equalsIgnoreCase("rejected_waste") ||
-           category.equalsIgnoreCase("trash"))
-    targetAngle = 43.9; // Right bin (+250 steps)
+    targetAngle = -93.2;        // Left bin 2 (-530 steps)
+  else if (category.equalsIgnoreCase("rejected_waste") || category.equalsIgnoreCase("trash"))
+    targetAngle = 43.9;         // Right bin (+250 steps)
 
   if (targetAngle == -999.0) {
     Serial.println("ERROR: Unrecognized category: " + category);
@@ -275,8 +289,7 @@ void handleSortCommand(String category) {
 
   // 4. Return Stepper to Home
   if (abs(currentAngle - HOME_ANGLE) > 0.1) {
-    long stepsToHome =
-        round((HOME_ANGLE - currentAngle) * STEPS_PER_REV / 360.0);
+    long stepsToHome = round((HOME_ANGLE - currentAngle) * STEPS_PER_REV / 360.0);
     Serial.print("Returning chute to home (");
     Serial.print(HOME_ANGLE);
     Serial.println(" degrees)...");
@@ -311,4 +324,6 @@ float readUltrasonicCm(int trigPin, int echoPin) {
 }
 
 // Save current angle to EEPROM (non-volatile, survives power off)
-void saveAngleToEEPROM(float angle) { EEPROM.put(EEPROM_ANGLE_ADDR, angle); }
+void saveAngleToEEPROM(float angle) {
+  EEPROM.put(EEPROM_ANGLE_ADDR, angle);
+}
