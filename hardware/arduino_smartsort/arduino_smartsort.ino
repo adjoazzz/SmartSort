@@ -50,7 +50,7 @@ float currentAngle = HOME_ANGLE; // Track the current position of the deflector
 Servo flapServo;
 #define SERVO_PIN 9
 #define FLAP_CLOSED_DEG 100 // Angle when holding the item (up / closed)
-#define FLAP_OPEN_DEG 180   // Angle to drop the item (swings the OTHER way)
+#define FLAP_OPEN_DEG 0     // Angle to drop the item (swings the OTHER way)
 #define FLAP_HOLD_MS 2000   // How long to hold the flap open (2 seconds)
 
 unsigned long lastTriggerTime = 0;
@@ -120,9 +120,16 @@ void setup() {
 
   // Slowly sweep to the closed (100) position so it doesn't snap violently on
   // boot
-  for (int angle = FLAP_OPEN_DEG; angle <= FLAP_CLOSED_DEG; angle++) {
-    flapServo.write(angle);
-    delay(20);
+  if (FLAP_OPEN_DEG < FLAP_CLOSED_DEG) {
+    for (int angle = FLAP_OPEN_DEG; angle <= FLAP_CLOSED_DEG; angle++) {
+      flapServo.write(angle);
+      delay(20);
+    }
+  } else {
+    for (int angle = FLAP_OPEN_DEG; angle >= FLAP_CLOSED_DEG; angle--) {
+      flapServo.write(angle);
+      delay(20);
+    }
   }
   // We DO NOT detach here so the servo continuously holds the flap closed at
   // 100 degrees.
