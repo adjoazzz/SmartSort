@@ -75,5 +75,16 @@ app.listen(PORT, () => {
   logger.info(`Server is running on http://localhost:${PORT}`);
 });
 
+// Global safety nets — prevent uncaught errors from crashing the server
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Promise Rejection:', { reason: reason?.message || reason, stack: reason?.stack });
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught Exception:', { message: err.message, stack: err.stack });
+  // Give the logger time to flush, then exit (uncaught exceptions leave the process in an undefined state)
+  setTimeout(() => process.exit(1), 1000);
+});
+
 // Server export
 module.exports = app;
