@@ -225,8 +225,13 @@ void loop() {
       ledcWrite(FLASH_LED_PIN, 0); // Turn off flash immediately!
       // ----------------------
 
-      if (!fb)
+      if (!fb) {
+        Serial.println("FATAL ERROR: Camera capture failed! Out of PSRAM or driver crash.");
+        Serial.println("Rebooting ESP32 to recover...");
+        delay(1000);
+        ESP.restart(); // Force reboot to clear memory and fix the camera
         return;
+      }
 
       if (WiFi.status() == WL_CONNECTED) {
         HTTPClient http;

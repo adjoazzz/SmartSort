@@ -237,11 +237,11 @@ def fill_levels():
         
     try:
         # data contains: glass_cm, metal_cm, paper_plastic_cm, rejected_cm
-        # Convert distances to fill percentages (Assuming bin depth is 50cm for example)
-        BIN_DEPTH_CM = 50.0
+        # Convert distances to fill percentages (Bins are 30cm deep)
+        BIN_DEPTH_CM = 30.0
         
         percentages = []
-        for key in ["glass_cm", "metal_cm", "paper_plastic_cm", "rejected_cm"]:
+        for key in ["glass_cm", "metal_cm", "paper_plastic_cm", "rejected_waste_cm"]:
             cm = float(data.get(key, BIN_DEPTH_CM))
             # If distance is > depth, fill is 0%. If distance is 0, fill is 100%.
             fill_pct = max(0, min(100, 100 * (1.0 - (cm / BIN_DEPTH_CM))))
@@ -253,13 +253,18 @@ def fill_levels():
         
         # Forward to Node backend
         try:
-            telemetry_data = {
+            payload = {
                 "customBinId": "BIN-001",
-                "fillLevel": int(max_fill)
+                "fillLevel": int(max_fill),
+                "fillLevelGlass": int(percentages[0]),
+                "fillLevelMetal": int(percentages[1]),
+                "fillLevelPaper": int(percentages[2]),
+                "fillLevelRejected": int(percentages[3])
             }
+            logger.info(f"Forwarding payload to dashboard: {payload}")
             resp = requests.post(
                 "http://127.0.0.1:5000/api/bins/telemetry", 
-                json=telemetry_data, 
+                json=payload, 
                 timeout=5
             )
             if resp.status_code != 200:
@@ -296,6 +301,6 @@ if __name__ == '__main__':
     logger.info("Starting Smart Bin API server...")
     logger.info(f"Classes: {class_names}")
     
-    # Use the PORT environment variable if available, otherwise default to 7860 (Hugging Face default)
-    port = int(os.environ.get("PORT", 7860))
+    # Use the PORT environment variable if available, otherwise default to 5001
+    port = int(os.environ.get("PORT", 5001))
     app.run(host='0.0.0.0', port=port, debug=False)

@@ -10,8 +10,12 @@ model Device {
   id             String          @id @default(uuid())
   customBinId    String          @unique
   location       String
-  fillLevel      Int             @default(0)
-  status         String          @default("Active") // Active, Offline, Maintenance
+  fillLevel         Int             @default(0)
+  fillLevelGlass    Int             @default(0)
+  fillLevelMetal    Int             @default(0)
+  fillLevelPaper    Int             @default(0)
+  fillLevelRejected Int             @default(0)
+  status            String          @default("Active") // Active, Offline, Maintenance
   deviceType     String          @default("bin")
   lastSortedItem String?         
   updatedAt      DateTime        @updatedAt

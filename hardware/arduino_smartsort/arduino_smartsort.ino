@@ -49,11 +49,12 @@ float currentAngle = HOME_ANGLE; // Track the current position of the deflector
 // SG90 Servo Flap
 Servo flapServo;
 #define SERVO_PIN 9
-#define FLAP_CLOSED_DEG 100 // Angle when holding the item (up / closed)
+#define FLAP_CLOSED_DEG 110 // Angle when holding the item (up / closed)
 #define FLAP_OPEN_DEG 0     // Angle to drop the item (swings the OTHER way)
 #define FLAP_HOLD_MS 2000   // How long to hold the flap open (2 seconds)
 
 unsigned long lastTriggerTime = 0;
+bool isSorting = false; // Lock to prevent new triggers during sort/camera ops
 
 // Forward declarations
 void saveAngleToEEPROM(float angle);
@@ -131,8 +132,9 @@ void setup() {
       delay(20);
     }
   }
-  // We DO NOT detach here so the servo continuously holds the flap closed at
-  // 100 degrees.
+  // Detach the servo when idle. SoftwareSerial interrupts (like sending "TRIGGER")
+  // heavily distort the Servo PWM signal, causing violent twitching if left attached.
+  flapServo.detach();
 
   Serial.println("Arduino Ready: Chute Home Position calibrated at 0 degrees!");
   Serial.println("Sensors, Stepper, and Servo active and waiting for items.");
@@ -143,7 +145,14 @@ void loop() {
 
   // 1. Check Trigger Sensor (with confirmation read to filter noise)
   float distance = readUltrasonicCm(TRIG_PIN, ECHO_PIN);
-  if (distance > 0 && distance < TRIGGER_DISTANCE_CM &&
+
+  // Timeout for isSorting lock (in case ESP32 fails to respond within 20s)
+  if (isSorting && (now - lastTriggerTime > 20000)) {
+    Serial.println("Sort timeout: ESP32 didn't respond. Unlocking trigger.");
+    isSorting = false;
+  }
+
+  if (!isSorting && distance > 0 && distance < TRIGGER_DISTANCE_CM &&
       (now - lastTriggerTime > 5000)) {
     // Confirm detection: wait briefly and read again to avoid false triggers
     delay(150);
@@ -151,6 +160,7 @@ void loop() {
     if (confirmDist > 0 && confirmDist < TRIGGER_DISTANCE_CM) {
       Serial.print("Item detected! Sending TRIGGER... ");
       espSerial.println("TRIGGER");
+      isSorting = true; // Lock the trigger until sorting is done
       lastTriggerTime = now; // Prevent multiple triggers in a row
     }
   }
@@ -301,6 +311,7 @@ void handleSortCommand(String category) {
   // 5. Tell ESP32 we are done
   Serial.println("Sort Complete! Ready for next item.");
   espSerial.println("ACK:SORTED");
+  isSorting = false; // Unlock trigger for the next item
 }
 
 // Helper to read distance in cm

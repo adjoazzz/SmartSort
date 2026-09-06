@@ -78,7 +78,7 @@ class DeviceService {
   }
 
   async saveTelemetry(body) {
-    const { customBinId, location, fillLevel, lastSortedItem, confidence, status: itemStatus, imageBase64 } = body;
+    const { customBinId, location, fillLevel, fillLevelGlass, fillLevelMetal, fillLevelPaper, fillLevelRejected, lastSortedItem, confidence, status: itemStatus, imageBase64 } = body;
     
     if (!customBinId) {
       throw new AppError('customBinId is required', 400, 'VALIDATION_FAILED');
@@ -88,6 +88,10 @@ class DeviceService {
       where: { customBinId },
       update: {
         fillLevel,
+        ...(fillLevelGlass !== undefined ? { fillLevelGlass } : {}),
+        ...(fillLevelMetal !== undefined ? { fillLevelMetal } : {}),
+        ...(fillLevelPaper !== undefined ? { fillLevelPaper } : {}),
+        ...(fillLevelRejected !== undefined ? { fillLevelRejected } : {}),
         lastSortedItem,
         status: fillLevel >= 95 ? "Full" : "Active"
       },
@@ -95,6 +99,10 @@ class DeviceService {
         customBinId,
         location: location || "Unknown Location",
         fillLevel: fillLevel || 0,
+        fillLevelGlass: fillLevelGlass || 0,
+        fillLevelMetal: fillLevelMetal || 0,
+        fillLevelPaper: fillLevelPaper || 0,
+        fillLevelRejected: fillLevelRejected || 0,
         lastSortedItem,
         status: fillLevel >= 95 ? "Full" : "Active"
       }

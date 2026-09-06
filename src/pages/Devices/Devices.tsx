@@ -233,27 +233,18 @@ export default function Devices() {
   const categoryFills = React.useMemo(() => {
     if (!currentDevice) {
       return [
-        { name: "Plastic & Glass", fill: 0, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
-        { name: "Paper", fill: 0, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
+        { name: "Glass", fill: 0, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
         { name: "Metal", fill: 0, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
+        { name: "Paper/Plastic", fill: 0, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
         { name: "Rejected", fill: 0, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
       ];
     }
 
-    const idStr = currentDevice.id || "A";
-    const seed = (idStr.charCodeAt(0) * 3 + idStr.charCodeAt(idStr.length - 1) * 7) % 50;
-    const base = currentDevice.fill;
-
-    const plasticGlass = Math.min(100, Math.max(0, Math.round(base * (0.85 + (seed % 15) / 100))));
-    const paper = Math.min(100, Math.max(0, Math.round(base * (0.65 + ((seed * 3) % 20) / 100))));
-    const metal = Math.min(100, Math.max(0, Math.round(base * (0.45 + ((seed * 5) % 25) / 100))));
-    const rejected = Math.min(100, Math.max(0, Math.round(base * (0.25 + ((seed * 11) % 15) / 100))));
-
     return [
-      { name: "Plastic & Glass", fill: plasticGlass, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
-      { name: "Paper", fill: paper, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
-      { name: "Metal", fill: metal, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
-      { name: "Rejected", fill: rejected, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
+      { name: "Glass", fill: currentDevice.fillLevelGlass ?? 0, color: "bg-[#38bdf8] dark:bg-sky-400", border: "border-[#0284c7]" },
+      { name: "Metal", fill: currentDevice.fillLevelMetal ?? 0, color: "bg-[#94a3b8] dark:bg-slate-400", border: "border-[#64748b]" },
+      { name: "Paper/Plastic", fill: currentDevice.fillLevelPaper ?? 0, color: "bg-[#f59e0b] dark:bg-amber-400", border: "border-[#d97706]" },
+      { name: "Rejected", fill: currentDevice.fillLevelRejected ?? 0, color: "bg-[#f43f5e] dark:bg-rose-400", border: "border-[#e11d48]" },
     ];
   }, [currentDevice]);
   const currentTemp = currentDevice

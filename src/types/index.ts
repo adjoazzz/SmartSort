@@ -24,6 +24,10 @@ export interface Device {
   customBinId: string;
   location: string;
   fillLevel: number;
+  fillLevelGlass?: number;
+  fillLevelMetal?: number;
+  fillLevelPaper?: number;
+  fillLevelRejected?: number;
   status: DeviceStatus;
   lastSortedItem?: string | null;
   deviceType?: string | null;
