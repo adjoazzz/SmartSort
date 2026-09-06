@@ -43,15 +43,19 @@ function validateEmail(value: string): string | undefined {
   return undefined;
 }
 
-function validatePassword(value: string): string | undefined {
+function validatePassword(value: string, isSignup = false): string | undefined {
   if (!value) return "Password is required";
-  if (value.length < MIN_PASSWORD_LENGTH)
-    return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
-  if (!/\d/.test(value)) return "Password must contain at least one number";
-  if (!/[!@#$%^&*(),.?":{}|<>[\]\\/`~_\-+=]/.test(value))
-    return "Password must contain at least one special character";
+  if (isSignup) {
+    if (value.length < MIN_PASSWORD_LENGTH)
+      return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+    if (!/\d/.test(value)) return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>[\]\\/`~_\-+=]/.test(value))
+      return "Password must contain at least one special character";
+  }
   return undefined;
 }
+
+
 
 // --- Inline Error Message Component ---
 
@@ -156,7 +160,7 @@ export default function Login() {
   const handlePasswordChange = (value: string) => {
     setPassword(value);
     if (touched.password) {
-      const err = validatePassword(value);
+      const err = validatePassword(value, isSignup);
       setErrors((prev) => ({ ...prev, password: err }));
     }
   };
@@ -169,7 +173,7 @@ export default function Login() {
 
   const handlePasswordBlur = () => {
     setTouched((prev) => ({ ...prev, password: true }));
-    setErrors((prev) => ({ ...prev, password: validatePassword(password) }));
+    setErrors((prev) => ({ ...prev, password: validatePassword(password, isSignup) }));
   };
 
   const triggerShake = () => {
@@ -182,7 +186,7 @@ export default function Login() {
 
     const newErrors: ValidationErrors = {
       email: validateEmail(email),
-      password: validatePassword(password),
+      password: validatePassword(password, isSignup),
     };
 
     // Validate name fields only during signup
@@ -562,7 +566,10 @@ export default function Login() {
             <div className="flex flex-col gap-4 items-center justify-center text-xs mt-2">
               <button
                 type="button"
-                onClick={() => setIsSignup(!isSignup)}
+                onClick={() => {
+                  setIsSignup(!isSignup);
+                  setErrors({});
+                }}
                 className="font-semibold text-primary hover:text-blue-500 transition-colors"
               >
                 {isSignup
