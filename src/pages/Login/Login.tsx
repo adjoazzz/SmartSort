@@ -208,9 +208,16 @@ export default function Login() {
 
     try {
       if (isSignup) {
+        const fullName = `${firstName.trim()} ${lastName.trim()}`;
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName,
+              name: fullName,
+            },
+          },
         });
 
         if (error) throw error;
@@ -219,8 +226,9 @@ export default function Login() {
         if (data.user) {
           const fullName = `${firstName.trim()} ${lastName.trim()}`;
           await authFetch(
-            (import.meta as any).env?.VITE_API_BASE_URL + "/api/auth/sync" ||
-              "http://localhost:5000/api/auth/sync",
+            (import.meta as any).env?.VITE_API_BASE_URL
+              ? (import.meta as any).env.VITE_API_BASE_URL + "/api/auth/sync"
+              : "http://localhost:5000/api/auth/sync",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -418,6 +426,9 @@ export default function Login() {
                     />
                     <input
                       id="signup-firstname"
+                      name="firstName"
+                      autoComplete="given-name"
+                      aria-label="First Name"
                       type="text"
                       placeholder="First Name"
                       value={firstName}
@@ -452,6 +463,9 @@ export default function Login() {
                     />
                     <input
                       id="signup-lastname"
+                      name="lastName"
+                      autoComplete="family-name"
+                      aria-label="Last Name"
                       type="text"
                       placeholder="Last Name"
                       value={lastName}
@@ -488,6 +502,9 @@ export default function Login() {
                 />
                 <input
                   id="login-email"
+                  name="email"
+                  autoComplete="username"
+                  aria-label="Email Address"
                   type="email"
                   placeholder="Email Address"
                   value={email}
@@ -524,6 +541,9 @@ export default function Login() {
                 />
                 <input
                   id="login-password"
+                  name="password"
+                  autoComplete="current-password"
+                  aria-label="Password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
@@ -585,6 +605,8 @@ export default function Login() {
 
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
+                  id="remember-me"
+                  name="rememberMe"
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}

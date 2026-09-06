@@ -32,7 +32,8 @@ export function ProfilePopup({
       if (user && user.email) {
         currentEmail = user.email;
         setUserEmail(user.email);
-        setUserName(user.email.split("@")[0]);
+        const metaName = user.user_metadata?.full_name || user.user_metadata?.name;
+        setUserName(metaName || user.email.split("@")[0]);
       } else {
         setUserEmail("Not logged in");
         setUserName("Guest");

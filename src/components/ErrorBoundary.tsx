@@ -24,8 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Uncaught error:', error, errorInfo);
     
     fetch(
-      (import.meta as any).env?.VITE_API_BASE_URL + '/api/audit-logs' || 
-      'http://localhost:5000/api/audit-logs',
+      ((import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000") + '/api/audit-logs',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

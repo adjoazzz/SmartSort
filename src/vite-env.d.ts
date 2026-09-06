@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 declare module "*.css";
+declare module "lucide-react";
 
 declare module "*.png" {
   const value: string;

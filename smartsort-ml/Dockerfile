@@ -19,8 +19,8 @@ COPY app.py .
 COPY smart_bin_model.tflite .
 COPY smart_bin_model.keras .
 
-# Expose the API port
-EXPOSE 5001
+# Expose the API port for Hugging Face (requires 7860)
+EXPOSE 7860
 
 # Run the app
 CMD ["python", "app.py"]

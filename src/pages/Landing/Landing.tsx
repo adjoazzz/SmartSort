@@ -675,6 +675,7 @@ export default function Landing() {
                 
                 <div className="flex flex-col gap-1.5">
                   <label
+                    htmlFor="inquiry-company-name"
                     className={`text-[10px] font-bold uppercase tracking-wider ${
                       errors.companyName ? "text-red-500" : "text-muted-foreground"
                     }`}
@@ -682,6 +683,9 @@ export default function Landing() {
                     Company Name
                   </label>
                   <input 
+                    id="inquiry-company-name"
+                    name="companyName"
+                    autoComplete="organization"
                     type="text" 
                     data-testid="inquiry-company-name"
                     placeholder="Global Logistics Inc." 
@@ -698,8 +702,10 @@ export default function Landing() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Facility Tons Output (Tons/M)</label>
+                  <label htmlFor="inquiry-tons" className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Facility Tons Output (Tons/M)</label>
                   <select 
+                    id="inquiry-tons"
+                    name="tonsRange"
                     value={form.tonsRange}
                     data-testid="inquiry-tons"
                     onChange={e => setForm({...form, tonsRange: e.target.value})}
@@ -714,6 +720,7 @@ export default function Landing() {
 
                 <div className="flex flex-col gap-1.5">
                   <label
+                    htmlFor="inquiry-email"
                     className={`text-[10px] font-bold uppercase tracking-wider ${
                       errors.email ? "text-red-500" : "text-muted-foreground"
                     }`}
@@ -721,6 +728,9 @@ export default function Landing() {
                     Business Email
                   </label>
                   <input 
+                    id="inquiry-email"
+                    name="email"
+                    autoComplete="email"
                     type="email" 
                     data-testid="inquiry-email"
                     placeholder="manager@company.com" 
