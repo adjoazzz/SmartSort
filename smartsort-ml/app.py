@@ -296,6 +296,6 @@ if __name__ == '__main__':
     logger.info("Starting Smart Bin API server...")
     logger.info(f"Classes: {class_names}")
     
-    # Use the PORT environment variable if available (required for cloud deployment like DigitalOcean)
-    port = int(os.environ.get("PORT", 5001))
+    # Use the PORT environment variable if available, otherwise default to 7860 (Hugging Face default)
+    port = int(os.environ.get("PORT", 7860))
     app.run(host='0.0.0.0', port=port, debug=False)
