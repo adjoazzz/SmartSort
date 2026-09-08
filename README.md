@@ -1882,4 +1882,32 @@ jobs:
 
 ---
 
+### ADDENDUM: RECENT ARCHITECTURAL REVISIONS
+
+The following revisions were recently made to the system architecture to resolve critical hardware brownouts, reduce mechanical latency, and improve AI classification accuracy. These updates supersede previous methodologies in the report.
+
+#### 1. Hardware: Deprecation of the MB102 Power Module (Dual Power Architecture)
+The MB102 Breadboard Power Supply Module was deprecated due to its inability to handle simultaneous stall currents from the motors and Wi-Fi transmission bursts from the ESP32, which caused recurring system brownouts. 
+The system was upgraded to a **Dual Power Architecture**:
+* **Arduino Logic:** Powered directly via a 5V USB connection to maintain stable logic voltages.
+* **Peripherals (ESP32, Sensors, Motors):** Powered by a high-capacity 5V Power Bank routed directly into the breadboard rails.
+* **Common Ground:** A single jumper wire bridges the Arduino's `GND` to the Breadboard's `GND` rail, enabling unified data communication between the isolated power supplies without cross-feeding the 5V positive rails.
+
+#### 2. Software: Asynchronous Telemetry for Latency Reduction
+Previously, the Python Flask API (`app.py`) synchronously awaited a response from the Node.js dashboard before returning the classification JSON to the ESP32. This created a mechanical bottleneck where network latency delayed the physical sorting. 
+The API was updated to utilize Python's `threading` library. The server now instantly returns the `200 OK` JSON response to the ESP32, while forwarding the telemetry payload to the dashboard in a detached background thread.
+
+#### 3. Machine Learning: Center-Crop Tensor Preservation
+The ESP32-CAM captures raw JPEG images in a 4:3 rectangular aspect ratio. Initially, resizing these images directly to the required `224x224` square input tensor aggressively distorted the spatial geometry of the trash, reducing classification confidence. 
+The Python server now implements a **Center-Crop Algorithm**. It mathematically calculates the shortest dimension and crops the center of the image into a perfect square *before* resizing it to 224x224, ensuring the physical shapes of the waste are preserved for the neural network.
+
+#### 4. Edge Computing: Low-Power Flash Illumination
+Capturing images inside a dark bin resulted in poor classification. However, enabling the ESP32's built-in Flash LED at full brightness (PWM 255) during Wi-Fi transmission caused instant battery brownouts. 
+The firmware was updated to activate the flash at a significantly reduced PWM duty cycle (`ledcWrite(FLASH_LED_PIN, 20)`). This provides sufficient illumination for the camera sensor while drawing minimal current, completely preventing voltage drops.
+
+#### 5. Mechanical Timing Optimization
+To improve the user experience, the system's mechanical delays were aggressively optimized. The Arduino's stepper motor settling delay (`STEPPER_MOVE_DELAY_MS`) was reduced from 4.0 seconds to 1.5 seconds, and the ESP32 camera's pre-capture delay was reduced from 3.0 seconds to 2.0 seconds.
+
+---
+
 *End of Project Report*

@@ -23,6 +23,9 @@ const { prisma } = require('./lib/prisma');
 // Initialize the Express app
 const app = express();
 
+// Start Background Cron Jobs
+require('./cron/offlineCheck');
+
 // Global Middlewares
 app.use(requestId);
 app.use(requestLogger);

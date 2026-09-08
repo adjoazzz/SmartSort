@@ -215,6 +215,10 @@ export default function Devices() {
       powerSource,
       lastActive: d.updatedAt ? new Date(d.updatedAt).toLocaleString() : "—",
       firmware: "v2.4.1",
+      fillLevelGlass: d.fillLevelGlass,
+      fillLevelMetal: d.fillLevelMetal,
+      fillLevelPaper: d.fillLevelPaper,
+      fillLevelRejected: d.fillLevelRejected,
     };
   });
 

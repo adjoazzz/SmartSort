@@ -9,7 +9,7 @@ SoftwareSerial espSerial(10, 11); // RX, TX
 // Trigger Sensor (Landing Zone)
 #define TRIG_PIN 4
 #define ECHO_PIN 12
-#define TRIGGER_DISTANCE_CM 7.0
+#define TRIGGER_DISTANCE_CM 9.0
 
 // Fill Sensor #1 (Glass Bin)
 #define FILL1_TRIG A0
@@ -114,9 +114,10 @@ void setup() {
   digitalWrite(STEPPER_IN3, LOW);
   digitalWrite(STEPPER_IN4, LOW);
 
-  flapServo.attach(SERVO_PIN);
-  flapServo.write(
-      FLAP_OPEN_DEG); // Assume it's dropped open at 0 when powered off
+  Serial.println("System Ready. Waiting for item...");
+
+  flapServo.write(FLAP_OPEN_DEG); // Set target angle FIRST
+  flapServo.attach(SERVO_PIN);    // Attach will instantly go to target without jerking
   delay(100);
 
   // Slowly sweep to the closed (100) position so it doesn't snap violently on
@@ -143,7 +144,7 @@ void setup() {
 void loop() {
   unsigned long now = millis();
 
-  // 1. Check Trigger Sensor (with confirmation read to filter noise)
+  // 1. Check Trigger Sensor (with confirmation)
   float distance = readUltrasonicCm(TRIG_PIN, ECHO_PIN);
 
   // Timeout for isSorting lock (in case ESP32 fails to respond within 20s)
@@ -211,6 +212,18 @@ void loop() {
     }
   }
 
+  // Power Bank Keep-Alive: Pulse the stepper coils silently every 15 seconds
+  // This draws a quick ~300mA burst of current to trick the power bank into staying awake!
+  static unsigned long lastKeepAlive = 0;
+  if (now - lastKeepAlive > 15000) {
+    lastKeepAlive = now;
+    digitalWrite(STEPPER_IN1, HIGH);
+    digitalWrite(STEPPER_IN2, HIGH);
+    delay(50); // 50ms burst
+    digitalWrite(STEPPER_IN1, LOW);
+    digitalWrite(STEPPER_IN2, LOW);
+  }
+
   delay(50);
 }
 
@@ -263,8 +276,8 @@ void handleSortCommand(String category) {
 
   // 2. Open the Flap FULLY (instant snap open)
   Serial.println("Opening flap...");
-  flapServo.attach(SERVO_PIN);
-  flapServo.write(FLAP_OPEN_DEG); // Instant full open
+  flapServo.write(FLAP_OPEN_DEG); // Set target angle FIRST
+  flapServo.attach(SERVO_PIN);    // Instant full open without jerking
 
   delay(FLAP_HOLD_MS); // Wait for item to fall
 
@@ -286,7 +299,7 @@ void handleSortCommand(String category) {
   delay(200);         // Brief settle time
   flapServo.detach(); // Detach to prevent twitching when idle
 
-  // Delay 4 seconds after flap closes before returning stepper home
+  // 3. Wait 4 seconds after dropping item before returning home
   Serial.println("Waiting 4s before returning chute home...");
   delay(STEPPER_MOVE_DELAY_MS);
 

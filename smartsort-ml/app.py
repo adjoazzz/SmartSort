@@ -130,8 +130,23 @@ def predict_image(img_bytes):
     """Run inference on raw image bytes. Returns (class_name, confidence%)."""
     if interpreter is not None and np is not None:
         img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+        
+        # Crop to square first to avoid squishing the aspect ratio
+        width, height = img.size
+        min_dim = min(width, height)
+        left = (width - min_dim) / 2
+        top = (height - min_dim) / 2
+        right = (width + min_dim) / 2
+        bottom = (height + min_dim) / 2
+        img = img.crop((left, top, right, bottom))
+        
         img = img.resize(IMG_SIZE)
         img_array = np.array(img, dtype=np.float32)
+        
+        # NOTE: The training script includes `layers.Rescaling(1./127.5, offset=-1)` 
+        # inside the Sequential model itself! Therefore, we MUST pass raw [0, 255] pixels.
+        # Do NOT divide by 255.0 here.
+        
         img_array = np.expand_dims(img_array, axis=0)  # Shape: (1, 224, 224, 3)
         input_details  = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
@@ -144,8 +159,19 @@ def predict_image(img_bytes):
         return predicted_class, confidence
     elif keras_model is not None and np is not None:
         img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+        
+        # Crop to square first
+        width, height = img.size
+        min_dim = min(width, height)
+        left = (width - min_dim) / 2
+        top = (height - min_dim) / 2
+        right = (width + min_dim) / 2
+        bottom = (height + min_dim) / 2
+        img = img.crop((left, top, right, bottom))
+        
         img = img.resize(IMG_SIZE)
         img_array = np.array(img, dtype=np.float32)
+        
         img_array = np.expand_dims(img_array, axis=0)
         predictions = keras_model.predict(img_array, verbose=0)
         scores = predictions[0]
@@ -193,7 +219,7 @@ def predict():
         except Exception as save_err:
             logger.error(f"Failed to save image locally: {save_err}")
 
-        # Forward telemetry to Node backend
+        # Forward telemetry to Node backend in a background thread so we don't delay the Arduino!
         try:
             telemetry_data = {
                 "customBinId": "BIN-001",
@@ -201,17 +227,22 @@ def predict():
                 "confidence": confidence,
                 "imageBase64": base64.b64encode(img_bytes).decode('utf-8')
             }
-            resp = requests.post(
-                "http://127.0.0.1:5000/api/bins/telemetry", 
-                json=telemetry_data, 
-                timeout=15
-            )
-            if resp.status_code == 200:
-                logger.info("Successfully sent telemetry to dashboard")
-            else:
-                logger.warning(f"Dashboard returned {resp.status_code}: {resp.text}")
+            
+            def send_telemetry(data):
+                try:
+                    resp = requests.post("http://127.0.0.1:5000/api/bins/telemetry", json=data, timeout=15)
+                    if resp.status_code == 200:
+                        logger.info("Successfully sent telemetry to dashboard")
+                    else:
+                        logger.warning(f"Dashboard returned {resp.status_code}: {resp.text}")
+                except Exception as e:
+                    logger.error(f"Failed to forward telemetry: {e}")
+            
+            import threading
+            threading.Thread(target=send_telemetry, args=(telemetry_data,)).start()
+
         except Exception as forward_err:
-            logger.error(f"Failed to forward telemetry to dashboard: {forward_err}")
+            logger.error(f"Failed to spawn telemetry thread: {forward_err}")
 
         import json
         from flask import Response
@@ -237,8 +268,8 @@ def fill_levels():
         
     try:
         # data contains: glass_cm, metal_cm, paper_plastic_cm, rejected_cm
-        # Convert distances to fill percentages (Bins are 30cm deep)
-        BIN_DEPTH_CM = 30.0
+        # Convert distances to fill percentages (Bins are 25cm deep)
+        BIN_DEPTH_CM = 25.0
         
         percentages = []
         for key in ["glass_cm", "metal_cm", "paper_plastic_cm", "rejected_waste_cm"]:

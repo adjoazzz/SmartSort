@@ -23,6 +23,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
+    "node-cron": "^4.6.0",
     "pg": "^8.11.5",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0",

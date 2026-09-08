@@ -154,6 +154,16 @@ void setup() {
     delay(500);
   }
 
+  // STARTUP DIAGNOSTIC: Double-flash the LED to prove Wi-Fi connected!
+  ledcWrite(FLASH_LED_PIN, 100); // Increased brightness
+  delay(100);
+  ledcWrite(FLASH_LED_PIN, 0);
+  delay(100);
+  ledcWrite(FLASH_LED_PIN, 100); // Increased brightness
+  delay(100);
+  ledcWrite(FLASH_LED_PIN, 0);
+
+
   // Start the live stream web server
   startCameraServer();
   Serial.println("");
@@ -188,8 +198,8 @@ void loop() {
       return; // Try again next loop
   }
 
-  // 2. Every 5 seconds (5,000 ms), ask Arduino for fill levels
-  if (now - lastFillLevelTime > 5000) {
+  // 2. Every 30 seconds (30,000 ms), ask Arduino for fill levels
+  if (now - lastFillLevelTime > 30000) {
     lastFillLevelTime = now;
     Serial.println("READ_LEVELS");
   }
@@ -202,13 +212,12 @@ void loop() {
     // Handle Image Trigger
     if (incoming == "TRIGGER") {
       Serial.println(
-          "Trigger received! Waiting 3 seconds for item to settle...");
-      delay(3000); // 3-second delay before taking the picture
+          "Trigger received! Waiting 2 seconds for item to settle...");
+      delay(2000); // 2-second delay before taking the picture
 
       // -- PICTURE SEQUENCE --
-      // Reduced flash brightness (15 out of 255 ≈ 6%) to eliminate
-      // glare/washout on shiny & metallic items
-      ledcWrite(FLASH_LED_PIN, 15);
+      // Increased brightness to 100 so it's actually visible!
+      ledcWrite(FLASH_LED_PIN, 100);
       delay(250); // Wait for auto-exposure to adjust
 
       // The ESP32 camera buffers old frames in memory (fb_count).
