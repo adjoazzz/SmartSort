@@ -1,5 +1,6 @@
 import { authFetch } from "../../lib/authFetch";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { toast } from "../../lib/toast";
 import {
   Cpu,
   Box,
@@ -173,6 +174,7 @@ export default function Dashboard() {
   const [searchParams] = useSearchParams();
   const facilityId = searchParams.get("facilityId") || "";
   const queryParam = facilityId ? `?facilityId=${facilityId}` : "";
+  const userRole = localStorage.getItem("userRole")?.toLowerCase();
 
   const [detectionsPage, setDetectionsPage] = useState(1);
   const detectionsLimit = 6;
@@ -230,12 +232,67 @@ export default function Dashboard() {
     return response.json();
   };
 
+  const fetchJobs = async () => {
+    const response = await authFetch(`${baseUrl}/api/jobs?limit=20`);
+    if (!response.ok) return { jobs: [] };
+    return response.json();
+  };
+
   // Realtime subscriptions — instant updates when DB changes
   const {
     data: devicesData,
     isLoading: devicesLoading,
     refresh: refreshDevices,
   } = useRealtimeData<any>(fetchDevices, { tables: ["Device"] });
+
+  const { data: jobsResponse } = useRealtimeData<any>(fetchJobs, {
+    tables: ["CollectionJob"],
+  });
+
+  const prevJobIdsRef = useRef<Set<string>>(new Set());
+  const isInitialJobsLoadRef = useRef(true);
+
+  // Trigger alert pop up when a bin reaches threshold & job is created
+  useEffect(() => {
+    const currentJobs: any[] = jobsResponse?.jobs || [];
+    if (!currentJobs) return;
+
+    const currentJobIds = new Set(currentJobs.map((j: any) => j.id));
+
+    if (isInitialJobsLoadRef.current) {
+      if (currentJobs.length > 0) {
+        prevJobIdsRef.current = currentJobIds;
+        isInitialJobsLoadRef.current = false;
+      }
+      return;
+    }
+
+    const newlyCreatedJobs = currentJobs.filter(
+      (j: any) => !prevJobIdsRef.current.has(j.id) && j.status === "Pending"
+    );
+
+    for (const job of newlyCreatedJobs) {
+      const isCritical = job.urgency === "Critical" || (job.fill && job.fill >= 90);
+      const toastFn = isCritical ? toast.error : toast.warning;
+      const binLocation = job.location || "College of Science";
+      const fillPercentage = job.fill ?? 80;
+
+      toastFn(
+        `🚨 Bin Fill Threshold Reached (${fillPercentage}%): Collection Job Created`,
+        {
+          id: `job-created-popup-${job.id}`,
+          duration: 9000,
+          description: `${job.device || "Unit"} at ${binLocation} reached ${fillPercentage}% capacity. A collection job has been auto-created.`,
+          action: {
+            label: "Assign Collector",
+            onClick: () => navigate("/jobs"),
+          },
+        }
+      );
+    }
+
+    prevJobIdsRef.current = currentJobIds;
+  }, [jobsResponse, navigate]);
 
   const {
     data: facilitiesData,
@@ -635,13 +692,15 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center gap-2.5 flex-shrink-0 w-full md:w-auto justify-end">
-          <Link
-            to="/route-optimization"
-            className="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#006c49] hover:bg-[#006c49]/90 text-white shadow-xs flex items-center gap-1.5 transition-all"
-          >
-            <Zap className="w-3.5 h-3.5" />
-            <span>Auto-Route Fleet</span>
-          </Link>
+          {userRole === "admin" && (
+            <Link
+              to="/route-optimization"
+              className="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#006c49] hover:bg-[#006c49]/90 text-white shadow-xs flex items-center gap-1.5 transition-all"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>Auto-Route Fleet</span>
+            </Link>
+          )}
           <Link
             to="/alerts"
             className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-border bg-card hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground dark:text-white transition-all flex items-center gap-1"

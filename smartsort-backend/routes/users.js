@@ -5,6 +5,7 @@ const { requireManagerOrAdmin, restrictToFacility } = require('../middleware/aut
 const { validate } = require('../middleware/validation');
 const { schemas } = require('../utils/validators');
 
+router.get('/me', userController.getCurrentUser);
 router.get('/', requireManagerOrAdmin, restrictToFacility, userController.getUsers);
 router.post('/', requireManagerOrAdmin, validate(schemas.user.create), userController.createUser);
 router.patch('/:id', requireManagerOrAdmin, validate(schemas.user.update), userController.updateUser);

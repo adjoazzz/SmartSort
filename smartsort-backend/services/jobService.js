@@ -34,8 +34,8 @@ function formatJob(job, index = 0) {
     id: job.id,
     device: `UNIT SN: ${device?.customBinId ?? "UNKNOWN"}`,
     type: (device?.lastSortedItem || "MIXED").toUpperCase(),
-    location: device?.location ?? "Unknown location",
-    zone: device?.location ?? "Unassigned zone",
+    location: (device?.location && device.location !== "Unknown Location" && device.location !== "Unknown location") ? device.location : "College of Science",
+    zone: (device?.location && device.location !== "Unknown Location" && device.location !== "Unknown location") ? device.location : "College of Science",
     fill: fillLevel,
     urgency,
     responseTime:
@@ -52,6 +52,7 @@ function formatJob(job, index = 0) {
     assignedTo: job.collector?.name ?? job.collectorId ?? null,
     assignedToId: job.collectorId ?? null,
     assignedToAuthId: job.collector?.authId ?? null,
+    assignedToEmail: job.collector?.email ?? null,
     distance: uiStatus === "In Transit" ? "En route - 0.8 miles away" : undefined,
     completedTime,
     sortOrder: index,
@@ -87,13 +88,20 @@ async function upsertDeviceFromJobInput({ device, location, fill, type }) {
 class JobService {
   async getJobs(facilityId, page = 1, limit = 10) {
     const skip = (page - 1) * limit;
-    const where = facilityId ? { device: { facilityId } } : {};
+    const where = facilityId && facilityId !== 'all'
+      ? {
+          OR: [
+            { device: { facilityId } },
+            { device: { facilityId: null } },
+          ]
+        }
+      : {};
 
     const [jobs, totalCount] = await Promise.all([
       prisma.collectionJob.findMany({
         where,
         orderBy: { createdAt: 'desc' },
-        include: { device: true, collector: { select: { id: true, name: true, authId: true } } },
+        include: { device: true, collector: { select: { id: true, name: true, authId: true, email: true } } },
         skip,
         take: limit,
       }),
@@ -119,9 +127,9 @@ class JobService {
         status: 'Pending',
         priority: URGENCY_PRIORITY_MAP[urgency] || 'Normal',
         deviceId: deviceRecord.id,
-        collectorId: collectorId ?? null,
+        collectorId: collectorId && collectorId !== 'Unassigned' ? collectorId : null,
       },
-      include: { device: true },
+      include: { device: true, collector: { select: { id: true, name: true, authId: true, email: true } } },
     });
 
     return createdJob ? formatJob(createdJob) : null;
@@ -137,10 +145,10 @@ class JobService {
     const updatedJob = await prisma.collectionJob.update({
       where: { id },
       data: {
-        status: mapJobStatus(status),
-        ...(collectorId !== undefined ? { collectorId } : {}),
+        ...(status !== undefined ? { status: mapJobStatus(status) } : {}),
+        ...(collectorId !== undefined ? { collectorId: (collectorId === 'Unassigned' || !collectorId) ? null : collectorId } : {}),
       },
-      include: { device: true, collector: { select: { id: true, name: true, authId: true } } },
+      include: { device: true, collector: { select: { id: true, name: true, authId: true, email: true } } },
     });
 
     return formatJob(updatedJob);

@@ -24,14 +24,26 @@ const prisma = new PrismaClient({
 
 // Graceful shutdown to prevent connection leaks on nodemon restarts
 process.once('SIGUSR2', async () => {
-  await prisma.$disconnect();
-  await pool.end();
-  process.kill(process.pid, 'SIGUSR2');
+  try {
+    await prisma.$disconnect();
+    await pool.end();
+  } catch (err) {
+    logger.error('Error disconnecting prisma/pool on restart:', err);
+  } finally {
+    if (process.platform === 'win32') {
+      process.exit(0);
+    } else {
+      process.kill(process.pid, 'SIGUSR2');
+    }
+  }
 });
 process.on('SIGINT', async () => {
-  await prisma.$disconnect();
-  await pool.end();
-  process.exit(0);
+  try {
+    await prisma.$disconnect();
+    await pool.end();
+  } finally {
+    process.exit(0);
+  }
 });
 
 prisma.$on('warn', (e) => {

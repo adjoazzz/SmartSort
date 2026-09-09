@@ -17,6 +17,7 @@ interface EditBinSpecsModalProps {
 }
 
 const LOCATION_PRESETS = [
+  "College of Science",
   "North Sector Hub 04",
   "Downtown Plaza - East",
   "Central Library Courtyard",
@@ -44,7 +45,13 @@ export function EditBinSpecsModal({
   useEffect(() => {
     if (device) {
       setBinName(device.name || device.id);
-      setLocation(device.location || "");
+      setLocation(
+        !device.location ||
+          device.location === "Unknown Location" ||
+          device.location === "Unknown location"
+          ? "College of Science"
+          : device.location,
+      );
       setStatus(device.status || "Active");
     }
   }, [device]);

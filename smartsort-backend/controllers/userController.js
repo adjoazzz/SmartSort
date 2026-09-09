@@ -155,6 +155,26 @@ class UserController {
       next(err);
     }
   }
+
+  async getCurrentUser(req, res, next) {
+    try {
+      if (!req.user) {
+        throw new AppError('User not authenticated', 401, 'UNAUTHORIZED');
+      }
+      res.status(200).json({
+        id: req.user.id,
+        authId: req.user.authId,
+        email: req.user.email,
+        name: req.user.name,
+        role: req.user.role,
+        status: req.user.status,
+        avatar: req.user.avatar,
+        assignedFacility: req.user.assignedFacility,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new UserController();

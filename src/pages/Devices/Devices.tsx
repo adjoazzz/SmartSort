@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Battery,
   Zap,
+  MapPin,
 } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -137,6 +138,10 @@ interface NormalizedDevice {
   powerSource: string;
   lastActive: string;
   firmware: string;
+  fillLevelGlass?: number;
+  fillLevelMetal?: number;
+  fillLevelPaper?: number;
+  fillLevelRejected?: number;
 }
 
 export default function Devices() {
@@ -208,7 +213,12 @@ export default function Devices() {
     return {
       id: d.customBinId || "",
       name: d.customBinId || "",
-      location: d.location || "",
+      location:
+        d.location &&
+        d.location !== "Unknown Location" &&
+        d.location !== "Unknown location"
+          ? d.location
+          : "College of Science",
       status: d.status ?? "Online",
       fill: d.fillLevel ?? 0,
       battery,
@@ -456,9 +466,10 @@ export default function Devices() {
                     <h3 className="text-xl font-bold text-foreground dark:text-white">
                       {currentDevice?.name || "No Device Selected"}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Live Status &amp; Levels
-                    </p>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      <span className="font-medium">{currentDevice?.location || "College of Science"}</span>
+                    </div>
                   </div>
                   <button
                     onClick={() => setShowEditSpecsModal(true)}
@@ -616,7 +627,7 @@ export default function Devices() {
             ? {
                 id: currentDevice.id,
                 name: currentDevice.name,
-                location: currentDevice.location,
+                location: currentDevice.location || "College of Science",
                 status: currentDevice.status,
               }
             : null

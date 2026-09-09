@@ -47,7 +47,6 @@ const getNavItems = (t: any) => [
     icon: <Briefcase className="w-5 h-5" strokeWidth={2} />,
     children: [
       { path: "/jobs", label: t("sideNav.jobs") },
-      { path: "/route-optimization", label: "AI Route Optimizer" },
       { path: "/collectors", label: t("sideNav.collectors") },
     ],
   },

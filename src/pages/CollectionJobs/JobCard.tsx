@@ -131,11 +131,11 @@ export function JobCard({
             disabled={!localAssignment || localAssignment === "Unassigned"}
             className={`h-10 w-full rounded-xl text-xs font-bold tracking-wide transition-all active:scale-[0.98] ${
               localAssignment && localAssignment !== "Unassigned"
-                ? "bg-primary hover:bg-primary/90 text-white cursor-pointer"
+                ? "bg-primary hover:bg-primary/90 text-white cursor-pointer shadow-sm"
                 : "bg-primary/10 dark:bg-primary/20 text-[#006c49]/50 dark:text-emerald-500/50 cursor-not-allowed border border-transparent"
             }`}
           >
-            Accept Job
+            Assign Collector
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { authFetch } from "../../lib/authFetch";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate, Link } from "react-router";
 import {
   Clock,
@@ -18,8 +18,7 @@ import {
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { MetricCard } from "../../components/MetricCard";
-import imgUserProfileAvatar from "../../assets/6c7b9dccb9925ee83b19c4f4237c7c6aa454950a.png";
-import { toast } from "sonner";
+import { toast } from "../../lib/toast";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -213,6 +212,7 @@ export default function CollectionJobs() {
   const limit = 10;
   
   const [availableCollectors, setAvailableCollectors] = useState<{id: string, name: string}[]>([]);
+  const userRole = localStorage.getItem("userRole")?.toLowerCase();
 
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -249,6 +249,47 @@ export default function CollectionJobs() {
   } = useRealtimeData<any>(fetchJobs, {
     tables: ["CollectionJob"],
   });
+
+  const prevJobIdsRef = useRef<Set<string>>(new Set());
+  const isInitialJobsLoadRef = useRef(true);
+
+  // Trigger alert pop up when a bin reaches threshold & job is created
+  useEffect(() => {
+    const currentJobs: any[] = jobsResponse?.data || [];
+    if (!currentJobs) return;
+
+    const currentJobIds = new Set(currentJobs.map((j: any) => j.id));
+
+    if (isInitialJobsLoadRef.current) {
+      if (currentJobs.length > 0) {
+        prevJobIdsRef.current = currentJobIds;
+        isInitialJobsLoadRef.current = false;
+      }
+      return;
+    }
+
+    const newlyCreatedJobs = currentJobs.filter(
+      (j: any) => !prevJobIdsRef.current.has(j.id) && j.status === "Pending"
+    );
+
+    for (const job of newlyCreatedJobs) {
+      const isCritical = job.urgency === "Critical" || (job.fill && job.fill >= 90);
+      const toastFn = isCritical ? toast.error : toast.warning;
+      const binLocation = job.location || "College of Science";
+      const fillPercentage = job.fill ?? 80;
+
+      toastFn(
+        `🚨 Bin Fill Threshold Reached (${fillPercentage}%): New Job Created`,
+        {
+          id: `jobs-page-popup-${job.id}`,
+          duration: 9000,
+          description: `${job.device || "Unit"} at ${binLocation} reached ${fillPercentage}% capacity. Automatically queued for assignment.`,
+        }
+      );
+    }
+
+    prevJobIdsRef.current = currentJobIds;
+  }, [jobsResponse]);
 
   const fetchJobsSummary = async () => {
     const response = await authFetch(`${baseUrl}/api/jobs/summary`);
@@ -377,10 +418,16 @@ export default function CollectionJobs() {
     setLocalAssignments((prev) => ({ ...prev, [jobId]: collector }));
   };
 
-  // Accept job (moves Pending -> In Transit)
-  const handleAcceptJob = async (jobId: string) => {
-    const assignedCollector = localAssignments[jobId];
-    if (!assignedCollector || assignedCollector === "Unassigned") return;
+  // Assign job handler
+  const handleAcceptJob = async (jobId: string, customCollectorId?: string) => {
+    const assignedCollector = customCollectorId || localAssignments[jobId];
+    if (!assignedCollector || assignedCollector === "Unassigned") {
+      toast.error("Please select a collector to assign this job.");
+      return;
+    }
+
+    const collectorObj = availableCollectors.find((c) => c.id === assignedCollector);
+    const collectorName = collectorObj?.name || "collector";
 
     try {
       const response = await authFetch(`${baseUrl}/api/jobs/${jobId}`, {
@@ -389,16 +436,20 @@ export default function CollectionJobs() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status: "In Transit",
           collectorId: assignedCollector,
         }),
       });
 
       if (response.ok) {
+        toast.success(`Job assigned to ${collectorName}`);
         await refresh();
+        await refreshJobs();
+      } else {
+        toast.error("Failed to assign job. Please try again.");
       }
     } catch (error) {
-      console.error("Error accepting job:", error);
+      console.error("Error assigning job:", error);
+      toast.error("Error connecting to server to assign job.");
     }
   };
 
@@ -572,14 +623,16 @@ export default function CollectionJobs() {
             Filters
           </button>
 
-          <button
-            onClick={() => navigate("/route-optimization")}
-            data-testid="ai-route-optimizer-btn"
-            className="px-4 py-2.5 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
-          >
-            <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            AI Route Optimizer
-          </button>
+          {userRole === "admin" && (
+            <button
+              onClick={() => navigate("/route-optimization")}
+              data-testid="ai-route-optimizer-btn"
+              className="px-4 py-2.5 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              AI Route Optimizer
+            </button>
+          )}
 
           <button
             onClick={() => setIsAutoSchedulerOpen(true)}
@@ -878,19 +931,34 @@ export default function CollectionJobs() {
                       </TableCell>
                       <TableCell className="px-6 py-4 whitespace-nowrap text-right text-xs">
                         {job.status !== "Completed" && (
-                          <div className="flex gap-2 justify-end">
+                          <div className="flex gap-2 justify-end items-center">
                             {job.status === "Pending" ? (
-                              <button
-                                onClick={() =>
-                                  handleCollectorSelection(
-                                    job.id,
-                                    availableCollectors[0]?.id || "Unassigned",
-                                  )
-                                }
-                                className="px-3 py-1.5 bg-primary/10 text-[#006c49] dark:text-emerald-400 font-bold rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
-                              >
-                                Select Collector
-                              </button>
+                              <div className="flex items-center gap-1.5">
+                                <select
+                                  value={localAssignments[job.id] || "Unassigned"}
+                                  onChange={(e) =>
+                                    handleCollectorSelection(job.id, e.target.value)
+                                  }
+                                  className="h-8 px-2 border border-slate-200 dark:border-border rounded-lg text-xs font-semibold bg-slate-50 dark:bg-card text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary"
+                                >
+                                  <option value="Unassigned">Select...</option>
+                                  {availableCollectors.map((collector) => (
+                                    <option key={collector.id} value={collector.id}>
+                                      {collector.name}
+                                    </option>
+                                  ))}
+                                </select>
+                                <button
+                                  onClick={() => handleAcceptJob(job.id)}
+                                  disabled={
+                                    !localAssignments[job.id] ||
+                                    localAssignments[job.id] === "Unassigned"
+                                  }
+                                  className="px-3 py-1.5 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                                >
+                                  Assign
+                                </button>
+                              </div>
                             ) : (
                               <button
                                 onClick={() => handleCompleteJob(job.id)}

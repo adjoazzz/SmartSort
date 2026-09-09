@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback, ReactNode } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { toast as sonnerToast } from "sonner";
+import { authFetch } from "../lib/authFetch";
 
 export interface Alert {
   id: string;
@@ -73,7 +74,7 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
   const fetchAlerts = useCallback(async () => {
     try {
       const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
-      const response = await fetch(`${baseUrl}/api/alerts`);
+      const response = await authFetch(`${baseUrl}/api/alerts`);
       if (!response.ok) return;
       const data = await response.json();
       const dbAlerts: any[] = Array.isArray(data) ? data : data.data || [];

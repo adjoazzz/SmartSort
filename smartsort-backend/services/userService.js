@@ -14,6 +14,7 @@ class UserService {
     const skip = (page - 1) * limit;
     const whereClause = {
       role: 'COLLECTOR',
+      status: { in: ['ACTIVE', 'Active'] },
       ...(facilityId ? { facilityId } : {}),
       ...(search
         ? {

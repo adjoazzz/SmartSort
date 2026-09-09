@@ -202,6 +202,9 @@ void loop() {
       Serial.print(paperDist);
       Serial.print(", Rejected: ");
       Serial.println(rejectedDist);
+    } else {
+      // Forward any debug logs from the ESP32 straight to the PC Serial Monitor!
+      Serial.println("[ESP32]: " + incoming);
     }
   }
 

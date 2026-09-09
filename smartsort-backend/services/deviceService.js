@@ -20,6 +20,43 @@ class DeviceService {
     return { devices, totalCount };
   }
 
+  async checkAndAutoCreateJob(device) {
+    if (!device || device.fillLevel < 80) return;
+
+    try {
+      const existingJob = await prisma.collectionJob.findFirst({
+        where: {
+          deviceId: device.id,
+          status: { in: ['Pending', 'In Progress'] }
+        }
+      });
+
+      if (!existingJob) {
+        const priority = device.fillLevel >= 95 ? 'Urgent' : 'High';
+        await prisma.collectionJob.create({
+          data: {
+            deviceId: device.id,
+            priority,
+            status: 'Pending',
+            collectorId: null,
+          }
+        });
+
+        await prisma.alert.create({
+          data: {
+            deviceId: device.id,
+            severity: device.fillLevel >= 95 ? 'CRITICAL' : 'WARNING',
+            title: `Capacity Alert: ${device.customBinId}`,
+            description: `Bin at ${device.location || 'College of Science'} reached ${device.fillLevel}% capacity. Collection job auto-created.`,
+            status: 'Active',
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error auto-creating collection job on threshold:', err);
+    }
+  }
+
   async updateDevice(id, data) {
     const device = await prisma.device.findFirst({
       where: {
@@ -32,10 +69,14 @@ class DeviceService {
     if (!device) {
       throw new AppError('Device not found', 404, 'NOT_FOUND');
     }
-    return prisma.device.update({
+    const updated = await prisma.device.update({
       where: { id: device.id },
       data,
     });
+    if (updated.fillLevel >= 80) {
+      await this.checkAndAutoCreateJob(updated);
+    }
+    return updated;
   }
 
   async getDeviceEvents(id, limit = 100) {
@@ -97,7 +138,7 @@ class DeviceService {
       },
       create: {
         customBinId,
-        location: location || "Unknown Location",
+        location: location || "College of Science",
         fillLevel: fillLevel || 0,
         fillLevelGlass: fillLevelGlass || 0,
         fillLevelMetal: fillLevelMetal || 0,
@@ -107,6 +148,8 @@ class DeviceService {
         status: fillLevel >= 95 ? "Full" : "Active"
       }
     });
+
+    await this.checkAndAutoCreateJob(updatedBin);
 
     let imageUrl = null;
     

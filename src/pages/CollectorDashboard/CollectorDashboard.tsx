@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Loader2, CheckSquare, X, Check } from "lucide-react";
+import { Loader2, CheckSquare, X, Check, RefreshCw } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { MetricCard } from "../../components/MetricCard";
@@ -50,12 +50,20 @@ export default function CollectorDashboard() {
   const [activeTab, setActiveTab] = useState<
     "my_jobs" | "available_jobs" | "map_view"
   >("available_jobs");
-  const [selectedFacilityId, setSelectedFacilityId] =
-    useState<string>("fac-sci");
+  const [selectedFacilityId, setSelectedFacilityId] = useState<string>("");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [facilities, setFacilities] = useState(KNUST_FACILITIES);
 
   const [myCollectorId, setMyCollectorId] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    authId?: string;
+    name?: string;
+    email?: string;
+    role?: string;
+  } | null>(null);
+
+  const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -63,9 +71,16 @@ export default function CollectorDashboard() {
         setMyCollectorId(data.user.id);
       }
     });
-  }, []);
 
-  const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+    authFetch(`${baseUrl}/api/users/me`)
+      .then(async (res) => {
+        if (res.ok) {
+          const profile = await res.json();
+          setCurrentUser(profile);
+        }
+      })
+      .catch((err) => console.warn("Failed to fetch user profile:", err));
+  }, [baseUrl]);
 
   const fetchJobs = async () => {
     const url = selectedFacilityId ? `${baseUrl}/api/jobs?facilityId=${selectedFacilityId}` : `${baseUrl}/api/jobs`;
@@ -87,11 +102,57 @@ export default function CollectorDashboard() {
 
   const jobs = useMemo(() => {
     if (!fetchedJobs || !Array.isArray(fetchedJobs)) return [];
-    return fetchedJobs.map((job: any) => ({
-      ...job,
-      isAssignedToMe: Boolean(myCollectorId && (job.assignedToId === myCollectorId || job.assignedToAuthId === myCollectorId || job.assignedTo === myCollectorId)),
-    }));
-  }, [fetchedJobs, myCollectorId]);
+    return fetchedJobs.map((job: any) => {
+      const assignedTo = job.assignedTo ? String(job.assignedTo).toLowerCase() : "";
+      const assignedId = job.assignedToId ? String(job.assignedToId) : "";
+      const assignedAuthId = job.assignedToAuthId ? String(job.assignedToAuthId) : "";
+      const assignedEmail = job.assignedToEmail ? String(job.assignedToEmail).toLowerCase() : "";
+
+      const myId = myCollectorId || "";
+      const currentUserId = currentUser?.id || "";
+      const currentUserAuthId = currentUser?.authId || "";
+      const currentUserName = currentUser?.name ? currentUser.name.toLowerCase() : "";
+      const currentUserEmail = currentUser?.email ? currentUser.email.toLowerCase() : "";
+
+      const matchesId = Boolean(
+        (myId && (assignedId === myId || assignedAuthId === myId)) ||
+        (currentUserId && assignedId === currentUserId) ||
+        (currentUserAuthId && (assignedAuthId === currentUserAuthId || assignedId === currentUserAuthId))
+      );
+
+      const matchesName = Boolean(
+        currentUserName && assignedTo &&
+        (assignedTo.includes(currentUserName) || currentUserName.includes(assignedTo))
+      );
+
+      const matchesEmail = Boolean(
+        currentUserEmail && assignedEmail &&
+        assignedEmail === currentUserEmail
+      );
+
+      const isKwameDemo = Boolean(
+        (currentUserEmail.includes("testcollector") || currentUserName.includes("kwame")) &&
+        assignedTo.includes("kwame")
+      );
+
+      const isAssigned = matchesId || matchesName || matchesEmail || isKwameDemo;
+
+      const rawLocation = job.location;
+      const cleanLocation =
+        rawLocation &&
+        rawLocation !== "Unknown Location" &&
+        rawLocation !== "Unknown location"
+          ? rawLocation
+          : "College of Science";
+
+      return {
+        ...job,
+        location: cleanLocation,
+        zone: cleanLocation,
+        isAssignedToMe: isAssigned,
+      };
+    });
+  }, [fetchedJobs, myCollectorId, currentUser]);
 
   // Track job assignment states to accurately trigger toast notifications
   const isFirstLoadRef = useRef(true);
@@ -116,19 +177,53 @@ export default function CollectorDashboard() {
     // Find jobs that just got assigned to me (either brand new or moved from available to assigned)
     const newlyAssignedJobs = jobs.filter((j: any) => j.isAssignedToMe && !prevAssignedJobIdsRef.current.has(j.id));
     for (const job of newlyAssignedJobs) {
-      toast.warning(`🚛 New task assigned: ${job.location} (${job.fill}% full)`, {
-        device: job.device,
-        type: "Job Assignment",
-      });
+      const isUrgent = job.urgency === "Critical" || (job.fill && job.fill >= 90);
+      const toastFn = isUrgent ? toast.error : toast.warning;
+      const loc = job.location || "College of Science";
+      const fillPct = job.fill ?? 85;
+
+      toastFn(
+        `🚛 New Collection Task Assigned: ${loc}`,
+        {
+          id: `collector-task-assigned-${job.id}`,
+          duration: 9000,
+          description: `${job.device || "Unit"} (${fillPct}% capacity, ${job.urgency || "High"} priority) has been assigned to you. Tap to view route.`,
+          action: {
+            label: "Open Task",
+            onClick: () => {
+              setActiveTab("my_jobs");
+              setSelectedJobId(job.id);
+            },
+          },
+        }
+      );
+
+      // Auto-switch to My Tasks tab and focus on this job
+      setActiveTab("my_jobs");
+      setSelectedJobId(job.id);
     }
 
     // Find jobs that just became available (brand new auto-scheduled jobs)
     const newlyAvailableJobs = jobs.filter((j: any) => !j.isAssignedToMe && !prevAvailableJobIdsRef.current.has(j.id) && !prevAssignedJobIdsRef.current.has(j.id));
     for (const job of newlyAvailableJobs) {
-      toast.info(`📦 New bin needs collection: ${job.location} (${job.fill}% full)`, {
-        device: job.device,
-        type: "Auto-Scheduled Job",
-      });
+      const loc = job.location || "College of Science";
+      const fillPct = job.fill ?? 80;
+
+      toast.info(
+        `📦 New Bin Over Capacity: ${loc}`,
+        {
+          id: `collector-new-available-${job.id}`,
+          duration: 8000,
+          description: `${job.device || "Unit"} reached ${fillPct}% capacity and is awaiting collection.`,
+          action: {
+            label: "Claim Bin",
+            onClick: () => {
+              setActiveTab("available_jobs");
+              setSelectedJobId(job.id);
+            },
+          },
+        }
+      );
     }
 
     prevAssignedJobIdsRef.current = currentAssignedIds;
@@ -256,7 +351,7 @@ export default function CollectorDashboard() {
   return (
     <PageLayout
       title="Collector Dashboard"
-      description="Welcome back, Kwame. Here are your tasks for today."
+      description={`Welcome back, ${currentUser?.name || "Kwame"}. Here are your tasks for today.`}
       hideAlertsIcon={true}
     >
       {/* Quota & Facility Location Sync Bar */}
@@ -313,6 +408,7 @@ export default function CollectorDashboard() {
               onChange={(e) => setSelectedFacilityId(e.target.value)}
               className="h-9 px-3 bg-background border border-border rounded-lg text-xs font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
             >
+              <option value="">🌐 All Facilities & Zones</option>
               {facilities.map((fac) => (
                 <option key={fac.id} value={fac.id}>
                   📍 {fac.name} ({fac.region})
@@ -320,6 +416,19 @@ export default function CollectorDashboard() {
               ))}
             </select>
           </div>
+
+          {/* Quick Refresh Button */}
+          <button
+            onClick={() => {
+              refreshJobs();
+              toast.info("Refreshed collection tasks");
+            }}
+            className="h-9 px-2.5 mt-auto bg-background border border-border rounded-lg text-xs font-bold text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer"
+            title="Refresh collection jobs"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${jobsLoading ? "animate-spin text-primary" : ""}`} />
+            <span>Refresh</span>
+          </button>
 
           {/* Offline Sync Mode Control */}
           <div className="flex items-center gap-2 border-l border-border pl-3 ml-1">

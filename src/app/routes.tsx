@@ -129,7 +129,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "route-optimization",
-        element: <ProtectedRoute allowedRoles={["admin", "manager"]} />,
+        element: <ProtectedRoute allowedRoles={["admin"]} />,
         children: [
           {
             index: true,

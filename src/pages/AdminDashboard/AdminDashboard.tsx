@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Warehouse, Smartphone, Activity, DollarSign } from "lucide-react";
+import { supabase } from "../../lib/supabaseClient";
 import { Link } from "react-router";
 import { PageLayout } from "../../components/PageLayout";
 import { MetricCard } from "../../components/MetricCard";
@@ -342,10 +343,81 @@ export default function AdminDashboard() {
     }
   };
 
+  const alertedFacilityTonnagesRef = useRef<Map<string, number>>(new Map());
+
+  // Real-time facility tonnage monitoring: trigger pop-up when threshold reached & truck pickup needed
+  useEffect(() => {
+    if (!facilities || facilities.length === 0) return;
+
+    // Threshold for municipal heavy truck pickup: 2.5 Tons
+    const TONNAGE_PICKUP_THRESHOLD = 2.5;
+
+    for (const fac of facilities) {
+      const tonnage = fac.pendingTonnage || 0;
+      const prevTonnage = alertedFacilityTonnagesRef.current.get(fac.id) ?? 0;
+
+      // Alert if tonnage is over threshold and either never alerted or has increased
+      if (
+        tonnage >= TONNAGE_PICKUP_THRESHOLD &&
+        (!alertedFacilityTonnagesRef.current.has(fac.id) || tonnage > prevTonnage)
+      ) {
+        alertedFacilityTonnagesRef.current.set(fac.id, tonnage);
+
+        toast.error(
+          `🚛 Facility Tonnage Limit Exceeded: ${fac.name}`,
+          {
+            id: `facility-tonnage-alert-${fac.id}`,
+            duration: 10000,
+            description: `${fac.name} (${fac.region}) has reached ${tonnage.toFixed(1)} Tons of accumulated waste and is in urgent need of a heavy truck pickup.`,
+            action: {
+              label: "Dispatch Truck",
+              onClick: () => {
+                setSelectedFacilityId(fac.id);
+                setTonnageInput(tonnage.toFixed(1));
+                const el = document.getElementById("dispatch-controller-card");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              },
+            },
+          }
+        );
+      }
+    }
+  }, [facilities]);
+
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 10000); // Poll every 10s
-    return () => clearInterval(interval);
+
+    // Subscribe to real-time changes on Facility, BulkCollectionJob, and Device tables
+    const channel = supabase
+      .channel("admin-dashboard-realtime")
+      .on(
+        "postgres_changes" as any,
+        { event: "*", schema: "public", table: "BulkCollectionJob" },
+        () => {
+          loadData();
+        }
+      )
+      .on(
+        "postgres_changes" as any,
+        { event: "*", schema: "public", table: "Facility" },
+        () => {
+          loadData();
+        }
+      )
+      .on(
+        "postgres_changes" as any,
+        { event: "*", schema: "public", table: "Device" },
+        () => {
+          loadData();
+        }
+      )
+      .subscribe();
+
+    const interval = setInterval(loadData, 10000); // Polling fallback
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleDispatchSubmit = async (e: React.FormEvent) => {
@@ -554,7 +626,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Third-Party Collection Dispatch Panel */}
-        <div className="bg-card border border-border rounded-xl shadow-sm p-6 flex flex-col gap-5">
+        <div id="dispatch-controller-card" className="bg-card border border-border rounded-xl shadow-sm p-6 flex flex-col gap-5">
           <div>
             <h3 className="font-bold text-sm text-foreground dark:text-white">
               Third-Party Dispatch Controller
