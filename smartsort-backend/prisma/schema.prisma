@@ -7,46 +7,46 @@ datasource db {
 }
 
 model Device {
-  id             String          @id @default(uuid())
-  customBinId    String          @unique
-  location       String
+  id                String          @id @default(uuid())
+  customBinId       String          @unique
+  location          String
   fillLevel         Int             @default(0)
   fillLevelGlass    Int             @default(0)
   fillLevelMetal    Int             @default(0)
   fillLevelPaper    Int             @default(0)
   fillLevelRejected Int             @default(0)
   status            String          @default("Active") // Active, Offline, Maintenance
-  deviceType     String          @default("bin")
-  lastSortedItem String?         
-  updatedAt      DateTime        @updatedAt
-  createdAt      DateTime        @default(now())
-  collectionJobs CollectionJob[]
-  processedItems ProcessedItem[]
-  deviceEvents   DeviceEvent[]
-  alerts         Alert[]
+  deviceType        String          @default("bin")
+  lastSortedItem    String?
+  updatedAt         DateTime        @updatedAt
+  createdAt         DateTime        @default(now())
+  collectionJobs    CollectionJob[]
+  processedItems    ProcessedItem[]
+  deviceEvents      DeviceEvent[]
+  alerts            Alert[]
 
   // Facility link
-  facilityId     String?
-  facility       Facility?       @relation(fields: [facilityId], references: [id])
+  facilityId String?
+  facility   Facility? @relation(fields: [facilityId], references: [id])
 
   @@index([status])
   @@index([facilityId])
 }
 
 model CollectionJob {
-  id          String   @id @default(uuid())
-  status      String   @default("Pending") // Pending, In Progress, Completed
-  priority    String   @default("Normal")  // Normal, High, Urgent
-  wasteType   String   @default("MIXED")
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  status    String   @default("Pending") // Pending, In Progress, Completed
+  priority  String   @default("Normal") // Normal, High, Urgent
+  wasteType String   @default("MIXED")
+  createdAt DateTime @default(now())
 
   // Connecting the job to a specific device
-  device      Device   @relation(fields: [deviceId], references: [id])
-  deviceId    String
+  device   Device @relation(fields: [deviceId], references: [id])
+  deviceId String
 
   // Connecting this to a User (Collector)
-  collectorId String?  
-  collector   User?    @relation(fields: [collectorId], references: [id])
+  collectorId String?
+  collector   User?   @relation(fields: [collectorId], references: [id])
 
   @@index([status, createdAt])
   @@index([deviceId])
@@ -58,7 +58,7 @@ model User {
   authId           String?  @unique // Supabase auth.users.id
   email            String   @unique
   name             String
-  role             String   // e.g. "MANAGER", "COLLECTOR", "ADMIN", "THIRD_PARTY_COLLECTOR"
+  role             String // e.g. "MANAGER", "COLLECTOR", "ADMIN", "THIRD_PARTY_COLLECTOR"
   status           String   @default("ACTIVE")
   avatar           String?
   assignedFacility String?
@@ -67,26 +67,27 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  collectionJobs      CollectionJob[] // For collectors
-  bulkCollectionJobs  BulkCollectionJob[] // For third-party collectors
+  collectionJobs     CollectionJob[] // For collectors
+  bulkCollectionJobs BulkCollectionJob[] // For third-party collectors
 
-  facilityId          String?
-  facility            Facility?           @relation(fields: [facilityId], references: [id])
+  facilityId String?
+  facility   Facility? @relation(fields: [facilityId], references: [id])
 }
 
 model Facility {
-  id                String              @id @default(uuid())
-  name              String              @unique // e.g. "Austin Hub"
-  region            String?             // e.g. "North Sector"
-  status            String              @default("Active") // Active, Offline, Maintenance
-  latitude          Float               // Map Latitude coord
-  longitude         Float               // Map Longitude coord
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @unique // e.g. "Austin Hub"
+  region    String? // e.g. "North Sector"
+  status    String   @default("Active") // Active, Offline, Maintenance
+  latitude  Float // Map Latitude coord
+  longitude Float // Map Longitude coord
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  devices           Device[]
-  users             User[]
-  bulkJobs          BulkCollectionJob[]
+  devices  Device[]
+  users    User[]
+  bulkJobs BulkCollectionJob[]
+  alerts   Alert[]
 }
 
 model BulkCollectionJob {
@@ -94,9 +95,9 @@ model BulkCollectionJob {
   facilityId    String
   facility      Facility  @relation(fields: [facilityId], references: [id], onDelete: Cascade)
   status        String    @default("Pending") // Pending, Dispatched, Completed
-  tonnage       Float     // Total accumulated tonnage to collect (e.g. 4.2 Tons)
-  collectorName String    // Name of the third-party company (e.g., "Zoomlion", "Jekora Ventures")
-  collectorId   String?   // References the Third-Party Collector user
+  tonnage       Float // Total accumulated tonnage to collect (e.g. 4.2 Tons)
+  collectorName String // Name of the third-party company (e.g., "Zoomlion", "Jekora Ventures")
+  collectorId   String? // References the Third-Party Collector user
   collector     User?     @relation(fields: [collectorId], references: [id])
   scheduledFor  DateTime?
   completedAt   DateTime?
@@ -117,15 +118,15 @@ model Feedback {
 model ProcessedItem {
   id              String   @id @default(uuid())
   deviceId        String
-  category        String   // Plastic, Paper, Metal, Glass, Organic, Other
-  status          String   // Sorted, Rejected
-  rejectionReason String?  // BIOHAZARD, MEDICAL_WASTE, E_WASTE, BATTERY_LITHIUM
+  category        String // Plastic, Paper, Metal, Glass, Organic, Other
+  status          String // Sorted, Rejected
+  rejectionReason String? // BIOHAZARD, MEDICAL_WASTE, E_WASTE, BATTERY_LITHIUM
   confidence      Float
   imageUrl        String?
   actionTaken     String
   createdAt       DateTime @default(now())
 
-  device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
   @@index([status])
   @@index([createdAt])
@@ -135,19 +136,25 @@ model ProcessedItem {
 
 // System notifications and alerts
 model Alert {
-  id          String   @id @default(uuid())
-  deviceId    String
-  severity    String   // CRITICAL, WARNING, INFO
+  id String @id @default(uuid())
+
+  // An alert can be tied to a specific device, a facility, or neither (system-level)
+  deviceId String?
+  device   Device? @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  facilityId String?
+  facility   Facility? @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  severity    String // CRITICAL, WARNING, INFO
   title       String
   description String
   status      String   @default("Active") // Active, Read, Resolved
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-
   @@index([severity, createdAt])
   @@index([deviceId, createdAt])
+  @@index([facilityId, createdAt])
   @@index([createdAt])
   @@index([deviceId, severity, status])
 }
@@ -156,12 +163,12 @@ model Alert {
 model DeviceEvent {
   id          String   @id @default(uuid())
   deviceId    String
-  eventType   String   // e.g., "POWER CYCLE", "NETWORK SYNC", "SENSOR UPDATE", "MAINTENANCE"
+  eventType   String // e.g., "POWER CYCLE", "NETWORK SYNC", "SENSOR UPDATE", "MAINTENANCE"
   description String
   severity    String   @default("INFO") // INFO, WARNING, CRITICAL
   createdAt   DateTime @default(now())
 
-  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
   @@index([deviceId, eventType, createdAt])
 }
@@ -174,4 +181,3 @@ model AuditLog {
   color     String   @default("text-foreground")
   createdAt DateTime @default(now())
 }
-

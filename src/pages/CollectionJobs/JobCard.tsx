@@ -13,13 +13,19 @@ export interface Job {
   responseTime: string;
   status: "Pending" | "In Transit" | "Completed";
   assignedTo: string | null;
+  assignedToId?: string | null;
   distance?: string;
   completedTime?: string;
 }
 
+interface CollectorOption {
+  id: string;
+  name: string;
+}
+
 interface JobCardProps {
   job: Job;
-  availableCollectors: string[];
+  availableCollectors: CollectorOption[];
   localAssignment: string;
   onCollectorSelect: (jobId: string, collector: string) => void;
   onAccept: (jobId: string) => void;
@@ -103,7 +109,6 @@ export function JobCard({
           </div>
         </div>
 
-        {/* Assign Controls */}
         <div className="flex flex-col gap-2 pt-1.5 border-t border-slate-100 dark:border-border/20">
           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
             Assign Collector
@@ -115,8 +120,8 @@ export function JobCard({
           >
             <option value="Unassigned">Unassigned</option>
             {availableCollectors.map((collector) => (
-              <option key={collector} value={collector}>
-                {collector}
+              <option key={collector.id} value={collector.id}>
+                {collector.name}
               </option>
             ))}
           </select>

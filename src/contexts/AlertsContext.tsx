@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback, ReactNode } from "react";
+import { supabase } from "../lib/supabaseClient";
+import { toast as sonnerToast } from "sonner";
 
 export interface Alert {
   id: string;
@@ -18,8 +20,22 @@ interface AlertsContextType {
 
 const AlertsContext = createContext<AlertsContextType | undefined>(undefined);
 
+function mapDbAlertToUi(dbAlert: any): Alert {
+  return {
+    id: dbAlert.id,
+    timestamp: new Date(dbAlert.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    type: dbAlert.title || "System Alert",
+    device: dbAlert.device?.customBinId || dbAlert.deviceId || "System",
+    severity: dbAlert.severity as Alert["severity"],
+    message: dbAlert.description || dbAlert.title,
+    status: dbAlert.status,
+  };
+}
+
 export function AlertsProvider({ children }: { children: ReactNode }) {
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const knownIdsRef = useRef<Set<string>>(new Set());
+  const initialLoadDoneRef = useRef(false);
 
   const addAlert = (alertData: Omit<Alert, "id" | "timestamp" | "status">) => {
     const newAlert: Alert = {
@@ -35,6 +51,7 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
     setAlerts((prev) => prev.map(a => a.id === id ? { ...a, status: "Resolved" } : a));
   };
 
+  // Listen for in-app toast/alert events
   useEffect(() => {
     const handleAppAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -52,6 +69,61 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('app-alert', handleAppAlert);
   }, []);
 
+  // Fetch alerts from the backend API and subscribe to real-time changes
+  const fetchAlerts = useCallback(async () => {
+    try {
+      const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+      const response = await fetch(`${baseUrl}/api/alerts`);
+      if (!response.ok) return;
+      const data = await response.json();
+      const dbAlerts: any[] = Array.isArray(data) ? data : data.data || [];
+      const mapped = dbAlerts.map(mapDbAlertToUi);
+
+      // Detect newly arrived alerts (skip on initial load)
+      if (initialLoadDoneRef.current) {
+        const newAlerts = mapped.filter((a) => !knownIdsRef.current.has(a.id));
+        for (const alert of newAlerts) {
+          const emoji = alert.severity === "CRITICAL" ? "🔴" : alert.severity === "WARNING" ? "🟡" : "🔵";
+          sonnerToast.info(`${emoji} ${alert.message}`, { duration: 6000 });
+        }
+      }
+
+      // Update known IDs
+      knownIdsRef.current = new Set(mapped.map((a) => a.id));
+      initialLoadDoneRef.current = true;
+
+      // Merge DB alerts with any in-memory-only alerts (from toasts)
+      setAlerts((prev) => {
+        const dbIds = new Set(mapped.map((a) => a.id));
+        const localOnly = prev.filter((a) => !dbIds.has(a.id) && a.id.startsWith("ALT-"));
+        return [...localOnly, ...mapped];
+      });
+    } catch {
+      // Silently ignore — backend might not be running
+    }
+  }, []);
+
+  useEffect(() => {
+    // Initial fetch
+    fetchAlerts();
+
+    // Subscribe to real-time changes on the Alert table
+    const channel = supabase
+      .channel("alerts-context-realtime")
+      .on(
+        "postgres_changes" as any,
+        { event: "*", schema: "public", table: "Alert" },
+        () => {
+          fetchAlerts();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchAlerts]);
+
   return (
     <AlertsContext.Provider value={{ alerts, addAlert, dismissAlert }}>
       {children}
@@ -66,3 +138,4 @@ export function useAlerts() {
   }
   return context;
 }
+

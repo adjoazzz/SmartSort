@@ -49,7 +49,9 @@ function formatJob(job, index = 0) {
               ? "Awaiting Pick-up"
               : "Awaiting Route",
     status: uiStatus,
-    assignedTo: job.collectorId ?? null,
+    assignedTo: job.collector?.name ?? job.collectorId ?? null,
+    assignedToId: job.collectorId ?? null,
+    assignedToAuthId: job.collector?.authId ?? null,
     distance: uiStatus === "In Transit" ? "En route - 0.8 miles away" : undefined,
     completedTime,
     sortOrder: index,
@@ -91,7 +93,7 @@ class JobService {
       prisma.collectionJob.findMany({
         where,
         orderBy: { createdAt: 'desc' },
-        include: { device: true },
+        include: { device: true, collector: { select: { id: true, name: true, authId: true } } },
         skip,
         take: limit,
       }),
@@ -138,7 +140,7 @@ class JobService {
         status: mapJobStatus(status),
         ...(collectorId !== undefined ? { collectorId } : {}),
       },
-      include: { device: true },
+      include: { device: true, collector: { select: { id: true, name: true, authId: true } } },
     });
 
     return formatJob(updatedJob);
@@ -189,7 +191,7 @@ class JobService {
       throw new AppError('facilityId and tonnage are required', 400, 'VALIDATION_FAILED');
     }
 
-    return prisma.bulkCollectionJob.create({
+    const job = await prisma.bulkCollectionJob.create({
       data: {
         facilityId,
         tonnage: Number(tonnage),
@@ -204,11 +206,31 @@ class JobService {
         }
       }
     });
+
+    // Fire an alert to the Admin Dashboard that tonnage was reached
+    try {
+      await prisma.alert.create({
+        data: {
+          facilityId,
+          severity: 'WARNING',
+          title: `Tonnage Target Reached: ${job.facility?.name || 'Facility'}`,
+          description: `Accumulated ${tonnage} Tons. A bulk pickup job has been created for ${job.facility?.name || 'this facility'}.`,
+          status: 'Active',
+        },
+      });
+    } catch (e) {
+      logger.error(`Failed to create alert for new bulk job: ${e.message}`);
+    }
+
+    return job;
   }
 
   async updateBulkJob(id, body) {
     const { status, collectorId, collectorName } = body;
-    const jobExists = await prisma.bulkCollectionJob.findUnique({ where: { id } });
+    const jobExists = await prisma.bulkCollectionJob.findUnique({ 
+      where: { id },
+      include: { facility: { select: { name: true } } }
+    });
     if (!jobExists) {
       throw new AppError('Bulk collection job not found', 404, 'NOT_FOUND');
     }
@@ -223,7 +245,7 @@ class JobService {
     if (collectorId !== undefined) updateData.collectorId = collectorId;
     if (collectorName !== undefined) updateData.collectorName = collectorName;
 
-    return prisma.bulkCollectionJob.update({
+    const updatedJob = await prisma.bulkCollectionJob.update({
       where: { id },
       data: updateData,
       include: {
@@ -232,6 +254,41 @@ class JobService {
         }
       }
     });
+
+    // Fire alerts if status changed
+    if (status !== undefined && status !== jobExists.status) {
+      try {
+        let severity = 'INFO';
+        let title = '';
+        let description = '';
+
+        if (status === 'Dispatched' || status === 'In Transit') {
+          severity = 'INFO';
+          title = `Truck Deployed: ${updatedJob.facility?.name}`;
+          description = `A pickup truck has been deployed for bulk collection at ${updatedJob.facility?.name}.`;
+        } else if (status === 'Completed') {
+          severity = 'INFO';
+          title = `Pickup Completed: ${updatedJob.facility?.name}`;
+          description = `The bulk collection of ${updatedJob.tonnage} Tons at ${updatedJob.facility?.name} has been completed.`;
+        }
+
+        if (title) {
+          await prisma.alert.create({
+            data: {
+              facilityId: updatedJob.facilityId,
+              severity,
+              title,
+              description,
+              status: 'Active',
+            },
+          });
+        }
+      } catch (e) {
+        logger.error(`Failed to create alert for bulk job update: ${e.message}`);
+      }
+    }
+
+    return updatedJob;
   }
 
   async autoScheduleJobs(rules = {}) {

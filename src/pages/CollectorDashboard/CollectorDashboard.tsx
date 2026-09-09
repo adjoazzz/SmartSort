@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Loader2, CheckSquare, X, Check } from "lucide-react";
 import { PageLayout } from "../../components/PageLayout";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -15,6 +15,8 @@ import { motion, AnimatePresence } from "motion/react";
 import type { CollectorJob } from "./collectorTypes";
 import { authFetch } from "../../lib/authFetch";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
+import { toast } from "../../lib/toast";
+import { supabase } from "../../lib/supabaseClient";
 
 // Lazy-load the map to avoid importing Leaflet CSS globally
 const BinLocatorMap = React.lazy(() =>
@@ -53,8 +55,16 @@ export default function CollectorDashboard() {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [facilities, setFacilities] = useState(KNUST_FACILITIES);
 
-  // Placeholder collector ID for now
-  const MY_COLLECTOR_ID = "placeholder-collector-123";
+  const [myCollectorId, setMyCollectorId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setMyCollectorId(data.user.id);
+      }
+    });
+  }, []);
+
   const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
 
   const fetchJobs = async () => {
@@ -79,9 +89,51 @@ export default function CollectorDashboard() {
     if (!fetchedJobs || !Array.isArray(fetchedJobs)) return [];
     return fetchedJobs.map((job: any) => ({
       ...job,
-      isAssignedToMe: job.assignedTo === MY_COLLECTOR_ID,
+      isAssignedToMe: Boolean(myCollectorId && (job.assignedToId === myCollectorId || job.assignedToAuthId === myCollectorId || job.assignedTo === myCollectorId)),
     }));
-  }, [fetchedJobs]);
+  }, [fetchedJobs, myCollectorId]);
+
+  // Track job assignment states to accurately trigger toast notifications
+  const isFirstLoadRef = useRef(true);
+  const prevAssignedJobIdsRef = useRef<Set<string>>(new Set());
+  const prevAvailableJobIdsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!jobs) return;
+
+    const currentAssignedIds = new Set(jobs.filter((j: any) => j.isAssignedToMe).map((j: any) => j.id));
+    const currentAvailableIds = new Set(jobs.filter((j: any) => !j.isAssignedToMe).map((j: any) => j.id));
+
+    if (isFirstLoadRef.current) {
+      if (jobs.length > 0) {
+        isFirstLoadRef.current = false;
+        prevAssignedJobIdsRef.current = currentAssignedIds;
+        prevAvailableJobIdsRef.current = currentAvailableIds;
+      }
+      return;
+    }
+
+    // Find jobs that just got assigned to me (either brand new or moved from available to assigned)
+    const newlyAssignedJobs = jobs.filter((j: any) => j.isAssignedToMe && !prevAssignedJobIdsRef.current.has(j.id));
+    for (const job of newlyAssignedJobs) {
+      toast.warning(`🚛 New task assigned: ${job.location} (${job.fill}% full)`, {
+        device: job.device,
+        type: "Job Assignment",
+      });
+    }
+
+    // Find jobs that just became available (brand new auto-scheduled jobs)
+    const newlyAvailableJobs = jobs.filter((j: any) => !j.isAssignedToMe && !prevAvailableJobIdsRef.current.has(j.id) && !prevAssignedJobIdsRef.current.has(j.id));
+    for (const job of newlyAvailableJobs) {
+      toast.info(`📦 New bin needs collection: ${job.location} (${job.fill}% full)`, {
+        device: job.device,
+        type: "Auto-Scheduled Job",
+      });
+    }
+
+    prevAssignedJobIdsRef.current = currentAssignedIds;
+    prevAvailableJobIdsRef.current = currentAvailableIds;
+  }, [jobs]);
 
   // Fetch facilities from API to stay synced with Admin Dashboard if online
   useEffect(() => {
@@ -135,10 +187,15 @@ export default function CollectorDashboard() {
 
   const handleClaimJob = async (id: string) => {
     try {
+      if (!myCollectorId) {
+        toast.error("Collector ID not found. Please log in again.");
+        return;
+      }
+
       const response = await authFetch(`${baseUrl}/api/jobs/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ collectorId: MY_COLLECTOR_ID, status: "In Transit" }),
+        body: JSON.stringify({ collectorId: myCollectorId, status: "In Transit" }),
       });
       if (response.ok) {
         refreshJobs();

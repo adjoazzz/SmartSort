@@ -136,13 +136,7 @@ const INITIAL_JOBS_DATA: Job[] = [
   },
 ];
 
-const AVAILABLE_COLLECTORS = [
-  "Marcus Aurelius",
-  "Sarah Chen",
-  "David Vane",
-  "Kwame Mensah",
-  "Abena Osei",
-];
+// Removed hardcoded AVAILABLE_COLLECTORS
 
 const KPIS = [
   {
@@ -217,6 +211,8 @@ export default function CollectionJobs() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
   const limit = 10;
+  
+  const [availableCollectors, setAvailableCollectors] = useState<{id: string, name: string}[]>([]);
 
   const baseUrl =
     (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
@@ -230,6 +226,21 @@ export default function CollectionJobs() {
     }
     return response.json();
   };
+
+  useEffect(() => {
+    const loadCollectors = async () => {
+      try {
+        const response = await authFetch(`${baseUrl}/api/collectors?limit=100`);
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableCollectors(data.data.map((c: any) => ({ id: c.id, name: c.name })));
+        }
+      } catch (err) {
+        console.error("Failed to fetch collectors", err);
+      }
+    };
+    loadCollectors();
+  }, [baseUrl]);
 
   const {
     data: jobsResponse,
@@ -615,7 +626,7 @@ export default function CollectionJobs() {
                 <JobCard
                   key={job.id}
                   job={job}
-                  availableCollectors={AVAILABLE_COLLECTORS}
+                  availableCollectors={availableCollectors}
                   localAssignment={localAssignments[job.id]}
                   onCollectorSelect={handleCollectorSelection}
                   onAccept={handleAcceptJob}
@@ -655,7 +666,7 @@ export default function CollectionJobs() {
                 <JobCard
                   key={job.id}
                   job={job}
-                  availableCollectors={AVAILABLE_COLLECTORS}
+                  availableCollectors={availableCollectors}
                   localAssignment={localAssignments[job.id]}
                   onCollectorSelect={handleCollectorSelection}
                   onAccept={handleAcceptJob}
@@ -695,7 +706,7 @@ export default function CollectionJobs() {
                 <JobCard
                   key={job.id}
                   job={job}
-                  availableCollectors={AVAILABLE_COLLECTORS}
+                  availableCollectors={availableCollectors}
                   localAssignment={localAssignments[job.id]}
                   onCollectorSelect={handleCollectorSelection}
                   onAccept={handleAcceptJob}
@@ -873,7 +884,7 @@ export default function CollectionJobs() {
                                 onClick={() =>
                                   handleCollectorSelection(
                                     job.id,
-                                    AVAILABLE_COLLECTORS[0],
+                                    availableCollectors[0]?.id || "Unassigned",
                                   )
                                 }
                                 className="px-3 py-1.5 bg-primary/10 text-[#006c49] dark:text-emerald-400 font-bold rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
