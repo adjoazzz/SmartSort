@@ -1722,13 +1722,19 @@ The repository is organized as follows:
 ```
 SmartSort/
 ├── src/                    # React/TypeScript frontend
-├── smartsort-backend/      # Express.js/Prisma backend API
+├── smartsort-backend/      # Express.js/Prisma backend API & Cron tasks
+│   └── cron/               # Automated background tasks (e.g. offline device checker)
 ├── smartsort-ml/           # Flask/TFLite ML microservice
 ├── hardware/
-│   ├── arduino_smartsort/  # Arduino Uno firmware
-│   └── esp32_cam_main/     # ESP32-CAM firmware
+│   ├── arduino_smartsort/  # Arduino Uno production firmware
+│   ├── esp32_cam_main/     # ESP32-CAM camera & UART bridge firmware
+│   ├── HardwareDiag/       # Sensor pin & ultrasonic diagnostic suite
+│   ├── MotorDiag/          # Stepper motor rotation & position test sketch
+│   ├── servo_calibration/  # SG90 servo zero & angle calibration
+│   └── hardware_diagnostic/# Complete integration hardware diagnostic tool
 ├── .github/workflows/      # CI/CD pipeline
-└── README.md
+├── PROJECT_DOCUMENTATION.md# Extended technical & thesis documentation
+└── README.md               # Main project specification & documentation report
 ```
 
 ---
@@ -1882,31 +1888,56 @@ jobs:
 
 ---
 
-### ADDENDUM: RECENT ARCHITECTURAL REVISIONS
+### ADDENDUM: RECENT ARCHITECTURAL REVISIONS & SYSTEM UPDATES
 
-The following revisions were recently made to the system architecture to resolve critical hardware brownouts, reduce mechanical latency, and improve AI classification accuracy. These updates supersede previous methodologies in the report.
+The following revisions and updates were recently integrated into the system architecture to resolve hardware brownouts, reduce mechanical sorting latency, eliminate spatial distortion during neural classification, enhance hardware fault recovery, and provide automated backend health monitoring. These updates supersede and expand upon previous methodologies in the report.
 
 #### 1. Hardware: Deprecation of the MB102 Power Module (Dual Power Architecture)
-The MB102 Breadboard Power Supply Module was deprecated due to its inability to handle simultaneous stall currents from the motors and Wi-Fi transmission bursts from the ESP32, which caused recurring system brownouts. 
+The MB102 Breadboard Power Supply Module was deprecated due to its inability to handle simultaneous stall currents from the stepper/servo motors and Wi-Fi transmission bursts from the ESP32-CAM, which caused recurring system brownouts. 
 The system was upgraded to a **Dual Power Architecture**:
-* **Arduino Logic:** Powered directly via a 5V USB connection to maintain stable logic voltages.
-* **Peripherals (ESP32, Sensors, Motors):** Powered by a high-capacity 5V Power Bank routed directly into the breadboard rails.
-* **Common Ground:** A single jumper wire bridges the Arduino's `GND` to the Breadboard's `GND` rail, enabling unified data communication between the isolated power supplies without cross-feeding the 5V positive rails.
+* **Arduino Logic:** Powered directly via a dedicated 5V USB connection to maintain stable logic voltages and noise-free sensor analog signals.
+* **Peripherals (ESP32-CAM, Sensors, Motors):** Powered by a high-capacity 5V Power Bank routed directly into the breadboard power rails.
+* **Common Ground:** A single jumper wire bridges the Arduino's `GND` to the Breadboard's `GND` rail, enabling unified UART data communication and sensor reference voltages between isolated power supplies without cross-feeding 5V positive rails.
 
 #### 2. Software: Asynchronous Telemetry for Latency Reduction
-Previously, the Python Flask API (`app.py`) synchronously awaited a response from the Node.js dashboard before returning the classification JSON to the ESP32. This created a mechanical bottleneck where network latency delayed the physical sorting. 
-The API was updated to utilize Python's `threading` library. The server now instantly returns the `200 OK` JSON response to the ESP32, while forwarding the telemetry payload to the dashboard in a detached background thread.
+Previously, the Python Flask API (`app.py`) synchronously awaited a response from the Node.js dashboard before returning classification JSON to the ESP32. Network latency from the cloud backend delayed physical sorting. 
+The Flask API was refactored using Python's `threading` module. The server now instantly returns a `200 OK` JSON classification response to the ESP32, while forwarding the telemetry payload and Base64 capture image to the Express/Supabase backend in a detached background thread.
 
 #### 3. Machine Learning: Center-Crop Tensor Preservation
-The ESP32-CAM captures raw JPEG images in a 4:3 rectangular aspect ratio. Initially, resizing these images directly to the required `224x224` square input tensor aggressively distorted the spatial geometry of the trash, reducing classification confidence. 
-The Python server now implements a **Center-Crop Algorithm**. It mathematically calculates the shortest dimension and crops the center of the image into a perfect square *before* resizing it to 224x224, ensuring the physical shapes of the waste are preserved for the neural network.
+The ESP32-CAM captures raw JPEG images in a 4:3 rectangular aspect ratio. Resizing these images directly to the required `224x224` square input tensor compressed the visual geometry of items, degrading neural network confidence scores. 
+The Python inference microservice implements a **Center-Crop Algorithm** (PIL library). It calculates the shortest image dimension, crops the center into a square, and *then* resizes it to 224x224. This preserves the original aspect ratio and shape of waste items prior to model inference.
 
 #### 4. Edge Computing: Low-Power Flash Illumination
-Capturing images inside a dark bin resulted in poor classification. However, enabling the ESP32's built-in Flash LED at full brightness (PWM 255) during Wi-Fi transmission caused instant battery brownouts. 
-The firmware was updated to activate the flash at a significantly reduced PWM duty cycle (`ledcWrite(FLASH_LED_PIN, 20)`). This provides sufficient illumination for the camera sensor while drawing minimal current, completely preventing voltage drops.
+Capturing images inside dark bin enclosures yielded low visual contrast. However, firing the ESP32's built-in Flash LED at full brightness (PWM 255) during Wi-Fi transmission induced power dips. 
+The firmware was updated to activate the Flash LED at a low PWM duty cycle (`ledcWrite(FLASH_LED_PIN, 20)`). This delivers optimal illumination for the camera sensor while drawing minimal current, completely preventing battery brownouts.
 
-#### 5. Mechanical Timing Optimization
-To improve the user experience, the system's mechanical delays were aggressively optimized. The Arduino's stepper motor settling delay (`STEPPER_MOVE_DELAY_MS`) was reduced from 4.0 seconds to 1.5 seconds, and the ESP32 camera's pre-capture delay was reduced from 3.0 seconds to 2.0 seconds.
+#### 5. Mechanical Timing & UART Protocol Optimization
+To improve end-user sorting throughput, mechanical delays and serial communication timing were optimized:
+* Reduced Arduino stepper settling delay (`STEPPER_MOVE_DELAY_MS`) from 4.0 seconds to 1.5 seconds.
+* Reduced ESP32 camera pre-capture settling delay from 3.0 seconds to 2.0 seconds.
+* Streamlined UART serial command frames (`TRIGGER`, `SORT:<class>`, `ACK:SORTED`, `PING`, `PONG`, `TELEMETRY:<levels>`) with buffer flushing and 5-second trigger cooldowns.
+
+#### 6. Embedded Firmware: Stateful Mechanical Homing via EEPROM & Fault Recovery
+To handle sudden power loss mid-rotation without losing mechanical chute orientation:
+* The Arduino firmware continuously persists the chute's exact angular position to non-volatile EEPROM (`EEPROM_ANGLE_ADDR`).
+* Upon cold boot, the startup sequence reads the saved angle. If non-zero, it automatically executes a reverse homing rotation to realign the chute to 0° baseline before accepting waste deposits.
+
+#### 7. Hardware Diagnostics & Sensor Calibration Suite
+A modular hardware diagnostic and calibration suite was added under `hardware/`:
+* `HardwareDiag`: Isolated ultrasonic sensor trigger/echo pin verification and fill-level distance debugging.
+* `MotorDiag`: Isolated ULN2003 stepper motor 360° sweep, angular step accuracy, and torque validation.
+* `servo_calibration`: SG90 trapdoor flap 0°/110° pulse width alignment tool.
+* `hardware_diagnostic`: Complete bench testing utility for end-to-end hardware loop verification without network dependencies.
+
+#### 8. Backend Infrastructure: Automated Offline Device Monitoring Cron
+An automated background cron task (`smartsort-backend/cron/offlineCheck.js`) was implemented and integrated into the server initialization sequence (`server.js`):
+* Periodically scans registered smart bins for heartbeat and telemetry timestamps.
+* Automatically updates device status to `OFFLINE` when telemetry exceeds timeout thresholds.
+* Generates system alerts to notify facility managers of connectivity losses or hardware power failures.
+
+#### 9. Frontend & User Interface: Full-Featured Auth & Device Management
+* **Multi-Role Authentication & Signup:** Implemented comprehensive multi-role login and registration flows with interactive role selection (Admin, Manager, Collector, Viewer), form validation, and Supabase Auth integration (`src/pages/Login/Login.tsx`).
+* **Device Management Views:** Refactored `src/pages/Devices/Devices.tsx` with real-time fill level indicators, online/offline status badges, last seen timestamps, and inline diagnostic controls.
 
 ---
 

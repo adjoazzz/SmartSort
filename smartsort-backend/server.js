@@ -25,6 +25,7 @@ const app = express();
 
 // Start Background Cron Jobs
 require('./cron/offlineCheck');
+require('./cron/autoScheduleCron');
 
 // Global Middlewares
 app.use(requestId);

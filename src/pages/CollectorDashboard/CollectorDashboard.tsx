@@ -13,6 +13,8 @@ import {
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import type { CollectorJob } from "./collectorTypes";
+import { authFetch } from "../../lib/authFetch";
+import { useRealtimeData } from "../../hooks/useRealtimeData";
 
 // Lazy-load the map to avoid importing Leaflet CSS globally
 const BinLocatorMap = React.lazy(() =>
@@ -20,60 +22,6 @@ const BinLocatorMap = React.lazy(() =>
     default: m.BinLocatorMap,
   })),
 );
-
-const COLLECTOR_JOBS: CollectorJob[] = [
-  {
-    id: "JOB-1041",
-    device: "#SN-4431-L",
-    location: "Main Lobby Entrance",
-    zone: "Level 1, Main",
-    fill: 82,
-    urgency: "High",
-    status: "In Transit",
-    isAssignedToMe: true,
-  },
-  {
-    id: "JOB-1042",
-    device: "#SN-9902-X",
-    location: "North Wing Cafe - B3",
-    zone: "Level 2, Zone A",
-    fill: 94,
-    urgency: "Critical",
-    status: "Pending",
-    isAssignedToMe: false,
-  },
-  {
-    id: "JOB-1040",
-    device: "#SN-1108-P",
-    location: "West Parking B1",
-    zone: "Basement 1, Zone C",
-    fill: 78,
-    urgency: "Normal",
-    status: "Pending",
-    isAssignedToMe: false,
-  },
-  {
-    id: "JOB-1039",
-    device: "#SN-8871-S",
-    location: "Employee Breakroom",
-    zone: "Level 4, South",
-    fill: 71,
-    urgency: "Normal",
-    status: "Pending",
-    isAssignedToMe: false,
-  },
-  {
-    id: "JOB-1038",
-    device: "#SN-5520-R",
-    location: "South Lobby",
-    zone: "Level 1, Zone B",
-    fill: 65,
-    urgency: "Normal",
-    status: "Completed",
-    isAssignedToMe: true,
-  },
-];
-
 const KNUST_FACILITIES = [
   {
     id: "fac-sci",
@@ -105,22 +53,35 @@ export default function CollectorDashboard() {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [facilities, setFacilities] = useState(KNUST_FACILITIES);
 
-  // Sync state with localStorage
-  const [jobs, setJobs] = useState<CollectorJob[]>(() => {
-    const saved = localStorage.getItem("collector_jobs");
-    if (saved) {
-      try {
-        return JSON.parse(saved) as CollectorJob[];
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return COLLECTOR_JOBS;
-  });
+  // Placeholder collector ID for now
+  const MY_COLLECTOR_ID = "placeholder-collector-123";
+  const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
+
+  const fetchJobs = async () => {
+    const url = selectedFacilityId ? `${baseUrl}/api/jobs?facilityId=${selectedFacilityId}` : `${baseUrl}/api/jobs`;
+    const response = await authFetch(url);
+    if (!response.ok) throw new Error("Failed to fetch jobs");
+    const json = await response.json();
+    return json.data || [];
+  };
+
+  const {
+    data: fetchedJobs,
+    isLoading: jobsLoading,
+    refresh: refreshJobs,
+  } = useRealtimeData<any[]>(fetchJobs, { tables: ["CollectionJob", "Device"] });
 
   useEffect(() => {
-    localStorage.setItem("collector_jobs", JSON.stringify(jobs));
-  }, [jobs]);
+    refreshJobs().catch(console.error);
+  }, [selectedFacilityId]);
+
+  const jobs = useMemo(() => {
+    if (!fetchedJobs || !Array.isArray(fetchedJobs)) return [];
+    return fetchedJobs.map((job: any) => ({
+      ...job,
+      isAssignedToMe: job.assignedTo === MY_COLLECTOR_ID,
+    }));
+  }, [fetchedJobs]);
 
   // Fetch facilities from API to stay synced with Admin Dashboard if online
   useEffect(() => {
@@ -146,7 +107,12 @@ export default function CollectorDashboard() {
     return (
       facilities.find((f) => f.id === selectedFacilityId) ||
       facilities[0] ||
-      KNUST_FACILITIES[0]
+      {
+        id: "fac-sci",
+        name: "College of Science",
+        region: "KNUST",
+        coords: [6.6735, -1.5658],
+      }
     );
   }, [facilities, selectedFacilityId]);
 
@@ -155,8 +121,8 @@ export default function CollectorDashboard() {
   const [remindJobId, setRemindJobId] = useState<string | null>(null);
 
   // Sorting assignments: Critical first, then High, then Normal, then by fill level descending
-  const getOptimizedRoute = (activeJobs: typeof COLLECTOR_JOBS) => {
-    const urgencyWeight = { Critical: 3, High: 2, Normal: 1 };
+  const getOptimizedRoute = (activeJobs: typeof jobs) => {
+    const urgencyWeight = { Critical: 3, Urgent: 3, High: 2, Medium: 1, Normal: 0 };
     return [...activeJobs]
       .filter((j) => j.status !== "Completed")
       .sort((a, b) => {
@@ -167,23 +133,35 @@ export default function CollectorDashboard() {
       });
   };
 
-  const handleClaimJob = (id: string) => {
-    setJobs((prev) =>
-      prev.map((job) =>
-        job.id === id
-          ? { ...job, isAssignedToMe: true, status: "In Transit" }
-          : job,
-      ),
-    );
-    setActiveTab("my_jobs");
+  const handleClaimJob = async (id: string) => {
+    try {
+      const response = await authFetch(`${baseUrl}/api/jobs/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ collectorId: MY_COLLECTOR_ID, status: "In Transit" }),
+      });
+      if (response.ok) {
+        refreshJobs();
+        setActiveTab("my_jobs");
+      }
+    } catch (e) {
+      console.error("Error claiming job", e);
+    }
   };
 
-  const handleCompleteJob = (id: string) => {
-    setJobs((prev) =>
-      prev.map((job) =>
-        job.id === id ? { ...job, status: "Completed" } : job,
-      ),
-    );
+  const handleCompleteJob = async (id: string) => {
+    try {
+      const response = await authFetch(`${baseUrl}/api/jobs/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "Completed" }),
+      });
+      if (response.ok) {
+        refreshJobs();
+      }
+    } catch (e) {
+      console.error("Error completing job", e);
+    }
   };
 
   // Get active assignments (assigned to me and not completed)
