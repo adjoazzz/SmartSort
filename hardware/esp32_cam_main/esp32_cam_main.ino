@@ -5,7 +5,7 @@
 #include <HTTPClient.h>
 #include <WiFi.h>
 
-// --- UPDATE THESE WITH YOUR DETAILS ---
+// WI-FI DETAILS ---
 const char *WIFI_SSID = "DESKTOP-KB425NS 6794";
 const char *WIFI_PASSWORD = "99*1z67Q";
 const char *ML_PREDICT_URL = "http://192.168.137.1:5001/predict";
@@ -33,7 +33,7 @@ const char *ML_API_KEY = "smartsort-ml-secret-key-2026";
 
 #define FLASH_LED_PIN 4
 
-// (Live stream server removed)
+
 
 unsigned long lastFillLevelTime = 0;
 

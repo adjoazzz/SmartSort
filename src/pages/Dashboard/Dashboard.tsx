@@ -31,8 +31,6 @@ import {
 } from "../../components/ui/table";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
 import { useTranslation } from "react-i18next";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import {
   Popover,
   PopoverContent,
@@ -443,77 +441,83 @@ export default function Dashboard() {
     },
   ];
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     setIsExporting(true);
-    setTimeout(() => {
-      try {
-        const doc = new jsPDF();
+    try {
+      const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+        import("jspdf"),
+        import("jspdf-autotable"),
+      ]);
 
-        // Header
-        doc.setFontSize(20);
-        doc.text("SmartSort Operations Report", 14, 22);
-        doc.setFontSize(11);
-        doc.setTextColor(100);
-        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+      const doc = new jsPDF();
 
-        // Section 1: KPIs
-        doc.setFontSize(14);
-        doc.setTextColor(0);
-        doc.text("Key Performance Indicators", 14, 45);
+      // Header
+      doc.setFontSize(20);
+      doc.text("SmartSort Operations Report", 14, 22);
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
 
-        const kpiData = dynamicKpis.map((kpi) => [
-          kpi.title,
-          kpi.value,
-          kpi.trend,
-        ]);
-        autoTable(doc, {
-          startY: 50,
-          head: [["Metric", "Value", "Trend"]],
-          body: kpiData,
-          theme: "grid",
-          headStyles: { fillColor: [0, 108, 73] },
-        });
+      // Section 1: KPIs
+      doc.setFontSize(14);
+      doc.setTextColor(0);
+      doc.text("Key Performance Indicators", 14, 45);
 
-        // Section 2: Device Bins
-        doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
-        const deviceData = displayBins.map((bin: any) => [
-          bin.label,
-          `${bin.value}%`,
-        ]);
-        autoTable(doc, {
-          startY: (doc as any).lastAutoTable.finalY + 20,
-          head: [["Device", "Fill Level"]],
-          body: deviceData,
-          theme: "grid",
-          headStyles: { fillColor: [0, 108, 73] },
-        });
+      const kpiData = dynamicKpis.map((kpi) => [
+        kpi.title,
+        kpi.value,
+        kpi.trend,
+      ]);
+      autoTable(doc, {
+        startY: 50,
+        head: [["Metric", "Value", "Trend"]],
+        body: kpiData,
+        theme: "grid",
+        headStyles: { fillColor: [0, 108, 73] },
+      });
 
-        // Section 3: Recent Events
-        doc.text(
-          "Recent Contamination Events",
-          14,
-          (doc as any).lastAutoTable.finalY + 15,
-        );
-        const eventData = RECENT_EVENTS.map((evt) => [
-          evt.time,
-          evt.source,
-          evt.detection,
-          evt.confidence,
-          evt.action,
-        ]);
-        autoTable(doc, {
-          startY: (doc as any).lastAutoTable.finalY + 20,
-          head: [["Time", "Source", "Detection", "Confidence", "Action"]],
-          body: eventData,
-          theme: "grid",
-          headStyles: { fillColor: [0, 108, 73] },
-        });
+      // Section 2: Device Bins
+      doc.text("Device Status", 14, (doc as any).lastAutoTable.finalY + 15);
+      const deviceData = displayBins.map((bin: any) => [
+        bin.label,
+        `${bin.value}%`,
+      ]);
+      autoTable(doc, {
+        startY: (doc as any).lastAutoTable.finalY + 20,
+        head: [["Device", "Fill Level"]],
+        body: deviceData,
+        theme: "grid",
+        headStyles: { fillColor: [0, 108, 73] },
+      });
 
-        doc.save("operations-report.pdf");
-      } finally {
-        setIsExporting(false);
-      }
-    }, 100);
+      // Section 3: Recent Events
+      doc.text(
+        "Recent Contamination Events",
+        14,
+        (doc as any).lastAutoTable.finalY + 15,
+      );
+      const eventData = RECENT_EVENTS.map((evt) => [
+        evt.time,
+        evt.source,
+        evt.detection,
+        evt.confidence,
+        evt.action,
+      ]);
+      autoTable(doc, {
+        startY: (doc as any).lastAutoTable.finalY + 20,
+        head: [["Time", "Source", "Detection", "Confidence", "Action"]],
+        body: eventData,
+        theme: "grid",
+        headStyles: { fillColor: [0, 108, 73] },
+      });
+
+      doc.save("operations-report.pdf");
+    } catch (err) {
+      console.error("Failed to export PDF:", err);
+      toast.error("Failed to generate PDF report");
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const binsOnly = devices.filter((d: any) => d.deviceType === "bin");
@@ -1028,6 +1032,7 @@ export default function Dashboard() {
                     </div>
                     <Progress
                       value={bin.value}
+                      aria-label={`${bin.label} fill level`}
                       className={`h-2 bg-muted ${
                         bin.color === "bg-[#ba1a1a] dark:bg-red-500" ||
                         bin.color === "bg-[#ba1a1a]"

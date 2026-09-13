@@ -27,7 +27,9 @@ export async function authFetch(
     if (response.status === 401) {
       await supabase.auth.signOut();
       localStorage.removeItem("userRole");
-      window.location.href = "/login";
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
     }
 
     return response;

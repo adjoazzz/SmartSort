@@ -31,9 +31,9 @@ export function MetricCard({
   const cardContent = (
     <>
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           {title}
-        </h3>
+        </h2>
 
         {iconSvg && (
           <div

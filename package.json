@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "preview": "vite preview",
     "dev": "vite",
     "backend": "npm --prefix smartsort-backend run dev",
     "backend:dev": "npm --prefix smartsort-backend run dev",
@@ -131,6 +132,7 @@
       "Nominatim",
       "Osei",
       "popupopen",
+      "psram",
       "qrbox",
       "Qrcode",
       "randomised",

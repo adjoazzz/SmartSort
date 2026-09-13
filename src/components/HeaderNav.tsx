@@ -290,11 +290,11 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             <button
               onClick={() => setIsAlertsOpen(true)}
               data-testid="header-alerts-btn"
-              className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors relative active:scale-[0.98]"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors relative active:scale-[0.98]"
               aria-label="Open alerts"
             >
               <Bell className="w-5 h-5" strokeWidth={2.5} />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-[#ba1a1a] dark:bg-red-500 rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-[#ba1a1a] dark:bg-red-500 rounded-full border-2 border-white translate-x-1/2 -translate-y-1/2"></span>
             </button>
           )}
 
@@ -303,7 +303,7 @@ export function HeaderNav({ hideAlertsIcon }: HeaderNavProps = {}) {
             <button
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
               data-testid="header-settings-btn"
-              className={`text-muted-foreground transition-colors active:scale-[0.98] ${isSettingsOpen ? "text-foreground dark:text-white" : "hover:text-foreground dark:hover:text-white"}`}
+              className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-muted-foreground transition-colors active:scale-[0.98] ${isSettingsOpen ? "text-foreground dark:text-white" : "hover:text-foreground dark:hover:text-white"}`}
               aria-label="Settings"
             >
               <Settings className="w-5 h-5" strokeWidth={2.5} />

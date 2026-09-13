@@ -73,6 +73,11 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
   // Fetch alerts from the backend API and subscribe to real-time changes
   const fetchAlerts = useCallback(async () => {
     try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) return;
+
       const baseUrl = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:5000";
       const response = await authFetch(`${baseUrl}/api/alerts`);
       if (!response.ok) return;
@@ -105,8 +110,21 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Initial fetch
+    // Initial fetch if authenticated
     fetchAlerts();
+
+    // Listen to auth state changes (login / logout)
+    const {
+      data: { subscription: authSub },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        fetchAlerts();
+      } else {
+        setAlerts([]);
+        knownIdsRef.current.clear();
+        initialLoadDoneRef.current = false;
+      }
+    });
 
     // Subscribe to real-time changes on the Alert table
     const channel = supabase
@@ -121,6 +139,7 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
       .subscribe();
 
     return () => {
+      authSub.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, [fetchAlerts]);
