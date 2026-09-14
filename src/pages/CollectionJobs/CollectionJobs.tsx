@@ -50,7 +50,7 @@ interface Job {
   fill: number;
   urgency: "Normal" | "Medium" | "Critical" | "High";
   responseTime: string;
-  status: "Pending" | "In Transit" | "Completed";
+  status: "Pending" | "In Transit" | "Completed" | "In Progress";
   assignedTo: string | null;
   distance?: string;
   completedTime?: string;
@@ -437,6 +437,7 @@ export default function CollectionJobs() {
         },
         body: JSON.stringify({
           collectorId: assignedCollector,
+          status: "In Progress",
         }),
       });
 
@@ -531,7 +532,9 @@ export default function CollectionJobs() {
   });
 
   const pendingJobs = filteredData.filter((j) => j.status === "Pending");
-  const inProgressJobs = filteredData.filter((j) => j.status === "In Transit");
+  const inProgressJobs = filteredData.filter(
+    (j) => j.status === "In Transit" || j.status === "In Progress",
+  );
   const completedJobs = filteredData.filter((j) => j.status === "Completed");
 
   const dynamicKpis = [

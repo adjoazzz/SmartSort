@@ -83,7 +83,9 @@ export default function CollectorDashboard() {
   }, [baseUrl]);
 
   const fetchJobs = async () => {
-    const url = selectedFacilityId ? `${baseUrl}/api/jobs?facilityId=${selectedFacilityId}` : `${baseUrl}/api/jobs`;
+    const queryParams = new URLSearchParams({ limit: "100" });
+    if (selectedFacilityId) queryParams.set("facilityId", selectedFacilityId);
+    const url = `${baseUrl}/api/jobs?${queryParams.toString()}`;
     const response = await authFetch(url);
     if (!response.ok) throw new Error("Failed to fetch jobs");
     const json = await response.json();
@@ -280,6 +282,11 @@ export default function CollectorDashboard() {
       });
   };
 
+  const isJobAvailable = (j: any) =>
+    !j.isAssignedToMe &&
+    j.status === "Pending" &&
+    (!j.assignedToId || j.assignedToId === "Unassigned" || !j.assignedTo);
+
   const handleClaimJob = async (id: string) => {
     try {
       if (!myCollectorId) {
@@ -293,11 +300,16 @@ export default function CollectorDashboard() {
         body: JSON.stringify({ collectorId: myCollectorId, status: "In Transit" }),
       });
       if (response.ok) {
-        refreshJobs();
+        toast.success("Job claimed and moved to My Tasks!");
+        await refreshJobs();
         setActiveTab("my_jobs");
+      } else {
+        const errJson = await response.json().catch(() => ({}));
+        toast.error(errJson.message || "Failed to claim job");
       }
     } catch (e) {
       console.error("Error claiming job", e);
+      toast.error("Network error claiming job");
     }
   };
 
@@ -309,10 +321,15 @@ export default function CollectorDashboard() {
         body: JSON.stringify({ status: "Completed" }),
       });
       if (response.ok) {
-        refreshJobs();
+        toast.success("Job marked as completed!");
+        await refreshJobs();
+      } else {
+        const errJson = await response.json().catch(() => ({}));
+        toast.error(errJson.message || "Failed to complete job");
       }
     } catch (e) {
       console.error("Error completing job", e);
+      toast.error("Network error completing job");
     }
   };
 
@@ -339,7 +356,7 @@ export default function CollectorDashboard() {
     const baseList = jobs.filter((job) =>
       activeTab === "my_jobs"
         ? job.isAssignedToMe
-        : !job.isAssignedToMe && job.status === "Pending",
+        : isJobAvailable(job),
     );
     if (activeTab === "my_jobs" && isOptimized) {
       const completed = baseList.filter((j) => j.status === "Completed");
@@ -470,13 +487,7 @@ export default function CollectorDashboard() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Available Bins (
-              {
-                jobs.filter(
-                  (j: any) => !j.isAssignedToMe && j.status === "Pending",
-                ).length
-              }
-              )
+              Available Bins ({jobs.filter(isJobAvailable).length})
             </button>
             <button
               onClick={() => setActiveTab("my_jobs")}

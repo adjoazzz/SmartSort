@@ -32,7 +32,7 @@ class JobController {
   async updateJob(req, res, next) {
     try {
       const { id } = req.params;
-      const job = await jobService.updateJob(id, req.body);
+      const job = await jobService.updateJob(id, req.body, req.user);
       res.status(200).json(job);
     } catch (err) {
       next(err);

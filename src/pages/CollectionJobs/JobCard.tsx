@@ -11,7 +11,7 @@ export interface Job {
   fill: number;
   urgency: "Normal" | "Medium" | "Critical" | "High";
   responseTime: string;
-  status: "Pending" | "In Transit" | "Completed";
+  status: "Pending" | "In Transit" | "Completed" | "In Progress";
   assignedTo: string | null;
   assignedToId?: string | null;
   distance?: string;
@@ -142,7 +142,7 @@ export function JobCard({
     );
   }
 
-  if (job.status === "In Transit") {
+  if (job.status === "In Transit" || job.status === "In Progress") {
     return (
       <div className="bg-card border border-slate-200/50 dark:border-border/50 p-5 rounded-xl shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-emerald-500/40 transition-all duration-300 flex flex-col gap-4 group">
         {/* Top Tags */}

@@ -1,5 +1,6 @@
 const { prisma } = require('../lib/prisma');
 const AppError = require('../utils/errorHandler');
+const logger = require('../utils/logger');
 
 const URGENCY_PRIORITY_MAP = {
   Normal: "Normal",
@@ -135,21 +136,58 @@ class JobService {
     return createdJob ? formatJob(createdJob) : null;
   }
 
-  async updateJob(id, body) {
+  async updateJob(id, body, currentUser = null) {
     const { status, collectorId } = body;
     const jobExists = await prisma.collectionJob.findUnique({ where: { id } });
     if (!jobExists) {
       throw new AppError('Collection job not found', 404, 'NOT_FOUND');
     }
 
+    // Role-based validation if currentUser is provided
+    if (currentUser && currentUser.role === 'COLLECTOR') {
+      // If collector is claiming a job, they can only assign to themselves
+      if (collectorId && collectorId !== currentUser.id && collectorId !== currentUser.authId) {
+        throw new AppError('Collectors can only assign jobs to themselves', 403, 'FORBIDDEN');
+      }
+      // If job is already assigned to someone else, collector cannot update it
+      if (
+        jobExists.collectorId &&
+        jobExists.collectorId !== currentUser.id &&
+        jobExists.collectorId !== currentUser.authId
+      ) {
+        throw new AppError('Cannot modify a job assigned to another collector', 403, 'FORBIDDEN');
+      }
+    }
+
+    const mappedStatus = status !== undefined ? mapJobStatus(status) : undefined;
+
     const updatedJob = await prisma.collectionJob.update({
       where: { id },
       data: {
-        ...(status !== undefined ? { status: mapJobStatus(status) } : {}),
+        ...(mappedStatus !== undefined ? { status: mappedStatus } : {}),
         ...(collectorId !== undefined ? { collectorId: (collectorId === 'Unassigned' || !collectorId) ? null : collectorId } : {}),
       },
       include: { device: true, collector: { select: { id: true, name: true, authId: true, email: true } } },
     });
+
+    // When job is marked Completed, reset device fill levels so the bin is empty for next cycle
+    if (mappedStatus === 'Completed' && jobExists.deviceId) {
+      try {
+        await prisma.device.update({
+          where: { id: jobExists.deviceId },
+          data: {
+            fillLevel: 0,
+            fillLevelGlass: 0,
+            fillLevelMetal: 0,
+            fillLevelPaper: 0,
+            fillLevelRejected: 0,
+            status: 'Active',
+          },
+        });
+      } catch (err) {
+        logger.error(`Failed to reset device fill levels on job completion: ${err.message}`);
+      }
+    }
 
     return formatJob(updatedJob);
   }
