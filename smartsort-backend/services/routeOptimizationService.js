@@ -173,6 +173,7 @@ class RouteOptimizationService {
         customBinId: stop.customBinId,
         name: stop.name,
         location: stop.location,
+        facilityId: stop.facilityId,
         latitude: stop.latitude,
         longitude: stop.longitude,
         currentFill: stop.currentFill,
@@ -269,22 +270,69 @@ class RouteOptimizationService {
       throw new Error("Invalid route payload");
     }
 
+    // Resolve a valid facilityId required by BulkCollectionJob foreign key
+    let targetFacilityId = facilityId;
+    if (!targetFacilityId) {
+      const stopWithFac = route.waypoints.find((w) => w.facilityId);
+      if (stopWithFac && stopWithFac.facilityId) {
+        targetFacilityId = stopWithFac.facilityId;
+      }
+    }
+
+    if (!targetFacilityId) {
+      const firstFacility = await prisma.facility.findFirst();
+      if (firstFacility) {
+        targetFacilityId = firstFacility.id;
+      } else {
+        const createdFac = await prisma.facility.create({
+          data: {
+            name: "KNUST Central Logistics Hub",
+            region: "KNUST",
+            status: "Active",
+            latitude: 6.6735,
+            longitude: -1.5658,
+          },
+        });
+        targetFacilityId = createdFac.id;
+      }
+    }
+
     // Create bulk collection job record
     const bulkJob = await prisma.bulkCollectionJob.create({
       data: {
-        facilityId: facilityId || null,
+        facilityId: targetFacilityId,
         tonnage: Number(route.totalTonnageCollected) || 3.5,
         collectorName: `${carrierName || route.carrier} (${driverName || 'Lead Driver'} - ${licensePlate || 'GT-4021-24'})`,
         status: "Dispatched",
-        scheduledFor: new Date()
-      }
+        scheduledFor: new Date(),
+      },
+      include: {
+        facility: {
+          select: { name: true },
+        },
+      },
     });
+
+    // Fire alert so admin dashboard notifications reflect the deployed fleet
+    try {
+      await prisma.alert.create({
+        data: {
+          facilityId: targetFacilityId,
+          severity: "INFO",
+          title: `Fleet Dispatched: ${bulkJob.facility?.name || 'Facility'}`,
+          description: `Truck (${licensePlate || 'GT-4021-24'}) deployed for ${bulkJob.tonnage} Tons across ${route.totalStops || 0} stops.`,
+          status: "Active",
+        },
+      });
+    } catch (e) {
+      // Non-fatal alert creation failure
+    }
 
     return {
       success: true,
       message: `Optimized route ${route.routeId} successfully dispatched to ${carrierName || route.carrier}!`,
       bulkJobId: bulkJob.id,
-      dispatchedRoute: route
+      dispatchedRoute: route,
     };
   }
 }

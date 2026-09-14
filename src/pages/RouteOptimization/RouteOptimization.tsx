@@ -383,6 +383,9 @@ export default function RouteOptimization() {
     if (!optimizedRoute) return;
     setIsDispatching(true);
     try {
+      const firstStopWithFacility = optimizedRoute.waypoints?.find((wp: any) => wp.facilityId);
+      const facilityId = firstStopWithFacility?.facilityId;
+
       const response = await authFetch(`${baseUrl}/api/routes/dispatch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -391,17 +394,21 @@ export default function RouteOptimization() {
           carrierName: selectedCarrier,
           driverName,
           licensePlate,
+          facilityId,
         }),
       });
 
-      if (!response.ok) throw new Error("Dispatch failed");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || errorData.error || "Dispatch failed");
+      }
       const result = await response.json();
       toast.success(`🚛 Route Dispatched!`, {
         description: `${selectedCarrier} (${licensePlate}) assigned with ${optimizedRoute.totalStops} collection stops.`,
       });
       refreshForecast();
     } catch (err: any) {
-      console.error(err);
+      console.error("Dispatch route error:", err);
       toast.error(err.message || "Failed to dispatch route");
     } finally {
       setIsDispatching(false);
