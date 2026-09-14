@@ -25,6 +25,26 @@ export async function authFetch(
     });
 
     if (response.status === 401) {
+      // Attempt to refresh the session before forcing logout
+      try {
+        const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+        if (!refreshError && refreshData.session?.access_token) {
+          const retryHeaders = new Headers(init?.headers);
+          retryHeaders.set("Authorization", `Bearer ${refreshData.session.access_token}`);
+          const retryResponse = await fetch(input, {
+            ...init,
+            headers: retryHeaders,
+            signal: init?.signal ?? controller.signal,
+          });
+
+          if (retryResponse.status !== 401) {
+            return retryResponse;
+          }
+        }
+      } catch {
+        // Refresh failed, proceed to sign out
+      }
+
       await supabase.auth.signOut();
       localStorage.removeItem("userRole");
       if (window.location.pathname !== "/login") {

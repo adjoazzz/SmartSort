@@ -1,3 +1,8 @@
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 // IMPORTANT: Require instrument.js at the top before any other modules
 const Sentry = require('./instrument');
 const express = require('express');
